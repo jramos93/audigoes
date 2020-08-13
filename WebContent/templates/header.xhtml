@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:body>
+	<table id="cabecera">
+		<tr>
+			<td colspan="3">
+				<table style="width: 100%; background-color: #004F7D; color: #FFF;">
+					<tr style="font-weight: bold;" class="text-upper">
+						<td align="left"><h:outputText value="Nombre de usuario"></h:outputText>
+						</td>
+						<!-- Agregar convertidor de fecha al hacer el bean -->
+						<td align="right"><h:outputText value="Fecha de Sistema"></h:outputText>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+
+		<tr>
+
+			<td align="left"><h:outputText value="Img izquierda"></h:outputText>
+			</td>
+			
+			<td align="center"><h:outputText value="Nombre del sistema"></h:outputText>
+			</td>
+			
+			<td align="right"><h:outputText value="Img derecha"></h:outputText>
+			</td>
+
+		</tr>
+	</table>
+</h:body>
+</html>
