@@ -31,9 +31,6 @@ public class RolMenu extends audigoes.ues.edu.sv.entities.SuperEntity implements
 	@Column(name="reg_activo")
 	private int regActivo;
 
-	@Column(name="rmn_mnu_id")
-	private int rmnMnuId;
-
 	@Column(name="usu_crea")
 	private String usuCrea;
 
@@ -42,7 +39,7 @@ public class RolMenu extends audigoes.ues.edu.sv.entities.SuperEntity implements
 
 	//bi-directional many-to-one association to Menu
 	@ManyToOne
-	@JoinColumn(name="rmn_rol_id")
+	@JoinColumn(name="rmn_mnu_id")
 	private Menu menu;
 
 	//bi-directional many-to-one association to Rol
@@ -83,14 +80,6 @@ public class RolMenu extends audigoes.ues.edu.sv.entities.SuperEntity implements
 
 	public void setRegActivo(int regActivo) {
 		this.regActivo = regActivo;
-	}
-
-	public int getRmnMnuId() {
-		return this.rmnMnuId;
-	}
-
-	public void setRmnMnuId(int rmnMnuId) {
-		this.rmnMnuId = rmnMnuId;
 	}
 
 	public String getUsuCrea() {
