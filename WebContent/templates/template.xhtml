@@ -5,19 +5,23 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 <h:head>
-	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta>
+	<meta charset="utf-8" />
+
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 </h:head>
 <h:body>
+	<h:outputStylesheet library="css" name="estilos.css"></h:outputStylesheet>
 	<table id="layout">
 		<!--  Header  -->
 		<tr>
-			<td colspan="2">
+			<td>
 				<div id="header" style="width: 100%;">
 					<ui:include src="/templates/header.xhtml"></ui:include>
 				</div>
 			</td>
 		</tr>
-		
+
 		<!--  Menu  -->
 		<tr>
 			<td valign="top">
@@ -26,12 +30,13 @@
 				</div>
 			</td>
 		</tr>
-		
+
 		<!--  Content  -->
 		<tr>
 			<td valign="top">
 				<div id="content" style="width: 100%;">
-					<p:growl id="grwl" showDetail="true" widgetVar="wvGrwl" sticky="true" life="1200">
+					<p:growl id="grwl" showDetail="true" widgetVar="wvGrwl"
+						sticky="true" life="1200">
 						<p:autoUpdate></p:autoUpdate>
 					</p:growl>
 					<ui:insert name="content">
@@ -40,7 +45,7 @@
 				</div>
 			</td>
 		</tr>
-		
+
 		<!--  Footer  -->
 		<tr>
 			<td valign="top">

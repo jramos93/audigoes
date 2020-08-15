@@ -1,0 +1,14 @@
+@charset "ISO-8859-1";
+
+body {
+	background-color: #6c757d;
+	background-repeat: no-repeat;
+	background-position: top center;
+	background-attachment: fixed;
+	font-size: 12px;
+	font-family: sans-serif;
+}
+
+img {
+	border: none;
+}
