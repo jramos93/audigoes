@@ -81,7 +81,7 @@ public class AudigoesController {
 			if (getRegistro() != null) {
 				try {
 					setRegistro((SuperEntity) getRegistro().getClass().newInstance());
-					getRegistro().setRegActivo(BigDecimal.ONE);
+					getRegistro().setRegActivo(1);
 					getRegistro().setFecCrea(getToday());
 				} catch (InstantiationException | IllegalAccessException e) {
 					e.printStackTrace();

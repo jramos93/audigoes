@@ -25,7 +25,7 @@ public class SuperEntity implements Serializable{
 	private String usuModi;
 	
 	@Column(name="REG_ACTIVO")
-	private BigDecimal regActivo;
+	private int regActivo;
 
 	public Date getFecCrea() {
 		return fecCrea;
@@ -59,11 +59,11 @@ public class SuperEntity implements Serializable{
 		this.usuModi = usuModi;
 	}
 
-	public BigDecimal getRegActivo() {
+	public int getRegActivo() {
 		return regActivo;
 	}
 
-	public void setRegActivo(BigDecimal regActivo) {
+	public void setRegActivo(int regActivo) {
 		this.regActivo = regActivo;
 	}
 	
