@@ -2,11 +2,51 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
+	<h:head>
+		<h:outputStylesheet library="css" name="menu.css"></h:outputStylesheet>
+	</h:head>
 <h:body>
-	<h:form>
-		<!-- Agregar el componente del menu al crear el bean -->
-		<!--  p:menubar -->
-	</h:form>
+	<h:form>  
+    <p:growl id="messages"/>
+    <p:menubar>
+        <p:submenu label="Administraciòn" icon="pi pi-file">
+            <p:menuitem value="Gestion de Roles" url="#" />
+            <p:separator />
+            <p:menuitem value="Gestion de Usuarios" url="#" />
+            <p:separator />
+            <p:menuitem value="Gestion de Instituciòn" url="#" />
+            <p:separator />
+            <p:submenu label="Gestion de Catalogos" icon="pi pi-briefcase">
+                <p:menuitem value="Tipos de Auditoria" url="#" />
+                <p:separator />
+                <p:menuitem value="Unidades Administrativas" url="#" />
+                <p:separator />
+                <p:menuitem value="Origen de Auditoria" url="#" />
+                <p:separator />
+                <p:menuitem value="Normativas" url="#" />
+                <p:separator />
+                <p:menuitem value="Criterios" url="#" />
+                <p:separator />
+                <p:menuitem value="Marcas" url="#" />
+            </p:submenu>
+        </p:submenu>
+ 
+        <p:submenu label="Planeacion" icon="pi pi-calendar-plus">
+        </p:submenu>
+        <p:submenu label="Fase de Planificacion" icon="pi pi-list">
+        </p:submenu>
+        <p:submenu label="Fase de Ejecucion" icon="pi pi-check-circle">
+        </p:submenu>
+        <p:submenu label="Fase de Informe" icon="pi pi-folder-open">
+        </p:submenu>
+        <p:submenu label="Fase de Seguimiento" icon="pi pi-pencil">
+        </p:submenu>
+        <p:submenu label="Consultas" icon="pi pi-chart-line">
+        </p:submenu>
+
+    </p:menubar>
+</h:form>
 </h:body>
 </html>

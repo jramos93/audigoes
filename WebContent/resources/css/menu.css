@@ -1,0 +1,14 @@
+@charset "ISO-8859-1";
+p-menubar {
+background-color: #8080ff;
+color: white;
+}
+.ui-menubar {
+    border: solid #0080ff;
+    background-color: #c0c0c0;
+    color: #c0c0c0;
+    font-weight: bolder;
+}
+.ui-menu-list{
+	color: #0080c0;
+}

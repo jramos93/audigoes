@@ -6,17 +6,17 @@
 	xmlns:p="http://primefaces.org/ui">
 <h:head>
 	<meta charset="utf-8" />
-
 	<meta name="viewport"
 		content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		<h:outputStylesheet library="css" name="estilos.css"></h:outputStylesheet>
+		<h:outputStylesheet library="css" name="menu.css"></h:outputStylesheet>
 </h:head>
 <h:body>
-	<h:outputStylesheet library="css" name="estilos.css"></h:outputStylesheet>
-	<table id="layout">
+	<table id="layout" style="width: 99%; height:800px;">
 		<!--  Header  -->
 		<tr>
 			<td>
-				<div id="header" style="width: 100%;">
+				<div id="header" style="width: 100%; height:160px;">
 					<ui:include src="/templates/header.xhtml"></ui:include>
 				</div>
 			</td>
@@ -24,8 +24,8 @@
 
 		<!--  Menu  -->
 		<tr>
-			<td valign="top">
-				<div id="menu" style="width: 100%;">
+			<td valign="top" align="center">
+				<div id="menu" style="width: 90%;height:100px;">
 					<ui:include src="/templates/menu.xhtml"></ui:include>
 				</div>
 			</td>
@@ -34,7 +34,7 @@
 		<!--  Content  -->
 		<tr>
 			<td valign="top">
-				<div id="content" style="width: 100%;">
+				<div id="content" style="width: 100%;height:390px;">
 					<p:growl id="grwl" showDetail="true" widgetVar="wvGrwl"
 						sticky="true" life="1200">
 						<p:autoUpdate></p:autoUpdate>
@@ -49,7 +49,7 @@
 		<!--  Footer  -->
 		<tr>
 			<td valign="top">
-				<div id="footer" style="width: 100%;">
+				<div id="footer" style="width: 100%; height:13px;">
 					<ui:include src="/templates/footer.xhtml"></ui:include>
 				</div>
 			</td>
