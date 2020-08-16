@@ -1,11 +1,11 @@
 package audigoes.ues.edu.sv.controller;
 
-import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -16,8 +16,23 @@ import audigoes.ues.edu.sv.session.audigoesSBSLLocal;
 
 public class AudigoesController {
 
-	@EJB(mappedName = "ejb/BusinessSBSL")
+	@EJB(beanName  = "audigoesSBSL")
 	protected audigoesSBSLLocal audigoesLocal;
+	
+	public AudigoesController() {
+		super();
+	}
+	
+	public AudigoesController(SuperEntity registro) {
+		this.setRegistro(registro);
+		if(this.getRegistro() instanceof SuperEntity) {
+			((SuperEntity) registro).setRegActivo(1);
+		}
+	}
+	
+	@PostConstruct
+	public void init() {
+	}
 
 	private boolean error = false;
 	private String status; // NEW, EDIT, SEARCH

@@ -29,13 +29,6 @@ public class audigoesSBSL implements audigoesSBSLLocal {
 	
 	private boolean transActiva = false;
 
-    /**
-     * Default constructor. 
-     */
-    public audigoesSBSL() {
-        // TODO Auto-generated constructor stub
-    }
-
 	@Override
 	public SuperEntity insert(SuperEntity entidad) throws Exception {
 		EntityTransaction et = null;
@@ -168,7 +161,10 @@ public class audigoesSBSL implements audigoesSBSLLocal {
 	}
 
 	public EntityManager getEm() {
-		return em;
+		if (this.em==null || !this.em.isOpen()) {
+			this.em=this.emf.createEntityManager();
+		}
+		return this.em;
 	}
 
 	public void setEm(EntityManager em) {
