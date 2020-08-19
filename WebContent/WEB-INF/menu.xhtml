@@ -1,0 +1,45 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pv="http://primefaces.org/verona">
+
+	<div class="layout-menu-wrapper">
+		<div class="nano">
+			<div class="nano-content sidebar-scroll-content">
+				<div class="layout-menu-container">
+					<h:form id="menuform">
+						<pv:menu id="pvMenu">
+							<p:submenu label="Administraciòn" icon="pi pi-file">
+								<p:menuitem value="Gestion de Roles" url="#" />
+								<p:separator />
+								<p:menuitem value="Gestion de Usuarios" url="#" />
+								<p:separator />
+								<p:menuitem value="Gestion de Instituciòn" url="#" />
+								<p:separator />
+								<p:submenu label="Gestion de Catalogos" icon="pi pi-briefcase">
+									<p:menuitem value="Tipos de Auditoria" url="#" />
+									<p:separator />
+									<p:menuitem value="Unidades Administrativas" url="#" />
+									<p:separator />
+									<p:menuitem value="Origen de Auditoria" url="#" />
+									<p:separator />
+									<p:menuitem value="Normativas" url="#" />
+									<p:separator />
+									<p:menuitem value="Criterios" url="#" />
+									<p:separator />
+									<p:menuitem value="Marcas" url="#" />
+								</p:submenu>
+							</p:submenu>
+
+							<p:submenu label="Planeacion" icon="pi pi-calendar-plus">
+							</p:submenu>
+						</pv:menu>
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</ui:composition>

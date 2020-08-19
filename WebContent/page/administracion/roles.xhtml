@@ -1,114 +1,103 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
-<h:head>
-	<meta charset="utf-8" />
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
 
-	<meta name="viewport"
-		content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-	<title>AUDIGOES</title>
+	<ui:define name="title">Empty Page</ui:define>
 
-	<h:outputStylesheet name="primeicons/primeicons.css"
-		library="primefaces" />
-</h:head>
-<h:body>
-	<ui:composition template="/templates/template.xhtml">
-		<ui:define name="content">
-			<h:form id="frm">
+	<ui:define name="content">
+		<h:form id="frm">
 
 
-				<p:dataTable var="rol" value="#{rolMB.listado}" widgetVar="wvRoles"
-					id="dtRoles" style="margin-top:20px;" paginator="true"
-					filteredValue="#{rolMB.filteredRoles}"
-					globalFilterFunction="#{rolMB.globalFilterFunction}"
-					paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
-					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
-					rowKey="#{rolMB.registro.rolId}">
+			<p:dataTable var="rol" value="#{rolMB.listado}" widgetVar="wvRoles"
+				reflow="true" id="dtRoles" style="margin-top:20px;" paginator="true"
+				filteredValue="#{rolMB.filteredRoles}"
+				globalFilterFunction="#{rolMB.globalFilterFunction}"
+				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+				rowKey="#{rolMB.registro.rolId}">
 
-					<f:facet name="paginatorTopLeft">
-						<p:commandButton value="Agregar" icon="pi pi-plus"
-							actionListener="#{rolMB.onNew}"
-							oncomplete="PF('wvRolNewEdit').show();" update=":frmRolNewEdit"></p:commandButton>
+				<f:facet name="paginatorTopLeft">
+					<p:commandButton value="Agregar" icon="pi pi-plus"
+						actionListener="#{rolMB.onNew}"
+						oncomplete="PF('wvRolNewEdit').show();" update=":frmRolNewEdit"></p:commandButton>
+				</f:facet>
+
+				<f:facet name="paginatorTopRight">
+					<p:outputPanel>
+						<h:outputText value="Búsqueda global: " />
+						<p:inputText id="globalFilter" onkeyup="PF('wvRoles').filter();"
+							style="width:150px" placeholder="Ingresa una palabra" />
+					</p:outputPanel>
+				</f:facet>
+
+				<p:column headerText="Id">
+					<h:outputText value="#{rol.rolId}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Nombre">
+					<h:outputText value="#{rol.rolNombre}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Descripcion">
+					<h:outputText value="#{rol.rolDescripcion}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Estado" filterBy="#{rol.regActivo}"
+					filterMatchMode="exact">
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('wvRoles').filter();">
+							<f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}"
+								noSelectionOption="true" />
+							<f:selectItems value="#{rolMB.regActivoList}" />
+						</p:selectOneMenu>
 					</f:facet>
+					<h:outputText value="#{rol.regActivo}"
+						converter="regActivoConverter"></h:outputText>
+				</p:column>
 
-					<f:facet name="paginatorTopRight">
-						<p:outputPanel>
-							<h:outputText value="Búsqueda global: " />
-							<p:inputText id="globalFilter" onkeyup="PF('wvRoles').filter();"
-								style="width:150px" placeholder="Ingresa una palabra" />
-						</p:outputPanel>
-					</f:facet>
+				<p:column headerText="Modificar">
+					<p:commandButton update=":frmRolNewEdit"
+						oncomplete="PF('wvRolNewEdit').show()" icon="pi pi-pencil"
+						title="Modificar" actionListener="#{rolMB.onEdit}">
+						<f:setPropertyActionListener value="#{rol}"
+							target="#{rolMB.registro}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
 
-					<p:column headerText="Id">
-						<h:outputText value="#{rol.rolId}"></h:outputText>
-					</p:column>
-
-					<p:column headerText="Nombre">
-						<h:outputText value="#{rol.rolNombre}"></h:outputText>
-					</p:column>
-
-					<p:column headerText="Descripcion">
-						<h:outputText value="#{rol.rolDescripcion}"></h:outputText>
-					</p:column>
-
-					<p:column headerText="Estado" filterBy="#{rol.regActivo}"
-						filterMatchMode="exact">
-						<f:facet name="filter">
-							<p:selectOneMenu onchange="PF('wvRoles').filter();">
-								<f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}"
-									noSelectionOption="true" />
-								<f:selectItems value="#{rolMB.regActivoList}" />
-							</p:selectOneMenu>
-						</f:facet>
-						<h:outputText value="#{rol.regActivo}"
-							converter="regActivoConverter"></h:outputText>
-					</p:column>
-
-					<p:column headerText="Modificar">
-						<p:commandButton update=":frmRolNewEdit"
-							oncomplete="PF('wvRolNewEdit').show()" icon="pi pi-pencil"
-							title="Modificar" actionListener="#{rolMB.onEdit}">
-							<f:setPropertyActionListener value="#{rol}"
-								target="#{rolMB.registro}" />
-						</p:commandButton>
-					</p:column>
-				</p:dataTable>
-			</h:form>
-
-			<p:dialog widgetVar="wvRolNewEdit" responsive="true" width="500"
-				closeOnEscape="true" header="Gestión de Roles" modal="true">
-				<h:form id="frmRolNewEdit">
-					<div class="ui-fluid p-formgrid p-grid">
-						<div class="p-field p-col">
-							<p:outputLabel for="nombre" value="Nombre del rol:" />
-							<p:inputText id="nombre" value="#{rolMB.registro.rolNombre}"
-								required="true" />
-						</div>
-						<div class="p-field p-col">
-							<p:outputLabel for="descripcion" value="Descripción del rol:" />
-							<p:inputTextarea id="descripcion" rows="4" required="true"
-								value="#{rolMB.registro.rolDescripcion}" />
-						</div>
-
-						<div class="p-field-radiobutton">
-							<p:outputLabel for="estado" value="Descripción del rol:" />
-							<p:selectOneRadio id="estado" value="#{rolMB.registro.regActivo}" required="true" disabled="#{rolMB.status=='NEW'}">
-								<f:selectItems value="#{rolMB.regActivoList}"></f:selectItems>
-							</p:selectOneRadio>
-						</div>
-
-
-						<p:commandButton actionListener="#{rolMB.onSave}" value="Guardar"
-							oncomplete="PF('wvRolNewEdit').hide();" update=":frm:dtRoles"></p:commandButton>
+		<p:dialog widgetVar="wvRolNewEdit" responsive="true" width="500"
+			closeOnEscape="true" header="Gestión de Roles" modal="true">
+			<h:form id="frmRolNewEdit">
+				<div class="ui-fluid p-formgrid p-grid">
+					<div class="p-field p-col">
+						<p:outputLabel for="nombre" value="Nombre del rol:" />
+						<p:inputText id="nombre" value="#{rolMB.registro.rolNombre}"
+							required="true" />
 					</div>
-				</h:form>
-			</p:dialog>
-		</ui:define>
-	</ui:composition>
+					<div class="p-field p-col">
+						<p:outputLabel for="descripcion" value="Descripción del rol:" />
+						<p:inputTextarea id="descripcion" rows="4" required="true"
+							value="#{rolMB.registro.rolDescripcion}" />
+					</div>
 
-</h:body>
-</html>
+					<div class="p-field-radiobutton">
+						<p:outputLabel for="estado" value="Descripción del rol:" />
+						<p:selectOneRadio id="estado" value="#{rolMB.registro.regActivo}"
+							required="true" disabled="#{rolMB.status=='NEW'}">
+							<f:selectItems value="#{rolMB.regActivoList}"></f:selectItems>
+						</p:selectOneRadio>
+					</div>
+
+
+					<p:commandButton actionListener="#{rolMB.onSave}" value="Guardar"
+						oncomplete="PF('wvRolNewEdit').hide();" update=":frm:dtRoles"></p:commandButton>
+				</div>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,534 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Dashboard</ui:define>
+
+    <ui:define name="head">
+           <script type="text/javascript">
+               //<![CDATA[
+               function skinBar() {
+                   this.cfg.shadow = false;
+                   this.cfg.title = '';
+                   this.cfg.seriesColors = ['#9fd037','#f7cb00'];
+                   this.cfg.grid = {
+                       background: '#ffffff',
+                       borderColor: '#ffffff',
+                       gridLineColor: '#dce2e7',
+                       shadow: false
+                   };
+                   this.cfg.axesDefaults = {
+                       borderWidth: 0.1,
+                       borderColor: 'dce2e7',
+                       rendererOptions: {
+                           textColor: '#2d353c'
+                       }
+                   };
+                   this.cfg.seriesDefaults = {
+                       shadow: false,
+                       lineWidth: 1,
+                       renderer: $.jqplot.BarRenderer,
+                       markerOptions: {
+                           shadow: false,
+                           size: 7,
+                           style: 'circle'
+                       }
+                   }
+               }
+               //]]>  
+           </script>
+           <style type="text/css">
+               .main-content {
+                   padding: 0;
+               }
+           </style>
+       </ui:define>
+
+    <ui:define name="content">
+        <div class="ui-g dashboard">            
+            <div class="ui-g-12 ui-md-6 ui-lg-3">
+                <div class="ui-g card overview-box overview-box-1">
+                    <div class="ui-g-4 overview-box-icon">
+                        <p:graphicImage name="images/icon-paper.png" library="verona-layout" />
+                    </div>
+                    <div class="ui-g-8">
+                        <span class="overview-box-count">253</span>
+                        <span class="overview-box-name">DOCUMENTS RECEIVED</span>
+                        <span class="overview-box-rate">+10%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6 ui-lg-3">
+                <div class="ui-g card overview-box overview-box-2">
+                    <div class="ui-g-4 overview-box-icon">
+                        <p:graphicImage name="images/icon-mail.png" library="verona-layout" />
+                    </div>
+                    <div class="ui-g-8">
+                        <span class="overview-box-count">3216</span>
+                        <span class="overview-box-name">EMAILS RECEIVED</span>
+                        <span class="overview-box-rate">+34%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6 ui-lg-3">
+                <div class="ui-g card overview-box overview-box-3">
+                    <div class="ui-g-4 overview-box-icon">
+                        <p:graphicImage name="images/icon-location.png" library="verona-layout" />
+                    </div>
+                    <div class="ui-g-8">
+                        <span class="overview-box-count">428</span>
+                        <span class="overview-box-name">CHECK-INS SAVED</span>
+                        <span class="overview-box-rate">-15%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6 ui-lg-3">
+                <div class="ui-g card overview-box overview-box-4">
+                    <div class="ui-g-4 overview-box-icon">
+                        <p:graphicImage name="images/icon-orders.png" library="verona-layout" />
+                    </div>
+                    <div class="ui-g-8">
+                        <span class="overview-box-count">924</span>
+                        <span class="overview-box-name">NEW ORDERS</span>
+                        <span class="overview-box-rate">+24%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ui-g-12 ui-md-6 ui-lg-4 task-list">
+                <p:panel header="TASKS" style="min-height:360px">
+                    <ul>
+                        <li>
+                            <p:selectBooleanCheckbox />
+                            <span class="task-name">Sales Reports</span>
+                            <i class="fa fa-briefcase"></i>
+                        </li>
+                        <li>
+                            <p:selectBooleanCheckbox />
+                            <span class="task-name">Pay Invoices</span>
+                            <i class="fa fa-credit-card"></i>
+                        </li>
+                        <li>
+                            <p:selectBooleanCheckbox />
+                            <span class="task-name">Dinner with Tony</span>
+                            <i class="fa fa-cutlery"></i>
+                        </li>
+                        <li>
+                            <p:selectBooleanCheckbox />
+                            <span class="task-name">Client Meeting</span>
+                            <i class="fa fa-user"></i>
+                        </li>
+                        <li>
+                            <p:selectBooleanCheckbox />
+                            <span class="task-name">New Theme</span>
+                            <i class="fa fa-paint-brush"></i>
+                        </li>
+                        <li>
+                            <p:selectBooleanCheckbox />
+                            <span class="task-name">Flight Ticket</span>
+                            <i class="fa fa-fighter-jet"></i>
+                        </li>
+                        <li>
+                            <p:selectBooleanCheckbox />
+                            <span class="task-name">Generate Charts</span>
+                            <i class="fa fa-area-chart"></i>
+                        </li>
+                        <li>
+                            <p:selectBooleanCheckbox />
+                            <span class="task-name">Call Client</span>
+                            <i class="fa fa-phone"></i>
+                        </li>
+                        <li>
+                            <p:selectBooleanCheckbox />
+                            <span class="task-name">Share location</span>
+                            <i class="fa fa-map-marker"></i>
+                        </li>
+                        <li>
+                            <p:selectBooleanCheckbox />
+                            <span class="task-name">Create Feed</span>
+                            <i class="fa fa-rss"></i>
+                        </li>
+                    </ul>
+                </p:panel>
+            </div>
+            <div class="ui-g-12 ui-md-6 ui-lg-4 ui-fluid contact-form">
+                <p:panel header="CONTACT US" style="min-height:360px">
+                    <div class="ui-g">
+                        <div class="ui-g-12">
+                            <p:selectOneMenu id="console" value="#{selectOneMenuView.console}" autoWidth="false">
+                                <f:selectItem itemLabel="Select One" itemValue="" />
+                                <f:selectItem itemLabel="Xbox One" itemValue="Xbox One" />
+                                <f:selectItem itemLabel="PS4" itemValue="PS4" />
+                                <f:selectItem itemLabel="Wii U" itemValue="Wii U" />
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-12">
+                            <p:inputText placeholder="Name"/>
+                        </div>
+                        <div class="ui-g-12">
+                            <p:inputText placeholder="Email"/>
+                        </div>
+                        <div class="ui-g-12">
+                            <p:inputText placeholder="Age"/>
+                        </div>
+                        <div class="ui-g-12">
+                            <p:inputText placeholder="Location"/>
+                        </div>
+                        <div class="ui-g-12">
+                            <p:inputTextarea placeholder="Message" cols="5" autoResize="false"/>
+                        </div>
+                        <div class="ui-g-12">
+                            <p:commandButton type="button" value="Send" icon="fa fa-paper-plane-o"></p:commandButton>
+                        </div>
+                    </div>
+                </p:panel>
+            </div>
+            <div class="ui-g-12 ui-lg-4 contacts">
+                <p:panel header="CONTACTS" style="min-height:360px">
+                    <ul>
+                        <li class="clearfix">
+                            <p:graphicImage name="images/avatar.png" library="verona-layout" width="45"/>
+                            <div class="contact-info">
+                                <span class="name">Samantha Owens (me)</span>
+                                <span class="location">jane@pf-verona.com</span>
+                            </div>
+                            <div class="contact-actions">
+                                <span class="connection-status online">online</span>
+                                <i class="fa fa-paper-plane-o"></i>
+                                <i class="fa fa-phone"></i>
+                            </div>
+                        </li>
+                        <li class="clearfix">
+                            <p:graphicImage name="images/avatar1.png" library="verona-layout" width="45"/>
+                            <div class="contact-info">
+                                <span class="name">Joshua Williams</span>
+                                <span class="location">joshua@pf-verona.com</span>
+                            </div>
+                            <div class="contact-actions">
+                                <span class="connection-status online">online</span>
+                                <i class="fa fa-paper-plane-o"></i>
+                                <i class="fa fa-phone"></i>
+                            </div>
+                        </li>
+                        <li class="clearfix">
+                            <p:graphicImage name="images/avatar2.png" library="verona-layout" width="45"/>
+                            <div class="contact-info">
+                                <span class="name">Emily Clark</span>
+                                <span class="location">emily@pf-verona.com</span>
+                            </div>
+                            <div class="contact-actions">
+                                <span class="connection-status offline">offline</span>
+                                <i class="fa fa-paper-plane-o"></i>
+                                <i class="fa fa-phone"></i>
+                            </div>
+                        </li>
+                        <li class="clearfix">
+                            <p:graphicImage name="images/avatar3.png" library="verona-layout" width="45"/>
+                            <div class="contact-info">
+                                <span class="name">Tim Johnson</span>
+                                <span class="location">tim@pf-verona.com</span>
+                            </div>                                
+                            <div class="contact-actions">
+                                <span class="connection-status online">online</span>
+                                <i class="fa fa-paper-plane-o"></i>
+                                <i class="fa fa-phone"></i>
+                            </div>
+                        </li>
+                        <li class="clearfix">
+                            <p:graphicImage name="images/avatar4.png" library="verona-layout" width="45"/>
+                            <div class="contact-info">
+                                <span class="name">David Stark</span>
+                                <span class="location">kelly@pf-verona.com</span>
+                            </div>
+                            <div class="contact-actions">
+                                <span class="connection-status offline">offline</span>
+                                <i class="fa fa-paper-plane-o"></i>
+                                <i class="fa fa-phone"></i>
+                            </div>
+                        </li>
+                    </ul>
+                </p:panel>
+            </div>
+            
+            <div class="ui-g-12 ui-md-4">
+                <div class="user-card">
+                    <div class="user-card-header">
+                        <p:graphicImage name="images/dashboard/verona-photo.png" library="verona-layout" />
+                    </div>
+                    <div class="user-card-content">
+                        <p:graphicImage name="images/avatar.png" library="verona-layout" />
+                        <span class="user-card-name">Samantha Owens</span>
+                        <span class="user-card-role">System Admin</span>
+                        <p>
+                            Retro occupy organic, stumptown shabby chic pour-over roof party DIY normcore.Actually artisan organic occupy, Wes Anderson ugh whatever pour-over gastropub selvage. 
+                            Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse. Dreamcatcher locavore iPhone chillwave, occupy trust fund slow-carb distillery art party narwhal.
+                        </p>
+                        <p:commandButton type="button" value="Connect"></p:commandButton>
+                    </div>
+                    <div class="user-card-footer">
+                        <div class="ui-g">
+                            <div class="ui-g-4">
+                                <span>Issues</span>
+                                <span>52</span>
+                            </div>
+                            <div class="ui-g-4">
+                                <span>Open</span>
+                                <span>25</span>
+                            </div>
+                            <div class="ui-g-4">
+                                <span>Closed</span>
+                                <span>27</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-8 chat">
+                <p:panel header="Chat">
+                    <ul>
+                        <li class="clearfix message-from">
+                            <p:graphicImage name="images/avatar2.png" library="verona-layout" />
+                            <span>Retro occupy organic, stumptown shabby chic pour-over roof party DIY normcore.</span>
+                        </li>
+                        <li class="clearfix message-own">
+                            <p:graphicImage name="images/avatar.png" library="verona-layout" />
+                            <span>Actually artisan organic occupy, Wes Anderson ugh whatever pour-over gastropub selvage.</span>
+                        </li>
+                        <li class="clearfix message-from">
+                            <p:graphicImage name="images/avatar2.png" library="verona-layout" />
+                            <span>Chillwave craft beer tote bag stumptown quinoa hashtag.</span>
+                        </li>
+                        <li class="clearfix message-own">
+                            <p:graphicImage name="images/avatar.png" library="verona-layout" />
+                            <span>Dreamcatcher locavore iPhone chillwave, occupy trust fund slow-carb distillery art party narwhal.</span>
+                        </li>
+                        <li class="clearfix message-own">
+                            <span>Sed ut perspiciatis unde omnis iste natus.</span>
+                        </li>
+                        <li class="clearfix message-from">
+                            <p:graphicImage name="images/avatar2.png" library="verona-layout" />
+                            <span>Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse.</span>
+                        </li>
+                        <li class="clearfix message-own">
+                            <p:graphicImage name="images/avatar.png" library="verona-layout" />
+                            <span>At vero eos et accusamus.</span>
+                        </li>
+                    </ul>
+                    <div class="new-message">
+                        <div class="message-attachment">
+                            <i class="fa fa-paperclip" />
+                        </div>
+                        <div class="message-input">
+                            <input type="text" placeholder="Write a message" />
+                        </div>
+                    </div>
+                </p:panel>
+            </div>
+
+            <div class="ui-g-12 ui-lg-4">
+                <div class="card timeline ui-fluid">
+                    <div class="ui-g">
+                        <div class="ui-g-3">
+                            <span class="event-time">just now</span>
+                            <i class="fa fa-map-signs" style="color:#f7cb00"></i>
+                        </div>
+                        <div class="ui-g-9">
+                            <span class="event-owner" style="color:#f7cb00">Katherine May</span>
+                            <span class="event-text">Lorem ipsun dolor amet</span>
+                            <div class="event-content">
+                                <p:graphicImage name="images/dashboard/bridge.png" library="verona-layout" width="100"/>
+                            </div>
+                        </div>
+                        
+                        <div class="ui-g-3">
+                            <span class="event-time">12h ago</span>
+                            <i class="fa fa-star" style="color:#985edb"></i>
+                        </div>
+                        <div class="ui-g-9">
+                            <span class="event-owner" style="color:#985edb">Brandon Santos</span>
+                            <span class="event-text">Ab nobis, magnam sunt eum. Laudantium, repudiandae, similique!.</span>
+                        </div>
+                        
+                        <div class="ui-g-3">
+                            <span class="event-time">15h ago</span>
+                            <i class="fa fa-comment" style="color:#9fd037"></i>
+                        </div>
+                        <div class="ui-g-9">
+                            <span class="event-owner" style="color:#9fd037">Stephan Ward</span>
+                            <span class="event-text">Omnis veniam quibusdam ratione est repellat qui nam quisquam ab mollitia dolores ullam voluptates, similique, dignissimos.</span>
+                        </div>
+                        
+                        <div class="ui-g-3">
+                            <span class="event-time">2d ago</span>
+                            <i class="fa fa-map" style="color:#f7cb00"></i>
+                        </div>
+                        <div class="ui-g-9">
+                            <span class="event-owner" style="color:#f7cb00">Jason Smith</span>
+                            <span class="event-text">Laudantium, repudiandae, similique!</span>
+                            <div class="event-content">
+                                <p:graphicImage name="images/dashboard/map.png" library="verona-layout" />
+                            </div>
+                        </div>
+                        
+                        <div class="ui-g-3">
+                            <span class="event-time">1w ago</span>
+                            <i class="fa fa-heart" style="color:#ff9c59"></i>
+                        </div>
+                        <div class="ui-g-9">
+                            <span class="event-owner" style="color:#ff9c59">Kevin Cox</span>
+                            <span class="event-text">Quibusdam ratione est repellat qui nam quisquam veniam quibusdam ratione.</span>
+                        </div>
+                        
+                        <div class="ui-g-3">
+                            <span class="event-time">2w ago</span>
+                            <i class="fa fa-history" style="color:#9fd037"></i>
+                        </div>
+                        <div class="ui-g-9">
+                            <span class="event-owner" style="color:#9fd037">Walter White</span>
+                            <span class="event-text">I am the one who knocks!</span>
+                        </div>
+                        <div class="ui-g-12">
+                            <p:commandButton type="button" value="Refresh" icon="ui-icon-refresh"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ui-g-12 ui-lg-8">
+                <div class="card">
+                    <h:form>
+                        <p:dataTable var="car" value="#{dtBasicView.cars}" selectionMode="single" rowKey="#{car.id}" reflow="true" style="margin-bottom:20px">
+                            <f:facet name="header">Recent Sales</f:facet>
+                            <p:column headerText="Id" sortBy="#{car.id}">
+                                <h:outputText value="#{car.id}" />
+                            </p:column>
+
+                            <p:column headerText="Year" sortBy="#{car.year}">
+                                <h:outputText value="#{car.year}" />
+                            </p:column>
+
+                            <p:column headerText="Brand" sortBy="#{car.brand}">
+                                <h:outputText value="#{car.brand}" />
+                            </p:column>
+                            
+                            <p:column headerText="Color" sortBy="#{car.color}">
+                                <h:outputText value="#{car.color}" />
+                            </p:column>
+                        </p:dataTable>   
+                        
+                        <p:panel header="Sales Graph" styleClass="chart-panel">
+                            <p:chart type="bar" model="#{chartDemoView.barModel}" responsive="true"/>
+                        </p:panel>
+                    </h:form>
+                </div>
+            </div>
+            
+            <div class="ui-g-12 ui-lg-6">
+                <div class="card verona-overview">
+                    <p:graphicImage name="images/dashboard/verona-map.jpg" library="verona-layout" />
+                    <span class="article-date">January 2017</span>
+                    <h3>VERONA</h3>
+                    <p>Verona is a city on the Adige river in Veneto, northern Italy, 
+                        with approximately 265,000 inhabitants and one of the seven provincial capitals of the region. It is the second largest city municipality in the 
+                        region and the third largest in northeast Italy. The metropolitan area of Verona covers an area of 1,426 km2 (550.58 sq mi) and has a population of 714,274 inhabitants. 
+                        It is one of the main tourist destinations in northern Italy, owing to its artistic heritage, several annual fairs, shows, 
+                        and operas, such as the lyrical season in the Arena, the ancient amphitheatre built by the Romans.</p>
+                </div>
+            </div>
+            
+            <div class="ui-g-12 ui-lg-6 activity-feed">
+                <p:panel header="ACTIVITY FEED">
+                    <h3>Last Activity</h3>
+                    <p>Updated 1 minute ago</p>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6">
+                            <span>INCOME</span>
+                            <div class="knob income">$900</div>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <span>TAX</span>
+                            <div class="knob tax">$250</div>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <span>INVOICES</span>
+                            <div class="knob invoice">$125</div>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <span>EXPENSES</span>
+                            <div class="knob expense">$250</div>
+                        </div>
+                    </div>
+                </p:panel>
+            </div>
+            
+            <div class="ui-g-12 ui-md-8">
+                <p:panel header="Calendar" style="height:100%">
+                    <p:schedule value="#{scheduleJava8View.eventModel}" leftHeaderTemplate="prev,next"/>
+                </p:panel>
+            </div>
+            <div class="ui-g-12 ui-md-4">
+                <p:panel header="Activity" style="height:100%">
+                    <div class="activity-header">
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <span style="font-weight:bold">Last Activity</span>
+                                <p>Updated 1 minute ago</p>
+                            </div>
+                            <div class="ui-g-6" style="text-align:right">
+                                <p:commandButton type="button" icon="fa fa-refresh"/>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="activity-list">
+                        <li>
+                            <div class="count">$900</div>
+                            <div class="ui-g">
+                                <div class="ui-g-6">Income</div>
+                                <div class="ui-g-6">95%</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="count" style="background-color:#9fd037">$250</div>
+                            <div class="ui-g">
+                                <div class="ui-g-6">Tax</div>
+                                <div class="ui-g-6">24%</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="count" style="background-color:#ff9c59">$125</div>
+                            <div class="ui-g">
+                                <div class="ui-g-6">Invoices</div>
+                                <div class="ui-g-6">55%</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="count" style="background-color:#985edb">$250</div>
+                            <div class="ui-g">
+                                <div class="ui-g-6">Expenses</div>
+                                <div class="ui-g-6">15%</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="count" style="background-color:#f18983">$350</div>
+                            <div class="ui-g">
+                                <div class="ui-g-6">Bonus</div>
+                                <div class="ui-g-6">5%</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="count" style="background-color:#9fd037">$500</div>
+                            <div class="ui-g">
+                                <div class="ui-g-6">Revenue</div>
+                                <div class="ui-g-6">25%</div>
+                            </div>
+                        </li>
+                    </ul>
+                </p:panel>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>
