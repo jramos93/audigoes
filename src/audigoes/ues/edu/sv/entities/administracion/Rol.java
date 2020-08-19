@@ -5,54 +5,56 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-
 /**
  * The persistent class for the rol database table.
  * 
  */
 @Entity
-@NamedQuery(name="Rol.findAll", query="SELECT r FROM Rol r")
+@Table(name = "rol")
+@NamedQuery(name = "Rol.findAll", query = "SELECT r FROM Rol r")
 public class Rol extends audigoes.ues.edu.sv.entities.SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
-	@Column(name="rol_id")
+	@TableGenerator(name = "rol_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "rol_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "rol_id")
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "rol_id")
 	private int rolId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_crea")
+	@Column(name = "fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_modi")
+	@Column(name = "fec_modi")
 	private Date fecModi;
 
-	@Column(name="reg_activo")
+	@Column(name = "reg_activo")
 	private int regActivo;
 
-	@Column(name="rol_descripcion")
+	@Column(name = "rol_descripcion")
 	private String rolDescripcion;
 
-	@Column(name="rol_nombre")
+	@Column(name = "rol_nombre")
 	private String rolNombre;
 
-	@Column(name="usu_crea")
+	@Column(name = "usu_crea")
 	private String usuCrea;
 
-	@Column(name="usu_modi")
+	@Column(name = "usu_modi")
 	private String usuModi;
 
-	//bi-directional many-to-one association to RolMenu
-	@OneToMany(mappedBy="rol")
+	// bi-directional many-to-one association to RolMenu
+	@OneToMany(mappedBy = "rol")
 	private List<RolMenu> rolMenus;
 
-	//bi-directional many-to-one association to RolPermiso
-	@OneToMany(mappedBy="rol")
+	// bi-directional many-to-one association to RolPermiso
+	@OneToMany(mappedBy = "rol")
 	private List<RolPermiso> rolPermisos;
 
-	//bi-directional many-to-one association to UsuarioPermiso
-	@OneToMany(mappedBy="rol")
+	// bi-directional many-to-one association to UsuarioPermiso
+	@OneToMany(mappedBy = "rol")
 	private List<UsuarioPermiso> usuarioPermisos;
 
 	public Rol() {

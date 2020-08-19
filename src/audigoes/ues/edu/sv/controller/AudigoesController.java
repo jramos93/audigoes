@@ -1,5 +1,6 @@
 package audigoes.ues.edu.sv.controller;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -16,20 +17,20 @@ import audigoes.ues.edu.sv.session.audigoesSBSLLocal;
 
 public class AudigoesController {
 
-	@EJB(beanName  = "audigoesSBSL")
+	@EJB(beanName = "audigoesSBSL")
 	protected audigoesSBSLLocal audigoesLocal;
-	
+
 	public AudigoesController() {
 		super();
 	}
-	
+
 	public AudigoesController(SuperEntity registro) {
 		this.setRegistro(registro);
-		if(this.getRegistro() instanceof SuperEntity) {
+		if (this.getRegistro() instanceof SuperEntity) {
 			((SuperEntity) registro).setRegActivo(1);
 		}
 	}
-	
+
 	@PostConstruct
 	public void init() {
 	}
@@ -47,8 +48,8 @@ public class AudigoesController {
 	private List<? extends SuperEntity> selectedListado;
 
 	/* propiedades de utilerìa bàsica */
-	private List<SelectItem> regActivoList;
 	private List<SelectItem> siNoList;
+	private List<SelectItem> regActivoList;
 
 	public void addInfo(FacesMessage mensaje) {
 		mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
@@ -147,7 +148,7 @@ public class AudigoesController {
 	public void afterCancel() {
 	}
 
-	/* Funciones para guardar*/
+	/* Funciones para guardar */
 	public boolean beforeSave() {
 		return true;
 	}
@@ -179,7 +180,7 @@ public class AudigoesController {
 	public void afterSave() {
 	}
 
-	/* Funciones para guardar nuevo*/
+	/* Funciones para guardar nuevo */
 	public boolean beforeSaveNew() {
 		return true;
 	}
@@ -187,20 +188,29 @@ public class AudigoesController {
 	public void onSaveNew() {
 		try {
 			if (beforeSaveNew()) {
+				this.saveNewAudit();
 				audigoesLocal.insert(getRegistro());
+				this.addInfo(new FacesMessage("Confirmación", "Registro Guardado con Éxito"));
 				afterSaveNew();
 			} else {
-				// TODO mostrar mensaje de error
+				this.addWarn(new FacesMessage("Error!", "Consulte con el Administrador"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	public void saveNewAudit() {
+		if (this.getRegistro() instanceof SuperEntity) {
+			this.getRegistro().setUsuCrea("ROOT"); // Cambiar luego
+			this.getRegistro().setFecCrea(Calendar.getInstance(Locale.getDefault()).getTime());
+		}
+	}
+
 	public void afterSaveNew() {
 	}
 
-	/* Funciones para guardar edicion*/
+	/* Funciones para guardar edicion */
 	public boolean beforeSaveEdit() {
 		return true;
 	}
@@ -208,17 +218,52 @@ public class AudigoesController {
 	public void onSaveEdit() {
 		try {
 			if (beforeSaveEdit()) {
+				this.saveEditAudit();
 				audigoesLocal.update(getRegistro());
-				afterSaveNew();
+				this.addInfo(new FacesMessage("Confirmación", "Registro Guardado con Éxito"));
+				afterSaveEdit();
 			} else {
-				// TODO mostrar mensaje de error
+				this.addWarn(new FacesMessage("Error!", "Consulte con el Administrador"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	public void saveEditAudit() {
+		if (this.getRegistro() instanceof SuperEntity) {
+			this.getRegistro().setUsuModi("ROOT"); // Cambiar luego
+			this.getRegistro().setFecModi(Calendar.getInstance(Locale.getDefault()).getTime());
+		}
+	}
+
 	public void afterSaveEdit() {
+	}
+
+	/* Funciones para seleccion del registro */
+	protected boolean beforeRowSelect() {
+		return true;
+	}
+
+	public void onRowSelect() {
+		if (this.beforeRowSelect()) {
+			this.setRegistro(this.getRegSelected());
+			this.getRegistro().setSelected(true);
+			this.afterRowSelect();
+		}
+	}
+
+	protected void afterRowSelect() {
+
+	}
+
+	public void onShowSelected() {
+		this.onRowSelect();
+	}
+
+	public void onEditSelected() {
+		this.onRowSelect();
+		this.onEdit();
 	}
 
 	public boolean isError() {
@@ -238,7 +283,7 @@ public class AudigoesController {
 	}
 
 	public SuperEntity getRegistro() {
-		return registro;
+		return this.registro;
 	}
 
 	public void setRegistro(SuperEntity registro) {
@@ -246,7 +291,7 @@ public class AudigoesController {
 	}
 
 	public SuperEntity getRegSelected() {
-		return regSelected;
+		return this.regSelected;
 	}
 
 	public void setRegSelected(SuperEntity regSelected) {
@@ -277,14 +322,6 @@ public class AudigoesController {
 		this.selectedListado = selectedListado;
 	}
 
-	public List<SelectItem> getRegActivoList() {
-		return regActivoList;
-	}
-
-	public void setRegActivoList(List<SelectItem> regActivoList) {
-		this.regActivoList = regActivoList;
-	}
-
 	public List<SelectItem> getSiNoList() {
 		return siNoList;
 	}
@@ -292,5 +329,20 @@ public class AudigoesController {
 	public void setSiNoList(List<SelectItem> siNoList) {
 		this.siNoList = siNoList;
 	}
+
+	public List<SelectItem> getRegActivoList() {
+		if(this.regActivoList==null) {
+			this.regActivoList=new ArrayList<>();
+			this.regActivoList.add(new SelectItem(1, "ACTIVO"));
+			this.regActivoList.add(new SelectItem(0, "INACTIVO"));
+		}
+		return regActivoList;
+	}
+
+	public void setRegActivoList(List<SelectItem> regActivoList) {
+		this.regActivoList = regActivoList;
+	}
+
+	
 
 }

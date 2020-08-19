@@ -6,11 +6,18 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 
 @MappedSuperclass
-public class SuperEntity implements Serializable{
+public abstract class SuperEntity implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
+	
+	@Transient
+	private boolean selected;
+	
+	@Transient
+	private String status = "NEW";
 	
 	@Column(name="FEC_CREA")
 	private Date fecCrea;
@@ -65,6 +72,22 @@ public class SuperEntity implements Serializable{
 
 	public void setRegActivo(int regActivo) {
 		this.regActivo = regActivo;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 }

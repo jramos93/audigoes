@@ -2,6 +2,7 @@ package audigoes.ues.edu.sv.mbeans.administracion;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -17,6 +18,8 @@ public class RolMB extends AudigoesController implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private List<Rol> filteredRoles;
 
 	public RolMB() {
 		super(new Rol());
@@ -42,6 +45,27 @@ public class RolMB extends AudigoesController implements Serializable {
 		}
 	}
 
+	public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
+		String filterText = (filter == null) ? null : filter.toString().trim().toLowerCase();
+		if (filterText == null || filterText.equals("")) {
+			return true;
+		}
+		int filterInt = getInteger(filterText);
+
+		Rol rol = (Rol) value;
+		return rol.getRolNombre().toLowerCase().contains(filterText)
+				|| rol.getRolDescripcion().toLowerCase().contains(filterText)
+				|| rol.getRolId() == filterInt;
+	}
+
+	private int getInteger(String string) {
+		try {
+			return Integer.valueOf(string);
+		} catch (NumberFormatException ex) {
+			return 0;
+		}
+	}
+
 	/* GETS y SETS */
 
 	@Override
@@ -53,5 +77,19 @@ public class RolMB extends AudigoesController implements Serializable {
 	@Override
 	public List<Rol> getListado() {
 		return (List<Rol>) super.getListado();
+	}
+
+	@Override
+	public void afterSaveNew() {
+		getListado().add(getRegistro());
+		super.afterSaveNew();
+	}
+
+	public List<Rol> getFilteredRoles() {
+		return filteredRoles;
+	}
+
+	public void setFilteredRoles(List<Rol> filteredRoles) {
+		this.filteredRoles = filteredRoles;
 	}
 }

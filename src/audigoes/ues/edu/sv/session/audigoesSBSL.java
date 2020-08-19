@@ -33,24 +33,24 @@ public class audigoesSBSL implements audigoesSBSLLocal {
 	public SuperEntity insert(SuperEntity entidad) throws Exception {
 		EntityTransaction et = null;
 		try {
-			if(!isTransActiva()) {
-				et = getEm().getTransaction();
+			if(!this.transActiva) {
+				et = this.getEm().getTransaction();
 				et.begin();
 			}
-			getEm().persist(entidad);
-			getEm().flush();
-			if(!isTransActiva()) {
+			this.getEm().persist(entidad);
+			this.getEm().flush();
+			if(!this.transActiva) {
 				et.commit();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			if(!isTransActiva() && et != null) {
+			if(!this.transActiva && et != null) {
 				et.rollback();
 			}
 		} finally {
-			if(!isTransActiva() && getEm() != null) {
-				getEm().clear();
-				getEm().close();
+			if(!this.transActiva && this.getEm() != null) {
+				this.getEm().clear();
+				this.getEm().close();
 			}
 		}
 		return entidad;
@@ -60,13 +60,13 @@ public class audigoesSBSL implements audigoesSBSLLocal {
 	public SuperEntity update(SuperEntity entidad) throws Exception {
 		EntityTransaction et = null;
 		try {
-			if(!isTransActiva()) {
-				et = getEm().getTransaction();
+			if(!this.transActiva) {
+				et = this.getEm().getTransaction();
 				et.begin();
 			}
-			entidad = (SuperEntity) getEm().merge(entidad);
-			getEm().flush();
-			if(!isTransActiva()) {
+			entidad = (SuperEntity) this.getEm().merge(entidad);
+			this.getEm().flush();
+			if(!this.transActiva) {
 				et.commit();
 			}
 		} catch (Exception e) {
@@ -75,9 +75,9 @@ public class audigoesSBSL implements audigoesSBSLLocal {
 				et.rollback();
 			}
 		} finally {
-			if(!isTransActiva() && getEm() != null) {
-				getEm().clear();
-				getEm().close();
+			if(!this.transActiva && this.getEm() != null) {
+				this.getEm().clear();
+				this.getEm().close();
 			}
 		}
 		return entidad;
@@ -88,27 +88,27 @@ public class audigoesSBSL implements audigoesSBSLLocal {
 		EntityTransaction et = null;
 		BigDecimal pk = BigDecimal.ZERO;
 		try {
-			if(!isTransActiva()) {
-				et = getEm().getTransaction();
+			if(!this.transActiva) {
+				et = this.getEm().getTransaction();
 				et.begin();
 			}
-			PersistenceUnitUtil puu = getEm().getEntityManagerFactory().getPersistenceUnitUtil();
+			PersistenceUnitUtil puu = this.getEm().getEntityManagerFactory().getPersistenceUnitUtil();
 			pk = (BigDecimal) puu.getIdentifier(entidad);
-			entidad = (SuperEntity) getEm().find(entidad.getClass(), pk);
-			getEm().persist(entidad);
-			getEm().flush();
-			if(!isTransActiva()) {
+			entidad = (SuperEntity) this.getEm().find(entidad.getClass(), pk);
+			this.getEm().persist(entidad);
+			this.getEm().flush();
+			if(!this.transActiva) {
 				et.commit();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			if(!isTransActiva() && et != null) {
+			if(!this.transActiva && et != null) {
 				et.rollback();
 			}
 		} finally {
-			if(!isTransActiva() && getEm() != null) {
-				getEm().clear();
-				getEm().close();
+			if(!this.transActiva && getEm() != null) {
+				this.getEm().clear();
+				this.getEm().close();
 			}
 		}
 		
@@ -118,13 +118,13 @@ public class audigoesSBSL implements audigoesSBSLLocal {
 	public Object findByPk(Class<? extends Serializable> clase, Object parametros) {
 		Object registro = null;
 		try {
-			registro = getEm().find(clase, parametros);
+			registro = this.getEm().find(clase, parametros);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if(!isTransActiva() && getEm() != null) {
-				getEm().clear();
-				getEm().close();
+			if(!this.transActiva && getEm() != null) {
+				this.getEm().clear();
+				this.getEm().close();
 			}
 		}
 		return registro;
@@ -135,7 +135,7 @@ public class audigoesSBSL implements audigoesSBSLLocal {
 			throws Exception {
 		List<?> lista = null;
 	    try {
-	      TypedQuery<? extends Serializable> typedQuery = getEm().createNamedQuery(nameQuery, clase);
+	      TypedQuery<? extends Serializable> typedQuery = this.getEm().createNamedQuery(nameQuery, clase);
 	      if (arrayParametros != null)
 	        for (int i = 0; i < arrayParametros.length; i++)
 	          typedQuery.setParameter(i + 1, arrayParametros[i]);  
@@ -144,9 +144,9 @@ public class audigoesSBSL implements audigoesSBSLLocal {
 	    } catch (Exception e) {
 	      e.printStackTrace();
 	    } finally {
-	      if (!isTransActiva() && getEm() != null) {
-	        getEm().clear();
-	        getEm().close();
+	      if (!this.transActiva && this.getEm() != null) {
+	        this.getEm().clear();
+	        this.getEm().close();
 	      } 
 	    } 
 	    return lista;
