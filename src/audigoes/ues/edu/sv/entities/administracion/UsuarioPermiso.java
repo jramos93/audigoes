@@ -2,6 +2,9 @@ package audigoes.ues.edu.sv.entities.administracion;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import audigoes.ues.edu.sv.entities.SuperEntity;
+
 import java.util.Date;
 
 
@@ -12,7 +15,7 @@ import java.util.Date;
 @Entity
 @Table(name="usuario_permiso")
 @NamedQuery(name="UsuarioPermiso.findAll", query="SELECT u FROM UsuarioPermiso u")
-public class UsuarioPermiso extends audigoes.ues.edu.sv.entities.SuperEntity implements Serializable {
+public class UsuarioPermiso extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -125,6 +128,35 @@ public class UsuarioPermiso extends audigoes.ues.edu.sv.entities.SuperEntity imp
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + uspId;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UsuarioPermiso other = (UsuarioPermiso) obj;
+		if (uspId != other.uspId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "UsuarioPermiso [uspId=" + uspId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo="
+				+ regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", permiso=" + permiso + ", rol=" + rol
+				+ ", usuario=" + usuario + "]";
 	}
 
 }

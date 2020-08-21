@@ -2,6 +2,9 @@ package audigoes.ues.edu.sv.entities.administracion;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import audigoes.ues.edu.sv.entities.SuperEntity;
+
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +15,7 @@ import java.util.List;
  */
 @Entity
 @NamedQuery(name="Institucion.findAll", query="SELECT i FROM Institucion i")
-public class Institucion extends audigoes.ues.edu.sv.entities.SuperEntity implements Serializable {
+public class Institucion extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -62,6 +65,14 @@ public class Institucion extends audigoes.ues.edu.sv.entities.SuperEntity implem
 	//bi-directional many-to-one association to Configuracion
 	@OneToMany(mappedBy="institucion")
 	private List<Configuracion> configuracion;
+
+	//bi-directional many-to-one association to Marca
+	@OneToMany(mappedBy="institucion")
+	private List<Marca> marca;
+
+	//bi-directional many-to-one association to NormativaCedula
+	@OneToMany(mappedBy="institucion")
+	private List<NormativaCedula> normativaCedula;
 
 	//bi-directional many-to-one association to Unidad
 	@OneToMany(mappedBy="institucion")
@@ -200,6 +211,50 @@ public class Institucion extends audigoes.ues.edu.sv.entities.SuperEntity implem
 		return configuracion;
 	}
 
+	public List<Marca> getMarca() {
+		return this.marca;
+	}
+
+	public void setMarca(List<Marca> marca) {
+		this.marca = marca;
+	}
+
+	public Marca addMarca(Marca marca) {
+		getMarca().add(marca);
+		marca.setInstitucion(this);
+
+		return marca;
+	}
+
+	public Marca removeMarca(Marca marca) {
+		getMarca().remove(marca);
+		marca.setInstitucion(null);
+
+		return marca;
+	}
+
+	public List<NormativaCedula> getNormativaCedula() {
+		return this.normativaCedula;
+	}
+
+	public void setNormativaCedula(List<NormativaCedula> normativaCedula) {
+		this.normativaCedula = normativaCedula;
+	}
+
+	public NormativaCedula addNormativaCedula(NormativaCedula normativaCedula) {
+		getNormativaCedula().add(normativaCedula);
+		normativaCedula.setInstitucion(this);
+
+		return normativaCedula;
+	}
+
+	public NormativaCedula removeNormativaCedula(NormativaCedula normativaCedula) {
+		getNormativaCedula().remove(normativaCedula);
+		normativaCedula.setInstitucion(null);
+
+		return normativaCedula;
+	}
+
 	public List<Unidad> getUnidad() {
 		return this.unidad;
 	}
@@ -242,6 +297,38 @@ public class Institucion extends audigoes.ues.edu.sv.entities.SuperEntity implem
 		usuario.setInstitucion(null);
 
 		return usuario;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + insId;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Institucion other = (Institucion) obj;
+		if (insId != other.insId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Institucion [insId=" + insId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", insDireccion="
+				+ insDireccion + ", insIniciales=" + insIniciales + ", insLogo=" + insLogo + ", insNit=" + insNit
+				+ ", insNombre=" + insNombre + ", insSlogan=" + insSlogan + ", insTelefono=" + insTelefono
+				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", configuracion="
+				+ configuracion + ", marca=" + marca + ", normativaCedula=" + normativaCedula + ", unidad=" + unidad
+				+ ", usuario=" + usuario + "]";
 	}
 
 }

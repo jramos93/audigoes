@@ -2,6 +2,10 @@ package audigoes.ues.edu.sv.entities.administracion;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.planeacion.AuditoriaUnidad;
+
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +16,7 @@ import java.util.List;
  */
 @Entity
 @NamedQuery(name="Unidad.findAll", query="SELECT u FROM Unidad u")
-public class Unidad extends audigoes.ues.edu.sv.entities.SuperEntity implements Serializable {
+public class Unidad extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -49,6 +53,10 @@ public class Unidad extends audigoes.ues.edu.sv.entities.SuperEntity implements 
 	@Column(name="usu_modi")
 	private String usuModi;
 
+	//bi-directional many-to-one association to AuditoriaUnidad
+	@OneToMany(mappedBy="unidad")
+	private List<AuditoriaUnidad> auditoriaUnidad;
+
 	//bi-directional many-to-one association to Institucion
 	@ManyToOne
 	@JoinColumn(name="uni_ins_id")
@@ -56,7 +64,7 @@ public class Unidad extends audigoes.ues.edu.sv.entities.SuperEntity implements 
 
 	//bi-directional many-to-one association to UsuarioUnidad
 	@OneToMany(mappedBy="unidad")
-	private List<UsuarioUnidad> usuarioUnidads;
+	private List<UsuarioUnidad> usuarioUnidad;
 
 	public Unidad() {
 	}
@@ -141,6 +149,28 @@ public class Unidad extends audigoes.ues.edu.sv.entities.SuperEntity implements 
 		this.usuModi = usuModi;
 	}
 
+	public List<AuditoriaUnidad> getAuditoriaUnidad() {
+		return this.auditoriaUnidad;
+	}
+
+	public void setAuditoriaUnidad(List<AuditoriaUnidad> auditoriaUnidad) {
+		this.auditoriaUnidad = auditoriaUnidad;
+	}
+
+	public AuditoriaUnidad addAuditoriaUnidad(AuditoriaUnidad auditoriaUnidad) {
+		getAuditoriaUnidad().add(auditoriaUnidad);
+		auditoriaUnidad.setUnidad(this);
+
+		return auditoriaUnidad;
+	}
+
+	public AuditoriaUnidad removeAuditoriaUnidad(AuditoriaUnidad auditoriaUnidad) {
+		getAuditoriaUnidad().remove(auditoriaUnidad);
+		auditoriaUnidad.setUnidad(null);
+
+		return auditoriaUnidad;
+	}
+
 	public Institucion getInstitucion() {
 		return this.institucion;
 	}
@@ -149,26 +179,57 @@ public class Unidad extends audigoes.ues.edu.sv.entities.SuperEntity implements 
 		this.institucion = institucion;
 	}
 
-	public List<UsuarioUnidad> getUsuarioUnidads() {
-		return this.usuarioUnidads;
+	public List<UsuarioUnidad> getUsuarioUnidad() {
+		return this.usuarioUnidad;
 	}
 
-	public void setUsuarioUnidads(List<UsuarioUnidad> usuarioUnidads) {
-		this.usuarioUnidads = usuarioUnidads;
+	public void setUsuarioUnidad(List<UsuarioUnidad> usuarioUnidad) {
+		this.usuarioUnidad = usuarioUnidad;
 	}
 
 	public UsuarioUnidad addUsuarioUnidad(UsuarioUnidad usuarioUnidad) {
-		getUsuarioUnidads().add(usuarioUnidad);
+		getUsuarioUnidad().add(usuarioUnidad);
 		usuarioUnidad.setUnidad(this);
 
 		return usuarioUnidad;
 	}
 
 	public UsuarioUnidad removeUsuarioUnidad(UsuarioUnidad usuarioUnidad) {
-		getUsuarioUnidads().remove(usuarioUnidad);
+		getUsuarioUnidad().remove(usuarioUnidad);
 		usuarioUnidad.setUnidad(null);
 
 		return usuarioUnidad;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + uniId;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Unidad other = (Unidad) obj;
+		if (uniId != other.uniId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Unidad [uniId=" + uniId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo=" + regActivo
+				+ ", uniDescripcion=" + uniDescripcion + ", uniIniciales=" + uniIniciales + ", uniNombre=" + uniNombre
+				+ ", uniUbicacion=" + uniUbicacion + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi
+				+ ", auditoriaUnidad=" + auditoriaUnidad + ", institucion=" + institucion + ", usuarioUnidad="
+				+ usuarioUnidad + "]";
 	}
 
 }

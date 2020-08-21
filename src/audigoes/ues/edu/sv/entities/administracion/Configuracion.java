@@ -2,6 +2,9 @@ package audigoes.ues.edu.sv.entities.administracion;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import audigoes.ues.edu.sv.entities.SuperEntity;
+
 import java.util.Date;
 
 
@@ -11,7 +14,7 @@ import java.util.Date;
  */
 @Entity
 @NamedQuery(name="Configuracion.findAll", query="SELECT c FROM Configuracion c")
-public class Configuracion extends audigoes.ues.edu.sv.entities.SuperEntity implements Serializable {
+public class Configuracion extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -131,6 +134,35 @@ public class Configuracion extends audigoes.ues.edu.sv.entities.SuperEntity impl
 
 	public void setInstitucion(Institucion institucion) {
 		this.institucion = institucion;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + conId;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Configuracion other = (Configuracion) obj;
+		if (conId != other.conId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Configuracion [conId=" + conId + ", conDescripcion=" + conDescripcion + ", conNombre=" + conNombre
+				+ ", conValor=" + conValor + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo="
+				+ regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", institucion=" + institucion + "]";
 	}
 
 }

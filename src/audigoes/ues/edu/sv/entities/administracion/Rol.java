@@ -2,60 +2,61 @@ package audigoes.ues.edu.sv.entities.administracion;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import audigoes.ues.edu.sv.entities.SuperEntity;
+
 import java.util.Date;
 import java.util.List;
+
 
 /**
  * The persistent class for the rol database table.
  * 
  */
 @Entity
-@Table(name = "rol")
-@NamedQuery(name = "Rol.findAll", query = "SELECT r FROM Rol r")
-public class Rol extends audigoes.ues.edu.sv.entities.SuperEntity implements Serializable {
+@NamedQuery(name="Rol.findAll", query="SELECT r FROM Rol r")
+public class Rol extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@TableGenerator(name = "rol_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "rol_id", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "rol_id")
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "rol_id")
+	@GeneratedValue(strategy=GenerationType.TABLE)
+	@Column(name="rol_id")
 	private int rolId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fec_crea")
+	@Column(name="fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fec_modi")
+	@Column(name="fec_modi")
 	private Date fecModi;
 
-	@Column(name = "reg_activo")
+	@Column(name="reg_activo")
 	private int regActivo;
 
-	@Column(name = "rol_descripcion")
+	@Column(name="rol_descripcion")
 	private String rolDescripcion;
 
-	@Column(name = "rol_nombre")
+	@Column(name="rol_nombre")
 	private String rolNombre;
 
-	@Column(name = "usu_crea")
+	@Column(name="usu_crea")
 	private String usuCrea;
 
-	@Column(name = "usu_modi")
+	@Column(name="usu_modi")
 	private String usuModi;
 
-	// bi-directional many-to-one association to RolMenu
-	@OneToMany(mappedBy = "rol")
-	private List<RolMenu> rolMenus;
+	//bi-directional many-to-one association to RolMenu
+	@OneToMany(mappedBy="rol")
+	private List<RolMenu> rolMenu;
 
-	// bi-directional many-to-one association to RolPermiso
-	@OneToMany(mappedBy = "rol")
-	private List<RolPermiso> rolPermisos;
+	//bi-directional many-to-one association to RolPermiso
+	@OneToMany(mappedBy="rol")
+	private List<RolPermiso> rolPermiso;
 
-	// bi-directional many-to-one association to UsuarioPermiso
-	@OneToMany(mappedBy = "rol")
-	private List<UsuarioPermiso> usuarioPermisos;
+	//bi-directional many-to-one association to UsuarioPermiso
+	@OneToMany(mappedBy="rol")
+	private List<UsuarioPermiso> usuarioPermiso;
 
 	public Rol() {
 	}
@@ -124,70 +125,100 @@ public class Rol extends audigoes.ues.edu.sv.entities.SuperEntity implements Ser
 		this.usuModi = usuModi;
 	}
 
-	public List<RolMenu> getRolMenus() {
-		return this.rolMenus;
+	public List<RolMenu> getRolMenu() {
+		return this.rolMenu;
 	}
 
-	public void setRolMenus(List<RolMenu> rolMenus) {
-		this.rolMenus = rolMenus;
+	public void setRolMenu(List<RolMenu> rolMenu) {
+		this.rolMenu = rolMenu;
 	}
 
-	public RolMenu addRolMenus(RolMenu rolMenus) {
-		getRolMenus().add(rolMenus);
-		rolMenus.setRol(this);
+	public RolMenu addRolMenu(RolMenu rolMenu) {
+		getRolMenu().add(rolMenu);
+		rolMenu.setRol(this);
 
-		return rolMenus;
+		return rolMenu;
 	}
 
-	public RolMenu removeRolMenus(RolMenu rolMenus) {
-		getRolMenus().remove(rolMenus);
-		rolMenus.setRol(null);
+	public RolMenu removeRolMenu(RolMenu rolMenu) {
+		getRolMenu().remove(rolMenu);
+		rolMenu.setRol(null);
 
-		return rolMenus;
+		return rolMenu;
 	}
 
-	public List<RolPermiso> getRolPermisos() {
-		return this.rolPermisos;
+	public List<RolPermiso> getRolPermiso() {
+		return this.rolPermiso;
 	}
 
-	public void setRolPermisos(List<RolPermiso> rolPermisos) {
-		this.rolPermisos = rolPermisos;
+	public void setRolPermiso(List<RolPermiso> rolPermiso) {
+		this.rolPermiso = rolPermiso;
 	}
 
 	public RolPermiso addRolPermiso(RolPermiso rolPermiso) {
-		getRolPermisos().add(rolPermiso);
+		getRolPermiso().add(rolPermiso);
 		rolPermiso.setRol(this);
 
 		return rolPermiso;
 	}
 
 	public RolPermiso removeRolPermiso(RolPermiso rolPermiso) {
-		getRolPermisos().remove(rolPermiso);
+		getRolPermiso().remove(rolPermiso);
 		rolPermiso.setRol(null);
 
 		return rolPermiso;
 	}
 
-	public List<UsuarioPermiso> getUsuarioPermisos() {
-		return this.usuarioPermisos;
+	public List<UsuarioPermiso> getUsuarioPermiso() {
+		return this.usuarioPermiso;
 	}
 
-	public void setUsuarioPermisos(List<UsuarioPermiso> usuarioPermisos) {
-		this.usuarioPermisos = usuarioPermisos;
+	public void setUsuarioPermiso(List<UsuarioPermiso> usuarioPermiso) {
+		this.usuarioPermiso = usuarioPermiso;
 	}
 
 	public UsuarioPermiso addUsuarioPermiso(UsuarioPermiso usuarioPermiso) {
-		getUsuarioPermisos().add(usuarioPermiso);
+		getUsuarioPermiso().add(usuarioPermiso);
 		usuarioPermiso.setRol(this);
 
 		return usuarioPermiso;
 	}
 
 	public UsuarioPermiso removeUsuarioPermiso(UsuarioPermiso usuarioPermiso) {
-		getUsuarioPermisos().remove(usuarioPermiso);
+		getUsuarioPermiso().remove(usuarioPermiso);
 		usuarioPermiso.setRol(null);
 
 		return usuarioPermiso;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + rolId;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Rol other = (Rol) obj;
+		if (rolId != other.rolId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Rol [rolId=" + rolId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo=" + regActivo
+				+ ", rolDescripcion=" + rolDescripcion + ", rolNombre=" + rolNombre + ", usuCrea=" + usuCrea
+				+ ", usuModi=" + usuModi + ", rolMenu=" + rolMenu + ", rolPermiso=" + rolPermiso + ", usuarioPermiso="
+				+ usuarioPermiso + "]";
 	}
 
 }

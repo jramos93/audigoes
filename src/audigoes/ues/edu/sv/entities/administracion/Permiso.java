@@ -2,6 +2,9 @@ package audigoes.ues.edu.sv.entities.administracion;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import audigoes.ues.edu.sv.entities.SuperEntity;
+
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +15,7 @@ import java.util.List;
  */
 @Entity
 @NamedQuery(name="Permiso.findAll", query="SELECT p FROM Permiso p")
-public class Permiso extends audigoes.ues.edu.sv.entities.SuperEntity implements Serializable {
+public class Permiso extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -45,11 +48,11 @@ public class Permiso extends audigoes.ues.edu.sv.entities.SuperEntity implements
 
 	//bi-directional many-to-one association to RolPermiso
 	@OneToMany(mappedBy="permiso")
-	private List<RolPermiso> rolPermisos;
+	private List<RolPermiso> rolPermiso;
 
 	//bi-directional many-to-one association to UsuarioPermiso
 	@OneToMany(mappedBy="permiso")
-	private List<UsuarioPermiso> usuarioPermisos;
+	private List<UsuarioPermiso> usuarioPermiso;
 
 	public Permiso() {
 	}
@@ -118,48 +121,77 @@ public class Permiso extends audigoes.ues.edu.sv.entities.SuperEntity implements
 		this.usuModi = usuModi;
 	}
 
-	public List<RolPermiso> getRolPermisos() {
-		return this.rolPermisos;
+	public List<RolPermiso> getRolPermiso() {
+		return this.rolPermiso;
 	}
 
-	public void setRolPermisos(List<RolPermiso> rolPermisos) {
-		this.rolPermisos = rolPermisos;
+	public void setRolPermiso(List<RolPermiso> rolPermiso) {
+		this.rolPermiso = rolPermiso;
 	}
 
 	public RolPermiso addRolPermiso(RolPermiso rolPermiso) {
-		getRolPermisos().add(rolPermiso);
+		getRolPermiso().add(rolPermiso);
 		rolPermiso.setPermiso(this);
 
 		return rolPermiso;
 	}
 
 	public RolPermiso removeRolPermiso(RolPermiso rolPermiso) {
-		getRolPermisos().remove(rolPermiso);
+		getRolPermiso().remove(rolPermiso);
 		rolPermiso.setPermiso(null);
 
 		return rolPermiso;
 	}
 
-	public List<UsuarioPermiso> getUsuarioPermisos() {
-		return this.usuarioPermisos;
+	public List<UsuarioPermiso> getUsuarioPermiso() {
+		return this.usuarioPermiso;
 	}
 
-	public void setUsuarioPermisos(List<UsuarioPermiso> usuarioPermisos) {
-		this.usuarioPermisos = usuarioPermisos;
+	public void setUsuarioPermiso(List<UsuarioPermiso> usuarioPermiso) {
+		this.usuarioPermiso = usuarioPermiso;
 	}
 
 	public UsuarioPermiso addUsuarioPermiso(UsuarioPermiso usuarioPermiso) {
-		getUsuarioPermisos().add(usuarioPermiso);
+		getUsuarioPermiso().add(usuarioPermiso);
 		usuarioPermiso.setPermiso(this);
 
 		return usuarioPermiso;
 	}
 
 	public UsuarioPermiso removeUsuarioPermiso(UsuarioPermiso usuarioPermiso) {
-		getUsuarioPermisos().remove(usuarioPermiso);
+		getUsuarioPermiso().remove(usuarioPermiso);
 		usuarioPermiso.setPermiso(null);
 
 		return usuarioPermiso;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + perId;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Permiso other = (Permiso) obj;
+		if (perId != other.perId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Permiso [perId=" + perId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", perDescripcion="
+				+ perDescripcion + ", perNombre=" + perNombre + ", regActivo=" + regActivo + ", usuCrea=" + usuCrea
+				+ ", usuModi=" + usuModi + ", rolPermiso=" + rolPermiso + ", usuarioPermiso=" + usuarioPermiso + "]";
 	}
 
 }

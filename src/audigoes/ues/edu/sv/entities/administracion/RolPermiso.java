@@ -2,6 +2,9 @@ package audigoes.ues.edu.sv.entities.administracion;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import audigoes.ues.edu.sv.entities.SuperEntity;
+
 import java.util.Date;
 
 
@@ -12,7 +15,7 @@ import java.util.Date;
 @Entity
 @Table(name="rol_permiso")
 @NamedQuery(name="RolPermiso.findAll", query="SELECT r FROM RolPermiso r")
-public class RolPermiso extends audigoes.ues.edu.sv.entities.SuperEntity implements Serializable {
+public class RolPermiso extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -112,6 +115,35 @@ public class RolPermiso extends audigoes.ues.edu.sv.entities.SuperEntity impleme
 
 	public void setRol(Rol rol) {
 		this.rol = rol;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + rlpId;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RolPermiso other = (RolPermiso) obj;
+		if (rlpId != other.rlpId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "RolPermiso [rlpId=" + rlpId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo="
+				+ regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", permiso=" + permiso + ", rol=" + rol
+				+ "]";
 	}
 
 }

@@ -2,6 +2,9 @@ package audigoes.ues.edu.sv.entities.administracion;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import audigoes.ues.edu.sv.entities.SuperEntity;
+
 import java.util.Date;
 
 
@@ -12,7 +15,7 @@ import java.util.Date;
 @Entity
 @Table(name="propiedades_sistema")
 @NamedQuery(name="PropiedadesSistema.findAll", query="SELECT p FROM PropiedadesSistema p")
-public class PropiedadesSistema extends audigoes.ues.edu.sv.entities.SuperEntity implements Serializable {
+public class PropiedadesSistema extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -108,6 +111,35 @@ public class PropiedadesSistema extends audigoes.ues.edu.sv.entities.SuperEntity
 
 	public void setUsuModi(String usuModi) {
 		this.usuModi = usuModi;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + prsId;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PropiedadesSistema other = (PropiedadesSistema) obj;
+		if (prsId != other.prsId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "PropiedadesSistema [prsId=" + prsId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi
+				+ ", prsPropiedad=" + prsPropiedad + ", prsValor=" + prsValor + ", regActivo=" + regActivo
+				+ ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + "]";
 	}
 
 }

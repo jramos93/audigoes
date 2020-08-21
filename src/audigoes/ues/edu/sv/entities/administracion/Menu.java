@@ -2,6 +2,9 @@ package audigoes.ues.edu.sv.entities.administracion;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import audigoes.ues.edu.sv.entities.SuperEntity;
+
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +15,7 @@ import java.util.List;
  */
 @Entity
 @NamedQuery(name="Menu.findAll", query="SELECT m FROM Menu m")
-public class Menu extends audigoes.ues.edu.sv.entities.SuperEntity implements Serializable {
+public class Menu extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -63,7 +66,7 @@ public class Menu extends audigoes.ues.edu.sv.entities.SuperEntity implements Se
 
 	//bi-directional many-to-one association to RolMenu
 	@OneToMany(mappedBy="menu")
-	private List<RolMenu> rolMenus;
+	private List<RolMenu> rolMenu;
 
 	public Menu() {
 	}
@@ -186,26 +189,56 @@ public class Menu extends audigoes.ues.edu.sv.entities.SuperEntity implements Se
 		return menus;
 	}
 
-	public List<RolMenu> getRolMenus() {
-		return this.rolMenus;
+	public List<RolMenu> getRolMenu() {
+		return this.rolMenu;
 	}
 
-	public void setRolMenus(List<RolMenu> rolMenus) {
-		this.rolMenus = rolMenus;
+	public void setRolMenu(List<RolMenu> rolMenu) {
+		this.rolMenu = rolMenu;
 	}
 
-	public RolMenu addRolMenus(RolMenu rolMenus) {
-		getRolMenus().add(rolMenus);
-		rolMenus.setMenu(this);
+	public RolMenu addRolMenu(RolMenu rolMenu) {
+		getRolMenu().add(rolMenu);
+		rolMenu.setMenu(this);
 
-		return rolMenus;
+		return rolMenu;
 	}
 
-	public RolMenu removeRolMenus(RolMenu rolMenus) {
-		getRolMenus().remove(rolMenus);
-		rolMenus.setMenu(null);
+	public RolMenu removeRolMenu(RolMenu rolMenu) {
+		getRolMenu().remove(rolMenu);
+		rolMenu.setMenu(null);
 
-		return rolMenus;
+		return rolMenu;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + mnuId;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Menu other = (Menu) obj;
+		if (mnuId != other.mnuId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Menu [mnuId=" + mnuId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", mnuCorrelativo="
+				+ mnuCorrelativo + ", mnuDescripcion=" + mnuDescripcion + ", mnuNombre=" + mnuNombre + ", mnuTipo="
+				+ mnuTipo + ", mnuUrl=" + mnuUrl + ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi="
+				+ usuModi + ", menu=" + menu + ", menus=" + menus + ", rolMenu=" + rolMenu + "]";
 	}
 
 }

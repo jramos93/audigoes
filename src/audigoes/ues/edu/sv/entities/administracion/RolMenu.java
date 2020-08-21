@@ -2,6 +2,9 @@ package audigoes.ues.edu.sv.entities.administracion;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import audigoes.ues.edu.sv.entities.SuperEntity;
+
 import java.util.Date;
 
 
@@ -12,7 +15,7 @@ import java.util.Date;
 @Entity
 @Table(name="rol_menu")
 @NamedQuery(name="RolMenu.findAll", query="SELECT r FROM RolMenu r")
-public class RolMenu extends audigoes.ues.edu.sv.entities.SuperEntity implements Serializable {
+public class RolMenu extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -31,6 +34,9 @@ public class RolMenu extends audigoes.ues.edu.sv.entities.SuperEntity implements
 	@Column(name="reg_activo")
 	private int regActivo;
 
+	@Column(name="rmn_mnu_id")
+	private int rmnMnuId;
+
 	@Column(name="usu_crea")
 	private String usuCrea;
 
@@ -39,7 +45,7 @@ public class RolMenu extends audigoes.ues.edu.sv.entities.SuperEntity implements
 
 	//bi-directional many-to-one association to Menu
 	@ManyToOne
-	@JoinColumn(name="rmn_mnu_id")
+	@JoinColumn(name="rmn_rol_id")
 	private Menu menu;
 
 	//bi-directional many-to-one association to Rol
@@ -82,6 +88,14 @@ public class RolMenu extends audigoes.ues.edu.sv.entities.SuperEntity implements
 		this.regActivo = regActivo;
 	}
 
+	public int getRmnMnuId() {
+		return this.rmnMnuId;
+	}
+
+	public void setRmnMnuId(int rmnMnuId) {
+		this.rmnMnuId = rmnMnuId;
+	}
+
 	public String getUsuCrea() {
 		return this.usuCrea;
 	}
@@ -112,6 +126,35 @@ public class RolMenu extends audigoes.ues.edu.sv.entities.SuperEntity implements
 
 	public void setRol(Rol rol) {
 		this.rol = rol;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + rmnId;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RolMenu other = (RolMenu) obj;
+		if (rmnId != other.rmnId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "RolMenu [rmnId=" + rmnId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo=" + regActivo
+				+ ", rmnMnuId=" + rmnMnuId + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", menu=" + menu
+				+ ", rol=" + rol + "]";
 	}
 
 }

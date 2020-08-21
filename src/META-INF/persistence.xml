@@ -10,19 +10,46 @@
 		<mapping-file>META-INF/orm-seguridad.xml</mapping-file>
 		<class>audigoes.ues.edu.sv.entities.SuperEntity</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Bitacora</class>
+		<class>audigoes.ues.edu.sv.entities.informe.ActaLectura</class>
+		<class>audigoes.ues.edu.sv.entities.planificacion.Actividad</class>
+		<class>audigoes.ues.edu.sv.entities.planeacion.Auditoria</class>
+		<class>audigoes.ues.edu.sv.entities.planeacion.AuditoriaResponsable</class>
+		<class>audigoes.ues.edu.sv.entities.planeacion.AuditoriaUnidad</class>
+		<class>audigoes.ues.edu.sv.entities.informe.CedulaNota</class>
+		<class>audigoes.ues.edu.sv.entities.seguimiento.Comentario</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Configuracion</class>
+		<class>audigoes.ues.edu.sv.mbeans.administracion.Criterio</class>
+		<class>audigoes.ues.edu.sv.entities.informe.Destinatario</class>
+		<class>audigoes.ues.edu.sv.entities.planeacion.DocumentoPlan</class>
+		<class>audigoes.ues.edu.sv.entities.ejecucion.DocumentosEjecucion</class>
+		<class>audigoes.ues.edu.sv.entities.planificacion.DocumentosPlanificacion</class>
+		<class>audigoes.ues.edu.sv.entities.seguimiento.Evidencia</class>
+		<class>audigoes.ues.edu.sv.entities.informe.Informe</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Institucion</class>
+		<class>audigoes.ues.edu.sv.entities.administracion.Marca</class>
+		<class>audigoes.ues.edu.sv.entities.planificacion.Memorando</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Menu</class>
+		<class>audigoes.ues.edu.sv.entities.planificacion.Modificacion</class>
+		<class>audigoes.ues.edu.sv.entities.administracion.NormativaCedula</class>
+		<class>audigoes.ues.edu.sv.entities.planeacion.OrigenAuditoria</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Permiso</class>
+		<class>audigoes.ues.edu.sv.entities.planeacion.PlanAnual</class>
+		<class>audigoes.ues.edu.sv.entities.ejecucion.ProcedimientoEjecucion</class>
+		<class>audigoes.ues.edu.sv.entities.planificacion.ProcedimientoPlanificacion</class>
+		<class>audigoes.ues.edu.sv.entities.ejecucion.ProgramaEjecucion</class>
+		<class>audigoes.ues.edu.sv.entities.planificacion.ProgramaPlanificacion</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.PropiedadesSistema</class>
+		<class>audigoes.ues.edu.sv.entities.seguimiento.Recomendacion</class>
+		<class>audigoes.ues.edu.sv.entities.seguimiento.ResponsableRecomendacion</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Rol</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.RolMenu</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.RolPermiso</class>
+		<class>audigoes.ues.edu.sv.entities.seguimiento.Seguimiento</class>
+		<class>audigoes.ues.edu.sv.entities.planeacion.TipoAuditoria</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Unidad</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Usuario</class>
+		<class>audigoes.ues.edu.sv.entities.planificacion.UsuarioActividad</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.UsuarioPermiso</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.UsuarioUnidad</class>
-		<class>audigoes.ues.edu.sv.entities.administracion.TipoAuditoria</class>
-		<class>audigoes.ues.edu.sv.entities.administracion.OrigenAuditoria</class>
 	</persistence-unit>
 </persistence>

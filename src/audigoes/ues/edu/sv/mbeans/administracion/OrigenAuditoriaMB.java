@@ -9,7 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
-import audigoes.ues.edu.sv.entities.administracion.OrigenAuditoria;
+import audigoes.ues.edu.sv.entities.planeacion.OrigenAuditoria;
 
 
 @ManagedBean(name = "oriMB")
