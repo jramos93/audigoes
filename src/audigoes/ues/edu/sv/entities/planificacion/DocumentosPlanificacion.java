@@ -19,7 +19,8 @@ public class DocumentosPlanificacion extends SuperEntity implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "dop_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "dop_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "dop_id")
 	@Column(name="dop_id")
 	private int dopId;
 

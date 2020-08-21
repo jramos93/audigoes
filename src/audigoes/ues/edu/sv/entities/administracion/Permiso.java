@@ -19,7 +19,8 @@ public class Permiso extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "per_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "per_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "per_id")
 	@Column(name="per_id")
 	private int perId;
 

@@ -22,7 +22,8 @@ public class ProgramaEjecucion extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "pre_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "pre_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "pre_id")
 	@Column(name="pre_id")
 	private int preId;
 

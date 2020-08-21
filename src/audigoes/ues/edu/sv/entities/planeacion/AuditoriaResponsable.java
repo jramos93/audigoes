@@ -20,7 +20,8 @@ public class AuditoriaResponsable extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "aur_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "aur_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "aur_id")
 	@Column(name="aur_id")
 	private int aurId;
 

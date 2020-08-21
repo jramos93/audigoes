@@ -18,7 +18,8 @@ public class Modificacion extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "mod_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "mod_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "mod_id")
 	@Column(name="mod_id")
 	private int modId;
 

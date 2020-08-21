@@ -20,7 +20,8 @@ public class Recomendacion extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "rec_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "rec_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "rec_id")
 	@Column(name="rec_id")
 	private int recId;
 

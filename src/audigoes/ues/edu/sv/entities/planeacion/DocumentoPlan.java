@@ -19,7 +19,8 @@ public class DocumentoPlan extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "dpl_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "dpl_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "dpl_id")
 	@Column(name="dpl_id")
 	private int dplId;
 

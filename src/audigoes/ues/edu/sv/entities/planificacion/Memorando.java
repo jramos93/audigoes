@@ -19,7 +19,8 @@ public class Memorando extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "mem_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "mem_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "mem_id")
 	@Column(name="mem_id")
 	private int memId;
 

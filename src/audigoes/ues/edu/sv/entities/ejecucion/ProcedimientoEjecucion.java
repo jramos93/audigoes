@@ -19,41 +19,12 @@ import java.util.List;
 @Table(name="procedimiento_ejecucion")
 @NamedQuery(name="ProcedimientoEjecucion.findAll", query="SELECT p FROM ProcedimientoEjecucion p")
 public class ProcedimientoEjecucion extends SuperEntity implements Serializable {
-	@Override
-	public String toString() {
-		return "ProcedimientoEjecucion [pejId=" + pejId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi
-				+ ", pejDescripcion=" + pejDescripcion + ", pejNombre=" + pejNombre + ", regActivo=" + regActivo
-				+ ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", cedulaNotas=" + cedulaNotas
-				+ ", documentosEjecucion=" + documentosEjecucion + ", programaEjecucion=" + programaEjecucion
-				+ ", usuario1=" + usuario1 + ", usuario2=" + usuario2 + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + pejId;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ProcedimientoEjecucion other = (ProcedimientoEjecucion) obj;
-		if (pejId != other.pejId)
-			return false;
-		return true;
-	}
-
+	
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "pej_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "pej_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "pej_id")
 	@Column(name="pej_id")
 	private int pejId;
 
@@ -239,4 +210,34 @@ public class ProcedimientoEjecucion extends SuperEntity implements Serializable 
 		this.usuario2 = usuario2;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + pejId;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProcedimientoEjecucion other = (ProcedimientoEjecucion) obj;
+		if (pejId != other.pejId)
+			return false;
+		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return "ProcedimientoEjecucion [pejId=" + pejId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi
+				+ ", pejDescripcion=" + pejDescripcion + ", pejNombre=" + pejNombre + ", regActivo=" + regActivo
+				+ ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", cedulaNotas=" + cedulaNotas
+				+ ", documentosEjecucion=" + documentosEjecucion + ", programaEjecucion=" + programaEjecucion
+				+ ", usuario1=" + usuario1 + ", usuario2=" + usuario2 + "]";
+	}
 }

@@ -19,7 +19,8 @@ public class PropiedadesSistema extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "prs_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "prs_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "prs_id")
 	@Column(name="prs_id")
 	private int prsId;
 

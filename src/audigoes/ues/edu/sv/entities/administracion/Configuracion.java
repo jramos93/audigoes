@@ -18,7 +18,8 @@ public class Configuracion extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "con_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "con_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "con_id")
 	@Column(name="con_id")
 	private int conId;
 

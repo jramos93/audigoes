@@ -20,7 +20,8 @@ public class ActaLectura extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "acl_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "acl_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "acl_id")
 	@Column(name="acl_id")
 	private int aclId;
 

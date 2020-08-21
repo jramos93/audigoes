@@ -19,7 +19,8 @@ public class Rol extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "rol_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "rol_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "rol_id")
 	@Column(name="rol_id")
 	private int rolId;
 

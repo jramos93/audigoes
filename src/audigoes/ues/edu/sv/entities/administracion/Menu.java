@@ -19,7 +19,8 @@ public class Menu extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "men_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "men_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "men_id")
 	@Column(name="mnu_id")
 	private int mnuId;
 

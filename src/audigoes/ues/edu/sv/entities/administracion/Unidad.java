@@ -20,7 +20,8 @@ public class Unidad extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "uni_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "uni_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "uni_id")
 	@Column(name="uni_id")
 	private int uniId;
 

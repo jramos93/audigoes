@@ -19,7 +19,8 @@ public class RolMenu extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "rmn_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "rmn_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "rmn_id")
 	@Column(name="rmn_id")
 	private int rmnId;
 

@@ -19,7 +19,8 @@ public class UsuarioUnidad extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "uun_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "uun_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "uun_id")
 	@Column(name="uun_id")
 	private int uunId;
 

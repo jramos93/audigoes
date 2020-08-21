@@ -20,7 +20,8 @@ public class Informe extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "inf_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "inf_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "inf_id")
 	@Column(name="inf_id")
 	private int infId;
 

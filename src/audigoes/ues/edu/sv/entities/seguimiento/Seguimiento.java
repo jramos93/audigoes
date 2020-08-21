@@ -20,7 +20,8 @@ public class Seguimiento extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "seg_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "seg_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "seg_id")
 	@Column(name="seg_id")
 	private int segId;
 

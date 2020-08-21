@@ -19,7 +19,8 @@ public class RolPermiso extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@TableGenerator(name = "rlp_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "rlp_id", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "rlp_id")
 	@Column(name="rlp_id")
 	private int rlpId;
 
