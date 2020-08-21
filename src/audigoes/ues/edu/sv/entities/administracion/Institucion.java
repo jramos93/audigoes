@@ -61,15 +61,15 @@ public class Institucion extends audigoes.ues.edu.sv.entities.SuperEntity implem
 
 	//bi-directional many-to-one association to Configuracion
 	@OneToMany(mappedBy="institucion")
-	private List<Configuracion> configuracions;
+	private List<Configuracion> configuracion;
 
 	//bi-directional many-to-one association to Unidad
 	@OneToMany(mappedBy="institucion")
-	private List<Unidad> unidads;
+	private List<Unidad> unidad;
 
 	//bi-directional many-to-one association to Usuario
 	@OneToMany(mappedBy="institucion")
-	private List<Usuario> usuarios;
+	private List<Usuario> usuario;
 
 	public Institucion() {
 	}
@@ -178,67 +178,67 @@ public class Institucion extends audigoes.ues.edu.sv.entities.SuperEntity implem
 		this.usuModi = usuModi;
 	}
 
-	public List<Configuracion> getConfiguracions() {
-		return this.configuracions;
+	public List<Configuracion> getConfiguracion() {
+		return this.configuracion;
 	}
 
-	public void setConfiguracions(List<Configuracion> configuracions) {
-		this.configuracions = configuracions;
+	public void setConfiguracion(List<Configuracion> configuracion) {
+		this.configuracion = configuracion;
 	}
 
 	public Configuracion addConfiguracion(Configuracion configuracion) {
-		getConfiguracions().add(configuracion);
+		getConfiguracion().add(configuracion);
 		configuracion.setInstitucion(this);
 
 		return configuracion;
 	}
 
 	public Configuracion removeConfiguracion(Configuracion configuracion) {
-		getConfiguracions().remove(configuracion);
+		getConfiguracion().remove(configuracion);
 		configuracion.setInstitucion(null);
 
 		return configuracion;
 	}
 
-	public List<Unidad> getUnidads() {
-		return this.unidads;
+	public List<Unidad> getUnidad() {
+		return this.unidad;
 	}
 
-	public void setUnidads(List<Unidad> unidads) {
-		this.unidads = unidads;
+	public void setUnidad(List<Unidad> unidad) {
+		this.unidad = unidad;
 	}
 
 	public Unidad addUnidad(Unidad unidad) {
-		getUnidads().add(unidad);
+		getUnidad().add(unidad);
 		unidad.setInstitucion(this);
 
 		return unidad;
 	}
 
 	public Unidad removeUnidad(Unidad unidad) {
-		getUnidads().remove(unidad);
+		getUnidad().remove(unidad);
 		unidad.setInstitucion(null);
 
 		return unidad;
 	}
 
-	public List<Usuario> getUsuarios() {
-		return this.usuarios;
+	public List<Usuario> getUsuario() {
+		return this.usuario;
 	}
 
-	public void setUsuarios(List<Usuario> usuarios) {
-		this.usuarios = usuarios;
+	public void setUsuario(List<Usuario> usuario) {
+		this.usuario = usuario;
 	}
 
 	public Usuario addUsuario(Usuario usuario) {
-		getUsuarios().add(usuario);
+		getUsuario().add(usuario);
 		usuario.setInstitucion(this);
 
 		return usuario;
 	}
 
 	public Usuario removeUsuario(Usuario usuario) {
-		getUsuarios().remove(usuario);
+		getUsuario().remove(usuario);
 		usuario.setInstitucion(null);
 
 		return usuario;
