@@ -1,0 +1,106 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Audigoes</ui:define>
+
+	<ui:define name="content">
+	<div class="name" align="center">
+		<span class="app-name">Gestion de Tipos de Auditorias</span>
+	</div>
+		<h:form id="frm">
+
+
+			<p:dataTable var="tpa" value="#{tpaMB.listado}" widgetVar="wvTiposAuditorias"
+				reflow="true" id="dtTiposAuditorias" style="margin-top:20px;" paginator="true"
+				filteredValue="#{tpaMB.filteredTiposAuditoria}"
+				globalFilterFunction="#{tpaMB.globalFilterFunction}"
+				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+				rowKey="#{tpaMB.registro.tpaId}">
+
+				<f:facet name="paginatorTopLeft">
+					<p:commandButton value="Agregar" icon="pi pi-plus"
+						actionListener="#{tpaMB.onNew}"
+						oncomplete="PF('wvTpaNewEdit').show();" update=":frmTpaNewEdit"></p:commandButton>
+				</f:facet>
+
+				<f:facet name="paginatorTopRight">
+					<p:outputPanel>
+						<h:outputText value="Búsqueda global: " />
+						<p:inputText id="globalFilter" onkeyup="PF('wvTiposAuditorias').filter();"
+							style="width:150px" placeholder="Ingresa una palabra" />
+					</p:outputPanel>
+				</f:facet>
+
+				<p:column headerText="Id">
+					<h:outputText value="#{tpa.tpaId}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Nombre">
+					<h:outputText value="#{tpa.tpaNombre}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Descripcion">
+					<h:outputText value="#{tpa.tpaDescripcion}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Estado" filterBy="#{tpa.regActivo}"
+					filterMatchMode="exact">
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('wvTiposAuditorias').filter();">
+							<f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}"
+								noSelectionOption="true" />
+							<f:selectItems value="#{tpaMB.regActivoList}" />
+						</p:selectOneMenu>
+					</f:facet>
+					<h:outputText value="#{tpa.regActivo}"
+						converter="regActivoConverter"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Modificar">
+					<p:commandButton update=":frmTpaNewEdit"
+						oncomplete="PF('wvTpaNewEdit').show()" icon="pi pi-pencil"
+						title="Modificar" actionListener="#{tpaMB.onEdit}">
+						<f:setPropertyActionListener value="#{tpa}"
+							target="#{tpaMB.registro}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog widgetVar="wvTpaNewEdit" responsive="true" width="500"
+			closeOnEscape="true" header="Gestión de Tipos de Auditoria" modal="true">
+			<h:form id="frmTpaNewEdit">
+				<div class="ui-fluid p-formgrid p-grid">
+					<div class="p-field p-col">
+						<p:outputLabel for="nombre" value="Nombre del tipo de auditoria:" />
+						<p:inputText id="nombre" value="#{tpaMB.registro.tpaNombre}"
+							required="true" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="descripcion" value="Descripción del rol:" />
+						<p:inputTextarea id="descripcion" rows="4" required="true"
+							value="#{tpaMB.registro.tpaDescripcion}" />
+					</div>
+
+					<div class="p-field-radiobutton">
+						<p:outputLabel for="estado" value="Estado:" />
+						<p:selectOneRadio id="estado" value="#{tpaMB.registro.regActivo}"
+							required="true" disabled="#{tpaMB.status=='NEW'}">
+							<f:selectItems value="#{tpaMB.regActivoList}"></f:selectItems>
+						</p:selectOneRadio>
+					</div>
+
+
+					<p:commandButton actionListener="#{tpaMB.onSave}" value="Guardar"
+						oncomplete="PF('wvTpaNewEdit').hide();" update=":frm:dtTiposAuditorias"></p:commandButton>
+				</div>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

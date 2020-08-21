@@ -22,5 +22,7 @@
 		<class>audigoes.ues.edu.sv.entities.administracion.Usuario</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.UsuarioPermiso</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.UsuarioUnidad</class>
+		<class>audigoes.ues.edu.sv.entities.administracion.TipoAuditoria</class>
+		<class>audigoes.ues.edu.sv.entities.administracion.OrigenAuditoria</class>
 	</persistence-unit>
 </persistence>

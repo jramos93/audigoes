@@ -2,6 +2,8 @@
 <entity-mappings version="2.0" xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd">
 
+	<named-query name="tipoauditoria.all"><query>select o from TipoAuditoria o</query></named-query>
+	<named-query name="origenauditoria.all"><query>select o from OrigenAuditoria o</query></named-query>
 	<named-native-query name="rol.all" result-class="audigoes.ues.edu.sv.entities.administracion.Rol">
 		<query>select o.* from Rol o</query>
 	</named-native-query>
