@@ -1,8 +1,12 @@
-package audigoes.ues.edu.sv.entities.administracion;
+package audigoes.ues.edu.sv.entities.planeacion;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import audigoes.ues.edu.sv.entities.SuperEntity;
+
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -12,12 +16,11 @@ import java.util.Date;
 @Entity
 @Table(name="tipo_auditoria")
 @NamedQuery(name="TipoAuditoria.findAll", query="SELECT t FROM TipoAuditoria t")
-public class TipoAuditoria extends audigoes.ues.edu.sv.entities.SuperEntity implements Serializable {
+public class TipoAuditoria extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@TableGenerator(name = "tpa_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "tpa_id", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tpa_id")
+	@GeneratedValue(strategy=GenerationType.TABLE)
 	@Column(name="tpa_id")
 	private int tpaId;
 
@@ -43,6 +46,10 @@ public class TipoAuditoria extends audigoes.ues.edu.sv.entities.SuperEntity impl
 
 	@Column(name="usu_modi")
 	private String usuModi;
+
+	//bi-directional many-to-one association to Auditoria
+	@OneToMany(mappedBy="tipoAuditoria")
+	private List<Auditoria> auditoria;
 
 	public TipoAuditoria() {
 	}
@@ -109,6 +116,57 @@ public class TipoAuditoria extends audigoes.ues.edu.sv.entities.SuperEntity impl
 
 	public void setUsuModi(String usuModi) {
 		this.usuModi = usuModi;
+	}
+
+	public List<Auditoria> getAuditoria() {
+		return this.auditoria;
+	}
+
+	public void setAuditoria(List<Auditoria> auditoria) {
+		this.auditoria = auditoria;
+	}
+
+	public Auditoria addAuditoria(Auditoria auditoria) {
+		getAuditoria().add(auditoria);
+		auditoria.setTipoAuditoria(this);
+
+		return auditoria;
+	}
+
+	public Auditoria removeAuditoria(Auditoria auditoria) {
+		getAuditoria().remove(auditoria);
+		auditoria.setTipoAuditoria(null);
+
+		return auditoria;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + tpaId;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TipoAuditoria other = (TipoAuditoria) obj;
+		if (tpaId != other.tpaId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "TipoAuditoria [tpaId=" + tpaId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo="
+				+ regActivo + ", tpaDescripcion=" + tpaDescripcion + ", tpaNombre=" + tpaNombre + ", usuCrea=" + usuCrea
+				+ ", usuModi=" + usuModi + ", auditoria=" + auditoria + "]";
 	}
 
 }

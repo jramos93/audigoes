@@ -1,8 +1,12 @@
-package audigoes.ues.edu.sv.entities.administracion;
+package audigoes.ues.edu.sv.entities.planeacion;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import audigoes.ues.edu.sv.entities.SuperEntity;
+
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -12,12 +16,11 @@ import java.util.Date;
 @Entity
 @Table(name="origen_auditoria")
 @NamedQuery(name="OrigenAuditoria.findAll", query="SELECT o FROM OrigenAuditoria o")
-public class OrigenAuditoria extends audigoes.ues.edu.sv.entities.SuperEntity implements Serializable {
+public class OrigenAuditoria extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@TableGenerator(name = "ori_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "ori_id", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "ori_id")
+	@GeneratedValue(strategy=GenerationType.TABLE)
 	@Column(name="ori_id")
 	private int oriId;
 
@@ -43,6 +46,10 @@ public class OrigenAuditoria extends audigoes.ues.edu.sv.entities.SuperEntity im
 
 	@Column(name="usu_modi")
 	private String usuModi;
+
+	//bi-directional many-to-one association to Auditoria
+	@OneToMany(mappedBy="origenAuditoria")
+	private List<Auditoria> auditoria;
 
 	public OrigenAuditoria() {
 	}
@@ -109,6 +116,57 @@ public class OrigenAuditoria extends audigoes.ues.edu.sv.entities.SuperEntity im
 
 	public void setUsuModi(String usuModi) {
 		this.usuModi = usuModi;
+	}
+
+	public List<Auditoria> getAuditoria() {
+		return this.auditoria;
+	}
+
+	public void setAuditoria(List<Auditoria> auditoria) {
+		this.auditoria = auditoria;
+	}
+
+	public Auditoria addAuditoria(Auditoria auditoria) {
+		getAuditoria().add(auditoria);
+		auditoria.setOrigenAuditoria(this);
+
+		return auditoria;
+	}
+
+	public Auditoria removeAuditoria(Auditoria auditoria) {
+		getAuditoria().remove(auditoria);
+		auditoria.setOrigenAuditoria(null);
+
+		return auditoria;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + oriId;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		OrigenAuditoria other = (OrigenAuditoria) obj;
+		if (oriId != other.oriId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "OrigenAuditoria [oriId=" + oriId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", oriDescripcion="
+				+ oriDescripcion + ", oriNombre=" + oriNombre + ", regActivo=" + regActivo + ", usuCrea=" + usuCrea
+				+ ", usuModi=" + usuModi + ", auditoria=" + auditoria + "]";
 	}
 
 }
