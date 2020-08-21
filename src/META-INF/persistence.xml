@@ -7,6 +7,7 @@
 		transaction-type="RESOURCE_LOCAL">
 		<non-jta-data-source>jdbc/audigoes</non-jta-data-source>
 		<mapping-file>META-INF/orm.xml</mapping-file>
+		<mapping-file>META-INF/orm-seguridad.xml</mapping-file>
 		<class>audigoes.ues.edu.sv.entities.SuperEntity</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Bitacora</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Configuracion</class>
