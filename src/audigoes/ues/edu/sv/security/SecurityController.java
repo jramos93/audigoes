@@ -90,7 +90,7 @@ public class SecurityController extends AudigoesController {
 						}
 
 					} else {
-						message.setDetail("Error! Usuario no valido");
+						message.setDetail("Error! Usuario y/o clave no valido");
 						this.addWarn(message);
 						return null;
 					}

@@ -20,6 +20,9 @@
 	<div class="login-panel ui-fluid">
 		<div class="ui-g">
 			<h:form id="frmLogin">
+				<p:growl showDetail="true" sticky="true" life="3000">
+					<p:autoUpdate></p:autoUpdate>
+				</p:growl>
 				<div class="ui-g-12 logo-container">
 					<p:graphicImage name="images/logo-azul.png" library="verona-layout" />
 					<h1>INGRESO AL SISTEMA</h1>
@@ -27,11 +30,11 @@
 				</div>
 				<div class="ui-g-12">
 					<p:inputText id="usuario" placeholder="Usuario"
-						value="#{loginMB.usuario}" required="true" />
+						value="#{loginMB.usuario}" required="true" requiredMessage="Ingresa el Usuario"/>
 				</div>
 				<div class="ui-g-12">
 					<p:password id="clave" placeholder="Clave" feedback="false"
-						value="#{loginMB.clave}" />
+						value="#{loginMB.clave}" requiredMessage="Ingresa la clave"/>
 				</div>
 				<div class="ui-g-12 button-container">
 					<p:commandButton action="#{loginMB.onLogin}" update="frmLogin"

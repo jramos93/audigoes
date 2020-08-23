@@ -40,9 +40,13 @@
 <h:body styleClass="main-body">
 	<div class="layout-wrapper layout-menu-horizontal">
 		<ui:include src="./topbar.xhtml" />
-		
+
 		<div class="layout-content">
-			<ui:insert name="content" />
+			<ui:insert name="content">
+				<p:growl showDetail="true" sticky="true" life="3000">
+					<p:autoUpdate></p:autoUpdate>
+				</p:growl>
+			</ui:insert>
 		</div>
 
 		<ui:include src="./footer.xhtml" />
