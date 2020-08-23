@@ -8,7 +8,7 @@
 
     <div class="topbar">
         <div class="topbar-main1">
-        <div class="app-name">GN</div>
+        <div class="app-name">AUDIGOES</div>
             <a href="#" id="user-display1">
             	<span class="name"></span>
                  <span class="fecha"></span>
@@ -16,7 +16,7 @@
             
             <a href="#" id="user-display">
                 <span class="username">Usuario</span>
-                <span class="userrole">Administrador</span>
+                <span class="userrole">#{loginMB.objAppsSession.usuario.usuUsuario}</span>
                 <p:graphicImage name="images/user.png" library="verona-layout" />
             </a>
         </div>
@@ -24,10 +24,10 @@
             <a href="#" id="menu-button">
                 <span class="fa fa-bars"></span>
             </a>
-            <h:link outcome="/dashboard">
+            <h:link outcome="/page/main.xhtml">
                 <p:graphicImage name="images/logo-azul.png" library="verona-layout" styleClass="logo"/>
             </h:link>
-            <div class="app-insti">Nombre de la instituciòn</div>
+            <div class="app-insti">Nombre de la institución</div>
              
             <ul id="topbar-menu" class="fadeInDown animated">
                 <li class="search-item">

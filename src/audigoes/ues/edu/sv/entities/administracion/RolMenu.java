@@ -1,57 +1,64 @@
 package audigoes.ues.edu.sv.entities.administracion;
 
 import java.io.Serializable;
-import javax.persistence.*;
-
-import audigoes.ues.edu.sv.entities.SuperEntity;
-
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import audigoes.ues.edu.sv.entities.SuperEntity;
 
 /**
  * The persistent class for the rol_menu database table.
  * 
  */
 @Entity
-@Table(name="rol_menu")
-@NamedQuery(name="RolMenu.findAll", query="SELECT r FROM RolMenu r")
+@Table(name = "rol_menu")
+@NamedQuery(name = "RolMenu.findAll", query = "SELECT r FROM RolMenu r")
 public class RolMenu extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "rmn_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "rmn_id", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "rmn_id")
-	@Column(name="rmn_id")
+	@Column(name = "rmn_id")
 	private int rmnId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_crea")
+	@Column(name = "fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_modi")
+	@Column(name = "fec_modi")
 	private Date fecModi;
 
-	@Column(name="reg_activo")
+	@Column(name = "reg_activo")
 	private int regActivo;
 
-	@Column(name="rmn_mnu_id")
-	private int rmnMnuId;
-
-	@Column(name="usu_crea")
+	@Column(name = "usu_crea")
 	private String usuCrea;
 
-	@Column(name="usu_modi")
+	@Column(name = "usu_modi")
 	private String usuModi;
 
-	//bi-directional many-to-one association to Menu
+	// bi-directional many-to-one association to Menu
 	@ManyToOne
-	@JoinColumn(name="rmn_rol_id")
+	@JoinColumn(name = "rmn_mnu_id")
 	private Menu menu;
 
-	//bi-directional many-to-one association to Rol
+	// bi-directional many-to-one association to Rol
 	@ManyToOne
-	@JoinColumn(name="rmn_rol_id")
+	@JoinColumn(name = "rmn_rol_id")
 	private Rol rol;
 
 	public RolMenu() {
@@ -87,14 +94,6 @@ public class RolMenu extends SuperEntity implements Serializable {
 
 	public void setRegActivo(int regActivo) {
 		this.regActivo = regActivo;
-	}
-
-	public int getRmnMnuId() {
-		return this.rmnMnuId;
-	}
-
-	public void setRmnMnuId(int rmnMnuId) {
-		this.rmnMnuId = rmnMnuId;
 	}
 
 	public String getUsuCrea() {
@@ -154,8 +153,7 @@ public class RolMenu extends SuperEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "RolMenu [rmnId=" + rmnId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo=" + regActivo
-				+ ", rmnMnuId=" + rmnMnuId + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", menu=" + menu
-				+ ", rol=" + rol + "]";
+				+ ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", menu=" + menu + ", rol=" + rol + "]";
 	}
 
 }

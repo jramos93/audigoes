@@ -1,5 +1,7 @@
 package audigoes.ues.edu.sv.session;
 
+import java.util.List;
+
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -24,16 +26,16 @@ public class ValidacionSBSL implements ValidacionSBSLLocal {
 	
 	public Integer validar(String usuario, String clave) {
 		Integer resp=VAL_USUARIO_NO_EXISTE;
-		String claveAES="";
-		String claveMD5="";
+		//String claveAES="";
+		String claveSha384="";
 		
 		try {
-			Usuario usr = (Usuario) this.audigoesLocal.findByNamedQuery(Usuario.class, "usu.by.usuario", new Object[] {usuario});
+			List<Usuario> usrs =  (List<Usuario>) this.audigoesLocal.findByNamedQuery(Usuario.class, "usuario.findByUsuario", new Object[] {usuario});
+			Usuario usr = usrs.get(0);
 			if(usr!=null) {
 				if(usr.getRegActivo()==1) {
-					claveAES=Utils.getAESString(clave);
-					claveMD5=Utils.getMD5String(claveAES);
-					if(usr.getUsuContrasenia().equals(claveMD5)) {
+					claveSha384=Utils.getShaString(usuario+clave);
+					if(usr.getUsuContrasenia().equals(claveSha384)) {
 						if(!this.isClaveEstandar(usuario, clave)) {
 							resp=VAL_USUARIO_VALIDO;
 						} else {
@@ -54,11 +56,9 @@ public class ValidacionSBSL implements ValidacionSBSLLocal {
 	
 	public boolean isClaveEstandar(String usuario, String clave) {
 		boolean estandar=false;
-		String claveAES="";
-		String claveMD5="";
-		claveAES=Utils.getAESString(usuario+CLAVE_ESTANDAR);
-		claveMD5=Utils.getMD5String(claveAES);
-		if(clave.equals(claveMD5)) {
+		String claveSha384="";
+		claveSha384=Utils.getShaString(usuario+CLAVE_ESTANDAR);
+		if(clave.equals(claveSha384)) {
 			estandar=true;
 		}
 		return estandar;

@@ -2,24 +2,31 @@ package audigoes.ues.edu.sv.security;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.primefaces.model.menu.MenuModel;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
+import audigoes.ues.edu.sv.entities.administracion.Sesiones;
+import audigoes.ues.edu.sv.entities.administracion.Usuario;
+import audigoes.ues.edu.sv.entities.administracion.UsuarioPermiso;
 import audigoes.ues.edu.sv.session.ValidacionSBSLLocal;
 
-public class SecurityController extends AudigoesController{
-	
+public class SecurityController extends AudigoesController {
+
 	@EJB(beanName = "ValidacionSBSL")
 	protected ValidacionSBSLLocal validacionSBSL;
-	
+
 	private MenuModel menu;
 	private String usuario;
 	private String clave;
@@ -27,48 +34,115 @@ public class SecurityController extends AudigoesController{
 	private String claveConfirmada;
 	private String changePassOutcome;
 	private Date fechaSistema;
-	private boolean runLogout=true;
-	private boolean loggedIn=false;
-	private boolean produccion=true;
-	private Integer msgCodigo=0;
-	
+	private boolean runLogout = true;
+	private boolean loggedIn = false;
+	private boolean produccion = true;
+	private Integer msgCodigo = 0;
+
 	public SecurityController() {
 		TimeZone tz = TimeZone.getTimeZone("America/El_Salvador");
-		this.fechaSistema=Calendar.getInstance(tz, new Locale("es","SV")).getTime();
+		this.fechaSistema = Calendar.getInstance(tz, new Locale("es", "SV")).getTime();
 	}
-	
+
 	@PostConstruct
-	public void init() {}
-	
+	public void init() {
+	}
+
+	@SuppressWarnings("unchecked")
 	public String onLogin() {
-		this.loggedIn=false;
+		this.loggedIn = false;
 		FacesMessage message = new FacesMessage();
 		try {
 			FacesContext ctx = FacesContext.getCurrentInstance();
-			if(this.beforeLogin()) {
-				if(this.usuario!=null && this.clave!=null) {
-					this.msgCodigo=this.validacionSBSL.validar(this.usuario, this.clave);
-					
-					if(this.msgCodigo.equals(ValidacionSBSLLocal.VAL_USUARIO_VALIDO)) {
-						System.out.println("inicio");
+			if (this.beforeLogin()) {
+				if (this.usuario != null && this.clave != null) {
+					this.msgCodigo = this.validacionSBSL.validar(this.usuario, this.clave);
+					if (this.msgCodigo.equals(ValidacionSBSLLocal.VAL_USUARIO_VALIDO)) {
+						ObjAppsSession objAppsSession = new ObjAppsSession();
+						Sesiones sesion = null;
+						List<Usuario> usrs = (List<Usuario>) this.audigoesLocal.findByNamedQuery(Usuario.class,
+								"usuario.findByUsuario", new Object[] { usuario });
+						Usuario usr = usrs.get(0);
+						if (usr == null) {
+							message.setDetail("Error en login");
+							this.addWarn(message);
+							return null;
+						}
+
+						objAppsSession.setUsuario(usr);
+						sesion = this.getInitSesion(usr);
+						List<UsuarioPermiso> permisos = (List<UsuarioPermiso>) this.audigoesLocal.findByNamedQuery(
+								UsuarioPermiso.class, "permisos.findByUsuario", new Object[] { usuario });
+						if (sesion == null) {
+							message.setDetail("Error en el registro de la sesion");
+							this.addWarn(message);
+							return null;
+						} else {
+							objAppsSession.setPermisos(permisos);
+							objAppsSession.setHost(sesion.getSesHostname());
+							objAppsSession.setIp(sesion.getSesIp());
+							ctx.getExternalContext().getSessionMap().put("audigoes.user.name", this.usuario);
+							ctx.getExternalContext().getSessionMap().put("audigoes.session", objAppsSession);
+							this.setObjAppsSession(objAppsSession);
+							this.loggedIn = true;
+							this.afterLogin();
+							return this.outcome;
+						}
+
 					} else {
-						System.out.println("no inicio");
+						message.setDetail("Error! Usuario no valido");
+						this.addWarn(message);
+						return null;
 					}
+				} else {
+					message.setDetail("Error! ingrese el usuario y clave");
+					this.addWarn(message);
+					return null;
 				}
+			} else {
+				message.setDetail("Error en el registro de la sesion");
+				this.addWarn(message);
+				return null;
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
+			message.setDetail("Error en el registro de la sesion");
+			this.addWarn(message);
+			return null;
 		}
-		return null;
 	}
-	
+
+	private Sesiones getInitSesion(Usuario usuario) {
+		Sesiones sesion = null;
+		try {
+			FacesContext ctx = FacesContext.getCurrentInstance();
+			HttpServletRequest request = (HttpServletRequest) ctx.getExternalContext().getRequest();
+			Date hoy = new Date(System.currentTimeMillis());
+			sesion = new Sesiones();
+			sesion.setUsuario(usuario);
+			sesion.setRegActivo(1);
+			sesion.setSesHostname(request.getRemoteHost());
+			sesion.setSesIp(request.getRemoteAddr());
+			sesion.setSesInicio(hoy);
+			sesion.setUsuCrea(usuario.getUsuUsuario());
+			sesion.setFecCrea(hoy);
+			return (Sesiones) this.audigoesLocal.insert(sesion);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	protected boolean beforeLogin() {
 		return true;
 	}
-	
+
 	protected boolean beforeLogout() {
-		//this.setOutcome("/index.xhtml");
+		// this.setOutcome("/index.xhtml");
 		return true;
+	}
+
+	protected void afterLogin() {
 	}
 
 	public boolean isLoggedIn() {
@@ -79,105 +153,84 @@ public class SecurityController extends AudigoesController{
 		this.loggedIn = loggedIn;
 	}
 
-
 	public MenuModel getMenu() {
 		return menu;
 	}
-
 
 	public void setMenu(MenuModel menu) {
 		this.menu = menu;
 	}
 
-
 	public String getUsuario() {
 		return usuario;
 	}
-
 
 	public void setUsuario(String usuario) {
 		this.usuario = usuario;
 	}
 
-
 	public String getClave() {
 		return clave;
 	}
-
 
 	public void setClave(String clave) {
 		this.clave = clave;
 	}
 
-
 	public String getClaveNueva() {
 		return claveNueva;
 	}
-
 
 	public void setClaveNueva(String claveNueva) {
 		this.claveNueva = claveNueva;
 	}
 
-
 	public String getClaveConfirmada() {
 		return claveConfirmada;
 	}
-
 
 	public void setClaveConfirmada(String claveConfirmada) {
 		this.claveConfirmada = claveConfirmada;
 	}
 
-
 	public String getChangePassOutcome() {
 		return changePassOutcome;
 	}
-
 
 	public void setChangePassOutcome(String changePassOutcome) {
 		this.changePassOutcome = changePassOutcome;
 	}
 
-
 	public Date getFechaSistema() {
 		return fechaSistema;
 	}
-
 
 	public void setFechaSistema(Date fechaSistema) {
 		this.fechaSistema = fechaSistema;
 	}
 
-
 	public boolean isRunLogout() {
 		return runLogout;
 	}
-
 
 	public void setRunLogout(boolean runLogout) {
 		this.runLogout = runLogout;
 	}
 
-
 	public boolean isProduccion() {
 		return produccion;
 	}
-
 
 	public void setProduccion(boolean produccion) {
 		this.produccion = produccion;
 	}
 
-
 	public Integer getMsgCodigo() {
 		return msgCodigo;
 	}
 
-
 	public void setMsgCodigo(Integer msgCodigo) {
 		this.msgCodigo = msgCodigo;
 	}
-	
-	
+
 }

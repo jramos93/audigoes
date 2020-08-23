@@ -13,6 +13,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.security.ObjAppsSession;
 import audigoes.ues.edu.sv.session.audigoesSBSLLocal;
 
 public class AudigoesController {
@@ -50,6 +51,9 @@ public class AudigoesController {
 	/* propiedades de utilerìa bàsica */
 	private List<SelectItem> siNoList;
 	private List<SelectItem> regActivoList;
+	
+	protected ObjAppsSession objAppsSession;
+	protected String outcome;
 
 	public void addInfo(FacesMessage mensaje) {
 		mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
@@ -341,6 +345,25 @@ public class AudigoesController {
 
 	public void setRegActivoList(List<SelectItem> regActivoList) {
 		this.regActivoList = regActivoList;
+	}
+
+	public ObjAppsSession getObjAppsSession() {
+		if(this.objAppsSession==null) {
+			this.objAppsSession = (ObjAppsSession) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("audigoes.session");
+		}
+		return this.objAppsSession;
+	}
+
+	public void setObjAppsSession(ObjAppsSession objAppsSession) {
+		this.objAppsSession = objAppsSession;
+	}
+
+	public String getOutcome() {
+		return outcome;
+	}
+
+	public void setOutcome(String outcome) {
+		this.outcome = outcome;
 	}
 
 	
