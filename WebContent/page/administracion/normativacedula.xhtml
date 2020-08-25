@@ -1,0 +1,146 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Audigoes</ui:define>
+
+	<ui:define name="content">
+	<div class="name" align="center">
+		<span class="app-name">Gestion de Normativas</span>
+	</div>
+		<h:form id="frm">
+
+
+			<p:dataTable var="nor" value="#{norMB.listado}" widgetVar="wvNormativasCedulas"
+				reflow="true" id="dtNormativasCedulas" style="margin-top:20px;" paginator="true"
+				filteredValue="#{norMB.filteredNormativasCedula}"
+				globalFilterFunction="#{norMB.globalFilterFunction}"
+				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+				rowKey="#{norMB.registro.norId}">
+
+				<f:facet name="paginatorTopLeft">
+					<p:commandButton value="Agregar" icon="pi pi-plus"
+						actionListener="#{norMB.onNew}"
+						oncomplete="PF('wvNorNewEdit').show();" update=":frmNorNewEdit"></p:commandButton>
+				</f:facet>
+
+				<f:facet name="paginatorTopRight">
+					<p:outputPanel>
+						<h:outputText value="Búsqueda global: " />
+						<p:inputText id="globalFilter" onkeyup="PF('wvNormativasCedulas').filter();"
+							style="width:150px" placeholder="Ingresa una palabra" />
+					</p:outputPanel>
+				</f:facet>
+
+				<p:column headerText="Id">
+					<h:outputText value="#{nor.norId}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Nombre">
+					<h:outputText value="#{nor.norNombre}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Descripcion">
+					<h:outputText value="#{nor.norDescripcion}"></h:outputText>
+				</p:column>
+				
+				<p:column headerText="Version">
+					<h:outputText value="#{nor.norVersion}"></h:outputText>
+				</p:column>
+				
+				<p:column headerText="Estado" filterBy="#{nor.regActivo}"
+					filterMatchMode="exact">
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('wvNormativasCedulas').filter();">
+							<f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}"
+								noSelectionOption="true" />
+							<f:selectItems value="#{norMB.regActivoList}" />
+						</p:selectOneMenu>
+					</f:facet>
+					<h:outputText value="#{nor.regActivo}"
+						converter="regActivoConverter"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Modificar">
+					<p:commandButton update=":frmNorNewEdit"
+						oncomplete="PF('wvNorNewEdit').show()" icon="pi pi-pencil"
+						title="Modificar" actionListener="#{norMB.onEdit}">
+						<f:setPropertyActionListener value="#{nor}"
+							target="#{norMB.registro}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog widgetVar="wvNorNewEdit" responsive="true" width="600"
+			closeOnEscape="true" header="Gestión de Normativas" modal="true">
+			<h:form id="frmNorNewEdit">
+				<div class="ui-fluid p-formgrid p-grid">
+					<div class="p-field p-col">
+						<p:outputLabel for="nombre" value="Nombre Normativa:" />
+						<p:inputText id="nombre" value="#{norMB.registro.norNombre}"
+							required="true" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="descripcion" value="Descripción Normativa:" />
+						<p:inputTextarea id="descripcion" rows="4" required="true"
+							value="#{norMB.registro.norDescripcion}" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="autor" value="Autor:" />
+						<p:inputTextarea id="autor" rows="4" required="true"
+							value="#{norMB.registro.norAutor}" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="version" value="Version:" />
+						<p:inputTextarea id="version" rows="4" required="true"
+							value="#{norMB.registro.norVersion}" />
+					</div>
+					<div class="ui-g">
+					<div class="ui-g-12 ui-md-6 ui-lg-3">
+						<p:outputLabel for="anio" value="Año:"/>
+						<p:inputText id="anio" required="false"
+							value="#{norMB.registro.norAnio}" />
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-3">
+						<p:outputLabel for="tipo" value="Tipo:" />
+						<p:panelGrid columns="2" style="margin-bottom:10px" layout="grid" styleClass="form-group ui-panelgrid-blank">
+							<p:selectOneMenu id="tipo" value="#{norMB.registro.norTipo}" style="margin-bottom:10px;"
+								  required="true">
+			                    <f:selectItem itemLabel="Normativa" itemValue="1"/>
+			                    <f:selectItem itemLabel="Cedula" itemValue="0"/>
+			                </p:selectOneMenu>
+			            </p:panelGrid>
+					</div>
+					</div>
+					<div>
+					<h:form enctype="multipart/form-data">
+						<p:outputLabel value="Adjunte Documento:" />
+						<p:growl showDetail="true"/>
+						<p:fileUpload mode="advanced" cancelLabel="Cancelar" label="Seleccionar" uploadLabel="Subir" 
+							listener="#{norMB.fileUploadListener}"/>
+						
+					</h:form>
+					</div>
+
+		        	<div class="p-field-radiobutton">
+						<p:outputLabel for="estado" value="Estado:" />
+						<p:selectOneRadio id="estado" value="#{norMB.registro.regActivo}"
+							required="true" disabled="#{norMB.status=='NEW'}">
+							<f:selectItems value="#{norMB.regActivoList}"></f:selectItems>
+						</p:selectOneRadio>
+					</div>
+
+
+					<p:commandButton actionListener="#{norMB.onSave}" value="Guardar"
+						oncomplete="PF('wvNorNewEdit').hide();" update=":frm:dtNormativasCedulas"></p:commandButton>
+				</div>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>
