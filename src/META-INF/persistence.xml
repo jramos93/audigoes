@@ -18,7 +18,7 @@
 		<class>audigoes.ues.edu.sv.entities.informe.CedulaNota</class>
 		<class>audigoes.ues.edu.sv.entities.seguimiento.Comentario</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Configuracion</class>
-		<class>audigoes.ues.edu.sv.mbeans.administracion.Criterio</class>
+		<class>audigoes.ues.edu.sv.entities.administracion.Criterio</class>
 		<class>audigoes.ues.edu.sv.entities.informe.Destinatario</class>
 		<class>audigoes.ues.edu.sv.entities.planeacion.DocumentoPlan</class>
 		<class>audigoes.ues.edu.sv.entities.ejecucion.DocumentosEjecucion</class>

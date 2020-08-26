@@ -4,7 +4,6 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
-import audigoes.ues.edu.sv.mbeans.administracion.Criterio;
 
 import java.util.Date;
 import java.util.List;
