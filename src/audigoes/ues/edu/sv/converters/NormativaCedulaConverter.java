@@ -29,9 +29,7 @@ public class NormativaCedulaConverter implements Converter {
 			}
 			
 			setSecurityMB((SecurityController) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("loginMB"));
-			System.out.println(id);
 			registro = (NormativaCedula) getSecurityMB().getAudigoesLocal().findByPk(NormativaCedula.class, id);
-			System.out.println(registro.getNorId());
 			if (registro == null) {
 				throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error en conversión",
 						"No se pudo convertir el objeto"));
