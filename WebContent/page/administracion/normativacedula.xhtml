@@ -111,8 +111,7 @@
 						<p:panelGrid columns="2" style="margin-bottom:10px" layout="grid" styleClass="form-group ui-panelgrid-blank">
 							<p:selectOneMenu id="tipo" value="#{norMB.registro.norTipo}" style="margin-bottom:10px;"
 								  required="true">
-			                    <f:selectItem itemLabel="Normativa" itemValue="1"/>
-			                    <f:selectItem itemLabel="Cedula" itemValue="0"/>
+			                    <f:selectItems value="#{norMB.tipoList}"/>
 			                </p:selectOneMenu>
 			            </p:panelGrid>
 					</div>

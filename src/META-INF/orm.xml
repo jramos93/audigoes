@@ -6,6 +6,7 @@
 	<named-query name="institucion.all"><query>select o from Institucion o</query></named-query>
 	<named-query name="normativacedula.all"><query>select o from NormativaCedula o</query></named-query>
 	<named-query name="origenauditoria.all"><query>select o from OrigenAuditoria o</query></named-query>
+	<named-query name="criterio.all"><query>select o from Criterio o</query></named-query>
 	<named-native-query name="rol.all" result-class="audigoes.ues.edu.sv.entities.administracion.Rol">
 		<query>select o.* from Rol o</query>
 	</named-native-query>

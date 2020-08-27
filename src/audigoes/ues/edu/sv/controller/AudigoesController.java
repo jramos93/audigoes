@@ -21,6 +21,14 @@ public class AudigoesController {
 	@EJB(beanName = "audigoesSBSL")
 	protected audigoesSBSLLocal audigoesLocal;
 
+	public audigoesSBSLLocal getAudigoesLocal() {
+		return audigoesLocal;
+	}
+
+	public void setAudigoesLocal(audigoesSBSLLocal audigoesLocal) {
+		this.audigoesLocal = audigoesLocal;
+	}
+
 	public AudigoesController() {
 		super();
 	}

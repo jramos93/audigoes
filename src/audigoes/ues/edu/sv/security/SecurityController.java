@@ -21,6 +21,8 @@ import audigoes.ues.edu.sv.entities.administracion.Sesiones;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.administracion.UsuarioPermiso;
 import audigoes.ues.edu.sv.session.ValidacionSBSLLocal;
+import audigoes.ues.edu.sv.util.Test;
+import audigoes.ues.edu.sv.util.Utils;
 
 public class SecurityController extends AudigoesController {
 
