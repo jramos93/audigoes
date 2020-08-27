@@ -9,4 +9,5 @@
 	<named-query name="criterio.all"><query>select o from Criterio o</query></named-query>
 	<named-query name="unidad.all"><query>select o from Unidad o</query></named-query>
 	<named-query name="rol.all"><query>select o from Rol o</query></named-query>
+	<named-query name="configuracion.all"><query>select o from Configuracion o Where o.institucion.insId = ?1</query></named-query>
 </entity-mappings>

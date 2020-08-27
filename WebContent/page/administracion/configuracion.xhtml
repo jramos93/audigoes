@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Audigoes</ui:define>
+
+	<ui:define name="content">
+		<div class="name" align="center">
+			<span class="app-name">Configuración Variables de Sistema</span>
+		</div>
+		<h:form id="frm">
+
+
+			<p:dataTable var="conf" value="#{confMB.listado}" rowIndexVar="index"
+				widgetVar="wvConiguraciones" reflow="true" id="dtInstituciones"
+				style="margin-top:20px;" editable="true">
+
+				<f:facet name="header"> Variables del Sistema</f:facet>
+
+				<p:ajax event="rowEdit" listener="#{confMB.onRowEdit}" />
+				<p:ajax event="rowEditCancel" listener="#{confMB.onRowCancel}" />
+
+				<p:column headerText="N°" style="width:35px">
+					<h:outputText value="#{index+1}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Nombre">
+					<h:outputText value="#{conf.variablesSistema.varNombre}" />
+				</p:column>
+
+				<p:column headerText="Valor">
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{conf.conValor}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText id="convalor" value="#{conf.conValor}" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+				
+				<p:column headerText="Nombre">
+					<h:outputText value="#{conf.variablesSistema.varDescripcion}" />
+				</p:column>
+
+				<p:column style="width:35px">
+					<p:rowEditor />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog widgetVar="wvInsNewEdit" responsive="true" width="500"
+			closeOnEscape="true" header="Gestión de Instituciones" modal="true">
+			<h:form id="frmInsNewEdit">
+				<div class="ui-fluid p-formgrid p-grid">
+					<div class="p-field p-col">
+						<p:outputLabel for="nombre" value="Nombre del institución:" />
+						<p:inputText id="nombre" value="#{insMB.registro.insNombre}"
+							required="true" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="slogan" value="Eslogan:" />
+						<p:inputTextarea id="slogan" rows="4" required="true"
+							value="#{insMB.registro.insSlogan}" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="abreviatura" value="Abreviatura nombre:" />
+						<p:inputText id="abreviatura"
+							value="#{insMB.registro.insIniciales}" required="true" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="nit" value="NIT:" />
+						<p:inputText id="nit" value="#{insMB.registro.insNit}"
+							required="true" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="telefono" value="Teléfono:" />
+						<p:inputText id="telefono" value="#{insMB.registro.insTelefono}"
+							required="true" />
+					</div>
+
+					<div class="p-field-radiobutton">
+						<p:outputLabel for="estado" value="Estado:" />
+						<p:selectOneRadio id="estado" value="#{insMB.registro.regActivo}"
+							required="true" disabled="#{insMB.status=='NEW'}">
+							<f:selectItems value="#{insMB.regActivoList}"></f:selectItems>
+						</p:selectOneRadio>
+					</div>
+
+
+					<p:commandButton actionListener="#{insMB.onSave}" value="Guardar"
+						oncomplete="PF('wvInsNewEdit').hide();"
+						update=":frm:dtInstituciones" />
+				</div>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

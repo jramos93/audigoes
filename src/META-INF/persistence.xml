@@ -52,5 +52,6 @@
 		<class>audigoes.ues.edu.sv.entities.administracion.UsuarioPermiso</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.UsuarioUnidad</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Sesiones</class>
+		<class>audigoes.ues.edu.sv.entities.administracion.VariablesSistema</class>
 	</persistence-unit>
 </persistence>

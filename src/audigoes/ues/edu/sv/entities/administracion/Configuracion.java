@@ -7,52 +7,53 @@ import audigoes.ues.edu.sv.entities.SuperEntity;
 
 import java.util.Date;
 
-
 /**
  * The persistent class for the configuracion database table.
  * 
  */
 @Entity
-@NamedQuery(name="Configuracion.findAll", query="SELECT c FROM Configuracion c")
+@NamedQuery(name = "Configuracion.findAll", query = "SELECT c FROM Configuracion c")
 public class Configuracion extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "con_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "con_id", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "con_id")
-	@Column(name="con_id")
+	@Column(name = "con_id")
 	private int conId;
 
-	@Column(name="con_descripcion")
+	@Column(name = "con_descripcion")
 	private String conDescripcion;
 
-	@Column(name="con_nombre")
-	private String conNombre;
-
-	@Column(name="con_valor")
+	@Column(name = "con_valor")
 	private String conValor;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_crea")
+	@Column(name = "fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_modi")
+	@Column(name = "fec_modi")
 	private Date fecModi;
 
-	@Column(name="reg_activo")
+	@Column(name = "reg_activo")
 	private int regActivo;
 
-	@Column(name="usu_crea")
+	@Column(name = "usu_crea")
 	private String usuCrea;
 
-	@Column(name="usu_modi")
+	@Column(name = "usu_modi")
 	private String usuModi;
 
-	//bi-directional many-to-one association to Institucion
+	// bi-directional many-to-one association to Institucion
 	@ManyToOne
-	@JoinColumn(name="con_ins_id")
+	@JoinColumn(name = "con_ins_id")
 	private Institucion institucion;
+
+	// bi-directional many-to-one association to VariablesSistema
+	@ManyToOne
+	@JoinColumn(name = "con_var_id")
+	private VariablesSistema variablesSistema;
 
 	public Configuracion() {
 	}
@@ -71,14 +72,6 @@ public class Configuracion extends SuperEntity implements Serializable {
 
 	public void setConDescripcion(String conDescripcion) {
 		this.conDescripcion = conDescripcion;
-	}
-
-	public String getConNombre() {
-		return this.conNombre;
-	}
-
-	public void setConNombre(String conNombre) {
-		this.conNombre = conNombre;
 	}
 
 	public String getConValor() {
@@ -137,6 +130,14 @@ public class Configuracion extends SuperEntity implements Serializable {
 		this.institucion = institucion;
 	}
 
+	public VariablesSistema getVariablesSistema() {
+		return variablesSistema;
+	}
+
+	public void setVariablesSistema(VariablesSistema variablesSistema) {
+		this.variablesSistema = variablesSistema;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -161,9 +162,9 @@ public class Configuracion extends SuperEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Configuracion [conId=" + conId + ", conDescripcion=" + conDescripcion + ", conNombre=" + conNombre
-				+ ", conValor=" + conValor + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo="
-				+ regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", institucion=" + institucion + "]";
+		return "Configuracion [conId=" + conId + ", conDescripcion=" + conDescripcion + ", conValor=" + conValor
+				+ ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo=" + regActivo + ", usuCrea=" + usuCrea
+				+ ", usuModi=" + usuModi + ", institucion=" + institucion + ", variablesSistema=" + variablesSistema
+				+ "]";
 	}
-
 }
