@@ -7,9 +7,9 @@
 	<ui:define name="title">Audigoes</ui:define>
 
 	<ui:define name="content">
-	<div class="name" align="center">
-		<span class="app-name">Gestion de Roles</span>
-	</div>
+		<div class="name" align="center">
+			<span class="app-name">Gestion de Roles</span>
+		</div>
 		<h:form id="frm">
 
 
@@ -36,7 +36,7 @@
 					</p:outputPanel>
 				</f:facet>
 
-				<p:column headerText="Id">
+				<p:column headerText="Id" style="width:35px;">
 					<h:outputText value="#{rol.rolId}"></h:outputText>
 				</p:column>
 
@@ -49,7 +49,7 @@
 				</p:column>
 
 				<p:column headerText="Estado" filterBy="#{rol.regActivo}"
-					filterMatchMode="exact">
+					filterMatchMode="exact" style="text-align:center;">
 					<f:facet name="filter">
 						<p:selectOneMenu onchange="PF('wvRoles').filter();">
 							<f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}"
@@ -61,7 +61,15 @@
 						converter="regActivoConverter"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Modificar">
+				<p:column headerText="Permisos" style="text-align:center;">
+					<p:commandButton update=":frmRolNewEdit"
+						oncomplete="PF('wvRolNewEdit').show()" icon="pi pi-pencil"
+						title="Modificar" actionListener="#{rolMB.onEdit}">
+						<f:setPropertyActionListener value="#{rol}"
+							target="#{rolMB.registro}" />
+					</p:commandButton>
+				</p:column>
+				<p:column headerText="Modificar" style="text-align:center;">
 					<p:commandButton update=":frmRolNewEdit"
 						oncomplete="PF('wvRolNewEdit').show()" icon="pi pi-pencil"
 						title="Modificar" actionListener="#{rolMB.onEdit}">
@@ -75,30 +83,16 @@
 		<p:dialog widgetVar="wvRolNewEdit" responsive="true" width="500"
 			closeOnEscape="true" header="Gestión de Roles" modal="true">
 			<h:form id="frmRolNewEdit">
-				<div class="ui-fluid p-formgrid p-grid">
-					<div class="p-field p-col">
-						<p:outputLabel for="nombre" value="Nombre del rol:" />
-						<p:inputText id="nombre" value="#{rolMB.registro.rolNombre}"
-							required="true" maxlength="250" />
-					</div>
-					<div class="p-field p-col">
-						<p:outputLabel for="descripcion" value="Descripción del rol:" />
-						<p:inputTextarea id="descripcion" rows="4" required="true"
-							value="#{rolMB.registro.rolDescripcion}" maxlength="1000" />
-					</div>
-
-					<div class="p-field-radiobutton">
-						<p:outputLabel for="estado" value="Descripción del rol:" />
-						<p:selectOneRadio id="estado" value="#{rolMB.registro.regActivo}"
-							required="true" disabled="#{rolMB.status=='NEW'}">
-							<f:selectItems value="#{rolMB.regActivoList}"></f:selectItems>
-						</p:selectOneRadio>
-					</div>
-
-
-					<p:commandButton actionListener="#{rolMB.onSave}" value="Guardar"
-						oncomplete="PF('wvRolNewEdit').hide();" update=":frm:dtRoles"></p:commandButton>
-				</div>
+				<p:dataGrid var="permiso" value="#{rolMB.registro.rolPermiso}"
+					columns="2" rows="16" paginator="true" id="permisosRol"
+					paginatorPosition="bottom" style="text-align:center;"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="6,12,16">
+					<f:facet name="header">
+						Detalle de permisos rol #{rolMB.registro.rolNombre}
+					</f:facet>
+					<h:outputText value="#{permiso.permiso.perNombre}" />
+				</p:dataGrid>
 			</h:form>
 		</p:dialog>
 	</ui:define>

@@ -11,26 +11,41 @@
 				<div class="layout-menu-container">
 					<h:form id="menuform">
 						<pv:menu id="pvMenu">
-							<p:submenu label="Administraciòn" icon="pi pi-file">
-								<p:menuitem value="Gestion de Roles" url="#" />
+							<p:submenu label="Administración" icon="pi pi-file">
+								<p:menuitem value="Gestion de Roles" url="/audigoes/page/administracion/roles.xhtml" />
 								<p:separator />
-								<p:menuitem value="Gestion de Usuarios" url="#" />
+								<p:menuitem value="Gestion de Usuarios" url="/audigoes/page/administracion/usuarios.xhtml" />
 								<p:separator />
-								<p:menuitem value="Gestion de Instituciòn" url="#" />
+								<p:menuitem value="Gestion de Institución" url="/audigoes/page/administracion/institucion.xhtml" />
 								<p:separator />
 								<p:submenu label="Gestion de Catalogos" icon="pi pi-briefcase">
-									<p:menuitem value="Tipos de Auditoria" url="#" />
+									<p:menuitem value="Tipos de Auditoria" url="/audigoes/page/administracion/tipoauditoria.xhtml" />
 									<p:separator />
-									<p:menuitem value="Unidades Administrativas" url="#" />
+									<p:menuitem value="Unidades Administrativas" url="/audigoes/page/administracion/unidad.xhtml" />
 									<p:separator />
-									<p:menuitem value="Origen de Auditoria" url="#" />
+									<p:menuitem value="Origen de Auditoria" url="/audigoes/page/administracion/origenauditoria.xhtml" />
 									<p:separator />
-									<p:menuitem value="Normativas" url="#" />
+									<p:menuitem value="Normativas" url="/audigoes/page/administracion/normativacedula.xhtml" />
 									<p:separator />
-									<p:menuitem value="Criterios" url="#" />
+									<p:menuitem value="Criterios" url="/audigoes/page/administracion/criterio.xhtml" />
 									<p:separator />
-									<p:menuitem value="Marcas" url="#" />
+									<p:menuitem value="Marcas" url="/audigoes/page/administracion/marcas.xhtml" />
 								</p:submenu>
+							</p:submenu>
+							<p:submenu label="Planeacion" icon="pi pi-calendar-plus">
+							</p:submenu>
+							<p:submenu label="Auditorías" icon="pi pi-search">
+								<p:submenu label="Fase de Planificacion" icon="pi pi-list">
+								</p:submenu>
+								<p:submenu label="Fase de Ejecucion" icon="pi pi-check-circle">
+								</p:submenu>
+								<p:submenu label="Fase de Informe" icon="pi pi-folder-open">
+								</p:submenu>
+								<p:submenu label="Fase de Seguimiento" icon="pi pi-pencil">
+								</p:submenu>
+							</p:submenu>
+
+							<p:submenu label="Consultas" icon="pi pi-chart-line">
 							</p:submenu>
 
 							<p:submenu label="Planeacion" icon="pi pi-calendar-plus">
