@@ -91,27 +91,32 @@
 					<div class="p-field p-col">
 						<p:outputLabel for="nombre" value="Nombre del institución:" />
 						<p:inputText id="nombre" value="#{insMB.registro.insNombre}"
-							required="true" />
+							required="true" maxlength="250" />
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="slogan" value="Eslogan:" />
 						<p:inputTextarea id="slogan" rows="4" required="true"
-							value="#{insMB.registro.insSlogan}" />
+							value="#{insMB.registro.insSlogan}" maxlength="1000" />
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="abreviatura" value="Abreviatura nombre:" />
 						<p:inputText id="abreviatura" value="#{insMB.registro.insIniciales}"
-							required="true" />
+							required="true" maxlength="25" />
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="nit" value="NIT:" />
-						<p:inputText id="nit" value="#{insMB.registro.insNit}"
-							required="true" />
+						<p:inputMask id="nit" value="#{insMB.registro.insNit}"
+							required="true" mask="999-999999-999-9" />
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="telefono" value="Teléfono:" />
 						<p:inputText id="telefono" value="#{insMB.registro.insTelefono}"
-							required="true" />
+							required="true" maxlength="250" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="direccion" value="Dirección:" />
+						<p:inputTextarea id="direccion" rows="4" required="true"
+							value="#{insMB.registro.insDireccion}" maxlength="1000" />
 					</div>
 
 					<div class="p-field-radiobutton">

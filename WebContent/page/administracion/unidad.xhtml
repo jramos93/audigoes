@@ -81,22 +81,22 @@
 					<div class="p-field p-col">
 						<p:outputLabel for="nombre" value="Nombre de la unidad:" />
 						<p:inputText id="nombre" value="#{uniMB.registro.uniNombre}"
-							required="true" />
+							required="true" maxlength="250" />
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="descripcion" value="Descripción:" />
 						<p:inputTextarea id="descripcion" rows="4" required="true"
-							value="#{uniMB.registro.uniDescripcion}" />
+							value="#{uniMB.registro.uniDescripcion}" maxlength="1000"/>
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="abreviatura" value="Abreviatura nombre:" />
 						<p:inputText id="abreviatura" value="#{uniMB.registro.uniIniciales}"
-							required="true" />
+							required="true" maxlength="25" />
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="ubicacion" value="Ubicación:" />
 						<p:inputText id="ubicacion" value="#{uniMB.registro.uniUbicacion}"
-							required="true" />
+							required="true" maxlength="1000" />
 					</div>
 					
 					<div class="p-field-radiobutton">

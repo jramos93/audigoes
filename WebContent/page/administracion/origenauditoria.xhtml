@@ -79,12 +79,12 @@
 					<div class="p-field p-col">
 						<p:outputLabel for="nombre" value="Nombre del origen de auditoria:" />
 						<p:inputText id="nombre" value="#{oriMB.registro.oriNombre}"
-							required="true" />
+							required="true" maxlength="250" />
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="descripcion" value="Descripción del Origen de Auditoria" />
 						<p:inputTextarea id="descripcion" rows="4" required="true"
-							value="#{oriMB.registro.oriDescripcion}" />
+							value="#{oriMB.registro.oriDescripcion}" maxlength="1000" />
 					</div>
 
 					<div class="p-field-radiobutton">

@@ -79,12 +79,12 @@
 					<div class="p-field p-col">
 						<p:outputLabel for="nombre" value="Nombre del rol:" />
 						<p:inputText id="nombre" value="#{rolMB.registro.rolNombre}"
-							required="true" />
+							required="true" maxlength="250" />
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="descripcion" value="Descripción del rol:" />
 						<p:inputTextarea id="descripcion" rows="4" required="true"
-							value="#{rolMB.registro.rolDescripcion}" />
+							value="#{rolMB.registro.rolDescripcion}" maxlength="1000" />
 					</div>
 
 					<div class="p-field-radiobutton">
