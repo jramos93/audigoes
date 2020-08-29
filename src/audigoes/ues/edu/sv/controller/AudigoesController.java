@@ -59,6 +59,7 @@ public class AudigoesController {
 	/* propiedades de utilerìa bàsica */
 	private List<SelectItem> siNoList;
 	private List<SelectItem> regActivoList;
+	private List<SelectItem> generoList;
 	
 	protected ObjAppsSession objAppsSession;
 	protected String outcome;
@@ -372,6 +373,19 @@ public class AudigoesController {
 
 	public void setOutcome(String outcome) {
 		this.outcome = outcome;
+	}
+	
+	public List<SelectItem> getGeneroList() {
+		if (generoList == null) {
+			generoList = new ArrayList<SelectItem>();
+			generoList.add(new SelectItem(0, "F"));
+			generoList.add(new SelectItem(1, "M"));
+		}
+		return generoList;
+	}
+
+	public void setGeneroList(List<SelectItem> generoList) {
+		this.generoList = generoList;
 	}
 
 	

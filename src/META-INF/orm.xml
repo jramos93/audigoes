@@ -3,8 +3,9 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd">
 
 	<named-query name="tipoauditoria.all"><query>select o from TipoAuditoria o</query></named-query>
+<!-- 	<named-query name="rol.all"><query>select o from Rol o </query></named-query> -->
 	<named-query name="institucion.all"><query>select o from Institucion o</query></named-query>
-	<named-query name="normativacedula.all"><query>select o from NormativaCedula o</query></named-query>
+	<named-query name="usuarios.all"><query>select o from Usuario o</query></named-query>
 	<named-query name="origenauditoria.all"><query>select o from OrigenAuditoria o</query></named-query>
 	<named-query name="criterio.all"><query>select o from Criterio o</query></named-query>
 	<named-query name="unidad.all"><query>select o from Unidad o</query></named-query>
