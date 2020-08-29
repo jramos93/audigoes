@@ -14,4 +14,5 @@ public interface audigoesSBSLLocal {
 	void delete(SuperEntity entidad) throws Exception;
 	Object findByPk(Class<? extends Serializable> clase, Object parametros);
 	List<?> findByNamedQuery(Class<? extends Serializable> clase, String nameQuery, Object[] arrayParametros) throws Exception;
+	Object findByPropertyUnique(Class<? extends Serializable> clase, String var, Object parametros);
 }

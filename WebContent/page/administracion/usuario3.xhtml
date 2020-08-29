@@ -1,0 +1,96 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Audigoes</ui:define>
+
+	<ui:define name="content">
+		<div class="name" align="center">
+			<span class="app-name">Gestión de Usuarios</span>
+		</div>
+		<h:form id="frm">
+			<p:dataTable var="usu" value="#{usuMB.listado}" widgetVar="wvUsuario"
+				reflow="true" id="dtUsuario" style="margin-top:20px;"
+				paginator="true" filteredValue="#{usuMB.filteredUsuarios}"
+				globalFilterFunction="#{usuMB.globalFilterFunction}"
+				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+				rowKey="#{usuMB.registro.usuId}">
+
+				<f:facet name="paginatorTopLeft">
+					<p:commandButton value="Agregar" icon="pi pi-plus"
+						actionListener="#{usuMB.onNew}"
+						oncomplete="PF('wvUsuNewEdit').show();" update=":frmUsuNewEdit" />
+				</f:facet>
+
+				<f:facet name="paginatorTopRight">
+					<p:outputPanel>
+						<h:outputText value="Búsqueda global: " />
+						<p:inputText id="globalFilter" onkeyup="PF('wvUsuario').filter();"
+							style="width:150px" placeholder="Ingresa una palabra" />
+					</p:outputPanel>
+				</f:facet>
+
+				<p:column headerText="Usuario">
+					<h:outputText value="#{usu.usuUsuario} - #{usu.usuId}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Nombre">
+					<h:outputText value="#{usu.usuNombre}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Apellido">
+					<h:outputText value="#{usu.usuApellido}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Carnet">
+					<h:outputText value="#{usu.usuCarnetEmpleado}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Correo">
+					<h:outputText value="#{usu.usuCorreo}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Puesto Funcional">
+					<h:outputText value="#{usu.usuCargo}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Estado" filterBy="#{usu.regActivo}"
+					filterMatchMode="exact">
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('wvUsuario').filter();">
+							<f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}"
+								noSelectionOption="true" />
+							<f:selectItems value="#{usuMB.regActivoList}" />
+						</p:selectOneMenu>
+					</f:facet>
+					<h:outputText value="#{usu.regActivo}"
+						converter="regActivoConverter"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Modificar">
+
+					<p:commandButton update=":frmUsuNewEdit"
+						oncomplete="PF('wvUsuNewEdit').show();" icon="pi pi-pencil"
+						title="Modificar" actionListener="#{usuMB.onEdit}">
+						<f:setPropertyActionListener value="#{usu}" 
+							target="#{usuMB.registro}" />
+					</p:commandButton>
+
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog widgetVar="wvUsuNewEdit" responsive="true" resizable="true"
+			maximizable="true" minimizable="true" closable="true"
+			closeOnEscape="true" header="Gestión de Usuario" modal="true">
+			<h:form id="frmUsuNewEdit">
+				<div class="ui-fluid"></div>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

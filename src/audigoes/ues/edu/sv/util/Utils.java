@@ -9,6 +9,23 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 public class Utils {
+	
+	public static final String claveEstandar = "Cambiame1";
+	
+	public static final String rolAuditor = "AUDITOR";
+	public static final String rolCoordinador = "COORDINADOR";
+	public static final String rolJefe = "JEFATURA";
+	public static final String rolAuditado = "AUDITADO";
+	public static final String rolGeneral = "GENERAL";
+	
+	
+	public static final String perCreate = "AGREGAR";
+	public static final String perRead = "CONSULTAR";
+	public static final String perUpdate = "MODIFICAR";
+	public static final String perDelete = "ELIMINAR";
+	public static final String perGeneral = "GENERAL";
+	public static final String perLogin = "LOGIN";
+	
 
 	public static String getShaString(String texto) {
 		try {
@@ -49,29 +66,4 @@ public class Utils {
 		}
 
 	}
-	
-	
-//	
-//	public static String getAESString(String texto) {
-//		try {
-//			System.out.println("p-texto "+texto);
-//			Cipher cipher;
-//			cipher = Cipher.getInstance("AES");
-//			KeyGenerator keyGenerator;
-//			keyGenerator = KeyGenerator.getInstance("AES");
-//
-//			keyGenerator.init(256);
-//			SecretKey secretKey = keyGenerator.generateKey();
-//			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-//			byte[] encrypText = cipher.doFinal(texto.getBytes());
-//			
-//			System.out.println("Encrypted text: " + new String(encrypText));
-//			System.out.println("Encrypted text: " + new String(encrypText));
-//
-//			return new String(encrypText);
-//		} catch (Exception e) {
-//			throw new RuntimeException(e);
-//		}
-//
-//	}
 }

@@ -34,6 +34,9 @@ public class RolPermiso extends SuperEntity implements Serializable {
 
 	@Column(name="reg_activo")
 	private int regActivo;
+	
+	@Column(name="rlp_selected")
+	private int rlpSelected;
 
 	@Column(name="usu_crea")
 	private String usuCrea;
@@ -84,6 +87,14 @@ public class RolPermiso extends SuperEntity implements Serializable {
 
 	public void setRegActivo(int regActivo) {
 		this.regActivo = regActivo;
+	}
+
+	public int getRlpSelected() {
+		return rlpSelected;
+	}
+
+	public void setRlpSelected(int rlpSelected) {
+		this.rlpSelected = rlpSelected;
 	}
 
 	public String getUsuCrea() {
@@ -143,8 +154,8 @@ public class RolPermiso extends SuperEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "RolPermiso [rlpId=" + rlpId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo="
-				+ regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", permiso=" + permiso + ", rol=" + rol
-				+ "]";
+				+ regActivo + ", rlpSelected=" + rlpSelected + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi
+				+ ", permiso=" + permiso + ", rol=" + rol + "]";
 	}
 
 }

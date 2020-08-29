@@ -217,9 +217,9 @@ public class Rol extends SuperEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "Rol [rolId=" + rolId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo=" + regActivo
-				+ ", rolDescripcion=" + rolDescripcion + ", rolNombre=" + rolNombre + ", usuCrea=" + usuCrea
-				+ ", usuModi=" + usuModi + ", rolMenu=" + rolMenu + ", rolPermiso=" + rolPermiso + ", usuarioPermiso="
-				+ usuarioPermiso + "]";
+				+ ", rolDescripcion=" + rolDescripcion + ", rolNombre=" + rolNombre
+				+ ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", rolMenu=" + rolMenu + ", rolPermiso="
+				+ rolPermiso + ", usuarioPermiso=" + usuarioPermiso + "]";
 	}
 
 }
