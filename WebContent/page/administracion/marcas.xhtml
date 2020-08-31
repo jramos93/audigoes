@@ -1,0 +1,121 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Audigoes</ui:define>
+
+	<ui:define name="content">
+	<div class="name" align="center">
+		<span class="app-name">Gestion de Marcas</span>
+	</div>
+		<h:form id="frm">
+
+
+			<p:dataTable var="mar" value="#{marMB.listado}" widgetVar="wvMarcas"
+				reflow="true" id="dtMarcas" style="margin-top:20px;" paginator="true"
+				filteredValue="#{marMB.filteredMarcas}"
+				globalFilterFunction="#{marMB.globalFilterFunction}"
+				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+				rowKey="#{marMB.registro.marId}">
+
+				<f:facet name="paginatorTopLeft">
+					<p:commandButton value="Agregar" icon="pi pi-plus"
+						actionListener="#{marMB.onNew}"
+						oncomplete="PF('wvMarNewEdit').show();" update=":frmMarNewEdit"></p:commandButton>
+				</f:facet>
+
+				<f:facet name="paginatorTopRight">
+					<p:outputPanel>
+						<h:outputText value="Búsqueda global: " />
+						<p:inputText id="globalFilter" onkeyup="PF('wvMarcas').filter();"
+							style="width:150px" placeholder="Ingresa una palabra" />
+					</p:outputPanel>
+				</f:facet>
+
+				<p:column headerText="Id">
+					<h:outputText value="#{mar.marId}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Nombre">
+					<h:outputText value="#{mar.marNombre}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Descripcion">
+					<h:outputText value="#{mar.marDescripcion}"></h:outputText>
+				</p:column>
+				
+				<p:column headerText="Simbolo">
+					<h:outputText value="#{mar.marSimbolo}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Estado" filterBy="#{mar.regActivo}"
+					filterMatchMode="exact">
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('wvMarcas').filter();">
+							<f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}"
+								noSelectionOption="true" />
+							<f:selectItems value="#{marMB.regActivoList}" />
+						</p:selectOneMenu>
+					</f:facet>
+					<h:outputText value="#{mar.regActivo}"
+						converter="regActivoConverter"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Modificar">
+					<p:commandButton update=":frmMarNewEdit"
+						oncomplete="PF('wvMarNewEdit').show()" icon="pi pi-pencil"
+						title="Modificar" actionListener="#{marMB.onEdit}">
+						<f:setPropertyActionListener value="#{mar}"
+							target="#{marMB.registro}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog widgetVar="wvMarNewEdit" responsive="true" width="500"
+			closeOnEscape="true" header="Gestión de Marcas" modal="true">
+			<h:form id="frmMarNewEdit">
+				<div class="ui-fluid p-formgrid p-grid">
+					<div class="p-field p-col">
+						<p:outputLabel for="nombre" value="Nombre de la marca:" />
+						<p:inputText id="nombre" value="#{marMB.registro.marNombre}"
+							required="true" maxlength="250" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="descripcion" value="Descripción de la marca:" />
+						<p:inputTextarea id="descripcion" rows="4" required="true"
+							value="#{marMB.registro.marDescripcion}" maxlength="1000" />
+					</div>
+					
+					<div>
+						<h:form enctype="multipart/form-data">
+							<p:outputLabel value="Adjunte Simbolo:" />
+							<p:growl showDetail="true" />
+							<p:fileUpload mode="advanced" cancelLabel="Cancelar"
+								label="Seleccionar" uploadLabel="Subir"
+								listener="#{marMB.fileUploadListener}" />
+
+						</h:form>
+					</div>
+
+					<div class="p-field-radiobutton">
+						<p:outputLabel for="estado" value="Estado:" />
+						<p:selectOneRadio id="estado" value="#{marMB.registro.regActivo}"
+							required="true" disabled="#{marMB.status=='NEW'}">
+							<f:selectItems value="#{marMB.regActivoList}"></f:selectItems>
+						</p:selectOneRadio>
+					</div>
+
+
+					<p:commandButton actionListener="#{marMB.onSave}" value="Guardar"
+						oncomplete="PF('wvMarNewEdit').hide();" update=":frm:dtMarcas"></p:commandButton>
+				</div>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>
