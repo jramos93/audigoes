@@ -6,7 +6,7 @@ import javax.persistence.*;
 import audigoes.ues.edu.sv.entities.SuperEntity;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -62,12 +62,12 @@ public class Menu extends SuperEntity implements Serializable {
 	private Menu menu;
 
 	//bi-directional many-to-one association to Menu
-	@OneToMany(mappedBy="menu")
-	private List<Menu> menus;
+	@OneToMany(mappedBy="menu", fetch=FetchType.EAGER)
+	private Set<Menu> menus;
 
 	//bi-directional many-to-one association to RolMenu
-	@OneToMany(mappedBy="menu")
-	private List<RolMenu> rolMenu;
+	@OneToMany(mappedBy="menu", fetch=FetchType.EAGER)
+	private Set<RolMenu> rolMenu;
 
 	public Menu() {
 	}
@@ -168,11 +168,11 @@ public class Menu extends SuperEntity implements Serializable {
 		this.menu = menu;
 	}
 
-	public List<Menu> getMenus() {
+	public Set<Menu> getMenus() {
 		return this.menus;
 	}
 
-	public void setMenus(List<Menu> menus) {
+	public void setMenus(Set<Menu> menus) {
 		this.menus = menus;
 	}
 
@@ -190,11 +190,11 @@ public class Menu extends SuperEntity implements Serializable {
 		return menus;
 	}
 
-	public List<RolMenu> getRolMenu() {
+	public Set<RolMenu> getRolMenu() {
 		return this.rolMenu;
 	}
 
-	public void setRolMenu(List<RolMenu> rolMenu) {
+	public void setRolMenu(Set<RolMenu> rolMenu) {
 		this.rolMenu = rolMenu;
 	}
 

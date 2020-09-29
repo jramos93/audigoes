@@ -6,7 +6,7 @@ import javax.persistence.*;
 import audigoes.ues.edu.sv.entities.SuperEntity;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -49,8 +49,8 @@ public class TipoAuditoria extends SuperEntity implements Serializable {
 	private String usuModi;
 
 	//bi-directional many-to-one association to Auditoria
-	@OneToMany(mappedBy="tipoAuditoria")
-	private List<Auditoria> auditoria;
+	@OneToMany(mappedBy="tipoAuditoria", fetch=FetchType.EAGER)
+	private Set<Auditoria> auditoria;
 
 	public TipoAuditoria() {
 	}
@@ -119,11 +119,11 @@ public class TipoAuditoria extends SuperEntity implements Serializable {
 		this.usuModi = usuModi;
 	}
 
-	public List<Auditoria> getAuditoria() {
+	public Set<Auditoria> getAuditoria() {
 		return this.auditoria;
 	}
 
-	public void setAuditoria(List<Auditoria> auditoria) {
+	public void setAuditoria(Set<Auditoria> auditoria) {
 		this.auditoria = auditoria;
 	}
 

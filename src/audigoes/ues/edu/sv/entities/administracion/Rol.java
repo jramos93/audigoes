@@ -6,7 +6,7 @@ import javax.persistence.*;
 import audigoes.ues.edu.sv.entities.SuperEntity;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -48,16 +48,16 @@ public class Rol extends SuperEntity implements Serializable {
 	private String usuModi;
 
 	//bi-directional many-to-one association to RolMenu
-	@OneToMany(mappedBy="rol")
-	private List<RolMenu> rolMenu;
+	@OneToMany(mappedBy="rol", fetch=FetchType.EAGER)
+	private Set<RolMenu> rolMenu;
 
 	//bi-directional many-to-one association to RolPermiso
-	@OneToMany(mappedBy="rol")
-	private List<RolPermiso> rolPermiso;
+	@OneToMany(mappedBy="rol", fetch=FetchType.EAGER)
+	private Set<RolPermiso> rolPermiso;
 
 	//bi-directional many-to-one association to UsuarioPermiso
-	@OneToMany(mappedBy="rol")
-	private List<UsuarioPermiso> usuarioPermiso;
+	@OneToMany(mappedBy="rol", fetch=FetchType.EAGER)
+	private Set<UsuarioPermiso> usuarioPermiso;
 
 	public Rol() {
 	}
@@ -126,11 +126,11 @@ public class Rol extends SuperEntity implements Serializable {
 		this.usuModi = usuModi;
 	}
 
-	public List<RolMenu> getRolMenu() {
+	public Set<RolMenu> getRolMenu() {
 		return this.rolMenu;
 	}
 
-	public void setRolMenu(List<RolMenu> rolMenu) {
+	public void setRolMenu(Set<RolMenu> rolMenu) {
 		this.rolMenu = rolMenu;
 	}
 
@@ -148,11 +148,11 @@ public class Rol extends SuperEntity implements Serializable {
 		return rolMenu;
 	}
 
-	public List<RolPermiso> getRolPermiso() {
+	public Set<RolPermiso> getRolPermiso() {
 		return this.rolPermiso;
 	}
 
-	public void setRolPermiso(List<RolPermiso> rolPermiso) {
+	public void setRolPermiso(Set<RolPermiso> rolPermiso) {
 		this.rolPermiso = rolPermiso;
 	}
 
@@ -170,11 +170,11 @@ public class Rol extends SuperEntity implements Serializable {
 		return rolPermiso;
 	}
 
-	public List<UsuarioPermiso> getUsuarioPermiso() {
+	public Set<UsuarioPermiso> getUsuarioPermiso() {
 		return this.usuarioPermiso;
 	}
 
-	public void setUsuarioPermiso(List<UsuarioPermiso> usuarioPermiso) {
+	public void setUsuarioPermiso(Set<UsuarioPermiso> usuarioPermiso) {
 		this.usuarioPermiso = usuarioPermiso;
 	}
 

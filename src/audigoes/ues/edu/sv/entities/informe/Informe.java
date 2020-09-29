@@ -7,7 +7,7 @@ import audigoes.ues.edu.sv.entities.SuperEntity;
 import audigoes.ues.edu.sv.entities.planificacion.Actividad;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -96,12 +96,12 @@ public class Informe extends SuperEntity implements Serializable {
 	private String usuModi;
 
 	//bi-directional many-to-one association to ActaLectura
-	@OneToMany(mappedBy="informe")
-	private List<ActaLectura> actaLectura;
+	@OneToMany(mappedBy="informe", fetch=FetchType.EAGER)
+	private Set<ActaLectura> actaLectura;
 
 	//bi-directional many-to-one association to CedulaNota
-	@OneToMany(mappedBy="informe")
-	private List<CedulaNota> cedulaNotas;
+	@OneToMany(mappedBy="informe", fetch=FetchType.EAGER)
+	private Set<CedulaNota> cedulaNotas;
 
 	//bi-directional many-to-one association to Actividad
 	@ManyToOne
@@ -271,11 +271,11 @@ public class Informe extends SuperEntity implements Serializable {
 		this.usuModi = usuModi;
 	}
 
-	public List<ActaLectura> getActaLectura() {
+	public Set<ActaLectura> getActaLectura() {
 		return this.actaLectura;
 	}
 
-	public void setActaLectura(List<ActaLectura> actaLectura) {
+	public void setActaLectura(Set<ActaLectura> actaLectura) {
 		this.actaLectura = actaLectura;
 	}
 
@@ -293,11 +293,11 @@ public class Informe extends SuperEntity implements Serializable {
 		return actaLectura;
 	}
 
-	public List<CedulaNota> getCedulaNotas() {
+	public Set<CedulaNota> getCedulaNotas() {
 		return this.cedulaNotas;
 	}
 
-	public void setCedulaNotas(List<CedulaNota> cedulaNotas) {
+	public void setCedulaNotas(Set<CedulaNota> cedulaNotas) {
 		this.cedulaNotas = cedulaNotas;
 	}
 

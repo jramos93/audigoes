@@ -10,7 +10,7 @@ import audigoes.ues.edu.sv.entities.planificacion.ProcedimientoPlanificacion;
 import audigoes.ues.edu.sv.entities.seguimiento.Recomendacion;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -108,8 +108,8 @@ public class CedulaNota extends SuperEntity implements Serializable {
 	private Usuario usuario2;
 
 	//bi-directional many-to-one association to Recomendacion
-	@OneToMany(mappedBy="cedulaNota")
-	private List<Recomendacion> recomendacion;
+	@OneToMany(mappedBy="cedulaNota", fetch=FetchType.EAGER)
+	private Set<Recomendacion> recomendacion;
 
 	public CedulaNota() {
 	}
@@ -282,11 +282,11 @@ public class CedulaNota extends SuperEntity implements Serializable {
 		this.usuario2 = usuario2;
 	}
 
-	public List<Recomendacion> getRecomendacion() {
+	public Set<Recomendacion> getRecomendacion() {
 		return this.recomendacion;
 	}
 
-	public void setRecomendacion(List<Recomendacion> recomendacion) {
+	public void setRecomendacion(Set<Recomendacion> recomendacion) {
 		this.recomendacion = recomendacion;
 	}
 

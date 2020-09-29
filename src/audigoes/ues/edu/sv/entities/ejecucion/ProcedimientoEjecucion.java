@@ -8,7 +8,7 @@ import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -53,12 +53,12 @@ public class ProcedimientoEjecucion extends SuperEntity implements Serializable 
 	private String usuModi;
 
 	//bi-directional many-to-one association to CedulaNota
-	@OneToMany(mappedBy="procedimientoEjecucion")
-	private List<CedulaNota> cedulaNotas;
+	@OneToMany(mappedBy="procedimientoEjecucion", fetch=FetchType.EAGER)
+	private Set<CedulaNota> cedulaNotas;
 
 	//bi-directional many-to-one association to DocumentosEjecucion
-	@OneToMany(mappedBy="procedimientoEjecucion")
-	private List<DocumentosEjecucion> documentosEjecucion;
+	@OneToMany(mappedBy="procedimientoEjecucion", fetch=FetchType.EAGER)
+	private Set<DocumentosEjecucion> documentosEjecucion;
 
 	//bi-directional many-to-one association to ProgramaEjecucion
 	@ManyToOne
@@ -142,11 +142,11 @@ public class ProcedimientoEjecucion extends SuperEntity implements Serializable 
 		this.usuModi = usuModi;
 	}
 
-	public List<CedulaNota> getCedulaNotas() {
+	public Set<CedulaNota> getCedulaNotas() {
 		return this.cedulaNotas;
 	}
 
-	public void setCedulaNotas(List<CedulaNota> cedulaNotas) {
+	public void setCedulaNotas(Set<CedulaNota> cedulaNotas) {
 		this.cedulaNotas = cedulaNotas;
 	}
 
@@ -164,11 +164,11 @@ public class ProcedimientoEjecucion extends SuperEntity implements Serializable 
 		return cedulaNota;
 	}
 
-	public List<DocumentosEjecucion> getDocumentosEjecucion() {
+	public Set<DocumentosEjecucion> getDocumentosEjecucion() {
 		return this.documentosEjecucion;
 	}
 
-	public void setDocumentosEjecucion(List<DocumentosEjecucion> documentosEjecucion) {
+	public void setDocumentosEjecucion(Set<DocumentosEjecucion> documentosEjecucion) {
 		this.documentosEjecucion = documentosEjecucion;
 	}
 

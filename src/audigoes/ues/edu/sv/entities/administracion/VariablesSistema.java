@@ -3,7 +3,7 @@ package audigoes.ues.edu.sv.entities.administracion;
 import java.io.Serializable;
 import javax.persistence.*;
 
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -27,8 +27,8 @@ public class VariablesSistema implements Serializable {
 	private String varNombre;
 
 	//bi-directional many-to-one association to Configuracion
-	@OneToMany(mappedBy="variablesSistema")
-	private List<Configuracion> configuracion;
+	@OneToMany(mappedBy="variablesSistema", fetch=FetchType.EAGER)
+	private Set<Configuracion> configuracion;
 
 	public VariablesSistema() {
 	}
@@ -57,11 +57,11 @@ public class VariablesSistema implements Serializable {
 		this.varNombre = varNombre;
 	}
 
-	public List<Configuracion> getConfiguracion() {
+	public Set<Configuracion> getConfiguracion() {
 		return this.configuracion;
 	}
 
-	public void setConfiguracion(List<Configuracion> configuracion) {
+	public void setConfiguracion(Set<Configuracion> configuracion) {
 		this.configuracion = configuracion;
 	}
 

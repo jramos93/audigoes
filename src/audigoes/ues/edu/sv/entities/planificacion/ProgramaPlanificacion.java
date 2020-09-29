@@ -7,7 +7,7 @@ import audigoes.ues.edu.sv.entities.SuperEntity;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -67,8 +67,8 @@ public class ProgramaPlanificacion extends SuperEntity implements Serializable {
 	private String usuModi;
 
 	//bi-directional many-to-one association to ProcedimientoPlanificacion
-	@OneToMany(mappedBy="programaPlanificacion")
-	private List<ProcedimientoPlanificacion> procedimientoPlanificacion;
+	@OneToMany(mappedBy="programaPlanificacion", fetch=FetchType.EAGER)
+	private Set<ProcedimientoPlanificacion> procedimientoPlanificacion;
 
 	//bi-directional many-to-one association to Actividad
 	@ManyToOne
@@ -184,11 +184,11 @@ public class ProgramaPlanificacion extends SuperEntity implements Serializable {
 		this.usuModi = usuModi;
 	}
 
-	public List<ProcedimientoPlanificacion> getProcedimientoPlanificacion() {
+	public Set<ProcedimientoPlanificacion> getProcedimientoPlanificacion() {
 		return this.procedimientoPlanificacion;
 	}
 
-	public void setProcedimientoPlanificacion(List<ProcedimientoPlanificacion> procedimientoPlanificacion) {
+	public void setProcedimientoPlanificacion(Set<ProcedimientoPlanificacion> procedimientoPlanificacion) {
 		this.procedimientoPlanificacion = procedimientoPlanificacion;
 	}
 

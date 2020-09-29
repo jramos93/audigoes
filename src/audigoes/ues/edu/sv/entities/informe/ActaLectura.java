@@ -6,7 +6,7 @@ import javax.persistence.*;
 import audigoes.ues.edu.sv.entities.SuperEntity;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -62,8 +62,8 @@ public class ActaLectura extends SuperEntity implements Serializable {
 	private Informe informe;
 
 	//bi-directional many-to-one association to Destinatario
-	@OneToMany(mappedBy="actaLectura")
-	private List<Destinatario> destinatario;
+	@OneToMany(mappedBy="actaLectura", fetch=FetchType.EAGER)
+	private Set<Destinatario> destinatario;
 
 	public ActaLectura() {
 	}
@@ -156,11 +156,11 @@ public class ActaLectura extends SuperEntity implements Serializable {
 		this.informe = informe;
 	}
 
-	public List<Destinatario> getDestinatario() {
+	public Set<Destinatario> getDestinatario() {
 		return this.destinatario;
 	}
 
-	public void setDestinatario(List<Destinatario> destinatario) {
+	public void setDestinatario(Set<Destinatario> destinatario) {
 		this.destinatario = destinatario;
 	}
 

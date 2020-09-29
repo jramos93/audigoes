@@ -6,7 +6,7 @@ import javax.persistence.*;
 import audigoes.ues.edu.sv.entities.SuperEntity;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -91,12 +91,12 @@ public class PlanAnual extends SuperEntity implements Serializable {
 	private String usuModi;
 
 	//bi-directional many-to-one association to Auditoria
-	@OneToMany(mappedBy="planAnual")
-	private List<Auditoria> auditoria;
+	@OneToMany(mappedBy="planAnual", fetch=FetchType.EAGER)
+	private Set<Auditoria> auditoria;
 
 	//bi-directional many-to-one association to DocumentoPlan
-	@OneToMany(mappedBy="planAnual")
-	private List<DocumentoPlan> documentoPlan;
+	@OneToMany(mappedBy="planAnual", fetch=FetchType.EAGER)
+	private Set<DocumentoPlan> documentoPlan;
 
 	public PlanAnual() {
 	}
@@ -253,11 +253,11 @@ public class PlanAnual extends SuperEntity implements Serializable {
 		this.usuModi = usuModi;
 	}
 
-	public List<Auditoria> getAuditoria() {
+	public Set<Auditoria> getAuditoria() {
 		return this.auditoria;
 	}
 
-	public void setAuditoria(List<Auditoria> auditoria) {
+	public void setAuditoria(Set<Auditoria> auditoria) {
 		this.auditoria = auditoria;
 	}
 
@@ -275,11 +275,11 @@ public class PlanAnual extends SuperEntity implements Serializable {
 		return auditoria;
 	}
 
-	public List<DocumentoPlan> getDocumentoPlan() {
+	public Set<DocumentoPlan> getDocumentoPlan() {
 		return this.documentoPlan;
 	}
 
-	public void setDocumentoPlan(List<DocumentoPlan> documentoPlan) {
+	public void setDocumentoPlan(Set<DocumentoPlan> documentoPlan) {
 		this.documentoPlan = documentoPlan;
 	}
 

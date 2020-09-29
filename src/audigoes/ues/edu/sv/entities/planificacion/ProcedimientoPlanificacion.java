@@ -8,7 +8,7 @@ import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -67,12 +67,12 @@ public class ProcedimientoPlanificacion extends SuperEntity implements Serializa
 	private String usuModi;
 
 	//bi-directional many-to-one association to CedulaNota
-	@OneToMany(mappedBy="procedimientoPlanificacion")
-	private List<CedulaNota> cedulaNotas;
+	@OneToMany(mappedBy="procedimientoPlanificacion", fetch=FetchType.EAGER)
+	private Set<CedulaNota> cedulaNotas;
 
 	//bi-directional many-to-one association to DocumentosPlanificacion
-	@OneToMany(mappedBy="procedimientoPlanificacion")
-	private List<DocumentosPlanificacion> documentosPlanificacion;
+	@OneToMany(mappedBy="procedimientoPlanificacion", fetch=FetchType.EAGER)
+	private Set<DocumentosPlanificacion> documentosPlanificacion;
 
 	//bi-directional many-to-one association to ProgramaPlanificacion
 	@ManyToOne
@@ -188,11 +188,11 @@ public class ProcedimientoPlanificacion extends SuperEntity implements Serializa
 		this.usuModi = usuModi;
 	}
 
-	public List<CedulaNota> getCedulaNotas() {
+	public Set<CedulaNota> getCedulaNotas() {
 		return this.cedulaNotas;
 	}
 
-	public void setCedulaNotas(List<CedulaNota> cedulaNotas) {
+	public void setCedulaNotas(Set<CedulaNota> cedulaNotas) {
 		this.cedulaNotas = cedulaNotas;
 	}
 
@@ -210,11 +210,11 @@ public class ProcedimientoPlanificacion extends SuperEntity implements Serializa
 		return cedulaNota;
 	}
 
-	public List<DocumentosPlanificacion> getDocumentosPlanificacion() {
+	public Set<DocumentosPlanificacion> getDocumentosPlanificacion() {
 		return this.documentosPlanificacion;
 	}
 
-	public void setDocumentosPlanificacion(List<DocumentosPlanificacion> documentosPlanificacion) {
+	public void setDocumentosPlanificacion(Set<DocumentosPlanificacion> documentosPlanificacion) {
 		this.documentosPlanificacion = documentosPlanificacion;
 	}
 

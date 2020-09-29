@@ -9,7 +9,7 @@ import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -64,24 +64,24 @@ public class Actividad extends SuperEntity implements Serializable {
 	private Auditoria auditoria;
 
 	//bi-directional many-to-one association to Informe
-	@OneToMany(mappedBy="actividad")
-	private List<Informe> informe;
+	@OneToMany(mappedBy="actividad", fetch=FetchType.EAGER)
+	private Set<Informe> informe;
 
 	//bi-directional many-to-one association to Modificacion
-	@OneToMany(mappedBy="actividad")
-	private List<Modificacion> modificacion;
+	@OneToMany(mappedBy="actividad", fetch=FetchType.EAGER)
+	private Set<Modificacion> modificacion;
 
 	//bi-directional many-to-one association to ProgramaEjecucion
-	@OneToMany(mappedBy="actividad")
-	private List<ProgramaEjecucion> programaEjecucion;
+	@OneToMany(mappedBy="actividad", fetch=FetchType.EAGER)
+	private Set<ProgramaEjecucion> programaEjecucion;
 
 	//bi-directional many-to-one association to ProgramaPlanificacion
-	@OneToMany(mappedBy="actividad")
-	private List<ProgramaPlanificacion> programaPlanificacion;
+	@OneToMany(mappedBy="actividad", fetch=FetchType.EAGER)
+	private Set<ProgramaPlanificacion> programaPlanificacion;
 
 	//bi-directional many-to-one association to UsuarioActividad
-	@OneToMany(mappedBy="actividad")
-	private List<UsuarioActividad> usuarioActividad;
+	@OneToMany(mappedBy="actividad", fetch=FetchType.EAGER)
+	private Set<UsuarioActividad> usuarioActividad;
 
 	public Actividad() {
 	}
@@ -174,11 +174,11 @@ public class Actividad extends SuperEntity implements Serializable {
 		this.auditoria = auditoria;
 	}
 
-	public List<Informe> getInforme() {
+	public Set<Informe> getInforme() {
 		return this.informe;
 	}
 
-	public void setInforme(List<Informe> informe) {
+	public void setInforme(Set<Informe> informe) {
 		this.informe = informe;
 	}
 
@@ -196,11 +196,11 @@ public class Actividad extends SuperEntity implements Serializable {
 		return informe;
 	}
 
-	public List<Modificacion> getModificacion() {
+	public Set<Modificacion> getModificacion() {
 		return this.modificacion;
 	}
 
-	public void setModificacion(List<Modificacion> modificacion) {
+	public void setModificacion(Set<Modificacion> modificacion) {
 		this.modificacion = modificacion;
 	}
 
@@ -218,11 +218,11 @@ public class Actividad extends SuperEntity implements Serializable {
 		return modificacion;
 	}
 
-	public List<ProgramaEjecucion> getProgramaEjecucion() {
+	public Set<ProgramaEjecucion> getProgramaEjecucion() {
 		return this.programaEjecucion;
 	}
 
-	public void setProgramaEjecucion(List<ProgramaEjecucion> programaEjecucion) {
+	public void setProgramaEjecucion(Set<ProgramaEjecucion> programaEjecucion) {
 		this.programaEjecucion = programaEjecucion;
 	}
 
@@ -240,11 +240,11 @@ public class Actividad extends SuperEntity implements Serializable {
 		return programaEjecucion;
 	}
 
-	public List<ProgramaPlanificacion> getProgramaPlanificacion() {
+	public Set<ProgramaPlanificacion> getProgramaPlanificacion() {
 		return this.programaPlanificacion;
 	}
 
-	public void setProgramaPlanificacion(List<ProgramaPlanificacion> programaPlanificacion) {
+	public void setProgramaPlanificacion(Set<ProgramaPlanificacion> programaPlanificacion) {
 		this.programaPlanificacion = programaPlanificacion;
 	}
 
@@ -262,11 +262,11 @@ public class Actividad extends SuperEntity implements Serializable {
 		return programaPlanificacion;
 	}
 
-	public List<UsuarioActividad> getUsuarioActividad() {
+	public Set<UsuarioActividad> getUsuarioActividad() {
 		return this.usuarioActividad;
 	}
 
-	public void setUsuarioActividad(List<UsuarioActividad> usuarioActividad) {
+	public void setUsuarioActividad(Set<UsuarioActividad> usuarioActividad) {
 		this.usuarioActividad = usuarioActividad;
 	}
 

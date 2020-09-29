@@ -1,12 +1,23 @@
 package audigoes.ues.edu.sv.entities.administracion;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import java.util.Date;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
-
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -64,24 +75,24 @@ public class Institucion extends SuperEntity implements Serializable {
 	private String usuModi;
 
 	//bi-directional many-to-one association to Configuracion
-	@OneToMany(mappedBy="institucion")
-	private List<Configuracion> configuracion;
+	@OneToMany(mappedBy="institucion", fetch=FetchType.EAGER)
+	private Set<Configuracion> configuracion;
 
 	//bi-directional many-to-one association to Marca
-	@OneToMany(mappedBy="institucion")
-	private List<Marca> marca;
+	@OneToMany(mappedBy="institucion", fetch=FetchType.EAGER)
+	private Set<Marca> marca;
 
 	//bi-directional many-to-one association to NormativaCedula
-	@OneToMany(mappedBy="institucion")
-	private List<NormativaCedula> normativaCedula;
+	@OneToMany(mappedBy="institucion", fetch=FetchType.EAGER)
+	private Set<NormativaCedula> normativaCedula;
 
 	//bi-directional many-to-one association to Unidad
-	@OneToMany(mappedBy="institucion")
-	private List<Unidad> unidad;
+	@OneToMany(mappedBy="institucion", fetch=FetchType.EAGER)
+	private Set<Unidad> unidad;
 
 	//bi-directional many-to-one association to Usuario
-	@OneToMany(mappedBy="institucion")
-	private List<Usuario> usuario;
+	@OneToMany(mappedBy="institucion", fetch=FetchType.EAGER)
+	private Set<Usuario> usuario;
 
 	public Institucion() {
 	}
@@ -190,11 +201,11 @@ public class Institucion extends SuperEntity implements Serializable {
 		this.usuModi = usuModi;
 	}
 
-	public List<Configuracion> getConfiguracion() {
+	public Set<Configuracion> getConfiguracion() {
 		return this.configuracion;
 	}
 
-	public void setConfiguracion(List<Configuracion> configuracion) {
+	public void setConfiguracion(Set<Configuracion> configuracion) {
 		this.configuracion = configuracion;
 	}
 
@@ -212,11 +223,11 @@ public class Institucion extends SuperEntity implements Serializable {
 		return configuracion;
 	}
 
-	public List<Marca> getMarca() {
+	public Set<Marca> getMarca() {
 		return this.marca;
 	}
 
-	public void setMarca(List<Marca> marca) {
+	public void setMarca(Set<Marca> marca) {
 		this.marca = marca;
 	}
 
@@ -234,11 +245,11 @@ public class Institucion extends SuperEntity implements Serializable {
 		return marca;
 	}
 
-	public List<NormativaCedula> getNormativaCedula() {
+	public Set<NormativaCedula> getNormativaCedula() {
 		return this.normativaCedula;
 	}
 
-	public void setNormativaCedula(List<NormativaCedula> normativaCedula) {
+	public void setNormativaCedula(Set<NormativaCedula> normativaCedula) {
 		this.normativaCedula = normativaCedula;
 	}
 
@@ -256,11 +267,11 @@ public class Institucion extends SuperEntity implements Serializable {
 		return normativaCedula;
 	}
 
-	public List<Unidad> getUnidad() {
+	public Set<Unidad> getUnidad() {
 		return this.unidad;
 	}
 
-	public void setUnidad(List<Unidad> unidad) {
+	public void setUnidad(Set<Unidad> unidad) {
 		this.unidad = unidad;
 	}
 
@@ -278,11 +289,11 @@ public class Institucion extends SuperEntity implements Serializable {
 		return unidad;
 	}
 
-	public List<Usuario> getUsuario() {
+	public Set<Usuario> getUsuario() {
 		return this.usuario;
 	}
 
-	public void setUsuario(List<Usuario> usuario) {
+	public void setUsuario(Set<Usuario> usuario) {
 		this.usuario = usuario;
 	}
 
