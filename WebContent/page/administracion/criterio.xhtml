@@ -68,6 +68,13 @@
 						<f:setPropertyActionListener value="#{cri}"
 							target="#{criMB.registro}" />
 					</p:commandButton>
+					<p:commandButton update=":frmCriNewEdit"
+						oncomplete="PF('wvCriNewEdit').show()" icon="pi pi-eye"
+						title="Visualizar" actionListener="#{criMB.onShow}">
+						<f:setPropertyActionListener value="#{cri}"
+							target="#{criMB.registro}" />
+					</p:commandButton>
+					
 				</p:column>
 			</p:dataTable>
 		</h:form>
@@ -79,17 +86,17 @@
 					<div class="p-field p-col">
 						<p:outputLabel for="nombre" value="Nombre del criterio:" />
 						<p:inputText id="nombre" value="#{criMB.registro.criNombre}"
-							required="true" maxlength="250" />
+							required="true" maxlength="250" disabled="#{criMB.status=='SHOW'}"/>
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="descripcion" value="Descripción  del criterio:" />
 						<p:inputTextarea id="descripcion" rows="4" required="true"
-							value="#{criMB.registro.criDescripcion}" />
+							value="#{criMB.registro.criDescripcion}" disabled="#{criMB.status=='SHOW'}"/>
 					</div>
 					<div>
 					<h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
 					 <p:outputLabel for="normativa" value="Normativa: " />
-					        <p:selectOneMenu converter="normativaConverter" id="normativa" value="#{criMB.registro.normativaCedula}" style="width:125px">
+					        <p:selectOneMenu converter="normativaConverter" id="normativa" value="#{criMB.registro.normativaCedula}" style="width:125px" disabled="#{criMB.status=='SHOW'}">
 					            <f:selectItems itemLabel="#{cri.norNombre}" itemValue="#{cri}" value="#{criMB.normativasList}" var="cri"/>
 					        </p:selectOneMenu>
 					</h:panelGrid>
@@ -97,14 +104,14 @@
 					<div class="p-field-radiobutton">
 						<p:outputLabel for="estado" value="Estado:" />
 						<p:selectOneRadio id="estado" value="#{criMB.registro.regActivo}"
-							required="true" disabled="#{criMB.status=='NEW'}">
+							required="true" disabled="#{criMB.status=='NEW' or (criMB.status=='SHOW')}">
 							<f:selectItems value="#{criMB.regActivoList}"></f:selectItems>
 						</p:selectOneRadio>
 					</div>
 
 
 					<p:commandButton actionListener="#{criMB.onSave}" value="Guardar"
-						oncomplete="PF('wvCriNewEdit').hide();" update=":frm:dtCriterios"></p:commandButton>
+						oncomplete="PF('wvCriNewEdit').hide();" update=":frm:dtCriterios" rendered="#{criMB.status=='NEW' or (criMB.status=='EDIT')}"></p:commandButton>
 				</div>
 			</h:form>
 		</p:dialog>

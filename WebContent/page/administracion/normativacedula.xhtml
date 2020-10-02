@@ -74,6 +74,12 @@
 						<f:setPropertyActionListener value="#{nor}"
 							target="#{norMB.registro}" />
 					</p:commandButton>
+					<p:commandButton update=":frmNorNewEdit"
+						oncomplete="PF('wvNorNewEdit').show()" icon="pi pi-eye"
+						title="Visualizar" actionListener="#{norMB.onShow}">
+						<f:setPropertyActionListener value="#{nor}"
+							target="#{norMB.registro}" />
+					</p:commandButton>
 				</p:column>
 			</p:dataTable>
 		</h:form>
@@ -85,44 +91,44 @@
 					<div class="p-field p-col">
 						<p:outputLabel for="nombre" value="Nombre Normativa:" />
 						<p:inputText id="nombre" value="#{norMB.registro.norNombre}"
-							required="true" maxlength="250" />
+							required="true" maxlength="250" disabled="#{norMB.status=='SHOW'}"/>
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="descripcion" value="Descripción Normativa:" />
 						<p:inputTextarea id="descripcion" rows="4" required="true"
-							value="#{norMB.registro.norDescripcion}" maxlength="1000" />
+							value="#{norMB.registro.norDescripcion}" maxlength="1000" disabled="#{norMB.status=='SHOW'}"/>
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="autor" value="Autor:" />
 						<p:inputTextarea id="autor" rows="4" required="true"
-							value="#{norMB.registro.norAutor}" maxlength="250" />
+							value="#{norMB.registro.norAutor}" maxlength="250" disabled="#{norMB.status=='SHOW'}"/>
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="version" value="Version:" />
 						<p:inputTextarea id="version" rows="4" required="true"
-							value="#{norMB.registro.norVersion}" maxlength="10" />
+							value="#{norMB.registro.norVersion}" maxlength="10" disabled="#{norMB.status=='SHOW'}"/>
 					</div>
 					<div class="ui-g">
 						<div class="ui-g-12 ui-md-6 ui-lg-3">
 							<p:outputLabel for="anio" value="Año:" />
 							<p:inputMask id="anio" required="false"
-								value="#{norMB.registro.norAnio}" mask="9999" />
+								value="#{norMB.registro.norAnio}" mask="9999" disabled="#{norMB.status=='SHOW'}"/>
 						</div>
 						<div class="ui-g-12 ui-md-6 ui-lg-3">
 							<p:outputLabel for="tipo" value="Tipo:" />
 							<p:selectOneMenu id="tipo" value="#{norMB.registro.norTipo}"
-								style="margin-bottom:10px;" required="true">
+								style="margin-bottom:10px;" required="true" disabled="#{norMB.status=='SHOW'}">
 								<f:selectItems value="#{norMB.tipoList}" />
 							</p:selectOneMenu>
 						</div>
 					</div>
 					<div>
-						<h:form enctype="multipart/form-data">
+						<h:form enctype="multipart/form-data" rendered="#{norMB.status=='NEW' or (norMB.status=='EDIT')}">
 							<p:outputLabel value="Adjunte Documento:" />
 							<p:growl showDetail="true" />
 							<p:fileUpload mode="advanced" cancelLabel="Cancelar"
-								label="Seleccionar" uploadLabel="Subir"
-								listener="#{norMB.fileUploadListener}" />
+								label="Seleccionar" uploadLabel="Subir" required="false" 
+								listener="#{norMB.fileUploadListener}"/>
 
 						</h:form>
 					</div>
@@ -130,7 +136,7 @@
 					<div class="p-field-radiobutton">
 						<p:outputLabel for="estado" value="Estado:" />
 						<p:selectOneRadio id="estado" value="#{norMB.registro.regActivo}"
-							required="true" disabled="#{norMB.status=='NEW'}">
+							required="true" disabled="#{norMB.status=='NEW' or (norMB.status=='SHOW')}">
 							<f:selectItems value="#{norMB.regActivoList}"></f:selectItems>
 						</p:selectOneRadio>
 					</div>
@@ -138,7 +144,7 @@
 
 					<p:commandButton actionListener="#{norMB.onSave}" value="Guardar"
 						oncomplete="PF('wvNorNewEdit').hide();"
-						update=":frm:dtNormativasCedulas"></p:commandButton>
+						update=":frm:dtNormativasCedulas" rendered="#{norMB.status=='NEW' or (norMB.status=='EDIT')}" ></p:commandButton>
 				</div>
 			</h:form>
 		</p:dialog>

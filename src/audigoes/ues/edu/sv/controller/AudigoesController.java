@@ -138,6 +138,21 @@ public class AudigoesController {
 
 	protected void afterEdit() {
 	}
+	
+	/* Acciones al visualizar objeto */
+	public boolean beforeShow() {
+		return true;
+	}
+
+	public void onShow() {
+		if (beforeShow()) {
+			setStatus("SHOW");
+			afterShow();
+		}
+	}
+
+	protected void afterShow() {
+	}
 
 	/* Acciones al cancelar un evento */
 	public boolean beforeCancel() {
