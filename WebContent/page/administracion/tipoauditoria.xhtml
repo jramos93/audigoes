@@ -15,12 +15,13 @@
 
 			<p:dataTable var="tpa" value="#{tpaMB.listado}" widgetVar="wvTiposAuditorias"
 				reflow="true" id="dtTiposAuditorias" style="margin-top:20px;" paginator="true"
-				filteredValue="#{tpaMB.filteredTiposAuditoria}"
+				filteredValue="#{tpaMB.filteredTiposAuditoria}" selection="#{tpaMB.registro}"
+				selectionMode="single"
 				globalFilterFunction="#{tpaMB.globalFilterFunction}"
 				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
-				rowKey="#{tpaMB.registro.tpaId}">
+				rowKey="#{tpa.tpaId}">
 
 				<f:facet name="paginatorTopLeft">
 					<p:commandButton value="Agregar" icon="pi pi-plus"

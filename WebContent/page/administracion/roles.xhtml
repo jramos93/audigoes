@@ -11,23 +11,21 @@
 			<span class="app-name">Gestion de Roles</span>
 		</div>
 		<h:form id="frm">
-
-
 			<p:dataTable var="rol" value="#{rolMB.listado}" widgetVar="wvRoles"
 				reflow="true" id="dtRoles" style="margin-top:20px;" paginator="true"
-				filteredValue="#{rolMB.filteredRoles}"
+				filteredValue="#{rolMB.filteredRoles}" selection="#{rolMB.regSelected}"
+				selectionMode="single" rowKey="#{rol.rolId}"
 				globalFilterFunction="#{rolMB.globalFilterFunction}"
-				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+				rowsPerPageTemplate="1,5,10,15" rows="5"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
-				rowKey="#{rolMB.registro.rolId}">
-
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+				<p:ajax event="rowSelect" listener="#{rolMB.onRowSelect}" update="dtRoles" />
 				<f:facet name="paginatorTopLeft">
-					<p:commandButton value="Agregar" icon="pi pi-plus"
-						actionListener="#{rolMB.onNew}"
-						oncomplete="PF('wvRolNewEdit').show();" update=":frmRolNewEdit"></p:commandButton>
+					<p:commandButton update=":frmRolNewEdit" value="Editar"
+						oncomplete="PF('wvRolNewEdit').show()" icon="pi pi-pencil"
+						actionListener="#{rolMB.onEdit}" rendered="#{rolMB.registro.selected}" >
+					</p:commandButton>
 				</f:facet>
-
 				<f:facet name="paginatorTopRight">
 					<p:outputPanel>
 						<h:outputText value="Búsqueda global: " />
@@ -60,29 +58,14 @@
 					<h:outputText value="#{rol.regActivo}"
 						converter="regActivoConverter"></h:outputText>
 				</p:column>
-
-				<p:column headerText="Permisos" style="text-align:center;">
-					<p:commandButton update=":frmRolNewEdit"
-						oncomplete="PF('wvRolNewEdit').show()" icon="pi pi-pencil"
-						title="Modificar" actionListener="#{rolMB.onEdit}">
-						<f:setPropertyActionListener value="#{rol}"
-							target="#{rolMB.registro}" />
-					</p:commandButton>
-				</p:column>
-				<p:column headerText="Modificar" style="text-align:center;">
-					<p:commandButton update=":frmRolNewEdit"
-						oncomplete="PF('wvRolNewEdit').show()" icon="pi pi-pencil"
-						title="Modificar" actionListener="#{rolMB.onEdit}">
-						<f:setPropertyActionListener value="#{rol}"
-							target="#{rolMB.registro}" />
-					</p:commandButton>
-				</p:column>
 			</p:dataTable>
 		</h:form>
 
 		<p:dialog widgetVar="wvRolNewEdit" responsive="true" width="500"
 			closeOnEscape="true" header="Gestión de Roles" modal="true">
+			<p:ajax event="close" listener="#{rolMB.onCancel}" update="frm" />
 			<h:form id="frmRolNewEdit">
+				
 				<p:dataGrid var="permiso" value="#{rolMB.registro.rolPermiso}"
 					columns="2" rows="16" paginator="true" id="permisosRol"
 					paginatorPosition="bottom" style="text-align:center;"

@@ -236,6 +236,7 @@ public class AudigoesController {
 	}
 
 	public void afterSaveNew() {
+		setStatus("SEARCH");
 	}
 
 	/* Funciones para guardar edicion */
