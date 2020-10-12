@@ -11,21 +11,29 @@
 		<span class="app-name">Gestion de Criterios</span>
 	</div>
 		<h:form id="frm">
-
-
 			<p:dataTable var="cri" value="#{criMB.listado}" widgetVar="wvCriterios"
 				reflow="true" id="dtCriterios" style="margin-top:20px;" paginator="true"
-				filteredValue="#{criMB.filteredCriterios}"
+				filteredValue="#{criMB.filteredCriterios}" selection="#{criMB.regSelected}"
+				selectionMode="single" rowKey="#{cri.criId}"
 				globalFilterFunction="#{criMB.globalFilterFunction}"
 				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
-				rowKey="#{criMB.registro.criId}">
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+				<p:ajax event="rowSelect" listener="#{criMB.onRowSelect}" update="dtCriterios" />
 
 				<f:facet name="paginatorTopLeft">
 					<p:commandButton value="Agregar" icon="pi pi-plus"
 						actionListener="#{criMB.onNew}"
-						oncomplete="PF('wvCriNewEdit').show();" update=":frmCriNewEdit"></p:commandButton>
+						oncomplete="PF('wvCriNewEdit').show();" update=":frmCriNewEdit">
+					</p:commandButton>
+					<p:commandButton update=":frmCriNewEdit" value="Editar"
+						oncomplete="PF('wvCriNewEdit').show()" icon="pi pi-pencil"
+						actionListener="#{criMB.onEdit}" rendered="#{criMB.registro.selected}">
+					</p:commandButton>
+					<p:commandButton update=":frmCriNewEdit" value="visualizar"
+						oncomplete="PF('wvCriNewEdit').show()" icon="pi pi-eye"
+						actionListener="#{criMB.onShow}" rendered="#{criMB.registro.selected}">
+					</p:commandButton>
 				</f:facet>
 
 				<f:facet name="paginatorTopRight">
@@ -61,37 +69,24 @@
 						converter="regActivoConverter"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Modificar">
-					<p:commandButton update=":frmCriNewEdit"
-						oncomplete="PF('wvCriNewEdit').show()" icon="pi pi-pencil"
-						title="Modificar" actionListener="#{criMB.onEdit}">
-						<f:setPropertyActionListener value="#{cri}"
-							target="#{criMB.registro}" />
-					</p:commandButton>
-					<p:commandButton update=":frmCriNewEdit"
-						oncomplete="PF('wvCriNewEdit').show()" icon="pi pi-eye"
-						title="Visualizar" actionListener="#{criMB.onShow}">
-						<f:setPropertyActionListener value="#{cri}"
-							target="#{criMB.registro}" />
-					</p:commandButton>
-					
-				</p:column>
 			</p:dataTable>
 		</h:form>
 
 		<p:dialog widgetVar="wvCriNewEdit" responsive="true" width="500"
 			closeOnEscape="true" header="Gestión de Criterios" modal="true">
+			<p:ajax event="close" listener="#{criMB.onCancel}" update="frm" />
 			<h:form id="frmCriNewEdit">
+			
 				<div class="ui-fluid p-formgrid p-grid">
 					<div class="p-field p-col">
 						<p:outputLabel for="nombre" value="Nombre del criterio:" />
 						<p:inputText id="nombre" value="#{criMB.registro.criNombre}"
-							required="true" maxlength="250" disabled="#{criMB.status=='SHOW'}"/>
+							required="true" maxlength="250" readonly="#{criMB.status=='SHOW'}"/>
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="descripcion" value="Descripción  del criterio:" />
 						<p:inputTextarea id="descripcion" rows="4" required="true"
-							value="#{criMB.registro.criDescripcion}" disabled="#{criMB.status=='SHOW'}"/>
+							value="#{criMB.registro.criDescripcion}" readonly="#{criMB.status=='SHOW'}"/>
 					</div>
 					<div>
 					<h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
@@ -104,11 +99,10 @@
 					<div class="p-field-radiobutton">
 						<p:outputLabel for="estado" value="Estado:" />
 						<p:selectOneRadio id="estado" value="#{criMB.registro.regActivo}"
-							required="true" disabled="#{criMB.status=='NEW' or (criMB.status=='SHOW')}">
+							required="true" disabled="#{criMB.status=='NEW'or (criMB.status=='SHOW')}">
 							<f:selectItems value="#{criMB.regActivoList}"></f:selectItems>
 						</p:selectOneRadio>
 					</div>
-
 
 					<p:commandButton actionListener="#{criMB.onSave}" value="Guardar"
 						oncomplete="PF('wvCriNewEdit').hide();" update=":frm:dtCriterios" rendered="#{criMB.status=='NEW' or (criMB.status=='EDIT')}"></p:commandButton>
