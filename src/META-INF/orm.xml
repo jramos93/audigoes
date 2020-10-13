@@ -1,15 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<entity-mappings version="2.0" xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd">
 
-	<named-query name="tipoauditoria.all"><query>select o from TipoAuditoria o</query></named-query>
-<!-- 	<named-query name="rol.all"><query>select o from Rol o </query></named-query> -->
-	<named-query name="institucion.all"><query>select o from Institucion o</query></named-query>
-	<named-query name="usuarios.all"><query>select o from Usuario o</query></named-query>
-	<named-query name="origenauditoria.all"><query>select o from OrigenAuditoria o</query></named-query>
-	<named-query name="criterio.all"><query>select o from Criterio o</query></named-query>
-	<named-query name="normativacedula.all"><query>select o from NormativaCedula o</query></named-query>
-	<named-query name="unidad.all"><query>select o from Unidad o</query></named-query>
-	<named-query name="rol.all"><query>select distinct o from Rol o left join fetch o.rolPermiso </query></named-query>
-	<named-query name="configuracion.all"><query>select o from Configuracion o Where o.institucion.insId = ?1</query></named-query>
+	<named-query name="tipoauditoria.all">
+		<query>select o from TipoAuditoria o</query>
+	</named-query>
+	<!-- <named-query name="rol.all"><query>select o from Rol o </query></named-query> -->
+	<named-query name="institucion.all">
+		<query>select o from Institucion o</query>
+	</named-query>
+	<named-query name="usuarios.all">
+		<query>select o from Usuario o</query>
+	</named-query>
+	<named-query name="origenauditoria.all">
+		<query>select o from OrigenAuditoria o</query>
+	</named-query>
+	<named-query name="criterio.all">
+		<query>select o from Criterio o</query>
+	</named-query>
+	<named-query name="normativacedula.all">
+		<query>select o from NormativaCedula o</query>
+	</named-query>
+	<named-query name="unidad.all">
+		<query>select o from Unidad o</query>
+	</named-query>
+	<named-query name="rol.all">
+		<query>select distinct o from Rol o left join fetch o.rolPermiso </query>
+	</named-query>
+	<named-query name="configuracion.all">
+		<query>select o from Configuracion o Where o.institucion.insId = ?1</query>
+	</named-query>
+	<named-query name="permiso.get.source.list">
+		<query>select o from Permiso o where o.perId not in (select o.permiso.perId from RolPermiso o where o.rol.rolId = ?1)</query>
+	</named-query>
+	<named-query name="permiso.get.target.list">
+		<query>select o from Permiso o where o.perId in (select o.permiso.perId from RolPermiso o where o.rol.rolId = ?1)</query>
+	</named-query>
+	<named-query name="rolpermisos.get.permisos.rol">
+		<query>select o from RolPermiso o where o.rol.rolId = ?1</query>
+	</named-query>
+	<named-query name="rolpermisos.delete">
+		<query>select o from RolPermiso o where o.rol.rolId = ?1 and o.permiso.perId = ?2</query>
+	</named-query>
 </entity-mappings>

@@ -4,7 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
 
-	<ui:define name="title">Sample</ui:define>
+	<ui:define name="title">Audigoes</ui:define>
 
 	<ui:define name="head">
 		<style type="text/css">
@@ -52,30 +52,30 @@
 
 								<p:outputLabel for="nombre" value="Nombre" />
 								<p:inputText id="nombre" value="#{dtinsMB.registro.insNombre}"
-									disabled="#{dtinsMB.status != 'EDIT'}" />
+								 	readonly="#{dtinsMB.status != 'EDIT'}" />
 
 								<p:outputLabel for="acronimo" value="Acrónimo" />
 								<p:inputText id="acronimo"
 									value="#{dtinsMB.registro.insIniciales}"
-									disabled="#{dtinsMB.status != 'EDIT'}" />
+									readonly="#{dtinsMB.status != 'EDIT'}" />
 
 								<p:outputLabel for="slogan" value="Slogan" />
 								<p:inputText id="slogan" value="#{dtinsMB.registro.insSlogan}"
-									disabled="#{dtinsMB.status != 'EDIT'}" />
+									readonly="#{dtinsMB.status != 'EDIT'}" />
 
 								<p:outputLabel for="direccion" value="Dirección" />
 								<p:inputTextarea id="direccion"
 									value="#{dtinsMB.registro.insDireccion}"
-									disabled="#{dtinsMB.status != 'EDIT'}" />
+									readonly="#{dtinsMB.status != 'EDIT'}" />
 
 								<p:outputLabel for="telefono" value="Teléfono" />
 								<p:inputText id="telefono"
 									value="#{dtinsMB.registro.insTelefono}"
-									disabled="#{dtinsMB.status != 'EDIT'}" />
+									readonly="#{dtinsMB.status != 'EDIT'}" />
 
 								<p:outputLabel for="nit" value="NIT" />
 								<p:inputMask id="nit" value="#{dtinsMB.registro.insNit}"
-									disabled="#{dtinsMB.status != 'EDIT'}" mask="999-999999-999-9" />
+									readonly="#{dtinsMB.status != 'EDIT'}" mask="999-999999-999-9" />
 							</p:panelGrid>
 
 						</div>

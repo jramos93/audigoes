@@ -91,16 +91,16 @@ public class audigoesSBSL implements audigoesSBSLLocal {
 	@Override
 	public void delete(SuperEntity entidad) throws Exception {
 		EntityTransaction et = null;
-		BigDecimal pk = BigDecimal.ZERO;
+		int pk = 0;
 		try {
 			if (!this.transActiva) {
 				et = this.getEm().getTransaction();
 				et.begin();
 			}
 			PersistenceUnitUtil puu = this.getEm().getEntityManagerFactory().getPersistenceUnitUtil();
-			pk = (BigDecimal) puu.getIdentifier(entidad);
+			pk = (int) puu.getIdentifier(entidad);
 			entidad = (SuperEntity) this.getEm().find(entidad.getClass(), pk);
-			this.getEm().persist(entidad);
+			this.getEm().remove(entidad);
 			this.getEm().flush();
 			if (!this.transActiva) {
 				et.commit();

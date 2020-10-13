@@ -56,7 +56,7 @@ public class AudigoesController {
 	private List<? extends SuperEntity> filteredListado;
 	private List<? extends SuperEntity> selectedListado;
 
-	/* propiedades de utilerìa bàsica */
+	/* propiedades de utilerìa básica */
 	private List<SelectItem> siNoList;
 	private List<SelectItem> regActivoList;
 	private List<SelectItem> generoList;
@@ -153,8 +153,31 @@ public class AudigoesController {
 
 	protected void afterShow() {
 	}
+	
+	/*Eliminar registro*/
+	
+	public boolean beforeDelete() {
+		return true;
+	}
+	
+	public void onDelete() {
+		try {
+			if (beforeDelete()) {
+				audigoesLocal.delete(getRegistro());
+				this.addInfo(new FacesMessage("Confirmación", "Se eliminó el registro seleccionado"));
+				afterDelete();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void afterDelete() {
+		
+	}
 
-	/* Acciones al cancelar un evento */
+	/* Acciones al cancelar  */
 	public boolean beforeCancel() {
 		return true;
 	}
@@ -206,6 +229,7 @@ public class AudigoesController {
 	}
 
 	public void afterSave() {
+		setStatus("SEARCH");
 	}
 
 	/* Funciones para guardar nuevo */

@@ -13,17 +13,20 @@
 		<h:form id="frm">
 			<p:dataTable var="rol" value="#{rolMB.listado}" widgetVar="wvRoles"
 				reflow="true" id="dtRoles" style="margin-top:20px;" paginator="true"
-				filteredValue="#{rolMB.filteredRoles}" selection="#{rolMB.regSelected}"
-				selectionMode="single" rowKey="#{rol.rolId}"
+				filteredValue="#{rolMB.filteredRoles}"
+				selection="#{rolMB.regSelected}" selectionMode="single"
+				rowKey="#{rol.rolId}"
 				globalFilterFunction="#{rolMB.globalFilterFunction}"
 				rowsPerPageTemplate="1,5,10,15" rows="5"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
-				<p:ajax event="rowSelect" listener="#{rolMB.onRowSelect}" update="dtRoles" />
+				<p:ajax event="rowSelect" listener="#{rolMB.onRowSelect}"
+					update="dtRoles" />
 				<f:facet name="paginatorTopLeft">
-					<p:commandButton update=":frmRolNewEdit" value="Editar"
-						oncomplete="PF('wvRolNewEdit').show()" icon="pi pi-pencil"
-						actionListener="#{rolMB.onEdit}" rendered="#{rolMB.registro.selected}" >
+					<p:commandButton update=":frmRolNewEdit" value="Permisos"
+						oncomplete="PF('wvRolNewEdit').show()" icon="pi pi-eye"
+						actionListener="#{rolMB.fillPermisos}"
+						rendered="#{rolMB.registro.selected}">
 					</p:commandButton>
 				</f:facet>
 				<f:facet name="paginatorTopRight">
@@ -61,21 +64,58 @@
 			</p:dataTable>
 		</h:form>
 
-		<p:dialog widgetVar="wvRolNewEdit" responsive="true" width="500"
-			closeOnEscape="true" header="Gestión de Roles" modal="true">
-			<p:ajax event="close" listener="#{rolMB.onCancel}" update="frm" />
+		<p:dialog id="dgRolNewEdit" widgetVar="wvRolNewEdit" responsive="true"
+			width="600" closeOnEscape="true" header="Permisos Asignados"
+			modal="true">
+
 			<h:form id="frmRolNewEdit">
-				
-				<p:dataGrid var="permiso" value="#{rolMB.registro.rolPermiso}"
-					columns="2" rows="16" paginator="true" id="permisosRol"
-					paginatorPosition="bottom" style="text-align:center;"
-					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-					rowsPerPageTemplate="6,12,16">
-					<f:facet name="header">
-						Detalle de permisos rol #{rolMB.registro.rolNombre}
+				<div class="name" align="center">
+					<span class="app-name">Permisos asignados a rol
+						#{rolMB.registro.rolNombre}</span>
+				</div>
+				<p:dataTable id="dtpermisorol" var="permisorol"
+					value="#{rlpMB.listado}" widgetVar="wvpermisorol" reflow="true"
+					style="margin-top:20px;" paginator="true" rowIndexVar="correlativo"
+					rowKey="#{permisorol.rlpId}" selection="#{rlpMB.regSelected}"
+					selectionMode="single" rowsPerPageTemplate="1,5,10,15" rows="5"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+					<f:facet name="paginatorTopLeft">
+						<p:commandButton value="Editar Permisos" icon="pi pi-pencil"
+							oncomplete="PF('wvNewRolPermiso').show();"
+							actionListener="#{rlpMB.onNew}" update=":frmNewRolPermiso" />
 					</f:facet>
-					<h:outputText value="#{permiso.permiso.perNombre}" />
-				</p:dataGrid>
+					<p:column headerText="N°" width="40" style="text-align:center;">
+						<h:outputText value="#{correlativo+1}" />
+					</p:column>
+					<p:column headerText="Nombre Permiso">
+						<h:outputText value="#{permisorol.permiso.perNombre}" />
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog id="dgNewRolPermiso" widgetVar="wvNewRolPermiso"
+			responsive="true" header="Nuevo Permiso" modal="true"
+			closeOnEscape="true">
+
+			<h:form id="frmNewRolPermiso">
+				<b>Indicaciones:</b>
+				<p>Seleccione los permisos de la izquierda y páselos a la
+					derecha para asignarlos al rol.</p>
+				<p>Puede seleccionar más de un permiso a la vez para asignarlos</p>
+				<p:pickList id="plpermisos" value="#{perMB.permisosList}"
+					var="permiso" itemValue="#{permiso}" responsive="true"
+					itemLabel="#{permiso.perNombre}" showCheckbox="true"
+					showSourceFilter="true" showTargetFilter="true"
+					filterMatchMode="contains" converter="permisoConverter">
+					<f:facet name="sourceCaption"> Disponibles</f:facet>
+					<f:facet name="targetCaption"> Asignados</f:facet>
+					<p:ajax event="transfer" listener="#{rlpMB.asignarPermiso}" />
+					<p:column style="text-align:left">
+						<h:outputText value="#{permiso.perNombre}" />
+					</p:column>
+				</p:pickList>
 			</h:form>
 		</p:dialog>
 	</ui:define>

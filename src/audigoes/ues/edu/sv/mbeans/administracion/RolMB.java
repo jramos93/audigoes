@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
@@ -20,6 +21,9 @@ public class RolMB extends AudigoesController implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private List<Rol> filteredRoles;
+	
+	@ManagedProperty(value = "#{rlpMB}")
+	private RolPermisoMB rlpMB = new RolPermisoMB();
 
 	public RolMB() {
 		super(new Rol());
@@ -65,6 +69,11 @@ public class RolMB extends AudigoesController implements Serializable {
 			return 0;
 		}
 	}
+	
+	public void fillPermisos() {
+		getRlpMB().setRol(getRegistro());
+		getRlpMB().fillListado();
+	}
 
 	/* GETS y SETS */
 
@@ -91,5 +100,13 @@ public class RolMB extends AudigoesController implements Serializable {
 
 	public void setFilteredRoles(List<Rol> filteredRoles) {
 		this.filteredRoles = filteredRoles;
+	}
+
+	public RolPermisoMB getRlpMB() {
+		return rlpMB;
+	}
+
+	public void setRlpMB(RolPermisoMB rlpMB) {
+		this.rlpMB = rlpMB;
 	}
 }

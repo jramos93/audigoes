@@ -188,11 +188,5 @@ public class Permiso extends SuperEntity implements Serializable {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "Permiso [perId=" + perId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", perDescripcion="
-				+ perDescripcion + ", perNombre=" + perNombre + ", regActivo=" + regActivo + ", usuCrea=" + usuCrea
-				+ ", usuModi=" + usuModi + ", rolPermiso=" + rolPermiso + ", usuarioPermiso=" + usuarioPermiso + "]";
-	}
 
 }
