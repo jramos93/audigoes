@@ -98,19 +98,14 @@ public class RolPermisoMB extends AudigoesController implements Serializable {
 
 				}
 				if (event.isRemove()) {
-					System.out.println("eliminar permiso");
 					try {
-						System.out.println(getRol().getRolId() + " + " + ((Permiso) item).getPerId());
 						List<RolPermiso> rolpermisodelete = (List<RolPermiso>) audigoesLocal.findByNamedQuery(
 								RolPermiso.class, "rolpermisos.delete",
 								new Object[] { getRol().getRolId(), ((Permiso) item).getPerId() });
-						System.out.println(rolpermisodelete.size());
 						if(rolpermisodelete.size()>0) {
-							System.out.println("eliminando");
 							setRegistro(rolpermisodelete.get(0));
 							onDelete();
 						}
-						System.out.println("fin");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -118,7 +113,7 @@ public class RolPermisoMB extends AudigoesController implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 
 	}
@@ -140,6 +135,12 @@ public class RolPermisoMB extends AudigoesController implements Serializable {
 	public void afterSaveNew() {
 		getListado().add(getRegistro());
 		super.afterSaveNew();
+	}
+	
+	@Override
+	public void afterDelete() {
+		getListado().remove(getRegistro());
+		super.afterDelete();
 	}
 
 	public List<RolPermiso> getFilteredRolPermisos() {

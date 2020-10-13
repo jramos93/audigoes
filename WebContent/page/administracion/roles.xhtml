@@ -111,7 +111,7 @@
 					filterMatchMode="contains" converter="permisoConverter">
 					<f:facet name="sourceCaption"> Disponibles</f:facet>
 					<f:facet name="targetCaption"> Asignados</f:facet>
-					<p:ajax event="transfer" listener="#{rlpMB.asignarPermiso}" />
+					<p:ajax event="transfer" listener="#{rlpMB.asignarPermiso}" update=":frmRolNewEdit" />
 					<p:column style="text-align:left">
 						<h:outputText value="#{permiso.perNombre}" />
 					</p:column>
