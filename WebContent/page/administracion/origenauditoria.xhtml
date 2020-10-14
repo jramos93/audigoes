@@ -11,21 +11,25 @@
 		<span class="app-name">Gestion de Origen de Auditoria</span>
 	</div>
 		<h:form id="frm">
-
-
 			<p:dataTable var="ori" value="#{oriMB.listado}" widgetVar="wvOrigenesAuditorias"
 				reflow="true" id="dtOrigenesAuditorias" style="margin-top:20px;" paginator="true"
-				filteredValue="#{oriMB.filteredOrigenesAuditoria}"
+				filteredValue="#{oriMB.filteredOrigenesAuditoria}" selection="#{oriMB.regSelected}"
+				selectionMode="single" rowKey="#{ori.oriId}"
 				globalFilterFunction="#{oriMB.globalFilterFunction}"
 				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
-				rowKey="#{oriMB.registro.oriId}">
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+				<p:ajax event="rowSelect" listener="#{oriMB.onRowSelect}" update="dtOrigenesAuditorias" />
 
 				<f:facet name="paginatorTopLeft">
 					<p:commandButton value="Agregar" icon="pi pi-plus"
 						actionListener="#{oriMB.onNew}"
-						oncomplete="PF('wvOriNewEdit').show();" update=":frmOriNewEdit"></p:commandButton>
+						oncomplete="PF('wvOriNewEdit').show();" update=":frmOriNewEdit">
+					</p:commandButton>
+					<p:commandButton update=":frmOriNewEdit" value="Editar"
+						oncomplete="PF('wvOriNewEdit').show()" icon="pi pi-pencil"
+						actionListener="#{oriMB.onEdit}" rendered="#{oriMB.registro.selected}">
+					</p:commandButton>
 				</f:facet>
 
 				<f:facet name="paginatorTopRight">
@@ -61,14 +65,6 @@
 						converter="regActivoConverter"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Modificar">
-					<p:commandButton update=":frmOriNewEdit"
-						oncomplete="PF('wvOriNewEdit').show()" icon="pi pi-pencil"
-						title="Modificar" actionListener="#{oriMB.onEdit}">
-						<f:setPropertyActionListener value="#{ori}"
-							target="#{oriMB.registro}" />
-					</p:commandButton>
-				</p:column>
 			</p:dataTable>
 		</h:form>
 

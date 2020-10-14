@@ -12,7 +12,6 @@ import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Criterio;
 import audigoes.ues.edu.sv.entities.administracion.NormativaCedula;
 
-
 @ManagedBean(name = "criMB")
 @ViewScoped
 public class CriterioMB extends AudigoesController implements Serializable {
@@ -20,15 +19,15 @@ public class CriterioMB extends AudigoesController implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private List<Criterio> filteredCriterios;
-	
+
 	private List<NormativaCedula> normativasList;
 
 	public CriterioMB() {
 		super(new Criterio());
 	}
-	
+
 	@PostConstruct
 	public void init() {
 		try {
@@ -43,26 +42,40 @@ public class CriterioMB extends AudigoesController implements Serializable {
 	@SuppressWarnings("unchecked")
 	public void fillListado() {
 		try {
-			setListado((List<Criterio>) audigoesLocal.findByNamedQuery(Criterio.class, "criterio.all", new Object[] {}));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void fillNormativasList() {
-		try {
-			setNormativasList((List<NormativaCedula>) audigoesLocal.findByNamedQuery(NormativaCedula.class, "normativacedula.all", new Object[] {}));
+			setListado(
+					(List<Criterio>) audigoesLocal.findByNamedQuery(Criterio.class, "criterio.all", new Object[] {}));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	 @Override
-		public boolean beforeNew() {
-			fillNormativasList();
-			return super.beforeNew();
+	@SuppressWarnings("unchecked")
+	public void fillNormativasList() {
+		try {
+			setNormativasList((List<NormativaCedula>) audigoesLocal.findByNamedQuery(NormativaCedula.class,
+					"normativacedula.all", new Object[] {}));
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public boolean beforeNew() {
+		fillNormativasList();
+		return super.beforeNew();
+	}
+
+	@Override
+	public boolean beforeEdit() {
+		fillNormativasList();
+		return super.beforeEdit();
+	}
+
+	@Override
+	public boolean beforeShow() {
+		fillNormativasList();
+		return super.beforeShow();
+	}
 
 	public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
 		String filterText = (filter == null) ? null : filter.toString().trim().toLowerCase();
@@ -73,8 +86,7 @@ public class CriterioMB extends AudigoesController implements Serializable {
 
 		Criterio criterio = (Criterio) value;
 		return criterio.getCriNombre().toLowerCase().contains(filterText)
-				|| criterio.getCriDescripcion().toLowerCase().contains(filterText)
-				|| criterio.getCriId() == filterInt;
+				|| criterio.getCriDescripcion().toLowerCase().contains(filterText) || criterio.getCriId() == filterInt;
 	}
 
 	private int getInteger(String string) {
@@ -84,7 +96,7 @@ public class CriterioMB extends AudigoesController implements Serializable {
 			return 0;
 		}
 	}
-	
+
 	/* GETS y SETS */
 
 	@Override

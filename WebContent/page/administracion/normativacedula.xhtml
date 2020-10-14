@@ -11,22 +11,30 @@
 			<span class="app-name">Gestion de Normativas</span>
 		</div>
 		<h:form id="frm">
-
-
 			<p:dataTable var="nor" value="#{norMB.listado}"
 				widgetVar="wvNormativasCedulas" reflow="true"
 				id="dtNormativasCedulas" style="margin-top:20px;" paginator="true"
-				filteredValue="#{norMB.filteredNormativasCedula}"
+				filteredValue="#{norMB.filteredNormativasCedula}" selection="#{norMB.regSelected}"
+				selectionMode="single" rowKey="#{nor.norId}"
 				globalFilterFunction="#{norMB.globalFilterFunction}"
 				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
-				rowKey="#{norMB.registro.norId}">
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+				<p:ajax event="rowSelect" listener="#{norMB.onRowSelect}" update="dtNormativasCedulas" />
 
 				<f:facet name="paginatorTopLeft">
 					<p:commandButton value="Agregar" icon="pi pi-plus"
 						actionListener="#{norMB.onNew}"
-						oncomplete="PF('wvNorNewEdit').show();" update=":frmNorNewEdit"></p:commandButton>
+						oncomplete="PF('wvNorNewEdit').show();" update=":frmNorNewEdit">
+					</p:commandButton>
+					<p:commandButton update=":frmNorNewEdit" value="Editar"
+						oncomplete="PF('wvNorNewEdit').show()" icon="pi pi-pencil"
+						actionListener="#{norMB.onEdit}" rendered="#{norMB.registro.selected}">
+					</p:commandButton>
+					<p:commandButton update=":frmNorNewEdit" value="visualizar"
+						oncomplete="PF('wvNorNewEdit').show()" icon="pi pi-eye"
+						actionListener="#{norMB.onShow}" rendered="#{norMB.registro.selected}">
+					</p:commandButton>
 				</f:facet>
 
 				<f:facet name="paginatorTopRight">
@@ -67,20 +75,6 @@
 						converter="regActivoConverter"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Modificar">
-					<p:commandButton update=":frmNorNewEdit"
-						oncomplete="PF('wvNorNewEdit').show()" icon="pi pi-pencil"
-						title="Modificar" actionListener="#{norMB.onEdit}">
-						<f:setPropertyActionListener value="#{nor}"
-							target="#{norMB.registro}" />
-					</p:commandButton>
-					<p:commandButton update=":frmNorNewEdit"
-						oncomplete="PF('wvNorNewEdit').show()" icon="pi pi-eye"
-						title="Visualizar" actionListener="#{norMB.onShow}">
-						<f:setPropertyActionListener value="#{nor}"
-							target="#{norMB.registro}" />
-					</p:commandButton>
-				</p:column>
 			</p:dataTable>
 		</h:form>
 
@@ -91,33 +85,33 @@
 					<div class="p-field p-col">
 						<p:outputLabel for="nombre" value="Nombre Normativa:" />
 						<p:inputText id="nombre" value="#{norMB.registro.norNombre}"
-							required="true" maxlength="250" disabled="#{norMB.status=='SHOW'}"/>
+							required="true" maxlength="250" readonly="#{norMB.status=='SHOW'}"/>
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="descripcion" value="Descripción Normativa:" />
 						<p:inputTextarea id="descripcion" rows="4" required="true"
-							value="#{norMB.registro.norDescripcion}" maxlength="1000" disabled="#{norMB.status=='SHOW'}"/>
+							value="#{norMB.registro.norDescripcion}" maxlength="1000" readonly="#{norMB.status=='SHOW'}"/>
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="autor" value="Autor:" />
 						<p:inputTextarea id="autor" rows="4" required="true"
-							value="#{norMB.registro.norAutor}" maxlength="250" disabled="#{norMB.status=='SHOW'}"/>
+							value="#{norMB.registro.norAutor}" maxlength="250" readonly="#{norMB.status=='SHOW'}"/>
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="version" value="Version:" />
 						<p:inputTextarea id="version" rows="4" required="true"
-							value="#{norMB.registro.norVersion}" maxlength="10" disabled="#{norMB.status=='SHOW'}"/>
+							value="#{norMB.registro.norVersion}" maxlength="10" readonly="#{norMB.status=='SHOW'}"/>
 					</div>
 					<div class="ui-g">
 						<div class="ui-g-12 ui-md-6 ui-lg-3">
 							<p:outputLabel for="anio" value="Año:" />
 							<p:inputMask id="anio" required="false"
-								value="#{norMB.registro.norAnio}" mask="9999" disabled="#{norMB.status=='SHOW'}"/>
+								value="#{norMB.registro.norAnio}" mask="9999" readonly="#{norMB.status=='SHOW'}"/>
 						</div>
 						<div class="ui-g-12 ui-md-6 ui-lg-3">
 							<p:outputLabel for="tipo" value="Tipo:" />
 							<p:selectOneMenu id="tipo" value="#{norMB.registro.norTipo}"
-								style="margin-bottom:10px;" required="true" disabled="#{norMB.status=='SHOW'}">
+								style="margin-bottom:10px;" required="true" readonly="#{norMB.status=='SHOW'}">
 								<f:selectItems value="#{norMB.tipoList}" />
 							</p:selectOneMenu>
 						</div>

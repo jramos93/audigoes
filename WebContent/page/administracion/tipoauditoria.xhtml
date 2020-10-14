@@ -11,22 +11,25 @@
 		<span class="app-name">Gestion de Tipos de Auditorias</span>
 	</div>
 		<h:form id="frm">
-
-
 			<p:dataTable var="tpa" value="#{tpaMB.listado}" widgetVar="wvTiposAuditorias"
 				reflow="true" id="dtTiposAuditorias" style="margin-top:20px;" paginator="true"
 				filteredValue="#{tpaMB.filteredTiposAuditoria}" selection="#{tpaMB.registro}"
-				selectionMode="single"
+				selectionMode="single" rowKey="#{tpa.tpaId}"
 				globalFilterFunction="#{tpaMB.globalFilterFunction}"
 				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
-				rowKey="#{tpa.tpaId}">
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+				<p:ajax event="rowSelect" listener="#{tpaMB.onRowSelect}" update="dtTiposAuditorias" />
 
 				<f:facet name="paginatorTopLeft">
 					<p:commandButton value="Agregar" icon="pi pi-plus"
 						actionListener="#{tpaMB.onNew}"
-						oncomplete="PF('wvTpaNewEdit').show();" update=":frmTpaNewEdit"></p:commandButton>
+						oncomplete="PF('wvTpaNewEdit').show();" update=":frmTpaNewEdit">
+					</p:commandButton>
+					<p:commandButton update=":frmTpaNewEdit" value="Editar"
+						oncomplete="PF('wvTpaNewEdit').show()" icon="pi pi-pencil"
+						actionListener="#{tpaMB.onEdit}" rendered="#{tpaMB.registro.selected}">
+					</p:commandButton>
 				</f:facet>
 
 				<f:facet name="paginatorTopRight">
@@ -61,15 +64,6 @@
 					<h:outputText value="#{tpa.regActivo}"
 						converter="regActivoConverter"></h:outputText>
 				</p:column>
-
-				<p:column headerText="Modificar">
-					<p:commandButton update=":frmTpaNewEdit"
-						oncomplete="PF('wvTpaNewEdit').show()" icon="pi pi-pencil"
-						title="Modificar" actionListener="#{tpaMB.onEdit}">
-						<f:setPropertyActionListener value="#{tpa}"
-							target="#{tpaMB.registro}" />
-					</p:commandButton>
-				</p:column>
 			</p:dataTable>
 		</h:form>
 
@@ -95,7 +89,6 @@
 							<f:selectItems value="#{tpaMB.regActivoList}"></f:selectItems>
 						</p:selectOneRadio>
 					</div>
-
 
 					<p:commandButton actionListener="#{tpaMB.onSave}" value="Guardar"
 						oncomplete="PF('wvTpaNewEdit').hide();" update=":frm:dtTiposAuditorias"></p:commandButton>
