@@ -13,17 +13,22 @@
 		<h:form id="frm">
 			<p:dataTable var="uni" value="#{uniMB.listado}" widgetVar="wvUnidades"
 				reflow="true" id="dtUnidades" style="margin-top:20px;" paginator="true"
-				filteredValue="#{uniMB.filteredUnidades}"
+				filteredValue="#{uniMB.filteredUnidades}" selection="#{uniMB.regSelected}"
+				selectionMode="single" rowKey="#{uni.uniId}"
 				globalFilterFunction="#{uniMB.globalFilterFunction}"
 				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
-				rowKey="#{uni.uniId}">
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+				<p:ajax event="rowSelect" listener="#{uniMB.onRowSelect}" update="dtUnidades" />
 
 				<f:facet name="paginatorTopLeft">
 					<p:commandButton value="Agregar" icon="pi pi-plus"
 						actionListener="#{uniMB.onNew}"
 						oncomplete="PF('wvUniNewEdit').show();" update=":frmUniNewEdit" />
+					<p:commandButton update=":frmUniNewEdit" value="Editar"
+						oncomplete="PF('wvUniNewEdit').show()" icon="pi pi-pencil"
+						actionListener="#{uniMB.onEdit}" rendered="#{uniMB.registro.selected}">
+					</p:commandButton>
 				</f:facet>
 
 				<f:facet name="paginatorTopRight">
@@ -63,14 +68,6 @@
 						converter="regActivoConverter"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Modificar">
-					<p:commandButton update=":frmUniNewEdit"
-						oncomplete="PF('wvUniNewEdit').show()" icon="pi pi-pencil"
-						title="Modificar" actionListener="#{uniMB.onEdit}">
-						<f:setPropertyActionListener value="#{uni}"
-							target="#{uniMB.registro}" />
-					</p:commandButton>
-				</p:column>
 			</p:dataTable>
 		</h:form>
 
@@ -106,7 +103,6 @@
 							<f:selectItems value="#{uniMB.regActivoList}"></f:selectItems>
 						</p:selectOneRadio>
 					</div>
-
 
 					<p:commandButton actionListener="#{uniMB.onSave}" value="Guardar"
 						oncomplete="PF('wvUniNewEdit').hide();" update=":frm:dtUnidades" />

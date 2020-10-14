@@ -13,7 +13,7 @@
 		<h:form id="frm">
 			<p:dataTable var="tpa" value="#{tpaMB.listado}" widgetVar="wvTiposAuditorias"
 				reflow="true" id="dtTiposAuditorias" style="margin-top:20px;" paginator="true"
-				filteredValue="#{tpaMB.filteredTiposAuditoria}" selection="#{tpaMB.registro}"
+				filteredValue="#{tpaMB.filteredTiposAuditoria}" selection="#{tpaMB.regSelected}"
 				selectionMode="single" rowKey="#{tpa.tpaId}"
 				globalFilterFunction="#{tpaMB.globalFilterFunction}"
 				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
@@ -29,6 +29,10 @@
 					<p:commandButton update=":frmTpaNewEdit" value="Editar"
 						oncomplete="PF('wvTpaNewEdit').show()" icon="pi pi-pencil"
 						actionListener="#{tpaMB.onEdit}" rendered="#{tpaMB.registro.selected}">
+					</p:commandButton>
+					<p:commandButton update=":frm" value="Eliminar"
+						icon="pi pi-delete"
+						actionListener="#{tpaMB.onDelete}" rendered="#{tpaMB.registro.selected}">
 					</p:commandButton>
 				</f:facet>
 
@@ -77,7 +81,7 @@
 							required="true" maxlength="250" />
 					</div>
 					<div class="p-field p-col">
-						<p:outputLabel for="descripcion" value="Descripción del rol:" />
+						<p:outputLabel for="descripcion" value="Descripción del tipo de auditoria:" />
 						<p:inputTextarea id="descripcion" rows="4" required="true"
 							value="#{tpaMB.registro.tpaDescripcion}" maxlength="1000" />
 					</div>

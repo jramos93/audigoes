@@ -85,6 +85,11 @@ public class TipoAuditoriaMB extends AudigoesController implements Serializable 
 		getListado().add(getRegistro());
 		super.afterSaveNew();
 	}
+	@Override
+	public void afterDelete() {
+		getListado().remove(getRegistro());
+		super.afterDelete();
+	}
 
 	public List<TipoAuditoria> getFilteredTiposAuditoria() {
 		return filteredTiposAuditoria;
