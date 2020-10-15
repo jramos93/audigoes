@@ -7,32 +7,38 @@
 	<ui:define name="title">Audigoes</ui:define>
 
 	<ui:define name="content">
-	<div class="name" align="center">
-		<span class="app-name">Gestion de Institucion</span>
-	</div>
+		<div class="name" align="center">
+			<span class="app-name">Gestion de Institucion</span>
+		</div>
 		<h:form id="frm">
-
-
-			<p:dataTable var="ins" value="#{insMB.listado}" widgetVar="wvInstitucion"
-				reflow="true" id="dtInstituciones" style="margin-top:20px;" paginator="true"
+			<p:dataTable var="ins" value="#{insMB.listado}"
+				widgetVar="wvInstitucion" reflow="true" id="dtInstituciones"
+				style="margin-top:20px;" paginator="true" rowKey="#{ins.insId}"
+				selection="#{insMB.regSelected}" selectionMode="single"
 				filteredValue="#{insMB.filteredInstituciones}"
 				globalFilterFunction="#{insMB.globalFilterFunction}"
 				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
-				rowKey="#{insMB.registro.insId}">
-
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+				<p:ajax event="rowSelect" listener="#{insMB.onRowSelect}"
+					update="dtInstituciones" />
 				<f:facet name="paginatorTopLeft">
 					<p:commandButton value="Agregar" icon="pi pi-plus"
 						actionListener="#{insMB.onNew}"
 						oncomplete="PF('wvInsNewEdit').show();" update=":frmInsNewEdit" />
+					<p:commandButton update=":frmInsNewEdit" value="Editar"
+						oncomplete="PF('wvInsNewEdit').show()" icon="pi pi-pencil"
+						title="Modificar" actionListener="#{insMB.onEdit}"
+						rendered="#{insMB.registro.selected}">
+					</p:commandButton>
 				</f:facet>
 
 				<f:facet name="paginatorTopRight">
 					<p:outputPanel>
 						<h:outputText value="Búsqueda global: " />
-						<p:inputText id="globalFilter" onkeyup="PF('wvInstitucion').filter();"
-							style="width:150px" placeholder="Ingresa una palabra" />
+						<p:inputText id="globalFilter"
+							onkeyup="PF('wvInstitucion').filter();" style="width:150px"
+							placeholder="Ingresa una palabra" />
 					</p:outputPanel>
 				</f:facet>
 
@@ -47,15 +53,15 @@
 				<p:column headerText="Eslogan">
 					<h:outputText value="#{ins.insSlogan}"></h:outputText>
 				</p:column>
-				
+
 				<p:column headerText="Abreviatura nombre">
 					<h:outputText value="#{ins.insIniciales}"></h:outputText>
 				</p:column>
-				
+
 				<p:column headerText="Dirección">
 					<h:outputText value="#{ins.insDireccion}"></h:outputText>
 				</p:column>
-				
+
 				<p:column headerText="NIT">
 					<h:outputText value="#{ins.insNit}"></h:outputText>
 				</p:column>
@@ -71,15 +77,6 @@
 					</f:facet>
 					<h:outputText value="#{ins.regActivo}"
 						converter="regActivoConverter"></h:outputText>
-				</p:column>
-
-				<p:column headerText="Modificar">
-					<p:commandButton update=":frmInsNewEdit"
-						oncomplete="PF('wvInsNewEdit').show()" icon="pi pi-pencil"
-						title="Modificar" actionListener="#{insMB.onEdit}">
-						<f:setPropertyActionListener value="#{ins}"
-							target="#{insMB.registro}" />
-					</p:commandButton>
 				</p:column>
 			</p:dataTable>
 		</h:form>
@@ -100,8 +97,9 @@
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="abreviatura" value="Abreviatura nombre:" />
-						<p:inputText id="abreviatura" value="#{insMB.registro.insIniciales}"
-							required="true" maxlength="25" />
+						<p:inputText id="abreviatura"
+							value="#{insMB.registro.insIniciales}" required="true"
+							maxlength="25" />
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="nit" value="NIT:" />
@@ -129,7 +127,8 @@
 
 
 					<p:commandButton actionListener="#{insMB.onSave}" value="Guardar"
-						oncomplete="PF('wvInsNewEdit').hide();" update=":frm:dtInstituciones" />
+						oncomplete="PF('wvInsNewEdit').hide();"
+						update=":frm:dtInstituciones" />
 				</div>
 			</h:form>
 		</p:dialog>
