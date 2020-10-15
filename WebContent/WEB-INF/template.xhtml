@@ -42,10 +42,10 @@
 		<ui:include src="./topbar.xhtml" />
 
 		<div class="layout-content">
+			<p:growl id="msg" showDetail="true" life="3000" >
+				<p:autoUpdate></p:autoUpdate>
+			</p:growl>
 			<ui:insert name="content">
-				<p:growl id="msg" showDetail="true" sticky="true" life="3000">
-					<p:autoUpdate></p:autoUpdate>
-				</p:growl>
 			</ui:insert>
 		</div>
 

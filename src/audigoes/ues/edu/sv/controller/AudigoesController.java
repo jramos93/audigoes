@@ -12,6 +12,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.primefaces.PrimeFaces;
+import org.primefaces.context.PrimeFacesContext;
+
 import audigoes.ues.edu.sv.entities.SuperEntity;
 import audigoes.ues.edu.sv.security.ObjAppsSession;
 import audigoes.ues.edu.sv.session.audigoesSBSLLocal;
@@ -69,7 +72,7 @@ public class AudigoesController {
 		if (mensaje.getSummary() == null) {
 			mensaje.setSummary("INFORMACIÓN");
 		}
-		FacesContext.getCurrentInstance().addMessage(null, mensaje);
+		PrimeFacesContext.getCurrentInstance().addMessage(null, mensaje);
 	}
 
 	public void addWarn(FacesMessage mensaje) {
@@ -77,7 +80,7 @@ public class AudigoesController {
 		if (mensaje.getSummary() == null) {
 			mensaje.setSummary("ADVERTENCIA");
 		}
-		FacesContext.getCurrentInstance().addMessage(null, mensaje);
+		PrimeFacesContext.getCurrentInstance().addMessage(null, mensaje);
 	}
 
 	public void addError(FacesMessage mensaje) {
@@ -85,7 +88,7 @@ public class AudigoesController {
 		if (mensaje.getSummary() == null) {
 			mensaje.setSummary("ERROR");
 		}
-		FacesContext.getCurrentInstance().addMessage(null, mensaje);
+		PrimeFacesContext.getCurrentInstance().addMessage(null, mensaje);
 	}
 
 	public void addFatal(FacesMessage mensaje) {
@@ -93,7 +96,7 @@ public class AudigoesController {
 		if (mensaje.getSummary() == null) {
 			mensaje.setSummary("FATAL");
 		}
-		FacesContext.getCurrentInstance().addMessage(null, mensaje);
+		PrimeFacesContext.getCurrentInstance().addMessage(null, mensaje);
 	}
 
 	public Date getToday() {
@@ -241,6 +244,7 @@ public class AudigoesController {
 		try {
 			if (beforeSaveNew()) {
 				this.saveNewAudit();
+				System.out.println("onSaveNew");
 				audigoesLocal.insert(getRegistro());
 				this.addInfo(new FacesMessage("Confirmación", "Registro Guardado con Éxito"));
 				afterSaveNew();
