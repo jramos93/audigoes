@@ -12,7 +12,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import org.primefaces.PrimeFaces;
 import org.primefaces.context.PrimeFacesContext;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
@@ -63,7 +62,7 @@ public class AudigoesController {
 	private List<SelectItem> siNoList;
 	private List<SelectItem> regActivoList;
 	private List<SelectItem> generoList;
-	
+
 	protected ObjAppsSession objAppsSession;
 	protected String outcome;
 
@@ -141,7 +140,7 @@ public class AudigoesController {
 
 	protected void afterEdit() {
 	}
-	
+
 	/* Acciones al visualizar objeto */
 	public boolean beforeShow() {
 		return true;
@@ -156,13 +155,13 @@ public class AudigoesController {
 
 	protected void afterShow() {
 	}
-	
-	/*Eliminar registro*/
-	
+
+	/* Eliminar registro */
+
 	public boolean beforeDelete() {
 		return true;
 	}
-	
+
 	public void onDelete() {
 		try {
 			if (beforeDelete()) {
@@ -173,14 +172,14 @@ public class AudigoesController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-	}
-	
-	public void afterDelete() {
-		
+
 	}
 
-	/* Acciones al cancelar  */
+	public void afterDelete() {
+
+	}
+
+	/* Acciones al cancelar */
 	public boolean beforeCancel() {
 		return true;
 	}
@@ -388,8 +387,8 @@ public class AudigoesController {
 	}
 
 	public List<SelectItem> getRegActivoList() {
-		if(this.regActivoList==null) {
-			this.regActivoList=new ArrayList<>();
+		if (this.regActivoList == null) {
+			this.regActivoList = new ArrayList<>();
 			this.regActivoList.add(new SelectItem(1, "ACTIVO"));
 			this.regActivoList.add(new SelectItem(0, "INACTIVO"));
 		}
@@ -401,8 +400,9 @@ public class AudigoesController {
 	}
 
 	public ObjAppsSession getObjAppsSession() {
-		if(this.objAppsSession==null) {
-			this.objAppsSession = (ObjAppsSession) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("audigoes.session");
+		if (this.objAppsSession == null) {
+			this.objAppsSession = (ObjAppsSession) FacesContext.getCurrentInstance().getExternalContext()
+					.getSessionMap().get("audigoes.session");
 		}
 		return this.objAppsSession;
 	}
@@ -418,7 +418,7 @@ public class AudigoesController {
 	public void setOutcome(String outcome) {
 		this.outcome = outcome;
 	}
-	
+
 	public List<SelectItem> getGeneroList() {
 		if (generoList == null) {
 			generoList = new ArrayList<SelectItem>();
@@ -431,7 +431,5 @@ public class AudigoesController {
 	public void setGeneroList(List<SelectItem> generoList) {
 		this.generoList = generoList;
 	}
-
-	
 
 }

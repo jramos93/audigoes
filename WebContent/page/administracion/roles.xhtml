@@ -13,11 +13,10 @@
 		<h:form id="frm">
 			<p:dataTable var="rol" value="#{rolMB.listado}" widgetVar="wvRoles"
 				reflow="true" id="dtRoles" style="margin-top:20px;" paginator="true"
-				filteredValue="#{rolMB.filteredRoles}"
+				filteredValue="#{rolMB.filteredRoles}" rowKey="#{rol.rolId}"
 				selection="#{rolMB.regSelected}" selectionMode="single"
-				rowKey="#{rol.rolId}"
 				globalFilterFunction="#{rolMB.globalFilterFunction}"
-				rowsPerPageTemplate="1,5,10,15" rows="5"
+				rowsPerPageTemplate="5,10,15,20,25" rows="10" sortMode="multiple"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
 				<p:ajax event="rowSelect" listener="#{rolMB.onRowSelect}"
@@ -37,15 +36,15 @@
 					</p:outputPanel>
 				</f:facet>
 
-				<p:column headerText="Id" style="width:35px;">
+				<p:column headerText="Id" style="width:35px;" sortBy="#{rol.rolId}">
 					<h:outputText value="#{rol.rolId}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Nombre">
+				<p:column headerText="Nombre" sortBy="#{rol.rolNombre}">
 					<h:outputText value="#{rol.rolNombre}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Descripcion">
+				<p:column headerText="Descripcion" sortBy="#{rol.rolDescripcion}">
 					<h:outputText value="#{rol.rolDescripcion}"></h:outputText>
 				</p:column>
 

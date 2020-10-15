@@ -39,19 +39,19 @@
 					</p:outputPanel>
 				</f:facet>
 
-				<p:column headerText="Id">
+				<p:column headerText="Id" sortBy="#{uni.uniId}">
 					<h:outputText value="#{uni.uniId}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Abreviatura Nombre">
+				<p:column headerText="Abreviatura Nombre" sortBy="#{uni.uniIniciales}">
 					<h:outputText value="#{uni.uniIniciales}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Nombre">
+				<p:column headerText="Nombre" sortBy="#{uni.uniNombre}">
 					<h:outputText value="#{uni.uniNombre}"></h:outputText>
 				</p:column>
 				
-				<p:column headerText="Ubicación">
+				<p:column headerText="Ubicación" sortBy="#{uni.uniUbicacion}">
 					<h:outputText value="#{uni.uniUbicacion}"></h:outputText>
 				</p:column>
 

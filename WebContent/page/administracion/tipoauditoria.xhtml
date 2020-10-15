@@ -44,15 +44,15 @@
 					</p:outputPanel>
 				</f:facet>
 
-				<p:column headerText="Id">
+				<p:column headerText="Id" sortBy="#{tpa.tpaId}">
 					<h:outputText value="#{tpa.tpaId}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Nombre">
+				<p:column headerText="Nombre" sortBy="#{tpa.tpaNombre}">
 					<h:outputText value="#{tpa.tpaNombre}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Descripcion">
+				<p:column headerText="Descripcion" sortBy="#{tpa.tpaDescripcion}">
 					<h:outputText value="#{tpa.tpaDescripcion}"></h:outputText>
 				</p:column>
 

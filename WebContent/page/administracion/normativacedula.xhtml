@@ -46,19 +46,19 @@
 					</p:outputPanel>
 				</f:facet>
 
-				<p:column headerText="Id">
+				<p:column headerText="Id" sortBy="#{nor.norId}">
 					<h:outputText value="#{nor.norId}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Nombre">
+				<p:column headerText="Nombre" sortBy="#{nor.norNombre}">
 					<h:outputText value="#{nor.norNombre}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Descripcion">
+				<p:column headerText="Descripcion" sortBy="#{nor.norDescripcion}">
 					<h:outputText value="#{nor.norDescripcion}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Version">
+				<p:column headerText="Version" sortBy="#{nor.norVersion}">
 					<h:outputText value="#{nor.norVersion}"></h:outputText>
 				</p:column>
 
