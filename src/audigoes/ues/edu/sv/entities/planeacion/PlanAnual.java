@@ -4,99 +4,104 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.administracion.Institucion;
 
 import java.util.Date;
 import java.util.Set;
-
 
 /**
  * The persistent class for the plan_anual database table.
  * 
  */
 @Entity
-@Table(name="plan_anual")
-@NamedQuery(name="PlanAnual.findAll", query="SELECT p FROM PlanAnual p")
+@Table(name = "plan_anual")
+@NamedQuery(name = "PlanAnual.findAll", query = "SELECT p FROM PlanAnual p")
 public class PlanAnual extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "pla_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "pla_id", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "pla_id")
-	@Column(name="pla_id")
+	@Column(name = "pla_id")
 	private int plaId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_crea")
+	@Column(name = "fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_modi")
+	@Column(name = "fec_modi")
 	private Date fecModi;
 
-	@Column(name="pla_anio")
+	@Column(name = "pla_anio")
 	private String plaAnio;
 
-	@Column(name="pla_descripcion")
+	@Column(name = "pla_descripcion")
 	private String plaDescripcion;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="pla_fecha_fin")
+	@Column(name = "pla_fecha_fin")
 	private Date plaFechaFin;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="pla_fecha_inicio")
+	@Column(name = "pla_fecha_inicio")
 	private Date plaFechaInicio;
 
 	@Lob
-	@Column(name="pla_indice")
+	@Column(name = "pla_indice")
 	private String plaIndice;
 
 	@Lob
-	@Column(name="pla_introduccion")
+	@Column(name = "pla_introduccion")
 	private String plaIntroduccion;
 
-	@Column(name="pla_lugar_fecha")
+	@Column(name = "pla_lugar_fecha")
 	private String plaLugarFecha;
 
 	@Lob
-	@Column(name="pla_mision")
+	@Column(name = "pla_mision")
 	private String plaMision;
 
-	@Column(name="pla_nombre")
+	@Column(name = "pla_nombre")
 	private String plaNombre;
 
 	@Lob
-	@Column(name="pla_objetivos")
+	@Column(name = "pla_objetivos")
 	private String plaObjetivos;
 
 	@Lob
-	@Column(name="pla_principios_valores")
+	@Column(name = "pla_principios_valores")
 	private String plaPrincipiosValores;
 
 	@Lob
-	@Column(name="pla_riesgos_considerados")
+	@Column(name = "pla_riesgos_considerados")
 	private String plaRiesgosConsiderados;
 
 	@Lob
-	@Column(name="pla_vision")
+	@Column(name = "pla_vision")
 	private String plaVision;
 
-	@Column(name="reg_activo")
+	@Column(name = "reg_activo")
 	private int regActivo;
 
-	@Column(name="usu_crea")
+	@Column(name = "usu_crea")
 	private String usuCrea;
 
-	@Column(name="usu_modi")
+	@Column(name = "usu_modi")
 	private String usuModi;
 
-	//bi-directional many-to-one association to Auditoria
-	@OneToMany(mappedBy="planAnual", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to Auditoria
+	@OneToMany(mappedBy = "planAnual", fetch = FetchType.EAGER)
 	private Set<Auditoria> auditoria;
 
-	//bi-directional many-to-one association to DocumentoPlan
-	@OneToMany(mappedBy="planAnual", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to DocumentoPlan
+	@OneToMany(mappedBy = "planAnual", fetch = FetchType.EAGER)
 	private Set<DocumentoPlan> documentoPlan;
+
+	// bi-directional many-to-one association to Institucion
+	@ManyToOne
+	@JoinColumn(name = "pla_ins_id")
+	private Institucion institucion;
 
 	public PlanAnual() {
 	}
@@ -295,6 +300,14 @@ public class PlanAnual extends SuperEntity implements Serializable {
 		documentoPlan.setPlanAnual(null);
 
 		return documentoPlan;
+	}
+	
+	public Institucion getInstitucion() {
+		return this.institucion;
+	}
+
+	public void setInstitucion(Institucion institucion) {
+		this.institucion = institucion;
 	}
 
 	@Override

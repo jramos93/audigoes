@@ -1,0 +1,111 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	 template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Audigoes</ui:define>
+
+	<ui:define name="content">
+		<div class="name" align="center">
+			<span class="app-name">Gestion de Roles</span>
+		</div>
+		<h:form id="frm">
+			<p:dataTable var="plan" value="#{planMB.listado}"
+				widgetVar="wvPlanAnual" reflow="true" id="dtPlanAnual"
+				style="margin-top:20px;" paginator="true"
+				filteredValue="#{planMB.filteredPlanAnuales}" rowKey="#{plan.plaId}"
+				selection="#{planMB.regSelected}" selectionMode="single"
+				globalFilterFunction="#{planMB.globalFilterFunction}"
+				rowsPerPageTemplate="5,10,15,20,25" rows="10" sortMode="multiple"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+				<p:ajax event="rowSelect" listener="#{planMB.onRowSelect}"
+					update="dtPlanAnual" />
+				<f:facet name="paginatorTopLeft">
+					<p:commandButton update=":frmPlanNewEdit" value="Nuevo"
+						oncomplete="PF('wvPlanNewEdit').show()" icon="pi pi-eye"
+						actionListener="#{planMB.onNew()}">
+					</p:commandButton>
+				</f:facet>
+				<f:facet name="paginatorTopRight">
+					<p:outputPanel>
+						<h:outputText value="Búsqueda global: " />
+						<p:inputText id="globalFilter"
+							onkeyup="PF('wvPlanAnual').filter();" style="width:150px"
+							placeholder="Ingresa una palabra" />
+					</p:outputPanel>
+				</f:facet>
+
+				<p:column headerText="Id" style="width:35px;" sortBy="#{plan.plaId}">
+					<h:outputText value="#{plan.plaId}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Nombre" sortBy="#{plan.plaNombre}">
+					<h:outputText value="#{plan.plaNombre}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Descripcion" sortBy="#{plan.plaDescripcion}">
+					<h:outputText value="#{plan.plaDescripcion}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Estado" filterBy="#{plan.regActivo}"
+					filterMatchMode="exact" style="text-align:center;">
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('wvPlanAnual').filter();">
+							<f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}"
+								noSelectionOption="true" />
+							<f:selectItems value="#{planMB.regActivoList}" />
+						</p:selectOneMenu>
+					</f:facet>
+					<h:outputText value="#{plan.regActivo}"
+						converter="regActivoConverter"></h:outputText>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog id="dgPlanNewEdit" widgetVar="wvPlanNewEdit"
+			responsive="true" width="800" closeOnEscape="true"
+			header="Plan Anual" modal="true" position="center" >
+			<h:form id="frmPlanNewEdit">
+				<div class="ui-fluid p-formgrid p-grid">
+					<div class="p-field p-col">
+						<p:outputLabel for="nombre" value="Nombre del plan" />
+						<p:inputText id="nombre" value="#{planMB.registro.plaNombre}"
+							required="true" maxlength="250"
+							readonly="#{planMB.status != 'NEW' and planMB.status != 'EDIT'}" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="fechainicio" value="Fecha Inicio" />
+						<p:calendar id="fechainicio" mask="dd-MM-yyyy"
+							value="#{planMB.registro.plaFechaInicio}" required="true"
+							pattern="dd-MM-yyyy" navigator="true" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="fechafin" value="Fecha Fin" />
+						<p:calendar id="fechafin" mask="dd-MM-yyyy"
+							value="#{planMB.registro.plaFechaFin}" required="true"
+							pattern="dd-MM-yyyy" navigator="true" />
+					</div>
+					<div class="p-field p-col">
+						<p:tabView id="tvPlanAnual">
+							<p:tab title="Objetivos">
+								<pe:ckEditor id="CKEDITOR" enterMode="CKEDITOR.ENTER_BR"></pe:ckEditor>
+							</p:tab>
+							<p:tab title="Descripción">
+								<pe:ckEditor id="CKEDITOR23" enterMode="CKEDITOR.ENTER_BR"></pe:ckEditor>
+							</p:tab>
+						</p:tabView>
+					</div>
+					<p:commandButton actionListener="#{planMB.onSave}" value="Guardar"
+						oncomplete="PF('wvPlanNewEdit').hide();" update=":frm:dtPlanAnual" />
+				</div>
+			</h:form>
+		</p:dialog>
+
+
+	</ui:define>
+
+</ui:composition>

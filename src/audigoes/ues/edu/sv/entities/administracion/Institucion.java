@@ -18,81 +18,85 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
-
+import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
 
 /**
  * The persistent class for the institucion database table.
  * 
  */
 @Entity
-@NamedQuery(name="Institucion.findAll", query="SELECT i FROM Institucion i")
+@NamedQuery(name = "Institucion.findAll", query = "SELECT i FROM Institucion i")
 public class Institucion extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "ins_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "ins_id", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "ins_id")
-	@Column(name="ins_id")
+	@Column(name = "ins_id")
 	private int insId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_crea")
+	@Column(name = "fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_modi")
+	@Column(name = "fec_modi")
 	private Date fecModi;
 
-	@Column(name="ins_direccion")
+	@Column(name = "ins_direccion")
 	private String insDireccion;
 
-	@Column(name="ins_iniciales")
+	@Column(name = "ins_iniciales")
 	private String insIniciales;
 
 	@Lob
-	@Column(name="ins_logo")
+	@Column(name = "ins_logo")
 	private String insLogo;
 
-	@Column(name="ins_nit")
+	@Column(name = "ins_nit")
 	private String insNit;
 
-	@Column(name="ins_nombre")
+	@Column(name = "ins_nombre")
 	private String insNombre;
 
-	@Column(name="ins_slogan")
+	@Column(name = "ins_slogan")
 	private String insSlogan;
 
-	@Column(name="ins_telefono")
+	@Column(name = "ins_telefono")
 	private String insTelefono;
 
-	@Column(name="reg_activo")
+	@Column(name = "reg_activo")
 	private int regActivo;
 
-	@Column(name="usu_crea")
+	@Column(name = "usu_crea")
 	private String usuCrea;
 
-	@Column(name="usu_modi")
+	@Column(name = "usu_modi")
 	private String usuModi;
 
-	//bi-directional many-to-one association to Configuracion
-	@OneToMany(mappedBy="institucion", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to Configuracion
+	@OneToMany(mappedBy = "institucion", fetch = FetchType.EAGER)
 	private Set<Configuracion> configuracion;
 
-	//bi-directional many-to-one association to Marca
-	@OneToMany(mappedBy="institucion", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to Marca
+	@OneToMany(mappedBy = "institucion", fetch = FetchType.EAGER)
 	private Set<Marca> marca;
 
-	//bi-directional many-to-one association to NormativaCedula
-	@OneToMany(mappedBy="institucion", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to NormativaCedula
+	@OneToMany(mappedBy = "institucion", fetch = FetchType.EAGER)
 	private Set<NormativaCedula> normativaCedula;
 
-	//bi-directional many-to-one association to Unidad
-	@OneToMany(mappedBy="institucion", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to Unidad
+	@OneToMany(mappedBy = "institucion", fetch = FetchType.EAGER)
 	private Set<Unidad> unidad;
 
-	//bi-directional many-to-one association to Usuario
-	@OneToMany(mappedBy="institucion", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to Usuario
+	@OneToMany(mappedBy = "institucion", fetch = FetchType.EAGER)
 	private Set<Usuario> usuario;
+
+	// bi-directional many-to-one association to PlanAnual
+	@OneToMany(mappedBy = "institucion", fetch = FetchType.EAGER)
+	private Set<PlanAnual> planAnual;
 
 	public Institucion() {
 	}
@@ -309,6 +313,28 @@ public class Institucion extends SuperEntity implements Serializable {
 		usuario.setInstitucion(null);
 
 		return usuario;
+	}
+	
+	public Set<PlanAnual> getPlanAnual() {
+		return this.planAnual;
+	}
+
+	public void setPlanAnual(Set<PlanAnual> planAnual) {
+		this.planAnual = planAnual;
+	}
+
+	public PlanAnual addPlanAnual(PlanAnual planAnual) {
+		getPlanAnual().add(planAnual);
+		planAnual.setInstitucion(this);
+
+		return planAnual;
+	}
+
+	public PlanAnual removePlanAnual(PlanAnual planAnual) {
+		getPlanAnual().remove(planAnual);
+		planAnual.setInstitucion(null);
+
+		return planAnual;
 	}
 
 	@Override
