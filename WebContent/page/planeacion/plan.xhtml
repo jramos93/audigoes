@@ -4,30 +4,37 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions"
-	 template="/WEB-INF/template.xhtml">
+	template="/WEB-INF/template.xhtml">
 
 	<ui:define name="title">Audigoes</ui:define>
 
 	<ui:define name="content">
 		<div class="name" align="center">
-			<span class="app-name">Gestion de Roles</span>
+			<span class="app-name">Planes Unidad de Auditoría Interna</span>
 		</div>
 		<h:form id="frm">
 			<p:dataTable var="plan" value="#{planMB.listado}"
-				widgetVar="wvPlanAnual" reflow="true" id="dtPlanAnual"
+				widgetVar="wvUnidades" reflow="true" id="dtPlanAnual"
 				style="margin-top:20px;" paginator="true"
-				filteredValue="#{planMB.filteredPlanAnuales}" rowKey="#{plan.plaId}"
+				filteredValue="#{planMB.filteredPlanAnuales}"
 				selection="#{planMB.regSelected}" selectionMode="single"
+				rowKey="#{plan.plaId}" rows="10"
 				globalFilterFunction="#{planMB.globalFilterFunction}"
-				rowsPerPageTemplate="5,10,15,20,25" rows="10" sortMode="multiple"
+				paginatorPosition="top" rowsPerPageTemplate="5,10,15,20,25"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
-				<p:ajax event="rowSelect" listener="#{planMB.onRowSelect}"
+				<p:ajax event="rowSelect" listener="#{planMB.onRowSelect()}"
 					update="dtPlanAnual" />
 				<f:facet name="paginatorTopLeft">
-					<p:commandButton update=":frmPlanNewEdit" value="Nuevo"
-						oncomplete="PF('wvPlanNewEdit').show()" icon="pi pi-eye"
-						actionListener="#{planMB.onNew()}">
+					<p:commandButton value="Nuevo" action="plannewedit"
+						icon="pi pi-plus">
+					</p:commandButton>
+					<p:commandButton value="Editar" action="plannewedit"
+						icon="pi pi-pencil" rendered="#{planMb.registro.selected}">
+					</p:commandButton>
+					<p:commandButton value="Auditorías" icon="pi pi-list"
+						actionListener="#{planMB.showAuditorias()}"
+						rendered="#{planMB.registro.selected}">
 					</p:commandButton>
 				</f:facet>
 				<f:facet name="paginatorTopRight">
@@ -66,46 +73,5 @@
 			</p:dataTable>
 		</h:form>
 
-		<p:dialog id="dgPlanNewEdit" widgetVar="wvPlanNewEdit"
-			responsive="true" width="800" closeOnEscape="true"
-			header="Plan Anual" modal="true" position="center" >
-			<h:form id="frmPlanNewEdit">
-				<div class="ui-fluid p-formgrid p-grid">
-					<div class="p-field p-col">
-						<p:outputLabel for="nombre" value="Nombre del plan" />
-						<p:inputText id="nombre" value="#{planMB.registro.plaNombre}"
-							required="true" maxlength="250"
-							readonly="#{planMB.status != 'NEW' and planMB.status != 'EDIT'}" />
-					</div>
-					<div class="p-field p-col">
-						<p:outputLabel for="fechainicio" value="Fecha Inicio" />
-						<p:calendar id="fechainicio" mask="dd-MM-yyyy"
-							value="#{planMB.registro.plaFechaInicio}" required="true"
-							pattern="dd-MM-yyyy" navigator="true" />
-					</div>
-					<div class="p-field p-col">
-						<p:outputLabel for="fechafin" value="Fecha Fin" />
-						<p:calendar id="fechafin" mask="dd-MM-yyyy"
-							value="#{planMB.registro.plaFechaFin}" required="true"
-							pattern="dd-MM-yyyy" navigator="true" />
-					</div>
-					<div class="p-field p-col">
-						<p:tabView id="tvPlanAnual">
-							<p:tab title="Objetivos">
-								<pe:ckEditor id="CKEDITOR" enterMode="CKEDITOR.ENTER_BR"></pe:ckEditor>
-							</p:tab>
-							<p:tab title="Descripción">
-								<pe:ckEditor id="CKEDITOR23" enterMode="CKEDITOR.ENTER_BR"></pe:ckEditor>
-							</p:tab>
-						</p:tabView>
-					</div>
-					<p:commandButton actionListener="#{planMB.onSave}" value="Guardar"
-						oncomplete="PF('wvPlanNewEdit').hide();" update=":frm:dtPlanAnual" />
-				</div>
-			</h:form>
-		</p:dialog>
-
-
 	</ui:define>
-
 </ui:composition>

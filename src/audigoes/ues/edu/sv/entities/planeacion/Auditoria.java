@@ -26,6 +26,9 @@ public class Auditoria extends SuperEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "aud_id")
 	@Column(name="aud_id")
 	private int audId;
+	
+	@Column(name="aud_anio")
+	private int audAnio;
 
 	@Column(name="aud_codigo")
 	private String audCodigo;
@@ -117,6 +120,14 @@ public class Auditoria extends SuperEntity implements Serializable {
 
 	public void setAudId(int audId) {
 		this.audId = audId;
+	}
+
+	public int getAudAnio() {
+		return audAnio;
+	}
+
+	public void setAudAnio(int audAnio) {
+		this.audAnio = audAnio;
 	}
 
 	public String getAudCodigo() {

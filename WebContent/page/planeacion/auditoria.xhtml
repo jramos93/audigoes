@@ -1,0 +1,127 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<div class="card">
+					<div class="name" align="center">
+						<span class="app-name">Auditorías</span>
+					</div>
+					<h:form id="frm">
+						<p:panelGrid id="pgPlanesAuditoria">
+							<p:selectOneMenu id="somPlanSelected"
+								value="#{audMB.planSelected}" converter="planAnualConverter">
+								<f:selectItem itemLabel="Todos los planes" itemValue="1" 
+									noSelectionOption="true" />
+								<f:selectItems id="siPlanAuditorias"
+									itemLabel="#{plan.plaNombre}" itemValue="#{plan}" var="plan" />
+							</p:selectOneMenu>
+						</p:panelGrid>
+
+						<p:dataTable id="dtAuditorias" value="#{audMB.listado}"
+							widgetVar="wvAuditorias" reflow="true" var="aud"
+							style="margin-top:20px;" paginator="true" rowKey="#{aud.audId}"
+							filteredValue="#{audMB.filteredAuditorias}"
+							selectionMode="single" selection="#{audMB.regSelected}"
+							globalFilterFunction="#{audMB.globalFilterFunction}"
+							rowsPerPageLabel="5,10,15,20,25" rows="10" sortMode="multiple"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+							<p:ajax event="rowSelect" listener="#{audMB.onRowSelect}"
+								update="dtAuditorias" />
+							<f:facet name="paginatorTopLeft">
+								<p:commandButton value="Nuevo" action="nuevoplan"
+									oncomplete="PF('wvNewEditAuditoria').show();"
+									update="dgNewEditAuditoria" icon="pi pi-eye"
+									actionListener="#{audMB.onNew()}" process="@this">
+								</p:commandButton>
+								<p:commandButton id="btnActividades" value="Actividades"
+									rendered="#{audMB.registro.selected}">
+								</p:commandButton>
+								<p:commandButton id="btnAuditPlanificacion"
+									value="Planificación" rendered="#{audMB.registro.selected}">
+								</p:commandButton>
+								<p:commandButton id="btnAuditEjecucion" value="Ejecución"
+									rendered="#{audMB.registro.selected}">
+								</p:commandButton>
+								<p:commandButton id="btnAuditInforme" value="Informe"
+									rendered="#{audMB.registro.selected}">
+								</p:commandButton>
+							</f:facet>
+							<p:column headerText="Año" sortBy="#{aud.audAnio}">
+								<h:outputText value="#{aud.audAnio}" />
+							</p:column>
+							<p:column headerText="Auditoría" sortBy="#{aud.audNombre}">
+								<h:outputText value="#{aud.audNombre}" />
+							</p:column>
+							<p:column headerText="Tipo Auditoría"
+								sortBy="#{aud.tipoAuditoria.tpaNombre}">
+								<h:outputText value="#{aud.tipoAuditoria.tpaNombre}" />
+							</p:column>
+							<p:column headerText="Fecha Inicio"
+								sortBy="#{aud.audFechaInicioProgramado}">
+								<h:outputText value="#{aud.audFechaInicioProgramado}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Fecha Inicio"
+								sortBy="#{aud.audFechaFinProgramado}">
+								<h:outputText value="#{aud.audFechaInicioProgramado}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Fase" sortBy="#{aud.audFase}">
+								<h:outputText value="#{aud.audFase}" />
+							</p:column>
+						</p:dataTable>
+					</h:form>
+				</div>
+			</div>
+		</div>
+
+		<p:dialog id="dgNewEditAuditoria" widgetVar="wvNewEditAuditoria"
+			modal="true" responsive="true" width="600"
+			header="#{audMB.status == NEW ? 'Nueva Auditoría' : 'Editar Auditoría'}">
+			<h:form id="frmNewEditAuditoria">
+				<div class="ui-fluid p-formgrid p-grid">
+					<div class="p-field p-col">
+						<p:outputLabel for="nombre" value="Plan Anual:" />
+						<p:selectOneMenu id="somPlanAnual"
+							value="#{audMB.registro.planAnual}" converter="planAnualConverter">
+							<f:selectItems id="siPlanAnual"
+								itemLabel="#{plan.plaNombre}" itemValue="#{plan}" var="plan" />
+						</p:selectOneMenu>
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="codigo" value="Código auditoría:" />
+						<p:inputText id="codigo" value="#{audMB.registro.audCodigo}"
+							required="true" maxlength="250" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="anio" value="Año auditoria:" />
+						<p:inputText id="anio" value="#{audMB.registro.audAnio}"
+							required="true" maxlength="250" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="nombre" value="Nombre auditoría:" />
+						<p:inputText id="nombre" value="#{audMB.registro.audNombre}"
+							required="true" maxlength="250" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="descripcion" value="Descripción:" />
+						<p:inputTextarea id="descripcion" rows="4" required="true"
+							value="#{audMB.registro.audDescripcion}" maxlength="1000" />
+					</div>
+					<p:commandButton actionListener="#{audMB.onSave}" value="Guardar"
+						oncomplete="PF('wvNewEditAuditoria').hide();" update=":frm" />
+				</div>
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

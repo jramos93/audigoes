@@ -3,29 +3,29 @@ package audigoes.ues.edu.sv.mbeans.planeacion;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
+import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
 
-@ManagedBean(name = "planMB")
-@RequestScoped
-public class PlaneacionMB extends AudigoesController implements Serializable {
+@ManagedBean(name = "audMB")
+@ViewScoped
+public class AuditoriaMB extends AudigoesController implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private List<PlanAnual> filteredPlanAnuales;
+	private List<Auditoria> filteredAuditorias;
+	private List<PlanAnual> planAnualList;
+	private PlanAnual planSelected;
 
-	public PlaneacionMB() {
-		super(new PlanAnual());
+	public AuditoriaMB() {
+		super(new Auditoria());
 	}
 
 	@PostConstruct
@@ -36,22 +36,15 @@ public class PlaneacionMB extends AudigoesController implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public void fillListado() {
 		try {
-			setListado((List<PlanAnual>) audigoesLocal.findByNamedQuery(PlanAnual.class,
-					"plananual.get.all.institucion.activos",
+			setListado((List<Auditoria>) audigoesLocal.findByNamedQuery(Auditoria.class,
+					"auditoria.get.all.institucion",
 					new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() }));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void showAuditorias() {
-		try {
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -64,9 +57,9 @@ public class PlaneacionMB extends AudigoesController implements Serializable {
 		}
 		int filterInt = getInteger(filterText);
 
-		PlanAnual plan = (PlanAnual) value;
-		return plan.getPlaNombre().toLowerCase().contains(filterText)
-				|| plan.getPlaDescripcion().toLowerCase().contains(filterText) || plan.getPlaId() == filterInt;
+		Auditoria auditoria = (Auditoria) value;
+		return auditoria.getAudNombre().toLowerCase().contains(filterText)
+				|| auditoria.getAudDescripcion().toLowerCase().contains(filterText) || auditoria.getAudId() == filterInt;
 	}
 
 	private int getInteger(String string) {
@@ -78,32 +71,21 @@ public class PlaneacionMB extends AudigoesController implements Serializable {
 	}
 	
 	@Override
-	public boolean beforeEdit() {
-		return super.beforeEdit();
-	}
-	
-	@Override
-	public void onEdit() {
-		super.onEdit();
-	}
-	
-	@Override
-	public boolean beforeSaveNew() {
-		getRegistro().setInstitucion(getObjAppsSession().getUsuario().getInstitucion());
-		return super.beforeSaveNew();
+	public void afterNew() {
+		super.afterNew();
 	}
 
 	/* GETS y SETS */
 
 	@Override
-	public PlanAnual getRegistro() {
-		return (PlanAnual) super.getRegistro();
+	public Auditoria getRegistro() {
+		return (Auditoria) super.getRegistro();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PlanAnual> getListado() {
-		return (List<PlanAnual>) super.getListado();
+	public List<Auditoria> getListado() {
+		return (List<Auditoria>) super.getListado();
 	}
 
 	@Override
@@ -112,12 +94,28 @@ public class PlaneacionMB extends AudigoesController implements Serializable {
 		super.afterSaveNew();
 	}
 
-	public List<PlanAnual> getFilteredPlanAnuales() {
-		return filteredPlanAnuales;
+	public List<Auditoria> getFilteredAuditorias() {
+		return filteredAuditorias;
 	}
 
-	public void setFilteredPlanAnuales(List<PlanAnual> filteredPlanAnuales) {
-		this.filteredPlanAnuales = filteredPlanAnuales;
+	public void setFilteredAuditorias(List<Auditoria> filteredAuditorias) {
+		this.filteredAuditorias = filteredAuditorias;
 	}
-	
+
+	public List<PlanAnual> getPlanAnualList() {
+		return planAnualList;
+	}
+
+	public void setPlanAnualList(List<PlanAnual> planAnualList) {
+		this.planAnualList = planAnualList;
+	}
+
+	public PlanAnual getPlanSelected() {
+		return planSelected;
+	}
+
+	public void setPlanSelected(PlanAnual planSelected) {
+		this.planSelected = planSelected;
+	}
+
 }

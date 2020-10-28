@@ -80,6 +80,10 @@ public class PlanAnual extends SuperEntity implements Serializable {
 	@Lob
 	@Column(name = "pla_vision")
 	private String plaVision;
+	
+	@Lob
+	@Column(name = "pla_portada")
+	private String plaPortada;
 
 	@Column(name = "reg_activo")
 	private int regActivo;
@@ -234,6 +238,14 @@ public class PlanAnual extends SuperEntity implements Serializable {
 		this.plaVision = plaVision;
 	}
 
+	public String getPlaPortada() {
+		return plaPortada;
+	}
+
+	public void setPlaPortada(String plaPortada) {
+		this.plaPortada = plaPortada;
+	}
+
 	public int getRegActivo() {
 		return this.regActivo;
 	}
@@ -339,9 +351,10 @@ public class PlanAnual extends SuperEntity implements Serializable {
 				+ plaFechaInicio + ", plaIndice=" + plaIndice + ", plaIntroduccion=" + plaIntroduccion
 				+ ", plaLugarFecha=" + plaLugarFecha + ", plaMision=" + plaMision + ", plaNombre=" + plaNombre
 				+ ", plaObjetivos=" + plaObjetivos + ", plaPrincipiosValores=" + plaPrincipiosValores
-				+ ", plaRiesgosConsiderados=" + plaRiesgosConsiderados + ", plaVision=" + plaVision + ", regActivo="
-				+ regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", auditoria=" + auditoria
-				+ ", documentoPlan=" + documentoPlan + "]";
+				+ ", plaRiesgosConsiderados=" + plaRiesgosConsiderados + ", plaVision=" + plaVision + ", plaPortada="
+				+ plaPortada + ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi
+				+ ", auditoria=" + auditoria + ", documentoPlan=" + documentoPlan + ", institucion=" + institucion
+				+ "]";
 	}
 
 }

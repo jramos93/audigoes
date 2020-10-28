@@ -229,6 +229,36 @@ public class AudigoesController {
 			e.printStackTrace();
 		}
 	}
+	
+	public void onSave(String estado) {
+		setStatus(estado);
+		try {
+			if (beforeSave()) {
+				if (getStatus().equals("NEW")) {
+					getRegistro().setFecCrea(getToday());
+					getRegistro().setRegActivo(1);
+					getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+					onSaveNew();
+				}
+				if (getStatus().equals("EDIT")) {
+					getRegistro().setFecModi(getToday());
+					getRegistro().setUsuModi(getObjAppsSession().getUsuario().getUsuUsuario());
+					onSaveEdit();
+				}
+				if (!isError()) {
+					afterSave();
+				} else if (getRegistro() == null) {
+					try {
+						setRegistro((SuperEntity) getRegistro().getClass().newInstance());
+					} catch (InstantiationException | IllegalAccessException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void afterSave() {
 		setStatus("SEARCH");
@@ -243,7 +273,6 @@ public class AudigoesController {
 		try {
 			if (beforeSaveNew()) {
 				this.saveNewAudit();
-				System.out.println("onSaveNew");
 				audigoesLocal.insert(getRegistro());
 				this.addInfo(new FacesMessage("Confirmación", "Registro Guardado con Éxito"));
 				afterSaveNew();
@@ -288,7 +317,7 @@ public class AudigoesController {
 
 	public void saveEditAudit() {
 		if (this.getRegistro() instanceof SuperEntity) {
-			this.getRegistro().setUsuModi("ROOT"); // Cambiar luego
+			this.getRegistro().setUsuModi(getObjAppsSession().getUsuario().getUsuUsuario()); 
 			this.getRegistro().setFecModi(Calendar.getInstance(Locale.getDefault()).getTime());
 		}
 	}

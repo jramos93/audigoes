@@ -16,7 +16,7 @@
 				filteredValue="#{uniMB.filteredUnidades}" selection="#{uniMB.regSelected}"
 				selectionMode="single" rowKey="#{uni.uniId}"
 				globalFilterFunction="#{uniMB.globalFilterFunction}"
-				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+				paginatorPosition="top" rowsPerPageTemplate="5,10,15,20,25" rows="10"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
 				<p:ajax event="rowSelect" listener="#{uniMB.onRowSelect}" update="dtUnidades" />

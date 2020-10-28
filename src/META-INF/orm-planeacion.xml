@@ -10,4 +10,7 @@
 	<named-query name="plananual.get.all.institucion">
 		<query>select o from PlanAnual o where o.institucion.insId = ?1 </query>
 	</named-query>
+	<named-query name="auditoria.get.all.institucion">
+		<query>select o from Auditoria o where o.planAnual.institucion.insId = ?1 and o.regActivo = 1</query>
+	</named-query>
 </entity-mappings>
