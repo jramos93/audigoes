@@ -47,7 +47,7 @@ public class AudigoesController {
 	}
 
 	private boolean error = false;
-	private String status; // NEW, EDIT, SEARCH
+	private String status = "SEARCH"; // NEW, EDIT, SEARCH
 
 	/* propiedades para objetos de entidad */
 	private SuperEntity registro;
@@ -188,10 +188,12 @@ public class AudigoesController {
 		try {
 			if (beforeCancel()) {
 				if (getRegistro() != null) {
-					setRegistro(null);
+					//setRegistro(null);
 					setRegistro((SuperEntity) getRegistro().getClass().newInstance());
+					setStatus("SEARCH");
 				}
 			}
+			afterCancel();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -213,36 +215,6 @@ public class AudigoesController {
 					onSaveNew();
 				}
 				if (getStatus().equals("EDIT")) {
-					onSaveEdit();
-				}
-				if (!isError()) {
-					afterSave();
-				} else if (getRegistro() == null) {
-					try {
-						setRegistro((SuperEntity) getRegistro().getClass().newInstance());
-					} catch (InstantiationException | IllegalAccessException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void onSave(String estado) {
-		setStatus(estado);
-		try {
-			if (beforeSave()) {
-				if (getStatus().equals("NEW")) {
-					getRegistro().setFecCrea(getToday());
-					getRegistro().setRegActivo(1);
-					getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
-					onSaveNew();
-				}
-				if (getStatus().equals("EDIT")) {
-					getRegistro().setFecModi(getToday());
-					getRegistro().setUsuModi(getObjAppsSession().getUsuario().getUsuUsuario());
 					onSaveEdit();
 				}
 				if (!isError()) {
@@ -286,7 +258,7 @@ public class AudigoesController {
 
 	public void saveNewAudit() {
 		if (this.getRegistro() instanceof SuperEntity) {
-			this.getRegistro().setUsuCrea("ROOT"); // Cambiar luego
+			this.getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario()); 
 			this.getRegistro().setFecCrea(Calendar.getInstance(Locale.getDefault()).getTime());
 		}
 	}

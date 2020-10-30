@@ -3,19 +3,19 @@ package audigoes.ues.edu.sv.mbeans.planeacion;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+
+import org.primefaces.component.tabview.TabView;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
 
 @ManagedBean(name = "planMB")
-@RequestScoped
+@ViewScoped
 public class PlaneacionMB extends AudigoesController implements Serializable {
 	/**
 	 * 
@@ -78,13 +78,15 @@ public class PlaneacionMB extends AudigoesController implements Serializable {
 	}
 	
 	@Override
-	public boolean beforeEdit() {
-		return super.beforeEdit();
-	}
-	
-	@Override
-	public void onEdit() {
-		super.onEdit();
+	public void afterCancel() {
+		try {
+			TabView tv = (TabView) FacesContext.getCurrentInstance().getViewRoot().findComponent("frmNewEdit:tvPlanAnual");
+			tv.setActiveIndex(0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		super.afterCancel();
 	}
 	
 	@Override
