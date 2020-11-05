@@ -11,6 +11,7 @@ import audigoes.ues.edu.sv.entities.seguimiento.Seguimiento;
 import java.util.Date;
 import java.util.Set;
 
+
 /**
  * The persistent class for the auditoria database table.
  * 
