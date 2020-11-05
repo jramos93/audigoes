@@ -42,14 +42,6 @@ public class Informe extends SuperEntity implements Serializable {
 	private String infConclusion;
 	
 	@Lob
-	@Column(name="inf_objetivos")
-	private String infObjetivos;
-	
-	@Lob
-	@Column(name="inf_alcances")
-	private String infAlcances;
-
-	@Lob
 	@Column(name="inf_encabezado")
 	private String infEncabezado;
 
@@ -194,22 +186,6 @@ public class Informe extends SuperEntity implements Serializable {
 
 	public void setInfPortada(String infPortada) {
 		this.infPortada = infPortada;
-	}
-
-	public String getInfObjetivos() {
-		return infObjetivos;
-	}
-
-	public void setInfObjetivos(String infObjetivos) {
-		this.infObjetivos = infObjetivos;
-	}
-
-	public String getInfAlcances() {
-		return infAlcances;
-	}
-
-	public void setInfAlcances(String infAlcances) {
-		this.infAlcances = infAlcances;
 	}
 
 	public String getInfProcedimientos() {
@@ -364,8 +340,7 @@ public class Informe extends SuperEntity implements Serializable {
 		return "Informe [infId=" + infId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi 
 				+ ", infAclaracion=" + infAclaracion + ", infConclusion=" + infConclusion + ", infEncabezado="
 				+ infEncabezado + ", infIntroduccion=" + infIntroduccion + ", infLogros=" + infLogros
-				+ ", infPiePagina=" + infPiePagina + ", infPortada=" + infPortada + ", infObjetivos=" + infObjetivos
-				+ ", infAlcances=" + infAlcances + ", infProcedimientos="
+				+ ", infPiePagina=" + infPiePagina + ", infPortada=" + infPortada  + ", infProcedimientos="
 				+ infProcedimientos + ", infRecomendaciones=" + infRecomendaciones + ", infResultados=" + infResultados
 				+ ", infSeguimiento=" + infSeguimiento + ", infTitulo=" + infTitulo + ", infVersion=" + infVersion
 				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", actaLectura="
