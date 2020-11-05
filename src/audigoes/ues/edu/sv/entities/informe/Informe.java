@@ -33,9 +33,6 @@ public class Informe extends SuperEntity implements Serializable {
 	@Column(name="fec_modi")
 	private Date fecModi;
 
-	@Column(name="inf_acl_id")
-	private int infAclId;
-
 	@Lob
 	@Column(name="inf_aclaracion")
 	private String infAclaracion;
@@ -43,6 +40,14 @@ public class Informe extends SuperEntity implements Serializable {
 	@Lob
 	@Column(name="inf_conclusion")
 	private String infConclusion;
+	
+	@Lob
+	@Column(name="inf_objetivos")
+	private String infObjetivos;
+	
+	@Lob
+	@Column(name="inf_alcances")
+	private String infAlcances;
 
 	@Lob
 	@Column(name="inf_encabezado")
@@ -135,14 +140,6 @@ public class Informe extends SuperEntity implements Serializable {
 		this.fecModi = fecModi;
 	}
 
-	public int getInfAclId() {
-		return this.infAclId;
-	}
-
-	public void setInfAclId(int infAclId) {
-		this.infAclId = infAclId;
-	}
-
 	public String getInfAclaracion() {
 		return this.infAclaracion;
 	}
@@ -199,6 +196,22 @@ public class Informe extends SuperEntity implements Serializable {
 		this.infPortada = infPortada;
 	}
 
+	public String getInfObjetivos() {
+		return infObjetivos;
+	}
+
+	public void setInfObjetivos(String infObjetivos) {
+		this.infObjetivos = infObjetivos;
+	}
+
+	public String getInfAlcances() {
+		return infAlcances;
+	}
+
+	public void setInfAlcances(String infAlcances) {
+		this.infAlcances = infAlcances;
+	}
+
 	public String getInfProcedimientos() {
 		return this.infProcedimientos;
 	}
@@ -238,6 +251,7 @@ public class Informe extends SuperEntity implements Serializable {
 	public void setInfTitulo(String infTitulo) {
 		this.infTitulo = infTitulo;
 	}
+	
 
 	public int getInfVersion() {
 		return this.infVersion;
@@ -347,10 +361,11 @@ public class Informe extends SuperEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Informe [infId=" + infId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", infAclId=" + infAclId
+		return "Informe [infId=" + infId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi 
 				+ ", infAclaracion=" + infAclaracion + ", infConclusion=" + infConclusion + ", infEncabezado="
 				+ infEncabezado + ", infIntroduccion=" + infIntroduccion + ", infLogros=" + infLogros
-				+ ", infPiePagina=" + infPiePagina + ", infPortada=" + infPortada + ", infProcedimientos="
+				+ ", infPiePagina=" + infPiePagina + ", infPortada=" + infPortada + ", infObjetivos=" + infObjetivos
+				+ ", infAlcances=" + infAlcances + ", infProcedimientos="
 				+ infProcedimientos + ", infRecomendaciones=" + infRecomendaciones + ", infResultados=" + infResultados
 				+ ", infSeguimiento=" + infSeguimiento + ", infTitulo=" + infTitulo + ", infVersion=" + infVersion
 				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", actaLectura="
