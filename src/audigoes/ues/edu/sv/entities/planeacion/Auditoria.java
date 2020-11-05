@@ -36,6 +36,14 @@ public class Auditoria extends SuperEntity implements Serializable {
 	@Lob
 	@Column(name="aud_descripcion")
 	private String audDescripcion;
+	
+	@Lob
+	@Column(name="aud_objetivos")
+	private String audObjetivos;
+	
+	@Lob
+	@Column(name="aud_alcances")
+	private String audalcances;
 
 	@Column(name="aud_fase")
 	private int audFase;
@@ -144,6 +152,22 @@ public class Auditoria extends SuperEntity implements Serializable {
 
 	public void setAudDescripcion(String audDescripcion) {
 		this.audDescripcion = audDescripcion;
+	}
+
+	public String getAudObjetivos() {
+		return audObjetivos;
+	}
+
+	public void setAudObjetivos(String audObjetivos) {
+		this.audObjetivos = audObjetivos;
+	}
+
+	public String getAudalcances() {
+		return audalcances;
+	}
+
+	public void setAudalcances(String audalcances) {
+		this.audalcances = audalcances;
 	}
 
 	public int getAudFase() {
@@ -392,9 +416,10 @@ public class Auditoria extends SuperEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Auditoria [audId=" + audId + ", audCodigo=" + audCodigo + ", audDescripcion=" + audDescripcion
-				+ ", audFase=" + audFase + ", audFechaFinProgramado=" + audFechaFinProgramado + ", audFechaFinReal="
-				+ audFechaFinReal + ", audFechaInicioProgramado=" + audFechaInicioProgramado + ", audFechaInicioReal="
+		return "Auditoria [audId=" + audId + ", audAnio=" + audAnio + ", audCodigo=" + audCodigo + ", audDescripcion="
+				+ audDescripcion + ", audObjetivos=" + audObjetivos + ", audalcances=" + audalcances + ", audFase="
+				+ audFase + ", audFechaFinProgramado=" + audFechaFinProgramado + ", audFechaFinReal=" + audFechaFinReal
+				+ ", audFechaInicioProgramado=" + audFechaInicioProgramado + ", audFechaInicioReal="
 				+ audFechaInicioReal + ", audNombre=" + audNombre + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi
 				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", actividad="
 				+ actividad + ", origenAuditoria=" + origenAuditoria + ", planAnual=" + planAnual + ", tipoAuditoria="
