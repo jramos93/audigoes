@@ -26,8 +26,8 @@ public class ActaLectura extends SuperEntity implements Serializable {
 	private int aclId;
 
 	@Lob
-	@Column(name="acl_descripcion")
-	private String aclDescripcion;
+	@Column(name="acl_cuerpo")
+	private String aclCuerpo;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="acl_fec_enviada")
@@ -36,8 +36,8 @@ public class ActaLectura extends SuperEntity implements Serializable {
 	@Column(name="acl_ref")
 	private String aclRef;
 
-	@Column(name="acl_titulo")
-	private String aclTitulo;
+	@Column(name="acl_encabezado")
+	private String aclEncabezado;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="fec_crea")
@@ -76,12 +76,12 @@ public class ActaLectura extends SuperEntity implements Serializable {
 		this.aclId = aclId;
 	}
 
-	public String getAclDescripcion() {
-		return this.aclDescripcion;
+	public String getAclCuerpo() {
+		return this.aclCuerpo;
 	}
 
-	public void setAclDescripcion(String aclDescripcion) {
-		this.aclDescripcion = aclDescripcion;
+	public void setAclCuerpo(String aclCuerpo) {
+		this.aclCuerpo = aclCuerpo;
 	}
 
 	public Date getAclFecEnviada() {
@@ -100,12 +100,12 @@ public class ActaLectura extends SuperEntity implements Serializable {
 		this.aclRef = aclRef;
 	}
 
-	public String getAclTitulo() {
-		return this.aclTitulo;
+	public String getAclEncabezado() {
+		return this.aclEncabezado;
 	}
 
-	public void setAclTitulo(String aclTitulo) {
-		this.aclTitulo = aclTitulo;
+	public void setAclEncabezado(String aclEncabezado) {
+		this.aclEncabezado = aclEncabezado;
 	}
 
 	public Date getFecCrea() {
@@ -202,8 +202,8 @@ public class ActaLectura extends SuperEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "ActaLectura [aclId=" + aclId + ", aclDescripcion=" + aclDescripcion + ", aclFecEnviada=" + aclFecEnviada
-				+ ", aclRef=" + aclRef + ", aclTitulo=" + aclTitulo + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi
+		return "ActaLectura [aclId=" + aclId + ", aclCuerpo=" + aclCuerpo + ", aclFecEnviada=" + aclFecEnviada
+				+ ", aclRef=" + aclRef + ", aclEncabezado=" + aclEncabezado + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi
 				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", informe=" + informe
 				+ ", destinatario=" + destinatario + "]";
 	}
