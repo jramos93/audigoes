@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planificacion.Actividad;
 
 import java.util.Date;
@@ -104,6 +105,11 @@ public class Informe extends SuperEntity implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="inf_act_id")
 	private Actividad actividad;
+	
+	//bi-directional many-to-one association to Auditoria
+		@ManyToOne
+		@JoinColumn(name="inf_aud_id")
+		private Auditoria auditoria;
 
 	public Informe() {
 	}
@@ -311,6 +317,14 @@ public class Informe extends SuperEntity implements Serializable {
 
 	public void setActividad(Actividad actividad) {
 		this.actividad = actividad;
+	}
+	
+	public Auditoria getAuditoria() {
+		return this.auditoria;
+	}
+
+	public void setAuditoria(Auditoria auditoria) {
+		this.auditoria = auditoria;
 	}
 
 	@Override

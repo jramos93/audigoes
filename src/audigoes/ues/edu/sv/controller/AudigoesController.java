@@ -19,6 +19,8 @@ import audigoes.ues.edu.sv.security.ObjAppsSession;
 import audigoes.ues.edu.sv.session.audigoesSBSLLocal;
 
 public class AudigoesController {
+	
+	public static final String SYSTEM_NAME = "AUDIGOES";
 
 	@EJB(beanName = "audigoesSBSL")
 	protected audigoesSBSLLocal audigoesLocal;
@@ -249,9 +251,10 @@ public class AudigoesController {
 				this.addInfo(new FacesMessage("Confirmación", "Registro Guardado con Éxito"));
 				afterSaveNew();
 			} else {
-				this.addWarn(new FacesMessage("Error!", "Consulte con el Administrador"));
+				setError(true); // para no ejecutar afterSave en el método onSave()
 			}
 		} catch (Exception e) {
+			this.addWarn(new FacesMessage("Error!", "Consulte con el Administrador"));
 			e.printStackTrace();
 		}
 	}
@@ -264,7 +267,6 @@ public class AudigoesController {
 	}
 
 	public void afterSaveNew() {
-		setStatus("SEARCH");
 	}
 
 	/* Funciones para guardar edicion */
@@ -280,9 +282,11 @@ public class AudigoesController {
 				this.addInfo(new FacesMessage("Confirmación", "Registro Guardado con Éxito"));
 				afterSaveEdit();
 			} else {
-				this.addWarn(new FacesMessage("Error!", "Consulte con el Administrador"));
+				setError(true);
 			}
 		} catch (Exception e) {
+			setError(true);
+			this.addWarn(new FacesMessage("Error!", "Consulte con el Administrador"));
 			e.printStackTrace();
 		}
 	}
