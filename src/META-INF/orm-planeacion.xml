@@ -13,4 +13,13 @@
 	<named-query name="auditoria.get.all.institucion">
 		<query>select o from Auditoria o where o.planAnual.institucion.insId = ?1 and o.regActivo = 1</query>
 	</named-query>
+	<named-query name="auditoria.get.all.institucion.plan">
+		<query>select o from Auditoria o where o.planAnual.institucion.insId = ?1 and o.planAnual.plaId = ?2 and o.regActivo = 1</query>
+	</named-query>
+	<named-query name="tipoauditoria.get.all.active.institucion">
+		<query>select o from TipoAuditoria o where o.institucion.insId = ?1 and o.regActivo = 1</query>
+	</named-query>
+	<named-query name="auditoria.get.max.id">
+		<query>SELECT a FROM Auditoria a where a.planAnual.institucion.insId = ?1 order by a.audCorrelativo DESC </query>
+	</named-query>
 </entity-mappings>
