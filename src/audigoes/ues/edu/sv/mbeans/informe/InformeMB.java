@@ -97,6 +97,7 @@ public class InformeMB extends AudigoesController implements Serializable {
 	}
 	
 	public void showInforme() {
+		this.onNew();
 		setStatus("INFORME");
 	}
 	
