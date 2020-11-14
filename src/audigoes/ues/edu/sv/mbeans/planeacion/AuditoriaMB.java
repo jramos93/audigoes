@@ -1,16 +1,19 @@
 package audigoes.ues.edu.sv.mbeans.planeacion;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
+import audigoes.ues.edu.sv.entities.planeacion.TipoAuditoria;
 
 @ManagedBean(name = "audMB")
 @ViewScoped
@@ -24,6 +27,9 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	private List<PlanAnual> planAnualList;
 	private PlanAnual planSelected;
 
+	private List<TipoAuditoria> tipoAuditoriaList;
+	private TipoAuditoria tipoAuditoriaSelected;
+
 	public AuditoriaMB() {
 		super(new Auditoria());
 	}
@@ -36,16 +42,53 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@SuppressWarnings("unchecked")
 	public void fillListado() {
 		try {
-			System.out.println("getObjAppsSession().getUsuario().getInstitucion().getInsId()  "+getObjAppsSession().getUsuario().getInstitucion().getInsId() );
-			setListado((List<Auditoria>) audigoesLocal.findByNamedQuery(Auditoria.class,
-					"auditoria.get.all.institucion",
+			setListado(
+					(List<Auditoria>) audigoesLocal.findByNamedQuery(Auditoria.class, "auditoria.get.all.institucion",
+							new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() }));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void fillPlanAnualList() {
+		try {
+			setPlanAnualList((List<PlanAnual>) audigoesLocal.findByNamedQuery(PlanAnual.class,
+					"plananual.get.all.institucion.activos",
 					new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() }));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void fillTipoAuditoriaList() {
+		try {
+			setTipoAuditoriaList((List<TipoAuditoria>) audigoesLocal.findByNamedQuery(TipoAuditoria.class,
+					"tipoauditoria.get.all.active.institucion",
+					new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() }));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void fillAuditoriasPlan() {
+		try {
+			if (getPlanSelected() != null) {
+				setListado((List<Auditoria>) audigoesLocal.findByNamedQuery(Auditoria.class,
+						"auditoria.get.all.institucion.plan",
+						new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId(),
+								getPlanSelected().getPlaId() }));
+			} else {
+				fillListado();
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -60,7 +103,8 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 		Auditoria auditoria = (Auditoria) value;
 		return auditoria.getAudNombre().toLowerCase().contains(filterText)
-				|| auditoria.getAudDescripcion().toLowerCase().contains(filterText) || auditoria.getAudId() == filterInt;
+				|| auditoria.getAudDescripcion().toLowerCase().contains(filterText)
+				|| auditoria.getAudId() == filterInt;
 	}
 
 	private int getInteger(String string) {
@@ -70,10 +114,93 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 			return 0;
 		}
 	}
+
+	@SuppressWarnings("unchecked")
+	public int getCorrelativoAuditoria() {
+		List<Auditoria> maxIdList;
+		try {
+			maxIdList = (List<Auditoria>) audigoesLocal.findByNamedQuery(Auditoria.class, "auditoria.get.max.id", new Object [] {
+					getObjAppsSession().getUsuario().getInstitucion().getInsId()});
+			if(maxIdList.size()>0) {
+				System.out.println(maxIdList.get(0).getAudCorrelativo()+1);
+				return maxIdList.get(0).getAudCorrelativo()+1;
+			}else {
+				System.out.println("1");
+				return 1;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	public void createCodAuditoria() {
+		
+	}
 	
 	@Override
-	public void afterNew() {
-		super.afterNew();
+	public boolean beforeNew() {
+		fillTipoAuditoriaList();
+		fillPlanAnualList();
+		createCodAuditoria();
+		return super.beforeNew();
+	}
+	
+	@Override
+	public boolean beforeEdit() {
+		fillTipoAuditoriaList();
+		fillPlanAnualList();
+		setTipoAuditoriaSelected(getRegistro().getTipoAuditoria());
+		setPlanSelected(getRegistro().getPlanAnual());
+		return super.beforeEdit();
+	}
+
+	@Override
+	public boolean beforeSave() {
+		// validando fecha de auditoría: fechaInicio < fechaFin
+		boolean fechaValida = getRegistro().getAudFechaInicioProgramado()
+				.compareTo(getRegistro().getAudFechaFinProgramado()) < 0;
+		if (fechaValida) {
+			/* 
+			 * validando fecha de auditoria: fecha de la nueva auditoría debe estar dentro
+			 * del rango de fecha del plan seleccionado 
+			*/
+			fechaValida = getRegistro().getAudFechaInicioProgramado()
+					.compareTo(getPlanSelected().getPlaFechaInicio()) >= 0
+					&& getRegistro().getAudFechaFinProgramado().compareTo(getPlanSelected().getPlaFechaFin()) <= 0;
+			if (fechaValida) {
+				getRegistro().setAudCorrelativo(getCorrelativoAuditoria());
+				getRegistro().setPlanAnual(getPlanSelected());
+				getRegistro().setTipoAuditoria(getTipoAuditoriaSelected());
+				return super.beforeSave();
+			} else {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+				addWarn(new FacesMessage(SYSTEM_NAME,
+						"La fecha de la auditoría se sale del rango programado para el plan seleccionado, DATOS DEL PLAN: "
+						+ " Fecha Inicio " + dateFormat.format(getPlanSelected().getPlaFechaInicio()) 
+						+ " Fecha Fin "	+ dateFormat.format(getPlanSelected().getPlaFechaFin())));
+				return false;
+			}
+
+		} else {
+			addWarn(new FacesMessage(SYSTEM_NAME,
+					"La fecha de inicio debe ser menor a la fecha de finalización, favor verificar las fechas ingresadas"));
+			return false;
+		}
+
+	}
+
+	@Override
+	public void afterSaveNew() {
+		getListado().add(getRegistro());
+		onNew();
+		super.afterSaveNew();
+	}
+	
+	@Override
+	public void afterDelete() {
+		getListado().remove(getRegistro());
+		super.afterDelete();
 	}
 
 	/* GETS y SETS */
@@ -87,12 +214,6 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	@Override
 	public List<Auditoria> getListado() {
 		return (List<Auditoria>) super.getListado();
-	}
-
-	@Override
-	public void afterSaveNew() {
-		getListado().add(getRegistro());
-		super.afterSaveNew();
 	}
 
 	public List<Auditoria> getFilteredAuditorias() {
@@ -117,6 +238,22 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	public void setPlanSelected(PlanAnual planSelected) {
 		this.planSelected = planSelected;
+	}
+	
+	public List<TipoAuditoria> getTipoAuditoriaList() {
+		return tipoAuditoriaList;
+	}
+
+	public void setTipoAuditoriaList(List<TipoAuditoria> tipoAuditoriaList) {
+		this.tipoAuditoriaList = tipoAuditoriaList;
+	}
+
+	public TipoAuditoria getTipoAuditoriaSelected() {
+		return tipoAuditoriaSelected;
+	}
+
+	public void setTipoAuditoriaSelected(TipoAuditoria tipoAuditoriaSelected) {
+		this.tipoAuditoriaSelected = tipoAuditoriaSelected;
 	}
 
 }

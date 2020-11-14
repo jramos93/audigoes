@@ -81,6 +81,17 @@ public class TipoAuditoriaMB extends AudigoesController implements Serializable 
 	}
 
 	@Override
+	public boolean beforeSaveNew() {
+		try {
+			getRegistro().setInstitucion(getObjAppsSession().getUsuario().getInstitucion());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return super.beforeSaveNew();
+	}
+	
+	@Override
 	public void afterSaveNew() {
 		getListado().add(getRegistro());
 		super.afterSaveNew();

@@ -1,26 +1,37 @@
 package audigoes.ues.edu.sv.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletResponse;
 
 import org.primefaces.context.PrimeFacesContext;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
 import audigoes.ues.edu.sv.security.ObjAppsSession;
 import audigoes.ues.edu.sv.session.audigoesSBSLLocal;
+import net.sf.jasperreports.engine.JRExporter;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 public class AudigoesController {
 	
 	public static final String SYSTEM_NAME = "AUDIGOES";
+	public static final String REPORT_PATH = "/WEB-INF/reportes/";
 
 	@EJB(beanName = "audigoesSBSL")
 	protected audigoesSBSLLocal audigoesLocal;
@@ -64,6 +75,11 @@ public class AudigoesController {
 	private List<SelectItem> siNoList;
 	private List<SelectItem> regActivoList;
 	private List<SelectItem> generoList;
+	private List<SelectItem> faseAuditoriaList;
+	
+	/* propiedades para los reportes */
+	private String pathReporte;
+	private String reportId;
 
 	protected ObjAppsSession objAppsSession;
 	protected String outcome;
@@ -326,6 +342,43 @@ public class AudigoesController {
 		this.onRowSelect();
 		this.onEdit();
 	}
+	
+	/* Generar Reporte */
+
+	@SuppressWarnings({ "rawtypes", "deprecation", "null", "unchecked" })
+	public void getReport() throws ClassNotFoundException, InstantiationException {
+		/* Parámetros reporte */
+		Map params = new HashMap();
+		try {
+			setReportId("rpt_plan.jasper");
+			File archivo = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath(REPORT_PATH+getReportId()));
+			
+			HttpServletResponse httpServletResponse = (HttpServletResponse) FacesContext.getCurrentInstance()
+					.getExternalContext().getResponse();
+			httpServletResponse.setContentType("application/pdf");
+			httpServletResponse.addHeader("Content-Type", "application/pdf");
+			
+			JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(archivo.getPath());
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params);
+			
+			JRExporter jrExporter = null;
+			jrExporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+			jrExporter.setParameter(JRExporterParameter.OUTPUT_STREAM, httpServletResponse);
+			
+			if(jrExporter != null) {
+				try {
+					jrExporter.exportReport();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/* GET Y SET */
 
 	public boolean isError() {
 		return error;
@@ -403,6 +456,22 @@ public class AudigoesController {
 	public void setRegActivoList(List<SelectItem> regActivoList) {
 		this.regActivoList = regActivoList;
 	}
+	
+	public List<SelectItem> getFaseAuditoriaList() {
+		if (this.faseAuditoriaList == null) {
+			this.faseAuditoriaList = new ArrayList<>();
+			this.faseAuditoriaList.add(new SelectItem(0, "PROGRAMADA"));
+			this.faseAuditoriaList.add(new SelectItem(1, "FASE PLANIFICACIÓN"));
+			this.faseAuditoriaList.add(new SelectItem(2, "FASE EJECUCIÓN"));
+			this.faseAuditoriaList.add(new SelectItem(3, "FASE INFORME"));
+			this.faseAuditoriaList.add(new SelectItem(4, "FASE SEGUIMIENTO"));
+		}
+		return faseAuditoriaList;
+	}
+
+	public void setFaseAuditoriaList(List<SelectItem> faseAuditoriaList) {
+		this.faseAuditoriaList = faseAuditoriaList;
+	}
 
 	public ObjAppsSession getObjAppsSession() {
 		if (this.objAppsSession == null) {
@@ -435,6 +504,22 @@ public class AudigoesController {
 
 	public void setGeneroList(List<SelectItem> generoList) {
 		this.generoList = generoList;
+	}
+	
+	public String getPathReporte() {
+		return pathReporte;
+	}
+
+	public void setPathReporte(String pathReporte) {
+		this.pathReporte = pathReporte;
+	}
+
+	public String getReportId() {
+		return reportId;
+	}
+
+	public void setReportId(String reportId) {
+		this.reportId = reportId;
 	}
 
 }

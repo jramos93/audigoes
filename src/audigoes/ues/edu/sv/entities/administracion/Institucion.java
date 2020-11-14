@@ -2,6 +2,7 @@ package audigoes.ues.edu.sv.entities.administracion;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -19,6 +20,7 @@ import javax.persistence.TemporalType;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
+import audigoes.ues.edu.sv.entities.planeacion.TipoAuditoria;
 
 /**
  * The persistent class for the institucion database table.
@@ -97,6 +99,10 @@ public class Institucion extends SuperEntity implements Serializable {
 	// bi-directional many-to-one association to PlanAnual
 	@OneToMany(mappedBy = "institucion", fetch = FetchType.EAGER)
 	private Set<PlanAnual> planAnual;
+
+	// bi-directional many-to-one association to TipoAuditoria
+	@OneToMany(mappedBy = "institucion")
+	private List<TipoAuditoria> tipoAuditoria;
 
 	public Institucion() {
 	}
@@ -314,7 +320,7 @@ public class Institucion extends SuperEntity implements Serializable {
 
 		return usuario;
 	}
-	
+
 	public Set<PlanAnual> getPlanAnual() {
 		return this.planAnual;
 	}
@@ -335,6 +341,28 @@ public class Institucion extends SuperEntity implements Serializable {
 		planAnual.setInstitucion(null);
 
 		return planAnual;
+	}
+	
+	public List<TipoAuditoria> getTipoAuditoria() {
+		return this.tipoAuditoria;
+	}
+
+	public void setTipoAuditoria(List<TipoAuditoria> tipoAuditoria) {
+		this.tipoAuditoria = tipoAuditoria;
+	}
+	
+	public TipoAuditoria addTipoAuditoria(TipoAuditoria tipoAuditoria) {
+		getTipoAuditoria().add(tipoAuditoria);
+		tipoAuditoria.setInstitucion(this);
+
+		return tipoAuditoria;
+	}
+
+	public TipoAuditoria removeTipoAuditoria(TipoAuditoria tipoAuditoria) {
+		getTipoAuditoria().remove(tipoAuditoria);
+		tipoAuditoria.setInstitucion(null);
+
+		return tipoAuditoria;
 	}
 
 	@Override
@@ -366,7 +394,7 @@ public class Institucion extends SuperEntity implements Serializable {
 				+ ", insNombre=" + insNombre + ", insSlogan=" + insSlogan + ", insTelefono=" + insTelefono
 				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", configuracion="
 				+ configuracion + ", marca=" + marca + ", normativaCedula=" + normativaCedula + ", unidad=" + unidad
-				+ ", usuario=" + usuario + "]";
+				+ ", usuario=" + usuario + ", planAnual=" + planAnual + ", tipoAuditoria=" + tipoAuditoria + "]";
 	}
 
 }

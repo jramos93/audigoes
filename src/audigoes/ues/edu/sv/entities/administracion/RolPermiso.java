@@ -154,7 +154,8 @@ public class RolPermiso extends SuperEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "RolPermiso [rlpId=" + rlpId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo="
-				+ regActivo + ", rlpSelected=" + rlpSelected + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi +"]";
+				+ regActivo + ", rlpSelected=" + rlpSelected + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi
+				+ ", permiso=" + permiso + ", rol=" + rol + "]";
 	}
 
 }

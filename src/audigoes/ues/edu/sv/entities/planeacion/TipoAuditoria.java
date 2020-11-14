@@ -4,53 +4,61 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.administracion.Institucion;
 
 import java.util.Date;
 import java.util.Set;
-
 
 /**
  * The persistent class for the tipo_auditoria database table.
  * 
  */
 @Entity
-@Table(name="tipo_auditoria")
-@NamedQuery(name="TipoAuditoria.findAll", query="SELECT t FROM TipoAuditoria t")
+@Table(name = "tipo_auditoria")
+@NamedQuery(name = "TipoAuditoria.findAll", query = "SELECT t FROM TipoAuditoria t")
 public class TipoAuditoria extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "tpa_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "tpa_id", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tpa_id")
-	@Column(name="tpa_id")
+	@Column(name = "tpa_id")
 	private int tpaId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_crea")
+	@Column(name = "fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_modi")
+	@Column(name = "fec_modi")
 	private Date fecModi;
 
-	@Column(name="reg_activo")
+	@Column(name = "reg_activo")
 	private int regActivo;
 
-	@Column(name="tpa_descripcion")
+	@Column(name = "tpa_descripcion")
 	private String tpaDescripcion;
 
-	@Column(name="tpa_nombre")
+	@Column(name = "tpa_nombre")
 	private String tpaNombre;
+	
+	@Column(name = "tpa_acronimo")
+	private String tpaAcronimo;
 
-	@Column(name="usu_crea")
+	@Column(name = "usu_crea")
 	private String usuCrea;
 
-	@Column(name="usu_modi")
+	@Column(name = "usu_modi")
 	private String usuModi;
 
-	//bi-directional many-to-one association to Auditoria
-	@OneToMany(mappedBy="tipoAuditoria", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to Auditoria
+	@OneToMany(mappedBy = "tipoAuditoria", fetch = FetchType.EAGER)
 	private Set<Auditoria> auditoria;
+
+	// bi-directional many-to-one association to Institucion
+	@ManyToOne
+	@JoinColumn(name = "tpa_ins_id")
+	private Institucion institucion;
 
 	public TipoAuditoria() {
 	}
@@ -103,6 +111,14 @@ public class TipoAuditoria extends SuperEntity implements Serializable {
 		this.tpaNombre = tpaNombre;
 	}
 
+	public String getTpaAcronimo() {
+		return tpaAcronimo;
+	}
+
+	public void setTpaAcronimo(String tpaAcronimo) {
+		this.tpaAcronimo = tpaAcronimo;
+	}
+
 	public String getUsuCrea() {
 		return this.usuCrea;
 	}
@@ -140,6 +156,14 @@ public class TipoAuditoria extends SuperEntity implements Serializable {
 
 		return auditoria;
 	}
+	
+	public Institucion getInstitucion() {
+		return this.institucion;
+	}
+
+	public void setInstitucion(Institucion institucion) {
+		this.institucion = institucion;
+	}
 
 	@Override
 	public int hashCode() {
@@ -166,8 +190,9 @@ public class TipoAuditoria extends SuperEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "TipoAuditoria [tpaId=" + tpaId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo="
-				+ regActivo + ", tpaDescripcion=" + tpaDescripcion + ", tpaNombre=" + tpaNombre + ", usuCrea=" + usuCrea
-				+ ", usuModi=" + usuModi + ", auditoria=" + auditoria + "]";
+				+ regActivo + ", tpaDescripcion=" + tpaDescripcion + ", tpaNombre=" + tpaNombre + ", tpaAcronimo="
+				+ tpaAcronimo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", auditoria=" + auditoria
+				+ ", institucion=" + institucion + "]";
 	}
 
 }

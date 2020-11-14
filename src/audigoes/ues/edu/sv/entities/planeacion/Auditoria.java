@@ -47,6 +47,9 @@ public class Auditoria extends SuperEntity implements Serializable {
 
 	@Column(name="aud_codigo")
 	private String audCodigo;
+	
+	@Column(name="aud_correlativo")
+	private int audCorrelativo;
 
 	@Lob
 	@Column(name="aud_descripcion")
@@ -163,6 +166,14 @@ public class Auditoria extends SuperEntity implements Serializable {
 
 	public void setAudCodigo(String audCodigo) {
 		this.audCodigo = audCodigo;
+	}
+
+	public int getAudCorrelativo() {
+		return audCorrelativo;
+	}
+
+	public void setAudCorrelativo(int audCorrelativo) {
+		this.audCorrelativo = audCorrelativo;
 	}
 
 	public String getAudDescripcion() {
