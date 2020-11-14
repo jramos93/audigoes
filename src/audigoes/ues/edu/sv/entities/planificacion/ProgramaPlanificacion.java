@@ -5,84 +5,93 @@ import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
+import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 
 import java.util.Date;
 import java.util.Set;
-
 
 /**
  * The persistent class for the programa_planificacion database table.
  * 
  */
 @Entity
-@Table(name="programa_planificacion")
-@NamedQuery(name="ProgramaPlanificacion.findAll", query="SELECT p FROM ProgramaPlanificacion p")
+@Table(name = "programa_planificacion")
+@NamedQuery(name = "ProgramaPlanificacion.findAll", query = "SELECT p FROM ProgramaPlanificacion p")
 public class ProgramaPlanificacion extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "prp_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "prp_id", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "prp_id")
-	@Column(name="prp_id")
+	@Column(name = "prp_id")
 	private int prpId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_crea")
+	@Column(name = "fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_modi")
+	@Column(name = "fec_modi")
 	private Date fecModi;
 
-	@Column(name="prp_alcance")
+	@Column(name = "prp_alcance")
 	private String prpAlcance;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="prp_fecha")
-	private Date prpFecha;
+	@Column(name = "prp_fecha_inicio")
+	private Date prpFechaInicio;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="prp_fecha_elaboro")
+	@Column(name = "prp_fecha_fin")
+	private Date prpFechaFin;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "prp_fecha_elaboro")
 	private Date prpFechaElaboro;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="prp_fecha_reviso")
+	@Column(name = "prp_fecha_reviso")
 	private Date prpFechaReviso;
 
 	@Lob
-	@Column(name="prp_obj_e")
+	@Column(name = "prp_obj_e")
 	private String prpObjE;
 
 	@Lob
-	@Column(name="prp_obj_g")
+	@Column(name = "prp_obj_g")
 	private String prpObjG;
 
-	@Column(name="reg_activo")
+	@Column(name = "reg_activo")
 	private int regActivo;
 
-	@Column(name="usu_crea")
+	@Column(name = "usu_crea")
 	private String usuCrea;
 
-	@Column(name="usu_modi")
+	@Column(name = "usu_modi")
 	private String usuModi;
 
-	//bi-directional many-to-one association to ProcedimientoPlanificacion
-	@OneToMany(mappedBy="programaPlanificacion", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to ProcedimientoPlanificacion
+	@OneToMany(mappedBy = "programaPlanificacion", fetch = FetchType.EAGER)
 	private Set<ProcedimientoPlanificacion> procedimientoPlanificacion;
 
-	//bi-directional many-to-one association to Actividad
+	// bi-directional many-to-one association to Actividad
 	@ManyToOne
-	@JoinColumn(name="prp_act_id")
+	@JoinColumn(name = "prp_act_id")
 	private Actividad actividad;
 
-	//bi-directional many-to-one association to Usuario
+	// bi-directional many-to-one association to Auditoria
 	@ManyToOne
-	@JoinColumn(name="prp_usu_id")
+	@JoinColumn(name = "prp_aud_id")
+	private Auditoria auditoria;
+
+	// bi-directional many-to-one association to Usuario
+	@ManyToOne
+	@JoinColumn(name = "prp_usu_id")
 	private Usuario usuario1;
 
-	//bi-directional many-to-one association to Usuario
+	// bi-directional many-to-one association to Usuario
 	@ManyToOne
-	@JoinColumn(name="prp_usu_usu_id")
+	@JoinColumn(name = "prp_usu_usu_id")
 	private Usuario usuario2;
 
 	public ProgramaPlanificacion() {
@@ -119,13 +128,30 @@ public class ProgramaPlanificacion extends SuperEntity implements Serializable {
 	public void setPrpAlcance(String prpAlcance) {
 		this.prpAlcance = prpAlcance;
 	}
+	
 
-	public Date getPrpFecha() {
-		return this.prpFecha;
+	public Date getPrpFechaInicio() {
+		return prpFechaInicio;
 	}
 
-	public void setPrpFecha(Date prpFecha) {
-		this.prpFecha = prpFecha;
+	public void setPrpFechaInicio(Date prpFechaInicio) {
+		this.prpFechaInicio = prpFechaInicio;
+	}
+
+	public Date getPrpFechaFin() {
+		return prpFechaFin;
+	}
+
+	public void setPrpFechaFin(Date prpFechaFin) {
+		this.prpFechaFin = prpFechaFin;
+	}
+
+	public Auditoria getAuditoria() {
+		return auditoria;
+	}
+
+	public void setAuditoria(Auditoria auditoria) {
+		this.auditoria = auditoria;
 	}
 
 	public Date getPrpFechaElaboro() {
@@ -192,14 +218,16 @@ public class ProgramaPlanificacion extends SuperEntity implements Serializable {
 		this.procedimientoPlanificacion = procedimientoPlanificacion;
 	}
 
-	public ProcedimientoPlanificacion addProcedimientoPlanificacion(ProcedimientoPlanificacion procedimientoPlanificacion) {
+	public ProcedimientoPlanificacion addProcedimientoPlanificacion(
+			ProcedimientoPlanificacion procedimientoPlanificacion) {
 		getProcedimientoPlanificacion().add(procedimientoPlanificacion);
 		procedimientoPlanificacion.setProgramaPlanificacion(this);
 
 		return procedimientoPlanificacion;
 	}
 
-	public ProcedimientoPlanificacion removeProcedimientoPlanificacion(ProcedimientoPlanificacion procedimientoPlanificacion) {
+	public ProcedimientoPlanificacion removeProcedimientoPlanificacion(
+			ProcedimientoPlanificacion procedimientoPlanificacion) {
 		getProcedimientoPlanificacion().remove(procedimientoPlanificacion);
 		procedimientoPlanificacion.setProgramaPlanificacion(null);
 
@@ -255,7 +283,7 @@ public class ProgramaPlanificacion extends SuperEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "ProgramaPlanificacion [prpId=" + prpId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi
-				+ ", prpAlcance=" + prpAlcance + ", prpFecha=" + prpFecha + ", prpFechaElaboro=" + prpFechaElaboro
+				+ ", prpAlcance=" + prpAlcance + ", prpFecha=" + prpFechaInicio + ", prpFechaElaboro=" + prpFechaElaboro
 				+ ", prpFechaReviso=" + prpFechaReviso + ", prpObjE=" + prpObjE + ", prpObjG=" + prpObjG
 				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi
 				+ ", procedimientoPlanificacion=" + procedimientoPlanificacion + ", actividad=" + actividad
