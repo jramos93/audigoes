@@ -10,6 +10,7 @@
 		<mapping-file>META-INF/orm-seguridad.xml</mapping-file>
 		<mapping-file>META-INF/orm-planeacion.xml</mapping-file>
 		<mapping-file>META-INF/orm-planificacion.xml</mapping-file>
+		<mapping-file>META-INF/orm-informe.xml</mapping-file>
 		<class>audigoes.ues.edu.sv.entities.SuperEntity</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Bitacora</class>
 		<class>audigoes.ues.edu.sv.entities.informe.ActaLectura</class>
@@ -55,5 +56,7 @@
 		<class>audigoes.ues.edu.sv.entities.administracion.UsuarioUnidad</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Sesiones</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.VariablesSistema</class>
+		<class>audigoes.ues.edu.sv.entities.informe.Convocatoria</class>
+		<class>audigoes.ues.edu.sv.entities.informe.CartaGerencia</class>
 	</persistence-unit>
 </persistence>

@@ -1,0 +1,43 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	
+		<h:form id="frmCarta">
+			<p:panel rendered="#{informeMB.status eq 'CARTA_GERENCIA'}">
+				<p:commandButton id="btnCancel" action="#{informeMB.onCancel}"
+					value="Cancelar" update="@form :frm" process="@this">
+				</p:commandButton>
+				<p:commandButton id="btnGuardarTop" action="#{cartaGerenciaMB.onSave}"
+					value="Guardar" update="@form :frm" process="@this @form">
+				</p:commandButton>
+				<p:commandButton id="btnEditarCarta" action="#{cartaGerenciaMB.onEdit}"
+					 value="Editar Carta"
+					icon="pi pi-plus" update="@form frmCarta">
+				</p:commandButton>
+				<div class="ui-fluid p-formgrid p-grid">
+					<div class="p-field p-col" style="margin-top: 25px;">
+						<p:tabView id="tvCarta">
+							<p:tab title="Encabezado">
+								<pe:ckEditor id="ctgEncabezado" width="100%"
+											value="#{cartaGerenciaMB.registro.ctgEncabezado}" />
+							</p:tab>
+							<p:tab title="Destinatario">
+								<pe:ckEditor id="ctgDestinatario" width="100%"
+											value="#{cartaGerenciaMB.registro.ctgDestinatario}" />
+							</p:tab>
+							<p:tab title="Cuerpo">
+									<pe:ckEditor id="ctgCuerpo" width="100%"
+											value="#{cartaGerenciaMB.registro.ctgCuerpo}" />
+							</p:tab>
+						</p:tabView>
+					</div>
+					<p:commandButton id="btnGuardarBottom" action="#{cartaGerenciaMB.onSave}"
+						value="Guardar" update="@form :frm" process="@this @form" />
+				</div>
+			</p:panel>
+		</h:form>
+
+</ui:composition>

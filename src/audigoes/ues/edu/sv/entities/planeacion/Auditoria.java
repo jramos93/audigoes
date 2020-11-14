@@ -1,15 +1,30 @@
 package audigoes.ues.edu.sv.entities.planeacion;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planificacion.Actividad;
 import audigoes.ues.edu.sv.entities.planificacion.Memorando;
 import audigoes.ues.edu.sv.entities.seguimiento.Seguimiento;
-
-import java.util.Date;
-import java.util.Set;
 
 
 /**
@@ -118,6 +133,10 @@ public class Auditoria extends SuperEntity implements Serializable {
 	//bi-directional many-to-one association to Seguimiento
 	@OneToMany(mappedBy="auditoria", fetch=FetchType.EAGER)
 	private Set<Seguimiento> seguimiento;
+	
+	//bi-directional many-to-one association to Informe
+		@OneToMany(mappedBy="auditoria")
+		private List<Informe> informe;
 
 	public Auditoria() {
 	}
@@ -390,6 +409,27 @@ public class Auditoria extends SuperEntity implements Serializable {
 		seguimiento.setAuditoria(null);
 
 		return seguimiento;
+	}
+	
+	public List<Informe> getInforme() {
+		return this.informe;
+	}
+
+	public void setInforme(List<Informe> informe) {
+		this.informe = informe;
+	}
+	public Informe addInforme(Informe informe) {
+		getInforme().add(informe);
+		informe.setAuditoria(this);
+
+		return informe;
+	}
+
+	public Informe removeInforme(Informe informe) {
+		getInforme().remove(informe);
+		informe.setAuditoria(null);
+
+		return informe;
 	}
 
 	@Override

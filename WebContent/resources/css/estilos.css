@@ -29,3 +29,12 @@ img {
 	min-height: 90%;
 	align: center;
 }
+.informe-icon {
+    background-image: url(resources/images/informe.png);
+}
+.convocatoria-icon {
+    background-image: url(../images/convocatoria.png);
+}
+.carta-icon {
+    background-image: url(../resources/images/carta.png);
+}

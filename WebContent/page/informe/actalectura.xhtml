@@ -1,0 +1,97 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<h:form id="frmConvocatoriaActa">
+		<p:panel rendered="#{informeMB.status eq 'ACTA_LECTURA'}">
+			<p:tabView>
+				<p:tab title="Convocatoria">
+					<h:form id="frmConvocatoria">
+						<p:panel>
+							<p:commandButton id="btnCancel"
+								action="#{informeMB.onCancel}" value="Cancelar"
+								update=":frmConvocatoriaActa :frm" process="@this">
+							</p:commandButton>
+							<p:commandButton id="btnGuardarTop"
+								action="#{actaLecturaMB.onSave}" value="Guardar"
+								update=":frmConvocatoriaActa :frm" process="@this @form">
+							</p:commandButton>
+							<p:commandButton id="btnEditarConvocatoria"
+								action="#{convocatoriaMB.onEdit}" value="Editar Acta Lectura"
+								icon="pi pi-plus" update=":frmConvocatoriaActa :frm">
+							</p:commandButton>
+
+							<div class="ui-fluid p-formgrid p-grid">
+								<div class="p-field p-col" style="margin-top: 25px;">
+									<p:panel>
+										<p:tabView id="tvConvocatoria" orientation="top">
+											<p:tab title="Encabezado">
+												<pe:ckEditor id="cvcencabezado" width="100%"
+													value="#{convocatoriaMB.registro.cvcEncabezado}" />
+											</p:tab>
+											<p:tab title="Destinatario">
+												<pe:ckEditor id="cvcdestinatario" width="100%"
+													value="#{convocatoriaMB.registro.cvcDestinatario}" />
+											</p:tab>
+											<p:tab title="Cuerpo">
+												<pe:ckEditor id="cvccuerpo" width="100%"
+													value="#{convocatoriaMB.registro.cvcCuerpo}" />
+											</p:tab>
+										</p:tabView>
+									</p:panel>
+
+									<p:commandButton id="btnGuardarBottom"
+										action="#{convocatoriaMB.onSave}" value="Guardar"
+										update="@form :frm" process="@this @form" />
+								</div>
+							</div>
+						</p:panel>
+					</h:form>
+				</p:tab>
+				<p:tab title="Acta de Lectura">
+					<h:form id="frmActaLectura">
+						<p:panel>
+							<p:commandButton id="btnCancel"
+								action="#{informeMB.onCancel}" value="Cancelar"
+								update=":frmConvocatoriaActa :frm" process="@this">
+							</p:commandButton>
+							<p:commandButton id="btnGuardarTop"
+								action="#{actaLecturaMB.onSave}" value="Guardar"
+								update=":frmConvocatoriaActa :frm" process="@this @form">
+							</p:commandButton>
+							<p:commandButton id="btnEditarActaLectura"
+								action="#{actaLecturaMB.onEdit}" value="Editar Acta Lectura"
+								icon="pi pi-plus" update=":frmConvocatoriaActa :frm">
+							</p:commandButton>
+
+							<div class="ui-fluid p-formgrid p-grid">
+								<div class="p-field p-col" style="margin-top: 25px;">
+									<p:tab title="Acta lectura">
+										<div class="ui-fluid p-formgrid p-grid">
+											<p:tabView id="tvActaLectura">
+												<p:tab title="Encabezado">
+													<pe:ckEditor id="aclencabezado" width="100%"
+														value="#{actaLecturaMB.registro.aclEncabezado}" />
+												</p:tab>
+												<p:tab title="Cuerpo">
+													<pe:ckEditor id="aclcuerpo" width="100%"
+														value="#{actaLecturaMB.registro.aclCuerpo}" />
+												</p:tab>
+											</p:tabView>
+											<p:commandButton id="btnGuardarBottom1"
+												action="#{actaLecturaMB.onSave}" value="Guardar"
+												update="@form :frm" process="@this @form" />
+										</div>
+									</p:tab>
+								</div>
+							</div>
+						</p:panel>
+					</h:form>
+				</p:tab>
+			</p:tabView>
+		</p:panel>
+	</h:form>
+</ui:composition>

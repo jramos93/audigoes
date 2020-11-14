@@ -9,6 +9,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 
 import audigoes.ues.edu.sv.security.SecurityController;
+import audigoes.ues.edu.sv.util.Test;
 import audigoes.ues.edu.sv.util.Utils;
 
 @ManagedBean(name = "loginMB")
@@ -26,6 +27,7 @@ public class LoginMB extends SecurityController implements Serializable{
 
 	@PostConstruct
 	public void init() {
+		Test.main(null);
 	}
 
 	protected boolean beforeLogin() {

@@ -61,6 +61,10 @@ public class Informe extends SuperEntity implements Serializable {
 	@Lob
 	@Column(name="inf_portada")
 	private String infPortada;
+	
+	@Lob
+	@Column(name="inf_destinatario")
+	private String infDestinatario;
 
 	@Lob
 	@Column(name="inf_procedimientos")
@@ -192,6 +196,14 @@ public class Informe extends SuperEntity implements Serializable {
 
 	public void setInfPortada(String infPortada) {
 		this.infPortada = infPortada;
+	}
+	
+	public String getInfDestinatario() {
+		return this.infDestinatario;
+	}
+
+	public void setInfDestinatario(String infDestinatario) {
+		this.infDestinatario = infDestinatario;
 	}
 
 	public String getInfProcedimientos() {
@@ -354,7 +366,7 @@ public class Informe extends SuperEntity implements Serializable {
 		return "Informe [infId=" + infId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi 
 				+ ", infAclaracion=" + infAclaracion + ", infConclusion=" + infConclusion + ", infEncabezado="
 				+ infEncabezado + ", infIntroduccion=" + infIntroduccion + ", infLogros=" + infLogros
-				+ ", infPiePagina=" + infPiePagina + ", infPortada=" + infPortada  + ", infProcedimientos="
+				+ ", infPiePagina=" + infPiePagina + ", infPortada=" + infPortada  + ", infDestinatario=" + infDestinatario  + ", infProcedimientos="
 				+ infProcedimientos + ", infRecomendaciones=" + infRecomendaciones + ", infResultados=" + infResultados
 				+ ", infSeguimiento=" + infSeguimiento + ", infTitulo=" + infTitulo + ", infVersion=" + infVersion
 				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", actaLectura="

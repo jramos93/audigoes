@@ -1,0 +1,105 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
+<h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+
+	<ui:define name="title">Audigoes</ui:define>
+	
+	<ui:define name="content">
+		<div class="name" align="center">
+			<span class="app-name">Informe</span>
+		</div>
+		<h:form id="frm">
+			<p:panel rendered="#{informeMB.status eq 'SEARCH'}">
+				<p:commandButton id="btnInforme" action="#{informeMB.showInforme}"
+					update="@form :frmInforme"
+					style="margin-right:500px;font-size: 6em;" icon="informe-icon" title="Nuevo Informe">
+				</p:commandButton>
+				<p:commandButton id="btnActaLectura"
+					action="#{informeMB.showActaLectura}" update="@form :frmConvocatoriaActa"
+					style="margin-right:500px;font-size: 6em;" icon="convocatoria-icon"
+					title="Convocatoria">
+				</p:commandButton>
+				<p:commandButton id="btnCarta" action="#{informeMB.showCarta}"
+					update="@form :frmCarta"
+					style="margin-right:500px;font-size: 6em;" icon="carta-icon" title="Carta Gerencia">
+				</p:commandButton>
+				
+			</p:panel>
+		</h:form>
+		<h:form id="frmInforme">
+			<p:panel rendered="#{informeMB.status eq 'INFORME'}">
+				<p:commandButton id="btnCancel" action="#{informeMB.onCancel}"
+					value="Cancelar" update="@form :frm" process="@this">
+				</p:commandButton>
+				<p:commandButton id="btnGuardarTop" action="#{informeMB.onSave}"
+					value="Guardar" update="@form :frm" process="@this @form">
+				</p:commandButton>
+				<div class="ui-fluid p-formgrid p-grid">
+					<div class="p-field p-col">
+						<p:outputLabel for="titulo" value="Titulo del Informe" />
+						<p:inputText id="titulo" value="#{informeMB.registro.infTitulo}"
+							required="true" maxlength="250"
+							requiredMessage="Debe ingresar titulo del informe" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="version" value="Version del Informe" />
+						<p:inputText id="version" value="#{informeMB.registro.infVersion}"
+							required="true" maxlength="250"
+							requiredMessage="Debe ingresar version del informe" />
+					</div>
+					<div class="p-field p-col" style="margin-top: 25px;">
+						<p:tabView id="tvInforme">
+									<p:tab title="Portada">
+										<pe:ckEditor id="infportada" width="100%"
+											value="#{informeMB.registro.infPortada}" />
+									</p:tab>
+									<p:tab title="Destinatario">
+										<pe:ckEditor id="infdestinatario" width="100%"
+											value="#{informeMB.registro.infDestinatario}" />
+									</p:tab>
+									<p:tab title="Introducción">
+										<pe:ckEditor id="infintroduccion" width="100%"
+											value="#{informeMB.registro.infIntroduccion}" />
+									</p:tab>
+									<p:tab title="Procedimientos">
+										<pe:ckEditor id="infprocedimientos" width="100%"
+											value="#{informeMB.registro.infProcedimientos}" />
+									</p:tab>
+									<p:tab title="Resultados">
+										<pe:ckEditor id="infresultados" width="100%"
+											value="#{informeMB.registro.infResultados}" />
+									</p:tab>
+									<p:tab title="Seguimientos">
+										<pe:ckEditor id="infseguimiento" width="100%"
+											value="#{informeMB.registro.infSeguimiento}" />
+									</p:tab>
+									<p:tab title="Conclusion">
+										<pe:ckEditor id="infconclusion" width="100%"
+											value="#{informeMB.registro.infConclusion}" />
+									</p:tab>
+									<p:tab title="Aclaracion">
+										<pe:ckEditor id="infaclaracion" width="100%"
+											value="#{informeMB.registro.infAclaracion}" />
+									</p:tab>
+									<p:tab title="Pie de Pagina">
+										<pe:ckEditor id="infpiePagina" width="100%"
+											value="#{informeMB.registro.infPiePagina}" />
+									</p:tab>
+				
+						</p:tabView>
+					</div>
+					<p:commandButton id="btnGuardarBottom" action="#{informeMB.onSave}"
+						value="Guardar" update="@form :frm" process="@this @form" />
+				</div>
+			</p:panel>
+		</h:form>
+		<ui:include src="actalectura.xhtml"></ui:include>
+		<ui:include src="cartagerencia.xhtml"></ui:include>
+	</ui:define>
+
+</ui:composition>

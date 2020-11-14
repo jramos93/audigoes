@@ -47,6 +47,16 @@ public class Destinatario extends SuperEntity implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="dst_acl_id")
 	private ActaLectura actaLectura;
+	
+	//bi-directional many-to-one association to ActaLectura
+	@ManyToOne
+	@JoinColumn(name="dst_cvc_id")
+	private Convocatoria convocatoria;
+	
+	//bi-directional many-to-one association to ActaLectura
+	@ManyToOne
+	@JoinColumn(name="dst_ctg_id")
+	private CartaGerencia cartaGerencia;
 
 	public Destinatario() {
 	}
@@ -114,6 +124,21 @@ public class Destinatario extends SuperEntity implements Serializable {
 	public void setActaLectura(ActaLectura actaLectura) {
 		this.actaLectura = actaLectura;
 	}
+	public Convocatoria getConvocatoria() {
+		return this.convocatoria;
+	}
+
+	public void setConvocatoria(Convocatoria convocatoria) {
+		this.convocatoria = convocatoria;
+	}
+	
+	public CartaGerencia getCartaGerencia() {
+		return this.cartaGerencia;
+	}
+
+	public void setCartaGerencia(CartaGerencia cartaGerencia) {
+		this.cartaGerencia = cartaGerencia;
+	}
 
 	@Override
 	public int hashCode() {
@@ -141,7 +166,7 @@ public class Destinatario extends SuperEntity implements Serializable {
 	public String toString() {
 		return "Destinatario [dstId=" + dstId + ", dstCorreo=" + dstCorreo + ", fecCrea=" + fecCrea + ", fecModi="
 				+ fecModi + ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi
-				+ ", actaLectura=" + actaLectura + "]";
+				+ ", convocatoria=" + convocatoria + ", cartaGerencia=" + cartaGerencia +", actaLectura=" + actaLectura + "]";
 	}
 
 }
