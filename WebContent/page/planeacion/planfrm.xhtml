@@ -1,0 +1,90 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+
+	<h:form id="frm">
+		<p:panel rendered="#{planMB.status eq 'SEARCH'}" >
+			<p:commandButton id="btnNuevoPlan" action="#{planMB.onNew}"
+				value="Nuevo Plan" icon="pi pi-plus" update="@form :frmNewEdit">
+			</p:commandButton>
+			<p:commandButton id="btnEditarPlan" action="#{planMB.onEdit}"
+				rendered="#{planMB.registro.selected}" value="Editar Informe Plan"
+				icon="pi pi-plus" update="@form :frmNewEdit">
+			</p:commandButton>
+			<p:commandButton id="btnAuditoriasPlan" value="Detalle Auditorias"
+				action="#{planMB.showAuditorias()}" update="@form :frmAuditoria"
+				rendered="#{planMB.registro.selected}" 
+				icon="pi pi-search">
+			</p:commandButton>
+			<p:commandButton id="btnInformePlan"
+				action="#{planMB.generarInforme}"
+				rendered="#{planMB.registro.selected}" value="Ver Informe Plan"
+				icon="pi pi-note" update="@form">
+			</p:commandButton>
+			<p:commandButton id="btnEliminarPlan" update="@form" value="Eliminar"
+				icon="pi pi-trash" actionListener="#{planMB.onDelete}"
+				rendered="#{planMB.registro.selected}">
+			</p:commandButton>
+			<p:commandButton value="GenerarReporte" actionListener="#{planMB.viewReporte()}" target="_blank" />
+			<p:separator />
+			<p:dataTable var="plan" value="#{planMB.listado}"
+				widgetVar="wvPlanAnual" reflow="true" id="dtPlanAnual"
+				style="margin-top:20px;" paginator="true"
+				selection="#{planMB.regSelected}" selectionMode="single"
+				rowKey="#{plan.plaId}" rows="10"
+				filteredValue="#{planMB.filteredPlanAnuales}"
+				globalFilterFunction="#{planMB.globalFilterFunction}"
+				rowsPerPageTemplate="5,10,15,20,25"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+				<p:ajax event="rowSelect" listener="#{planMB.onRowSelect}"
+					update="@form" />
+				<f:facet name="paginatorTopRight">
+					<p:outputPanel>
+						<h:outputText value="Búsqueda global: " />
+						<p:inputText id="globalFilter"
+							onkeyup="PF('wvPlanAnual').filter();" style="width:150px"
+							placeholder="Ingresa una palabra" />
+					</p:outputPanel>
+				</f:facet>
+
+				<p:column headerText="Año" style="width:10%; text-align:center;"
+					sortBy="#{plan.plaId}">
+					<h:outputText value="#{plan.plaAnio}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Nombre" sortBy="#{plan.plaNombre}">
+					<h:outputText value="#{plan.plaNombre}"></h:outputText>
+				</p:column>
+				<p:column headerText="Fecha Inicio" sortBy="#{plan.plaFechaInicio}">
+					<h:outputText value="#{plan.plaFechaInicio}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Fecha Fin" sortBy="#{plan.plaFechaFin}">
+					<h:outputText value="#{plan.plaFechaFin}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Estado" filterBy="#{plan.regActivo}"
+					filterMatchMode="exact" style="text-align:center; width:15%">
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('wvPlanAnual').filter();">
+							<f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}"
+								noSelectionOption="true" />
+							<f:selectItems value="#{planMB.regActivoList}" />
+						</p:selectOneMenu>
+					</f:facet>
+					<h:outputText value="#{plan.regActivo}"
+						converter="regActivoConverter"></h:outputText>
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</h:form>
+
+</ui:composition>
