@@ -8,7 +8,7 @@ public class Test {
 
 	public static void main(String[] args) {
 		try {
-			String texto = "BNAVAS123456";
+			String texto = "JRAMOSJramos93";
 			MessageDigest md = MessageDigest.getInstance("SHA-384");
 			byte[] msjd = md.digest(texto.getBytes(StandardCharsets.UTF_8));
 			BigInteger number = new BigInteger(1, msjd);

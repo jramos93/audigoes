@@ -82,6 +82,8 @@ public class UsrMB extends AudigoesController implements Serializable {
 	public void onSaveUser() {
 		if (getStatus().equals("NEW")) {
 			onCreateUser();
+			uprMB.setUsuario(getRegistro());
+			uprMB.onSaveUser();
 		} else if (getStatus().equals("EDIT")) {
 			onEditUser();
 			onSaveEdit();
@@ -96,8 +98,8 @@ public class UsrMB extends AudigoesController implements Serializable {
 			getRegistro().setRegActivo(1);
 			audigoesLocal.insert(getRegistro());
 			if (getRegistro() != null && getRegistro().getUsuId() > 0) {
-				uprMB.addPermiso(Utils.rolGeneral, Utils.perLogin, getRegistro());
-				addDelPermisos();
+				//uprMB.addPermiso(Utils.rolGeneral, Utils.perLogin, getRegistro());
+				//addDelPermisos();
 				getListado().add(getRegistro());
 				addInfo(new FacesMessage("Confirmación", "Usuario creado correctamente"));
 			}
@@ -110,8 +112,10 @@ public class UsrMB extends AudigoesController implements Serializable {
 	public void onEditUser() {
 		try {
 			if (getRegistro() != null && getRegistro().getUsuId() > 0) {
-				addDelPermisos();
+				//addDelPermisos();
 				addInfo(new FacesMessage("Confirmación", "Usuario guardado correctamente"));
+//				uprMB.setUsuario(getRegistro());
+//				uprMB.fillListado();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -130,18 +134,18 @@ public class UsrMB extends AudigoesController implements Serializable {
 	
 
 	public void fillPermisos() {
-		if (getRegistro() != null) {
-			try {
-				setAuditor(uprMB.searchPermiso(Utils.rolAuditor, Utils.perGeneral, getRegistro()).getUspId() > 0);
-				setAuditorCreate(uprMB.searchPermiso(Utils.rolAuditor, Utils.perCreate, getRegistro()).getUspId() > 0);
-				setAuditorRead(uprMB.searchPermiso(Utils.rolAuditor, Utils.perRead, getRegistro()).getUspId() > 0);
-				setAuditorUpdate(uprMB.searchPermiso(Utils.rolAuditor, Utils.perUpdate, getRegistro()).getUspId() > 0);
-				setAuditorDelete(uprMB.searchPermiso(Utils.rolAuditor, Utils.perDelete, getRegistro()).getUspId() > 0);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		}
+//		if (getRegistro() != null) {
+//			try {
+//				setAuditor(uprMB.searchPermiso(Utils.rolAuditor, Utils.perGeneral, getRegistro()).getUspId() > 0);
+//				setAuditorCreate(uprMB.searchPermiso(Utils.rolAuditor, Utils.perCreate, getRegistro()).getUspId() > 0);
+//				setAuditorRead(uprMB.searchPermiso(Utils.rolAuditor, Utils.perRead, getRegistro()).getUspId() > 0);
+//				setAuditorUpdate(uprMB.searchPermiso(Utils.rolAuditor, Utils.perUpdate, getRegistro()).getUspId() > 0);
+//				setAuditorDelete(uprMB.searchPermiso(Utils.rolAuditor, Utils.perDelete, getRegistro()).getUspId() > 0);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//
+//		}
 	}
 	
 	public void addDelPermisos() {
@@ -192,6 +196,10 @@ public class UsrMB extends AudigoesController implements Serializable {
 	@Override
 	protected void afterEdit() {
 		fillPermisos();
+		uprMB.setUsuario(getRegistro());
+		uprMB.fillListado();
+		uprMB.getRolMB().fillListado();
+		uprMB.onEdit();
 		super.afterEdit();
 	}
 	
@@ -229,6 +237,8 @@ public class UsrMB extends AudigoesController implements Serializable {
 //
 //		setExterno(false);
 //		setExternoRead(false);
+		
+		uprMB.getRolMB().fillListado();
 		super.afterNew();
 	}
 

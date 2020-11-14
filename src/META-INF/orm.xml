@@ -44,4 +44,16 @@
 	<named-query name="rolpermisos.delete">
 		<query>select o from RolPermiso o where o.rol.rolId = ?1 and o.permiso.perId = ?2</query>
 	</named-query>
+	
+	<named-query name="usuario.permiso.get.source.list">
+		<query>select o from Permiso o where o.perId in (select o.permiso.perId from RolPermiso o where o.rol.rolId = ?1) 
+		and o.perId not in (select o2.permiso.perId from UsuarioPermiso o2 where o2.rol.rolId=?1 and o2.usuario.usuId=?2)</query>
+	</named-query>
+	<named-query name="usuario.permiso.get.target.list">
+		<query>select o from Permiso o where o.perId in (select o.permiso.perId from RolPermiso o where o.rol.rolId = ?1) 
+		and o.perId in (select o2.permiso.perId from UsuarioPermiso o2 where o2.rol.rolId=?1 and o2.usuario.usuId=?2)</query>
+	</named-query>
+	<named-query name="usuario.permiso.delete">
+		<query>select o from UsuarioPermiso o where o.usuario.usuId=?1</query>
+	</named-query>
 </entity-mappings>

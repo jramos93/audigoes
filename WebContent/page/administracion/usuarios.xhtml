@@ -1,0 +1,259 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Audigoes</ui:define>
+
+	<ui:define name="content">
+		<div class="name" align="center">
+			<span class="app-name">Gestión de Usuarios</span>
+		</div>
+		<h:form id="frm">
+			<p:dataTable var="usu" value="#{usrMB.listado}" widgetVar="wvUsuario"
+				reflow="true" id="dtUsuario" style="margin-top:20px;"
+				paginator="true" filteredValue="#{usrMB.filteredUsuarios}"
+				globalFilterFunction="#{usrMB.globalFilterFunction}"
+				selection="#{usrMB.regSelected}" selectionMode="single"
+				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+				rowKey="#{usu.usuId}">
+				<p:ajax event="rowSelect" listener="#{usrMB.onRowSelect}"
+					update="dtUsuario" />
+				<f:facet name="paginatorTopLeft">
+					<p:commandButton value="Agregar" icon="pi pi-plus"
+						actionListener="#{usrMB.onNew}"
+						oncomplete="PF('wvUsuNewEdit').show();" update=":frmUsuNewEdit" />
+					<p:commandButton update=":frmUsuNewEdit" value="Editar"
+						oncomplete="PF('wvUsuNewEdit').show()" icon="pi pi-pencil"
+						action="#{usrMB.onEditSelected}"
+						rendered="#{usrMB.registro.selected}">
+					</p:commandButton>
+				</f:facet>
+
+				<f:facet name="paginatorTopRight">
+					<p:outputPanel>
+						<h:outputText value="Búsqueda global: " />
+						<p:inputText id="globalFilter" onkeyup="PF('wvUsuario').filter();"
+							style="width:150px" placeholder="Ingresa una palabra" />
+					</p:outputPanel>
+				</f:facet>
+
+				<p:column headerText="Usuario">
+					<h:outputText value="#{usu.usuUsuario} - #{usu.usuId}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Nombre">
+					<h:outputText value="#{usu.usuNombre}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Apellido">
+					<h:outputText value="#{usu.usuApellido}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Carnet">
+					<h:outputText value="#{usu.usuCarnetEmpleado}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Correo">
+					<h:outputText value="#{usu.usuCorreo}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Puesto Funcional">
+					<h:outputText value="#{usu.usuCargo}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Estado" filterBy="#{usu.regActivo}"
+					filterMatchMode="exact">
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('wvUsuario').filter();">
+							<f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}"
+								noSelectionOption="true" />
+							<f:selectItems value="#{usrMB.regActivoList}" />
+						</p:selectOneMenu>
+					</f:facet>
+					<h:outputText value="#{usu.regActivo}"
+						converter="regActivoConverter"></h:outputText>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog widgetVar="wvUsuNewEdit" responsive="true" resizable="true"
+			width="840" maximizable="true" minimizable="true" closable="true"
+			closeOnEscape="true" header="Gestión de Usuario" modal="true">
+			<h:form id="frmUsuNewEdit">
+				<div class="ui-fluid">
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<div class="card card-w-title">
+								<p:tabView id="tabUsuNewEdit">
+
+									<p:tab id="datosgenerales" title="Datos Generales">
+										<p:panelGrid columns="4"
+											columnClasses="ui-g-12 ui-md-2,ui-g-12 ui-md-4,ui-g-12 ui-md-2 ui-grc-2,ui-g-12 ui-md-4"
+											layout="grid"
+											styleClass="ui-panelgrid-blank form-group form-elements">
+											<h:outputLabel for="usunombre" value="Nombre:" />
+											<p:inputText id="usunombre"
+												value="#{usrMB.registro.usuNombre}" required="true"
+												requiredMessage="Debe ingresar nombre de usuario" />
+
+											<h:outputLabel for="usuapellido" value="Apellido:" />
+											<p:inputText id="usuapellido"
+												value="#{usrMB.registro.usuApellido}" required="true"
+												requiredMessage="Debe ingresar apellido de usuario" />
+
+											<h:outputLabel for="usucanet" value="Carnet Empleado:" />
+											<p:inputText id="usucanet"
+												value="#{usrMB.registro.usuCarnetEmpleado}" required="true"
+												requiredMessage="Debe ingresar carnet empleado" />
+
+											<h:outputLabel for="usuusuario" value="Usuario Empleado:" />
+											<p:inputText id="usuusuario"
+												value="#{usrMB.registro.usuUsuario}" required="true"
+												requiredMessage="Debe ingresar usuario empleado" />
+
+											<h:outputLabel for="usucorreo" value="Correo Empleado:" />
+											<p:inputText id="usucorreo"
+												value="#{usrMB.registro.usuCorreo}" required="true"
+												requiredMessage="Debe ingresar carnet empleado" />
+
+											<h:outputLabel for="usucargo" value="Cargo:" />
+											<p:inputText id="usucargo" value="#{usrMB.registro.usuCargo}"
+												required="true"
+												requiredMessage="Debe ingresar cargo del empleado" />
+
+											<h:outputLabel for="usugenero" value="Genero:" />
+											<p:selectOneRadio id="usugenero"
+												value="#{usuMB.registro.usuGenero}" required="true">
+												<f:selectItems value="#{usrMB.generoList}"></f:selectItems>
+											</p:selectOneRadio>
+
+											<h:outputLabel for="usufechanacimiento"
+												value="Fecha Nacimiento:" />
+											<p:calendar id="usufechanacimiento"
+												value="#{usrMB.registro.usuFechaNacimiento}" required="true"
+												requiredMessage="Debe ingresar fecha nacimiento" />
+
+											<h:outputLabel for="usudui" value="DUI:" />
+											<p:inputMask id="usudui" value="#{usrMB.registro.usuDui}"
+												mask="99999999-9" required="true"
+												requiredMessage="Debe ingresar número de DUI" />
+
+											<h:outputLabel for="usudui" value="NIT:" />
+											<p:inputMask id="usudnit" value="#{usrMB.registro.usuNit}"
+												mask="9999-999999-999-9" required="true"
+												requiredMessage="Debe ingresar número de NIT" />
+
+											<!-- 											<h:outputLabel for="skip" value="Asignar permisos luego" /> -->
+											<!-- 											<h:selectBooleanCheckbox id="skip" value="#{usuMB.skip}" /> -->
+										</p:panelGrid>
+										<p:panelGrid columns="2"
+											columnClasses="ui-g-12 ui-md-2,ui-g-12 ui-md-10"
+											layout="grid"
+											styleClass="ui-panelgrid-blank form-group form-elements">
+											<h:outputLabel for="usudireccion"
+												value="dirección residencia:" />
+											<p:inputTextarea id="usudireccion" rows="3"
+												value="#{usrMB.registro.usuDireccionResidencia}"
+												required="true"
+												requiredMessage="Debe ingresar dirección de residencia" />
+										</p:panelGrid>
+									</p:tab>
+
+									<p:tab id="roles" title="Roles y Permisos">
+										<p:dataTable id="dtpermisorol" var="p"
+											value="#{uprMB.listado}" widgetVar="wvpermisorol"
+											reflow="true" style="margin-top:20px;" paginator="true"
+											rowIndexVar="correlativo" rowKey="#{p.uspId}"
+											rowsPerPageTemplate="1,5,10,15" rows="5"
+											sortBy="#{p.rol.rolId}"
+											paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+											currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+											<f:facet name="paginatorTopLeft">
+												<p:commandButton value="Modificar Permisos"
+													icon="pi pi-pencil" actionListener="#{uprMB.onNew}"
+													update=":frmPermisosUsuario"
+													oncomplete="PF('wvPermisosUsuario').show();" />
+											</f:facet>
+											<p:column headerText="Rol" groupRow="true">
+												<h:outputText value="#{p.rol.rolNombre}" />
+											</p:column>
+											<p:column headerText="N°" width="40"
+												style="text-align:center;">
+												<h:outputText value="#{correlativo+1}" />
+											</p:column>
+											<p:column headerText="Permiso">
+												<h:outputText value="#{p.permiso.perNombre}" />
+											</p:column>
+											<p:column headerText="Estado">
+												<h:outputText value="#{p.regActivo}"
+													converter="regActivoConverter"></h:outputText>
+											</p:column>
+										</p:dataTable>
+									</p:tab>
+
+								</p:tabView>
+							</div>
+						</div>
+					</div>
+					<p:commandButton id="btn" value="Guardar" icon="fa fa-check"
+						oncomplete="PF('wvUsuNewEdit').hide();"
+						actionListener="#{usrMB.onSaveUser}" update=":frm:dtUsuario" />
+				</div>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog id="dgPermisosUsuario" widgetVar="wvPermisosUsuario"
+			responsive="true" header="Nuevo Permiso" modal="true"
+			closeOnEscape="true">
+
+			<h:form id="frmPermisosUsuario">
+				<p:panelGrid columns="1" layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+					<b>Indicaciones:</b>
+					<p>Seleccione los permisos de la izquierda y páselos a la
+						derecha para asignarlos al rol. Puede seleccionar más de un
+						permiso a la vez para asignarlos</p>
+
+					<p:outputLabel value="Rol:" />
+					<p:selectOneMenu id="rol" value="#{uprMB.rol}"
+						converter="rolConverter">
+						<f:selectItem itemLabel="-- Seleccione --" itemValue="" />
+						<f:selectItems value="#{rolMB.listado}" var="r" itemValue="#{r}"
+							itemLabel="#{r.rolNombre}" />
+						<p:ajax event="change" listener="#{uprMB.onChangeRol}"
+							update=":frmPermisosUsuario:plpermisos" />
+					</p:selectOneMenu>
+
+					<br />
+					<p:pickList id="plpermisos" value="#{uprMB.permisosList}"
+						var="permiso" itemValue="#{permiso}" responsive="true"
+						itemLabel="#{permiso.perNombre}" showCheckbox="true"
+						showSourceFilter="true" showTargetFilter="true"
+						filterMatchMode="contains" converter="permisoConverter">
+						<f:facet name="sourceCaption"> Disponibles</f:facet>
+						<f:facet name="targetCaption"> Asignados</f:facet>
+						<p:ajax event="transfer" listener="#{uprMB.onTransfer}" />
+						<p:column style="width:100%;">
+							<h:outputText style="margin-left:10px;"
+								value="#{permiso.perNombre}" />
+						</p:column>
+					</p:pickList>
+				</p:panelGrid>
+
+				<p:commandButton id="btn" value="Guardar" icon="fa fa-check"
+					oncomplete="PF('wvPermisosUsuario').hide();"
+					rendered="#{usrMB.status=='NEW'}"
+					actionListener="#{uprMB.onSaveUserExt}" update=":frmUsuNewEdit" />
+				<p:commandButton id="btn2" value="Modificar" icon="fa fa-check"
+					oncomplete="PF('wvPermisosUsuario').hide();"
+					rendered="#{usrMB.status=='EDIT'}"
+					actionListener="#{uprMB.onSaveEditUser}" update=":frmUsuNewEdit" />
+			</h:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

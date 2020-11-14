@@ -156,7 +156,7 @@ public class UsuarioPermiso extends SuperEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "UsuarioPermiso [uspId=" + uspId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo="
-				+ regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", permiso=" + permiso + ", rol=" + rol
+				+ regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi
 				+ ", usuario=" + usuario + "]";
 	}
 

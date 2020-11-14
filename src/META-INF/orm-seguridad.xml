@@ -9,7 +9,7 @@
 	</named-query>
 
 	<named-query name="permisos.findByUsuario">
-		<query>select o from UsuarioPermiso o where o.usuario.usuUsuario = ?1</query>
+		<query>select o from UsuarioPermiso o where o.usuario.usuId = ?1</query>
 	</named-query>
 
 	<named-query name="usuario.permiso">

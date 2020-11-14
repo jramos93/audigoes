@@ -42,6 +42,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	@SuppressWarnings("unchecked")
 	public void fillListado() {
 		try {
+			System.out.println("getObjAppsSession().getUsuario().getInstitucion().getInsId()  "+getObjAppsSession().getUsuario().getInstitucion().getInsId() );
 			setListado((List<Auditoria>) audigoesLocal.findByNamedQuery(Auditoria.class,
 					"auditoria.get.all.institucion",
 					new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() }));

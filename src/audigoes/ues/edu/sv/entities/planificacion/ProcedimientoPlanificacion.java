@@ -36,8 +36,12 @@ public class ProcedimientoPlanificacion extends SuperEntity implements Serializa
 	private Date fecModi;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="pro_fecha")
-	private Date proFecha;
+	@Column(name="pro_fecha_inicio")
+	private Date proFechaInicio;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name="pro_fecha_fin")
+	private Date proFechaFin;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="pro_fecha_elaboro")
@@ -114,14 +118,6 @@ public class ProcedimientoPlanificacion extends SuperEntity implements Serializa
 
 	public void setFecModi(Date fecModi) {
 		this.fecModi = fecModi;
-	}
-
-	public Date getProFecha() {
-		return this.proFecha;
-	}
-
-	public void setProFecha(Date proFecha) {
-		this.proFecha = proFecha;
 	}
 
 	public Date getProFechaElaboro() {
@@ -255,6 +251,23 @@ public class ProcedimientoPlanificacion extends SuperEntity implements Serializa
 	public void setUsuario2(Usuario usuario2) {
 		this.usuario2 = usuario2;
 	}
+	
+
+	public Date getProFechaInicio() {
+		return proFechaInicio;
+	}
+
+	public void setProFechaInicio(Date proFechaInicio) {
+		this.proFechaInicio = proFechaInicio;
+	}
+
+	public Date getProFechaFin() {
+		return proFechaFin;
+	}
+
+	public void setProFechaFin(Date proFechaFin) {
+		this.proFechaFin = proFechaFin;
+	}
 
 	@Override
 	public int hashCode() {
@@ -281,7 +294,7 @@ public class ProcedimientoPlanificacion extends SuperEntity implements Serializa
 	@Override
 	public String toString() {
 		return "ProcedimientoPlanificacion [proId=" + proId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi
-				+ ", proFecha=" + proFecha + ", proFechaElaboro=" + proFechaElaboro + ", proFechaReviso="
+				+ ", proFecha=" + proFechaInicio + ", proFechaElaboro=" + proFechaElaboro + ", proFechaReviso="
 				+ proFechaReviso + ", proNarrativa=" + proNarrativa + ", proNombre=" + proNombre + ", proReferencia="
 				+ proReferencia + ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi
 				+ ", cedulaNotas=" + cedulaNotas + ", documentosPlanificacion=" + documentosPlanificacion
