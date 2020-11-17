@@ -166,9 +166,10 @@ public class PlaneacionMB extends AudigoesController implements Serializable {
 	public void handleFileUpload(FileUploadEvent event) {
 		try {
 			this.arcMB.onNew();
+			this.arcMB.getRegistro().setPlanAnual(getRegistro());
 			this.arcMB.getRegistro().setArcArchivo(event.getFile().getContent());
 			this.arcMB.getRegistro().setArcNombre(event.getFile().getFileName());
-			//this.arcMB.getRegistro().setArcExt(event.getFile().getContentType());
+			this.arcMB.getRegistro().setArcExt(event.getFile().getContentType());
 			this.arcMB.onSave();
 		} catch (Exception e) {
 			e.printStackTrace();
