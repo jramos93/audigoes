@@ -6,7 +6,8 @@
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
 	<h:form id="frmNewEdit">
-		<p:panel rendered="#{planMB.status eq 'NEW' or planMB.status eq 'EDIT'}">
+		<p:panel
+			rendered="#{planMB.status eq 'NEW' or planMB.status eq 'EDIT'}">
 			<p:commandButton id="btnCancel" action="#{planMB.onCancel}"
 				value="Cancelar" update="@form :frm" process="@this">
 			</p:commandButton>
@@ -115,7 +116,9 @@
 							</p:dataTable>
 						</p:tab>
 						<p:tab title="Anexos" rendered="#{planMB.status eq 'EDIT'}">
-
+							<p:fileUpload listener="#{planMB.handleFileUpload}"
+								mode="advanced" dragDropSupport="false" update="msg"
+								fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png|doc?x|xls?x|pdf|ppt?x)$/" />
 						</p:tab>
 					</p:tabView>
 				</div>

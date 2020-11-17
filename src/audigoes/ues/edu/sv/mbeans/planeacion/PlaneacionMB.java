@@ -13,10 +13,12 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import org.primefaces.component.tabview.TabView;
+import org.primefaces.event.FileUploadEvent;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
+import audigoes.ues.edu.sv.mbeans.administracion.ArchivoMB;
 
 @ManagedBean(name = "planMB")
 @ViewScoped
@@ -31,6 +33,9 @@ public class PlaneacionMB extends AudigoesController implements Serializable {
 
 	@ManagedProperty(value = "#{audMB}")
 	private AuditoriaMB audMB = new AuditoriaMB();
+	
+	@ManagedProperty(value = "#{arcMB}")
+	private ArchivoMB arcMB = new ArchivoMB();
 
 	public PlaneacionMB() {
 		super(new PlanAnual());
@@ -157,6 +162,29 @@ public class PlaneacionMB extends AudigoesController implements Serializable {
 		getListado().remove(getRegistro());
 		super.afterDelete();
 	}
+	
+	public void handleFileUpload(FileUploadEvent event) {
+		try {
+			this.arcMB.onNew();
+			this.arcMB.getRegistro().setArcArchivo(event.getFile().getContent());
+			this.arcMB.getRegistro().setArcNombre(event.getFile().getFileName());
+			//this.arcMB.getRegistro().setArcExt(event.getFile().getContentType());
+			this.arcMB.onSave();
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage(SYSTEM_NAME, "Problemas al guardar archivo."));
+		}
+		
+	}
+	
+	/*public byte[] streamToByteArray(InputStream stream) {
+		try {
+			return IOUtils.toByteArray(stream);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}*/
 
 	/* ver reporte */
 	public void viewReporte() throws SQLException, ClassNotFoundException {
@@ -214,6 +242,14 @@ public class PlaneacionMB extends AudigoesController implements Serializable {
 
 	public void setAudMB(AuditoriaMB audMB) {
 		this.audMB = audMB;
+	}
+
+	public ArchivoMB getArcMB() {
+		return arcMB;
+	}
+
+	public void setArcMB(ArchivoMB arcMB) {
+		this.arcMB = arcMB;
 	}
 	
 }
