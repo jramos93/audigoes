@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.administracion.Archivo;
 import audigoes.ues.edu.sv.entities.administracion.Institucion;
 
 import java.util.Date;
@@ -80,7 +81,7 @@ public class PlanAnual extends SuperEntity implements Serializable {
 	@Lob
 	@Column(name = "pla_vision")
 	private String plaVision;
-	
+
 	@Lob
 	@Column(name = "pla_portada")
 	private String plaPortada;
@@ -106,6 +107,10 @@ public class PlanAnual extends SuperEntity implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "pla_ins_id")
 	private Institucion institucion;
+
+	// bi-directional many-to-one association to Archivo
+	@OneToMany(mappedBy = "planAnual", fetch = FetchType.EAGER)
+	private Set<Archivo> archivo;
 
 	public PlanAnual() {
 	}
@@ -313,13 +318,35 @@ public class PlanAnual extends SuperEntity implements Serializable {
 
 		return documentoPlan;
 	}
-	
+
 	public Institucion getInstitucion() {
 		return this.institucion;
 	}
 
 	public void setInstitucion(Institucion institucion) {
 		this.institucion = institucion;
+	}
+	
+	public Set<Archivo> getArchivo() {
+		return this.archivo;
+	}
+
+	public void setArchivo(Set<Archivo> archivo) {
+		this.archivo = archivo;
+	}
+
+	public Archivo addArchivo(Archivo archivo) {
+		getArchivo().add(archivo);
+		archivo.setPlanAnual(this);
+
+		return archivo;
+	}
+
+	public Archivo removeArchivo(Archivo archivo) {
+		getArchivo().remove(archivo);
+		archivo.setPlanAnual(null);
+
+		return archivo;
 	}
 
 	@Override
@@ -354,7 +381,6 @@ public class PlanAnual extends SuperEntity implements Serializable {
 				+ ", plaRiesgosConsiderados=" + plaRiesgosConsiderados + ", plaVision=" + plaVision + ", plaPortada="
 				+ plaPortada + ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi
 				+ ", auditoria=" + auditoria + ", documentoPlan=" + documentoPlan + ", institucion=" + institucion
-				+ "]";
+				+ ", archivo=" + archivo + "]";
 	}
-
 }

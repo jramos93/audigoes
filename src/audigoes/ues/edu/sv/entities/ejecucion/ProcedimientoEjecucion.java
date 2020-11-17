@@ -1,79 +1,97 @@
 package audigoes.ues.edu.sv.entities.ejecucion;
 
 import java.io.Serializable;
-import javax.persistence.*;
-
-import audigoes.ues.edu.sv.entities.SuperEntity;
-import audigoes.ues.edu.sv.entities.administracion.Usuario;
-import audigoes.ues.edu.sv.entities.informe.CedulaNota;
-
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.administracion.Archivo;
+import audigoes.ues.edu.sv.entities.administracion.Usuario;
+import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 
 /**
  * The persistent class for the procedimiento_ejecucion database table.
  * 
  */
 @Entity
-@Table(name="procedimiento_ejecucion")
-@NamedQuery(name="ProcedimientoEjecucion.findAll", query="SELECT p FROM ProcedimientoEjecucion p")
+@Table(name = "procedimiento_ejecucion")
+@NamedQuery(name = "ProcedimientoEjecucion.findAll", query = "SELECT p FROM ProcedimientoEjecucion p")
 public class ProcedimientoEjecucion extends SuperEntity implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "pej_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "pej_id", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "pej_id")
-	@Column(name="pej_id")
+	@Column(name = "pej_id")
 	private int pejId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_crea")
+	@Column(name = "fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_modi")
+	@Column(name = "fec_modi")
 	private Date fecModi;
 
 	@Lob
-	@Column(name="pej_descripcion")
+	@Column(name = "pej_descripcion")
 	private String pejDescripcion;
 
-	@Column(name="pej_nombre")
+	@Column(name = "pej_nombre")
 	private String pejNombre;
 
-	@Column(name="reg_activo")
+	@Column(name = "reg_activo")
 	private int regActivo;
 
-	@Column(name="usu_crea")
+	@Column(name = "usu_crea")
 	private String usuCrea;
 
-	@Column(name="usu_modi")
+	@Column(name = "usu_modi")
 	private String usuModi;
 
-	//bi-directional many-to-one association to CedulaNota
-	@OneToMany(mappedBy="procedimientoEjecucion", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to CedulaNota
+	@OneToMany(mappedBy = "procedimientoEjecucion", fetch = FetchType.EAGER)
 	private Set<CedulaNota> cedulaNotas;
 
-	//bi-directional many-to-one association to DocumentosEjecucion
-	@OneToMany(mappedBy="procedimientoEjecucion", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to DocumentosEjecucion
+	@OneToMany(mappedBy = "procedimientoEjecucion", fetch = FetchType.EAGER)
 	private Set<DocumentosEjecucion> documentosEjecucion;
 
-	//bi-directional many-to-one association to ProgramaEjecucion
+	// bi-directional many-to-one association to ProgramaEjecucion
 	@ManyToOne
-	@JoinColumn(name="pej_pre_id")
+	@JoinColumn(name = "pej_pre_id")
 	private ProgramaEjecucion programaEjecucion;
 
-	//bi-directional many-to-one association to Usuario
+	// bi-directional many-to-one association to Usuario
 	@ManyToOne
-	@JoinColumn(name="pej_usu_id")
+	@JoinColumn(name = "pej_usu_id")
 	private Usuario usuario1;
 
-	//bi-directional many-to-one association to Usuario
+	// bi-directional many-to-one association to Usuario
 	@ManyToOne
-	@JoinColumn(name="pej_usu_usu_id")
+	@JoinColumn(name = "pej_usu_usu_id")
 	private Usuario usuario2;
+
+	// bi-directional many-to-one association to Archivo
+	@OneToMany(mappedBy = "procedimientoEjecucion", fetch = FetchType.EAGER)
+	private Set<Archivo> archivo;
 
 	public ProcedimientoEjecucion() {
 	}
@@ -209,6 +227,28 @@ public class ProcedimientoEjecucion extends SuperEntity implements Serializable 
 	public void setUsuario2(Usuario usuario2) {
 		this.usuario2 = usuario2;
 	}
+	
+	public Set<Archivo> getArchivo() {
+		return this.archivo;
+	}
+
+	public void setArchivo(Set<Archivo> archivo) {
+		this.archivo = archivo;
+	}
+
+	public Archivo addArchivo(Archivo archivo) {
+		getArchivo().add(archivo);
+		archivo.setProcedimientoEjecucion(this);
+
+		return archivo;
+	}
+
+	public Archivo removeArchivo(Archivo archivo) {
+		getArchivo().remove(archivo);
+		archivo.setProcedimientoEjecucion(null);
+
+		return archivo;
+	}
 
 	@Override
 	public int hashCode() {
@@ -231,13 +271,13 @@ public class ProcedimientoEjecucion extends SuperEntity implements Serializable 
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "ProcedimientoEjecucion [pejId=" + pejId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi
 				+ ", pejDescripcion=" + pejDescripcion + ", pejNombre=" + pejNombre + ", regActivo=" + regActivo
 				+ ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", cedulaNotas=" + cedulaNotas
 				+ ", documentosEjecucion=" + documentosEjecucion + ", programaEjecucion=" + programaEjecucion
-				+ ", usuario1=" + usuario1 + ", usuario2=" + usuario2 + "]";
+				+ ", usuario1=" + usuario1 + ", usuario2=" + usuario2 + ", archivo=" + archivo + "]";
 	}
 }
