@@ -5,7 +5,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-@FacesConverter("regActivoConverter")
+@FacesConverter("faseAuditoriaConverter")
 public class FaseAuditoriaConverter implements Converter {
 
 	@Override
