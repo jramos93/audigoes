@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.ws.rs.GET;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
@@ -58,6 +59,12 @@ public class ProcedimientosPlaniMB extends AudigoesController implements Seriali
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public void afterSave() {
+		super.afterSave();
+		onEdit();
+	}
 
 	public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
 		String filterText = (filter == null) ? null : filter.toString().trim().toLowerCase();
@@ -76,6 +83,9 @@ public class ProcedimientosPlaniMB extends AudigoesController implements Seriali
 	
 	@Override
 	public boolean beforeSaveNew() {
+		getRegistro().setProFechaElaboro(getToday());
+		getRegistro().setUsuario1(getObjAppsSession().getUsuario());
+		getRegistro().setProgramaPlanificacion(programa);
 		return super.beforeSaveNew();
 	}
 

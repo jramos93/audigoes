@@ -37,12 +37,12 @@ public class ProgramaPlanificacionMB extends AudigoesController implements Seria
 	public void init() {
 		try {
 			super.init();
-			fillPrograma();
-			onEdit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+
 
 	@SuppressWarnings("unchecked")
 	public void fillPrograma() {

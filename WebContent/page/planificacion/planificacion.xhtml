@@ -5,8 +5,33 @@
 	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
 
 	<ui:define name="content">
-		
-		
+		<h:form id="frmPlanificacion">
+			<p:panel rendered="#{audMB.status eq 'SEARCH' and pplaMB.status eq 'SEARCH'}">
+				
+				<p:panelGrid columns="3" columnClasses="ui-g-12 ui-md-4 ui-lg-4"
+					layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements"
+					style="margin-top:100px; text-align:center;">
+					<p:commandLink value="" actionListener="#{audMB.onPrograma}" update=":frmPlanificacion, :frmPrograma">
+						<p:graphicImage value="/resources/images/programa.png"
+							style="height:200px;" />
+					</p:commandLink>
+
+					<p:commandLink value="">
+						<p:graphicImage value="/resources/images/memo.png"
+							style="height:200px;" />
+					</p:commandLink>
+
+					<h:commandLink value="">
+						<p:graphicImage value="/resources/images/programa-ejecucion.png"
+							style="height:200px;" />
+					</h:commandLink>
+				</p:panelGrid>
+			</p:panel>
+		</h:form>
+
+
+		<ui:include src="programa.xhtml"></ui:include>
 	</ui:define>
 
 </ui:composition>

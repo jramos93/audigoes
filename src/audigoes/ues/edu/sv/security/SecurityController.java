@@ -74,7 +74,7 @@ public class SecurityController extends AudigoesController {
 						objAppsSession.setUsuario(usr);
 						sesion = this.getInitSesion(usr);
 						List<UsuarioPermiso> permisos = (List<UsuarioPermiso>) this.audigoesLocal.findByNamedQuery(
-								UsuarioPermiso.class, "permisos.findByUsuario", new Object[] { usuario });
+								UsuarioPermiso.class, "permisos.findByUsuario", new Object[] { usr.getUsuId() });
 						if (sesion == null) {
 							message.setDetail("Error en el registro de la sesion");
 							this.addWarn(message);

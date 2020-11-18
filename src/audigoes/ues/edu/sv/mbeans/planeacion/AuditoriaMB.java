@@ -8,6 +8,7 @@ import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
@@ -29,6 +30,9 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	private List<TipoAuditoria> tipoAuditoriaList;
 	private TipoAuditoria tipoAuditoriaSelected;
+	
+	@ManagedProperty(value = "#{pplaMB}")
+	private ProgramaPlanificacionMB pplaMB = new ProgramaPlanificacionMB();
 
 	public AuditoriaMB() {
 		super(new Auditoria());
@@ -53,6 +57,11 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void onPrograma() {
+		pplaMB.fillPrograma();
+		pplaMB.onEdit();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -254,6 +263,14 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	public void setTipoAuditoriaSelected(TipoAuditoria tipoAuditoriaSelected) {
 		this.tipoAuditoriaSelected = tipoAuditoriaSelected;
+	}
+
+	public ProgramaPlanificacionMB getPplaMB() {
+		return pplaMB;
+	}
+
+	public void setPplaMB(ProgramaPlanificacionMB pplaMB) {
+		this.pplaMB = pplaMB;
 	}
 
 }

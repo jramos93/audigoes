@@ -9,57 +9,68 @@
 	<h:form id="frmProcedimiento">
 		<p:panel rendered="#{proplaMB.status ne 'SEARCH'}">
 
-			<div align="left" style="margin-top:50px;">
+			<div align="left" style="margin-top: 50px;">
 				<p:commandButton id="btnCancel" action="#{proplaMB.onCancel}"
-					value="Cancelar" icon="pi pi-replay" style="float:left;"
+					value="Cancelar" icon="pi pi-ban" style="float:left;"
 					update=":frmPrograma, :frmProcedimiento" process="@this">
 				</p:commandButton>
 			</div>
-			<div class="name" align="center" style="margin-top:100px;">
-				<span class="app-name">Procedimiento de Planificación</span>
+			<div class="name" align="center" style="margin-top: 100px;">
+				<span class="app-name">Procedimiento de Planificación </span>
 			</div>
 			<div class="ui-fluid p-formgrid p-grid">
-				<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
-					styleClass="ui-panelgrid-blank form-group form-elements">
+				<p:tabView>
+					<p:tab title="Procedimiento">
+						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+							styleClass="ui-panelgrid-blank form-group form-elements">
 
-					<p:outputLabel for="nombre" value="Nombre:"
-						style="font-weight:bold;" />
-					<p:inputTextarea id="nombre" value="#{proplaMB.registro.proNombre}"
-						rows="2" required="true" maxlength="250" />
+							<p:outputLabel for="nombre" value="Nombre:"
+								style="font-weight:bold;" />
+							<p:inputTextarea id="nombre"
+								value="#{proplaMB.registro.proNombre}" rows="2" required="true"
+								maxlength="250" />
 
-					<p:outputLabel for="narra" value="Narrativa"
-						style="font-weight:bold;" />
-					<pe:ckEditor id="narra" width="100%"
-						value="#{proplaMB.registro.proNarrativa}" />
+							<p:outputLabel for="ref" value="Referencia:"
+								style="font-weight:bold;" />
+							<p:inputTextarea id="ref"
+								value="#{proplaMB.registro.proReferencia}" rows="2"
+								required="true" maxlength="250" />
+						</p:panelGrid>
+						<p:panelGrid columns="4"
+							columnClasses="ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4, ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4"
+							layout="grid"
+							styleClass="ui-panelgrid-blank form-group form-elements">
 
-					<p:outputLabel for="ref" value="Referencia:"
-						style="font-weight:bold;" />
-					<p:inputTextarea id="ref"
-						value="#{proplaMB.registro.proReferencia}" rows="2"
-						required="true" maxlength="250" />
-				</p:panelGrid>
-				<p:panelGrid columns="4"
-					columnClasses="ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4, ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4"
-					layout="grid"
-					styleClass="ui-panelgrid-blank form-group form-elements">
+							<p:outputLabel value="Fecha de inicio:" style="font-weight:bold;" />
+							<p:calendar mode="inline"
+								value="#{proplaMB.registro.proFechaInicio}"></p:calendar>
 
-					<p:outputLabel value="Fecha de inicio:" style="font-weight:bold;" />
-					<p:calendar mode="inline"
-						value="#{proplaMB.registro.proFechaInicio}"></p:calendar>
+							<p:outputLabel value="Fecha de fin:" style="font-weight:bold;" />
+							<p:calendar mode="inline"
+								value="#{proplaMB.registro.proFechaFin}"></p:calendar>
+						</p:panelGrid>
 
-					<p:outputLabel value="Fecha de fin:" style="font-weight:bold;" />
-					<p:calendar mode="inline" value="#{proplaMB.registro.proFechaFin}"></p:calendar>
-				</p:panelGrid>
+					</p:tab>
+					<p:tab title="Narrativa">
+						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+							styleClass="ui-panelgrid-blank form-group form-elements">
+
+							<p:outputLabel for="narra" value="Narrativa"
+								style="font-weight:bold;" />
+							<pe:ckEditor id="narra" width="100%"
+								value="#{proplaMB.registro.proNarrativa}" />
+						</p:panelGrid>
+					</p:tab>
+					<p:tab title="Papeles de Trabajo"></p:tab>
+				</p:tabView>
 
 				<p:panelGrid columns="2"
 					columnClasses="ui-g-9 ui-lg-10,ui-g-3 ui-md-4 ui-lg-2"
 					layout="grid"
 					styleClass="ui-panelgrid-blank form-group form-elements">
-					<p:column>
-					</p:column>
-					<p:commandButton id="btn" value="Guardar" icon="fa fa-check"
-						style="float:right;" actionListener="#{proplaMB.onSave}"
-						update=":frmProcedimiento" />
+					<p:column></p:column>
+					<p:commandButton value="Guardar" icon="fa fa-check"
+						actionListener="#{proplaMB.onSave}" update=":frmProcedimiento" />
 				</p:panelGrid>
 			</div>
 
