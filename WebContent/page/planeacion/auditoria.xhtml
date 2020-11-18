@@ -2,126 +2,184 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
 
 	<ui:define name="content">
-		<div class="ui-g">
-			<div class="ui-g-12">
-				<div class="card">
-					<div class="name" align="center">
-						<span class="app-name">Auditorías</span>
-					</div>
-					<h:form id="frm">
-						<p:panelGrid id="pgPlanesAuditoria">
-							<p:selectOneMenu id="somPlanSelected"
-								value="#{audMB.planSelected}" converter="planAnualConverter">
-								<f:selectItem itemLabel="Todos los planes" itemValue="1" 
-									noSelectionOption="true" />
-								<f:selectItems id="siPlanAuditorias"
-									itemLabel="#{plan.plaNombre}" itemValue="#{plan}" var="plan" />
-							</p:selectOneMenu>
-						</p:panelGrid>
 
-						<p:dataTable id="dtAuditorias" value="#{audMB.listado}"
-							widgetVar="wvAuditorias" reflow="true" var="aud"
-							style="margin-top:20px;" paginator="true" rowKey="#{aud.audId}"
-							filteredValue="#{audMB.filteredAuditorias}"
-							selectionMode="single" selection="#{audMB.regSelected}"
-							globalFilterFunction="#{audMB.globalFilterFunction}"
-							rowsPerPageLabel="5,10,15,20,25" rows="10" sortMode="multiple"
-							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-							currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
-							<p:ajax event="rowSelect" listener="#{audMB.onRowSelect}"
-								update="dtAuditorias" />
-							<f:facet name="paginatorTopLeft">
-								<p:commandButton value="Nuevo" action="nuevoplan"
-									oncomplete="PF('wvNewEditAuditoria').show();"
-									update="dgNewEditAuditoria" icon="pi pi-eye"
-									actionListener="#{audMB.onNew()}" process="@this">
-								</p:commandButton>
-								<p:commandButton id="btnActividades" value="Actividades"
-									rendered="#{audMB.registro.selected}">
-								</p:commandButton>
-								<p:commandButton id="btnAuditPlanificacion"
-									value="Planificación" rendered="#{audMB.registro.selected}">
-								</p:commandButton>
-								<p:commandButton id="btnAuditEjecucion" value="Ejecución"
-									rendered="#{audMB.registro.selected}">
-								</p:commandButton>
-								<p:commandButton id="btnAuditInforme" value="Informe"
-									rendered="#{audMB.registro.selected}">
-								</p:commandButton>
-							</f:facet>
-							<p:column headerText="Año" sortBy="#{aud.audAnio}">
-								<h:outputText value="#{aud.audAnio}" />
-							</p:column>
-							<p:column headerText="Auditoría" sortBy="#{aud.audNombre}">
-								<h:outputText value="#{aud.audNombre}" />
-							</p:column>
-							<p:column headerText="Tipo Auditoría"
-								sortBy="#{aud.tipoAuditoria.tpaNombre}">
-								<h:outputText value="#{aud.tipoAuditoria.tpaNombre}" />
-							</p:column>
-							<p:column headerText="Fecha Inicio"
-								sortBy="#{aud.audFechaInicioProgramado}">
-								<h:outputText value="#{aud.audFechaInicioProgramado}">
-									<f:convertDateTime pattern="dd-MM-yyyy" />
-								</h:outputText>
-							</p:column>
-							<p:column headerText="Fecha Inicio"
-								sortBy="#{aud.audFechaFinProgramado}">
-								<h:outputText value="#{aud.audFechaInicioProgramado}">
-									<f:convertDateTime pattern="dd-MM-yyyy" />
-								</h:outputText>
-							</p:column>
-							<p:column headerText="Fase" sortBy="#{aud.audFase}">
-								<h:outputText value="#{aud.audFase}" />
-							</p:column>
-						</p:dataTable>
-					</h:form>
-				</div>
-			</div>
+		<div class="name" align="center">
+			<span class="app-name">Auditorías</span>
 		</div>
+		<h:form id="frm">
+			<p:panel rendered="#{audMB.status eq 'SEARCH'}">
+				<p:panelGrid id="pgPlanesAuditoria">
 
-		<p:dialog id="dgNewEditAuditoria" widgetVar="wvNewEditAuditoria"
-			modal="true" responsive="true" width="600"
-			header="#{audMB.status == NEW ? 'Nueva Auditoría' : 'Editar Auditoría'}">
-			<h:form id="frmNewEditAuditoria">
+				</p:panelGrid>
+
+				<p:dataTable id="dtAuditorias" value="#{audMB.listado}"
+					widgetVar="wvAuditorias" reflow="true" var="aud"
+					style="margin-top:20px;" paginator="true" rowKey="#{aud.audId}"
+					filteredValue="#{audMB.filteredAuditorias}" selectionMode="single"
+					selection="#{audMB.regSelected}"
+					globalFilterFunction="#{audMB.globalFilterFunction}"
+					rowsPerPageLabel="5,10,15,20,25" rows="10" sortMode="multiple"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+					<p:ajax event="rowSelect" listener="#{audMB.onRowSelect}"
+						update="dtAuditorias" />
+					<f:facet name="paginatorTopLeft">
+						<p:commandButton value="Nuevo" update="@form :frmNewEditAuditoria"
+							icon="pi pi-eye" actionListener="#{audMB.onNew()}"
+							process="@this">
+						</p:commandButton>
+						<p:commandButton id="btnEditarAuditoria" action="#{audMB.onEdit}"
+							rendered="#{audMB.registro.selected}" value="Editar Auditoría"
+							icon="pi pi-plus" update="@form :frmNewEditAuditoria">
+						</p:commandButton>
+						<p:commandButton id="btnActividades" value="Actividades"
+							rendered="#{audMB.registro.selected}">
+						</p:commandButton>
+						<p:commandButton id="btnAuditPlanificacion" value="Planificación"
+							rendered="#{audMB.registro.selected}">
+						</p:commandButton>
+						<p:commandButton id="btnAuditEjecucion" value="Ejecución"
+							rendered="#{audMB.registro.selected}">
+						</p:commandButton>
+						<p:commandButton id="btnAuditInforme" value="Informe"
+							rendered="#{audMB.registro.selected}">
+						</p:commandButton>
+						<p:commandButton update=":frm" value="Eliminar"
+							icon="pi pi-delete" actionListener="#{audMB.onDelete}"
+							rendered="#{audMB.registro.selected}" process="@this">
+								<p:confirm header="Confirmación" message="Seguro(a) que desea eliminar el registros" icon="pi pi-exclamation-triangle" />
+						</p:commandButton>
+					</f:facet>
+					<p:column headerText="N°" sortBy="#{aud.audCorrelativo}" width="">
+						<h:outputText value="#{aud.audCorrelativo}" />
+					</p:column>
+					<p:column headerText="Año" sortBy="#{aud.audAnio}">
+						<h:outputText value="#{aud.audAnio}" />
+					</p:column>
+					<p:column headerText="Auditoría" sortBy="#{aud.audNombre}">
+						<h:outputText value="#{aud.audNombre}" />
+					</p:column>
+					<p:column headerText="Tipo Auditoría"
+						sortBy="#{aud.tipoAuditoria.tpaNombre}">
+						<h:outputText value="#{aud.tipoAuditoria.tpaNombre}" />
+					</p:column>
+					<p:column headerText="Fecha Inicio"
+						sortBy="#{aud.audFechaInicioProgramado}">
+						<h:outputText value="#{aud.audFechaInicioProgramado}">
+							<f:convertDateTime pattern="dd-MM-yyyy" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Fecha Inicio"
+						sortBy="#{aud.audFechaFinProgramado}">
+						<h:outputText value="#{aud.audFechaInicioProgramado}">
+							<f:convertDateTime pattern="dd-MM-yyyy" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Fase" filterBy="#{aud.audFase}"
+						filterMatchMode="exact" style="text-align:center; width:15%">
+						<f:facet name="filter">
+							<p:selectOneMenu onchange="PF('wvAuditorias').filter();">
+								<f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}"
+									noSelectionOption="true" />
+								<f:selectItems value="#{audMB.faseAuditoriaList}" />
+							</p:selectOneMenu>
+						</f:facet>
+						<h:outputText value="#{aud.audFase}"
+							converter="faseAuditoriaConverter" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+
+
+		<h:form id="frmNewEditAuditoria">
+			<p:panel
+				rendered="#{audMB.status eq 'NEW' or audMB.status eq 'EDIT'}">
+				<p:commandButton id="btnCancel" action="#{audMB.onCancel}"
+					value="Cancelar" update="@form :frm" process="@this">
+				</p:commandButton>
+				<p:separator />
 				<div class="ui-fluid p-formgrid p-grid">
 					<div class="p-field p-col">
 						<p:outputLabel for="nombre" value="Plan Anual:" />
-						<p:selectOneMenu id="somPlanAnual"
-							value="#{audMB.registro.planAnual}" converter="planAnualConverter">
-							<f:selectItems id="siPlanAnual"
-								itemLabel="#{plan.plaNombre}" itemValue="#{plan}" var="plan" />
+						<p:selectOneMenu id="somPlanSelected"
+							value="#{audMB.planSelected}" converter="planAnualConverter">
+							<f:selectItem itemLabel="Seleccione Tipo de Auditoría"
+								itemValue="#{null}" noSelectionOption="true" />
+							<f:selectItems id="siPlanAuditorias"
+								value="#{audMB.planAnualList}" itemLabel="#{plan.plaNombre}"
+								itemValue="#{plan}" var="plan" />
+						</p:selectOneMenu>
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="nombre" value="Tipo Auditoría" />
+						<p:selectOneMenu id="audTipoAuditoria"
+							converter="tipoAuditoriaConverter"
+							converterMessage="Problemas al guardar tipo de auditoría"
+							value="#{audMB.tipoAuditoriaSelected}">
+							<f:selectItem itemLabel="Seleccione tipo de auditoria"
+								noSelectionOption="true" />
+							<f:selectItems value="#{audMB.tipoAuditoriaList}" var="tpa"
+								itemLabel="#{tpa.tpaNombre}" itemValue="#{tpa}" />
 						</p:selectOneMenu>
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="codigo" value="Código auditoría:" />
 						<p:inputText id="codigo" value="#{audMB.registro.audCodigo}"
-							required="true" maxlength="250" />
+							required="true" maxlength="250"
+							requiredMessage="Debe ingresar código de la auditoría" />
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="anio" value="Año auditoria:" />
-						<p:inputText id="anio" value="#{audMB.registro.audAnio}"
-							required="true" maxlength="250" />
+						<p:inputMask id="anio" value="#{audMB.registro.audAnio}"
+							required="true" placeholder="20XX"
+							requiredMessage="Debe ingresar año de la auditoría" mask="9999" />
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="nombre" value="Nombre auditoría:" />
 						<p:inputText id="nombre" value="#{audMB.registro.audNombre}"
-							required="true" maxlength="250" />
+							required="true" maxlength="250"
+							requiredMessage="Debe ingresar nombre de auditoría" />
 					</div>
 					<div class="p-field p-col">
-						<p:outputLabel for="descripcion" value="Descripción:" />
-						<p:inputTextarea id="descripcion" rows="4" required="true"
-							value="#{audMB.registro.audDescripcion}" maxlength="1000" />
+						<p:outputLabel for="audfechainicio" value="Fecha Inicio" />
+						<p:calendar id="audfechainicio" mask="true"
+							value="#{audMB.registro.audFechaInicioProgramado}"
+							required="true" pattern="dd-MM-yyyy" navigator="true"
+							requiredMessage="Debe ingresar fecha inicio" />
 					</div>
-					<p:commandButton actionListener="#{audMB.onSave}" value="Guardar"
-						oncomplete="PF('wvNewEditAuditoria').hide();" update=":frm" />
-				</div>
-			</h:form>
-		</p:dialog>
+					<div class="p-field p-col">
+						<p:outputLabel for="audfechafin" value="Fecha Fin" />
+						<p:calendar id="audfechafin" mask="true"
+							value="#{audMB.registro.audFechaFinProgramado}" required="true"
+							pattern="dd-MM-yyyy" navigator="true"
+							requiredMessage="Debe ingresar fecha de fin" />
+					</div>
 
+					<p:tabView id="tvAuditoriaNewEdit">
+						<p:tab id="tabDescripcion" title="Descripcion">
+							<pe:ckEditor id="audDescripcion" width="100%"
+								value="#{audMB.registro.audDescripcion}" />
+						</p:tab>
+						<p:tab id="tabAudObjetivos" title="Objetivos">
+							<pe:ckEditor id="audObjetivos" width="100%"
+								value="#{audMB.registro.audObjetivos}" />
+						</p:tab>
+						<p:tab id="tabAudAlcances" title="Alcances">
+							<pe:ckEditor id="audAlcances" width="100%"
+								value="#{audMB.registro.audAlcances}" />
+						</p:tab>
+					</p:tabView>
+					<p:commandButton actionListener="#{audMB.onSave}" value="Guardar"
+						update="@form :frm" />
+				</div>
+			</p:panel>
+		</h:form>
 	</ui:define>
 
 </ui:composition>

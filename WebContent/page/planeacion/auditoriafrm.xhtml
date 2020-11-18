@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<h:form id="frmAuditoria">
+		<p:panel rendered="#{planMB.status eq 'VIEW_AUDITORIAS'}">
+			<h:outputText styleClass="tituloDialog"
+				value="#{audMB.planSelected.plaNombre}" />
+			<p:commandButton id="btnCancel" action="#{planMB.onCancel}"
+				value="Regresar" update="@form :frm :frmNewEditAuditoria"
+				process="@this">
+			</p:commandButton>
+			<p:dataTable id="dtAuditorias" value="#{audMB.listado}"
+				widgetVar="wvAuditorias" reflow="true" var="aud"
+				style="margin-top:20px;" paginator="true" rowKey="#{aud.audId}"
+				filteredValue="#{audMB.filteredAuditorias}" selectionMode="single"
+				selection="#{audMB.regSelected}"
+				globalFilterFunction="#{audMB.globalFilterFunction}"
+				rowsPerPageTemplate="5,10,15,20,25" rows="10"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+				<p:ajax event="rowSelect" listener="#{audMB.onRowSelect}"
+					update="dtAuditorias" />
+				<f:facet name="paginatorTopLeft">
+					<p:commandButton value="Nuevo" update=":frmNewEditAuditoria"
+						icon="pi pi-eye" actionListener="#{audMB.onNew()}" process="@this">
+					</p:commandButton>
+					<p:commandButton id="btnActividades" value="Actividades"
+						rendered="#{audMB.registro.selected}">
+					</p:commandButton>
+					<p:commandButton id="btnAuditPlanificacion" value="Planificación"
+						rendered="#{audMB.registro.selected}">
+					</p:commandButton>
+					<p:commandButton id="btnAuditEjecucion" value="Ejecución"
+						rendered="#{audMB.registro.selected}">
+					</p:commandButton>
+					<p:commandButton id="btnAuditInforme" value="Informe"
+						rendered="#{audMB.registro.selected}">
+					</p:commandButton>
+					<p:commandButton update=":frm" value="Eliminar" icon="pi pi-times"
+						actionListener="#{audMB.onDelete}"
+						rendered="#{audMB.registro.selected}" process="@this">
+						<p:confirm header="Confirmación"
+							message="Seguro(a) que desea eliminar el registros"
+							icon="pi pi-exclamation-triangle" />
+					</p:commandButton>
+				</f:facet>
+				<p:column headerText="N°" sortBy="#{aud.audCorrelativo}" width="">
+					<h:outputText value="#{aud.audCorrelativo}" />
+				</p:column>
+				<p:column headerText="Año" sortBy="#{aud.audAnio}">
+					<h:outputText value="#{aud.audAnio}" />
+				</p:column>
+				<p:column headerText="Auditoría" sortBy="#{aud.audNombre}">
+					<h:outputText value="#{aud.audNombre}" />
+				</p:column>
+				<p:column headerText="Tipo Auditoría"
+					sortBy="#{aud.tipoAuditoria.tpaNombre}">
+					<h:outputText value="#{aud.tipoAuditoria.tpaNombre}" />
+				</p:column>
+				<p:column headerText="Fecha Inicio"
+					sortBy="#{aud.audFechaInicioProgramado}">
+					<h:outputText value="#{aud.audFechaInicioProgramado}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Fecha Fin"
+					sortBy="#{aud.audFechaFinProgramado}">
+					<h:outputText value="#{aud.audFechaFinProgramado}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Fase" filterBy="#{aud.audFase}"
+					filterMatchMode="exact" style="text-align:center; width:15%">
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('wvAuditorias').filter();">
+							<f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}"
+								noSelectionOption="true" />
+							<f:selectItems value="#{audMB.faseAuditoriaList}" />
+						</p:selectOneMenu>
+					</f:facet>
+					<h:outputText value="#{aud.audFase}"
+						converter="faseAuditoriaConverter" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</h:form>
+</ui:composition>

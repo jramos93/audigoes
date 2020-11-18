@@ -4,94 +4,98 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.administracion.Archivo;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 
 import java.util.Date;
 import java.util.Set;
 
-
 /**
  * The persistent class for the procedimiento_planificacion database table.
  * 
  */
 @Entity
-@Table(name="procedimiento_planificacion")
-@NamedQuery(name="ProcedimientoPlanificacion.findAll", query="SELECT p FROM ProcedimientoPlanificacion p")
+@Table(name = "procedimiento_planificacion")
+@NamedQuery(name = "ProcedimientoPlanificacion.findAll", query = "SELECT p FROM ProcedimientoPlanificacion p")
 public class ProcedimientoPlanificacion extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "pro_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "pro_id", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "pro_id")
-	@Column(name="pro_id")
+	@Column(name = "pro_id")
 	private int proId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_crea")
+	@Column(name = "fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_modi")
+	@Column(name = "fec_modi")
 	private Date fecModi;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="pro_fecha_inicio")
+	@Column(name = "pro_fecha_inicio")
 	private Date proFechaInicio;
-	
+
 	@Temporal(TemporalType.DATE)
-	@Column(name="pro_fecha_fin")
+	@Column(name = "pro_fecha_fin")
 	private Date proFechaFin;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="pro_fecha_elaboro")
+	@Column(name = "pro_fecha_elaboro")
 	private Date proFechaElaboro;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="pro_fecha_reviso")
+	@Column(name = "pro_fecha_reviso")
 	private Date proFechaReviso;
 
 	@Lob
-	@Column(name="pro_narrativa")
+	@Column(name = "pro_narrativa")
 	private String proNarrativa;
 
-	@Column(name="pro_nombre")
+	@Column(name = "pro_nombre")
 	private String proNombre;
 
-	@Column(name="pro_referencia")
+	@Column(name = "pro_referencia")
 	private String proReferencia;
 
-	@Column(name="reg_activo")
+	@Column(name = "reg_activo")
 	private int regActivo;
 
-	@Column(name="usu_crea")
+	@Column(name = "usu_crea")
 	private String usuCrea;
 
-	@Column(name="usu_modi")
+	@Column(name = "usu_modi")
 	private String usuModi;
 
-	//bi-directional many-to-one association to CedulaNota
-	@OneToMany(mappedBy="procedimientoPlanificacion", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to CedulaNota
+	@OneToMany(mappedBy = "procedimientoPlanificacion", fetch = FetchType.EAGER)
 	private Set<CedulaNota> cedulaNotas;
 
-	//bi-directional many-to-one association to DocumentosPlanificacion
-	@OneToMany(mappedBy="procedimientoPlanificacion", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to DocumentosPlanificacion
+	@OneToMany(mappedBy = "procedimientoPlanificacion", fetch = FetchType.EAGER)
 	private Set<DocumentosPlanificacion> documentosPlanificacion;
 
-	//bi-directional many-to-one association to ProgramaPlanificacion
+	// bi-directional many-to-one association to ProgramaPlanificacion
 	@ManyToOne
-	@JoinColumn(name="pro_prp_id")
+	@JoinColumn(name = "pro_prp_id")
 	private ProgramaPlanificacion programaPlanificacion;
 
-	//bi-directional many-to-one association to Usuario
+	// bi-directional many-to-one association to Usuario
 	@ManyToOne
-	@JoinColumn(name="pro_usu_id")
+	@JoinColumn(name = "pro_usu_id")
 	private Usuario usuario1;
 
-	//bi-directional many-to-one association to Usuario
+	// bi-directional many-to-one association to Usuario
 	@ManyToOne
-	@JoinColumn(name="pro_usu_usu_id")
+	@JoinColumn(name = "pro_usu_usu_id")
 	private Usuario usuario2;
+
+	// bi-directional many-to-one association to Archivo
+	@OneToMany(mappedBy = "procedimientoPlanificacion", fetch = FetchType.EAGER)
+	private Set<Archivo> archivo;
 
 	public ProcedimientoPlanificacion() {
 	}
@@ -251,7 +255,6 @@ public class ProcedimientoPlanificacion extends SuperEntity implements Serializa
 	public void setUsuario2(Usuario usuario2) {
 		this.usuario2 = usuario2;
 	}
-	
 
 	public Date getProFechaInicio() {
 		return proFechaInicio;
@@ -267,6 +270,28 @@ public class ProcedimientoPlanificacion extends SuperEntity implements Serializa
 
 	public void setProFechaFin(Date proFechaFin) {
 		this.proFechaFin = proFechaFin;
+	}
+	
+	public Set<Archivo> getArchivo() {
+		return this.archivo;
+	}
+
+	public void setArchivo(Set<Archivo> archivo) {
+		this.archivo = archivo;
+	}
+
+	public Archivo addArchivo(Archivo archivo) {
+		getArchivo().add(archivo);
+		archivo.setProcedimientoPlanificacion(this);
+
+		return archivo;
+	}
+
+	public Archivo removeArchivo(Archivo archivo) {
+		getArchivo().remove(archivo);
+		archivo.setProcedimientoPlanificacion(null);
+
+		return archivo;
 	}
 
 	@Override
@@ -294,12 +319,13 @@ public class ProcedimientoPlanificacion extends SuperEntity implements Serializa
 	@Override
 	public String toString() {
 		return "ProcedimientoPlanificacion [proId=" + proId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi
-				+ ", proFecha=" + proFechaInicio + ", proFechaElaboro=" + proFechaElaboro + ", proFechaReviso="
-				+ proFechaReviso + ", proNarrativa=" + proNarrativa + ", proNombre=" + proNombre + ", proReferencia="
-				+ proReferencia + ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi
-				+ ", cedulaNotas=" + cedulaNotas + ", documentosPlanificacion=" + documentosPlanificacion
-				+ ", programaPlanificacion=" + programaPlanificacion + ", usuario1=" + usuario1 + ", usuario2="
-				+ usuario2 + "]";
+				+ ", proFechaInicio=" + proFechaInicio + ", proFechaFin=" + proFechaFin + ", proFechaElaboro="
+				+ proFechaElaboro + ", proFechaReviso=" + proFechaReviso + ", proNarrativa=" + proNarrativa
+				+ ", proNombre=" + proNombre + ", proReferencia=" + proReferencia + ", regActivo=" + regActivo
+				+ ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", cedulaNotas=" + cedulaNotas
+				+ ", documentosPlanificacion=" + documentosPlanificacion + ", programaPlanificacion="
+				+ programaPlanificacion + ", usuario1=" + usuario1 + ", usuario2=" + usuario2 + ", archivo=" + archivo
+				+ "]";
 	}
 
 }

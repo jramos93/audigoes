@@ -29,6 +29,15 @@ img {
 	min-height: 90%;
 	align: center;
 }
+
+.tituloDialog{
+	display: block;
+	font-size: 2em;
+	font-weight: bold;
+	text-align: center;
+	margin: auto;
+}
+
 .informe-icon {
     background-image: url(resources/images/informe.png);
 }

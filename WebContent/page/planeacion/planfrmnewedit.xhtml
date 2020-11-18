@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<h:form id="frmNewEdit">
+		<p:panel
+			rendered="#{planMB.status eq 'NEW' or planMB.status eq 'EDIT'}">
+			<p:commandButton id="btnCancel" action="#{planMB.onCancel}"
+				value="Cancelar" update="@form :frm" process="@this">
+			</p:commandButton>
+			<p:commandButton id="btnGuardarTop" action="#{planMB.onSave}"
+				value="Guardar" update="@form :frm" process="@this @form">
+			</p:commandButton>
+			<div class="ui-fluid p-formgrid p-grid">
+				<div class="p-field p-col">
+					<p:outputLabel for="nombre" value="Nombre del plan" />
+					<p:inputText id="nombre" value="#{planMB.registro.plaNombre}"
+						required="true" maxlength="250"
+						requiredMessage="Debe ingresar nombre del plan" />
+				</div>
+				<div class="p-field p-col">
+					<p:outputLabel for="anio" value="Año" />
+					<p:inputMask id="anio" value="#{planMB.registro.plaAnio}"
+						required="true" maxlength="4" mask="9999" placeholder="20XX"
+						requiredMessage="Debe ingresar año del plan" />
+				</div>
+				<div class="p-field p-col">
+					<p:outputLabel for="fechainicio" value="Fecha Inicio" />
+					<p:calendar id="fechainicio" mask="true"
+						value="#{planMB.registro.plaFechaInicio}" required="true"
+						pattern="dd-MM-yyyy" navigator="true"
+						requiredMessage="Debe ingresar fecha inicio" />
+				</div>
+				<div class="p-field p-col">
+					<p:outputLabel for="fechafin" value="Fecha Fin" />
+					<p:calendar id="fechafin" mask="true"
+						value="#{planMB.registro.plaFechaFin}" required="true"
+						pattern="dd-MM-yyyy" navigator="true"
+						requiredMessage="Debe ingresar fecha de fin" />
+				</div>
+				<div class="p-field p-col" style="margin-top: 25px;">
+					<p:tabView id="tvPlanAnual">
+						<p:tab id="tabPortada" title="Portada">
+							<pe:ckEditor id="planportada" width="100%"
+								value="#{planMB.registro.plaPortada}" />
+						</p:tab>
+						<p:tab id="tabIndice" title="Indice">
+							<pe:ckEditor id="planindice" width="100%"
+								value="#{planMB.registro.plaIndice}" />
+						</p:tab>
+						<p:tab id="tabIntroduccion" title="Intoducción">
+							<pe:ckEditor id="planintroduccion" width="100%"
+								value="#{planMB.registro.plaIntroduccion}" />
+						</p:tab>
+						<p:tab id="tabMision" title="Misión">
+							<pe:ckEditor id="planmision" width="100%"
+								value="#{planMB.registro.plaMision}" />
+						</p:tab>
+						<p:tab id="tabVision" title="Visión">
+							<pe:ckEditor id="planvision" width="100%"
+								value="#{planMB.registro.plaVision}" />
+						</p:tab>
+						<p:tab id="tabPrincipios" title="Principios">
+							<pe:ckEditor id="planprincipios" width="100%"
+								value="#{planMB.registro.plaPrincipiosValores}" />
+						</p:tab>
+						<p:tab id="tabObjetivos" title="Objetivos">
+							<pe:ckEditor id="planobjetivos" width="100%"
+								value="#{planMB.registro.plaObjetivos}" />
+						</p:tab>
+						<p:tab id="tabRiesgos" title="Riesgos">
+							<pe:ckEditor id="planriesgos" width="100%"
+								value="#{planMB.registro.plaRiesgosConsiderados}" />
+						</p:tab>
+						<p:tab id="tabAuditoria" title="Auditorias"
+							rendered="#{planMB.status eq 'EDIT'}">
+							<p:dataTable id="dtAuditorias" value="#{audMB.listado}"
+								widgetVar="wvAuditorias" reflow="true" var="aud"
+								style="margin-top:20px;" paginator="true" rowKey="#{aud.audId}"
+								filteredValue="#{audMB.filteredAuditorias}"
+								selectionMode="single" selection="#{audMB.regSelected}"
+								globalFilterFunction="#{audMB.globalFilterFunction}"
+								rowsPerPageLabel="5,10,15,20,25" rows="10" sortMode="multiple"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+								<p:ajax event="rowSelect" listener="#{audMB.onRowSelect}"
+									update="dtAuditorias" />
+								<p:column headerText="Año" sortBy="#{aud.audAnio}">
+									<h:outputText value="#{aud.audAnio}" />
+								</p:column>
+								<p:column headerText="Auditoría" sortBy="#{aud.audNombre}">
+									<h:outputText value="#{aud.audNombre}" />
+								</p:column>
+								<p:column headerText="Tipo Auditoría"
+									sortBy="#{aud.tipoAuditoria.tpaNombre}">
+									<h:outputText value="#{aud.tipoAuditoria.tpaNombre}" />
+								</p:column>
+								<p:column headerText="Fecha Inicio"
+									sortBy="#{aud.audFechaInicioProgramado}">
+									<h:outputText value="#{aud.audFechaInicioProgramado}">
+										<f:convertDateTime pattern="dd-MM-yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Fecha Inicio"
+									sortBy="#{aud.audFechaFinProgramado}">
+									<h:outputText value="#{aud.audFechaInicioProgramado}">
+										<f:convertDateTime pattern="dd-MM-yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Fase" sortBy="#{aud.audFase}">
+									<h:outputText value="#{aud.audFase}" />
+								</p:column>
+							</p:dataTable>
+						</p:tab>
+						<p:tab title="Anexos" rendered="#{planMB.status eq 'EDIT'}">
+							<p:fileUpload listener="#{planMB.handleFileUpload}"
+								mode="advanced" dragDropSupport="false" update="msg"
+								fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
+						</p:tab>
+					</p:tabView>
+				</div>
+				<p:commandButton id="btnGuardarBottom" action="#{planMB.onSave}"
+					value="Guardar" update="@form :frm" process="@this @form" />
+			</div>
+		</p:panel>
+	</h:form>
+</ui:composition>

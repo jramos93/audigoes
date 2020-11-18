@@ -58,5 +58,6 @@
 		<class>audigoes.ues.edu.sv.entities.administracion.VariablesSistema</class>
 		<class>audigoes.ues.edu.sv.entities.informe.Convocatoria</class>
 		<class>audigoes.ues.edu.sv.entities.informe.CartaGerencia</class>
+		<class>audigoes.ues.edu.sv.entities.administracion.Archivo</class>
 	</persistence-unit>
 </persistence>

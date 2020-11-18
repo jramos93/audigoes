@@ -61,7 +61,7 @@ public class Auditoria extends SuperEntity implements Serializable {
 	
 	@Lob
 	@Column(name="aud_alcances")
-	private String audalcances;
+	private String audAlcances;
 
 	@Column(name="aud_fase")
 	private int audFase;
@@ -192,12 +192,12 @@ public class Auditoria extends SuperEntity implements Serializable {
 		this.audObjetivos = audObjetivos;
 	}
 
-	public String getAudalcances() {
-		return audalcances;
+	public String getAudAlcances() {
+		return audAlcances;
 	}
 
-	public void setAudalcances(String audalcances) {
-		this.audalcances = audalcances;
+	public void setAudAlcances(String audAlcances) {
+		this.audAlcances = audAlcances;
 	}
 
 	public int getAudFase() {
@@ -468,7 +468,7 @@ public class Auditoria extends SuperEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "Auditoria [audId=" + audId + ", audAnio=" + audAnio + ", audCodigo=" + audCodigo + ", audDescripcion="
-				+ audDescripcion + ", audObjetivos=" + audObjetivos + ", audalcances=" + audalcances + ", audFase="
+				+ audDescripcion + ", audObjetivos=" + audObjetivos + ", audAlcances=" + audAlcances + ", audFase="
 				+ audFase + ", audFechaFinProgramado=" + audFechaFinProgramado + ", audFechaFinReal=" + audFechaFinReal
 				+ ", audFechaInicioProgramado=" + audFechaInicioProgramado + ", audFechaInicioReal="
 				+ audFechaInicioReal + ", audNombre=" + audNombre + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi
