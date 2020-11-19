@@ -207,6 +207,15 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	}
 	
 	@Override
+	public boolean beforeDelete() {
+		if(getRegistro().getActividad().size() > 0 ) {
+			addWarn(new FacesMessage(SYSTEM_NAME, "La auditoría ya tiene actividades asignadas, no puede eliminarse"));
+			return false;
+		}
+		return super.beforeDelete();
+	}
+	
+	@Override
 	public void afterDelete() {
 		getListado().remove(getRegistro());
 		super.afterDelete();
