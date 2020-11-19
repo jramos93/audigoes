@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -14,8 +15,12 @@ import javax.faces.context.FacesContext;
 import org.primefaces.component.tabview.TabView;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
+import audigoes.ues.edu.sv.entities.SuperEntity;
 import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
+import audigoes.ues.edu.sv.entities.planificacion.ProgramaPlanificacion;
+import audigoes.ues.edu.sv.mbeans.planeacion.AuditoriaMB;
+import audigoes.ues.edu.sv.mbeans.planeacion.ProcedimientosPlaniMB;
 
 @ManagedBean(name = "informeMB")
 @ViewScoped
@@ -37,6 +42,7 @@ public class InformeMB extends AudigoesController implements Serializable {
 	private ConvocatoriaMB convMB = new ConvocatoriaMB();
 	
 	private Auditoria auditoria;
+	private int versionActual;
 
 	public InformeMB() {
 		super(new Informe());
@@ -47,11 +53,30 @@ public class InformeMB extends AudigoesController implements Serializable {
 		try {
 			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 			setAuditoria((Auditoria) sessionMap.get("auditoria"));
+			System.out.println(getAuditoria().getAudId());
 			super.init();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+	}
+	
+	@Override
+	public void onSave() {
+		if(getRegistro().getInfId() > 0 ) {
+			setStatus("EDIT");
+		} else {
+			setStatus("NEW");
+		}
+		super.onSave();
+	}
+	
+	@Override
+	public boolean beforeSaveNew() {
+		getRegistro().setAuditoria(getAuditoria());
+		getRegistro().setRegActivo(1);
+		getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+		getRegistro().setFecCrea(getToday());
+		return super.beforeSaveNew();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -59,6 +84,19 @@ public class InformeMB extends AudigoesController implements Serializable {
 		try {
 			setListado((List<Informe>) audigoesLocal.findByNamedQuery(Informe.class,"informe.all",
 					new Object[] {}));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	@SuppressWarnings("unchecked")
+	public void fillInforme() {
+		try {
+			setListado((List<Informe>) audigoesLocal.findByNamedQuery(Informe.class,
+					"informe.by.auditoria",
+					new Object[] {getAuditoria().getAudId()}));
+			if(!getListado().isEmpty()) {
+				setRegistro(getListado().get(0));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -87,7 +125,7 @@ public class InformeMB extends AudigoesController implements Serializable {
 	@Override
 	public void afterCancel() {
 		try {
-			TabView tv = (TabView) FacesContext.getCurrentInstance().getViewRoot().findComponent("frmNewEdit:tvInforme");
+			TabView tv = (TabView) FacesContext.getCurrentInstance().getViewRoot().findComponent("frmInforme:tvInforme");
 			tv.setActiveIndex(0);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -97,7 +135,13 @@ public class InformeMB extends AudigoesController implements Serializable {
 	}
 	
 	public void showInforme() {
-		this.onNew();
+		fillInforme();
+		if (getRegistro().getInfId() > 0) {
+			setVersionActual(getRegistro().getInfVersion());
+		}else {
+			setVersionActual(1);
+			getRegistro().setInfVersion(getVersionActual());
+		}
 		setStatus("INFORME");
 	}
 	
@@ -120,12 +164,6 @@ public class InformeMB extends AudigoesController implements Serializable {
 	@Override
 	public List<Informe> getListado() {
 		return (List<Informe>) super.getListado();
-	}
-
-	@Override
-	public void afterSaveNew() {
-		getListado().add(getRegistro());
-		super.afterSaveNew();
 	}
 
 	public List<Informe> getFilteredInformes() {
@@ -166,6 +204,14 @@ public class InformeMB extends AudigoesController implements Serializable {
 
 	public void setAuditoria(Auditoria auditoria) {
 		this.auditoria = auditoria;
+	}
+
+	public int getVersionActual() {
+		return versionActual;
+	}
+
+	public void setVersionActual(int versionActual) {
+		this.versionActual = versionActual;
 	}
 
 }

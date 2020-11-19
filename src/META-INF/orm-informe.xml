@@ -7,6 +7,9 @@
 	<named-query name="informe.all">
 		<query>select o from Informe o</query>
 	</named-query>
+	<named-query name="informe.by.auditoria">
+		<query>select o from Informe o where o.auditoria.audId=?1 and o.regActivo=1</query>
+	</named-query>
 	<named-query name="actaLectura.all">
 		<query>select o from ActaLectura o</query>
 	</named-query>

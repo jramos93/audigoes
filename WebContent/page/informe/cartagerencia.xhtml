@@ -17,6 +17,9 @@
 					 value="Editar Carta"
 					icon="pi pi-plus" update="@form frmCarta">
 				</p:commandButton>
+				<p:commandButton id="btnGuardarTop4" action="#{informeMB.onSave}"
+					value="Generar Carta" update="@form :frm" process="@this @form">
+				</p:commandButton>
 				<div class="ui-fluid p-formgrid p-grid">
 					<div class="p-field p-col" style="margin-top: 25px;">
 						<p:tabView id="tvCarta">
@@ -35,7 +38,7 @@
 						</p:tabView>
 					</div>
 					<p:commandButton id="btnGuardarBottom" action="#{cartaGerenciaMB.onSave}"
-						value="Guardar" update="@form :frm" process="@this @form" />
+						value="Guardar" update="@form :frm" process="@this @frm" />
 				</div>
 			</p:panel>
 		</h:form>

@@ -139,7 +139,7 @@ public class Auditoria extends SuperEntity implements Serializable {
 	
 	//bi-directional many-to-one association to Informe
 		@OneToMany(mappedBy="auditoria")
-		private List<Informe> informe;
+		private Set<Informe> informe;
 
 	public Auditoria() {
 	}
@@ -422,11 +422,11 @@ public class Auditoria extends SuperEntity implements Serializable {
 		return seguimiento;
 	}
 	
-	public List<Informe> getInforme() {
+	public Set<Informe> getInforme() {
 		return this.informe;
 	}
 
-	public void setInforme(List<Informe> informe) {
+	public void setInforme(Set<Informe> informe) {
 		this.informe = informe;
 	}
 	public Informe addInforme(Informe informe) {

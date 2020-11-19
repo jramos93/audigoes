@@ -15,20 +15,24 @@
 		</div>
 		<h:form id="frm">
 			<p:panel rendered="#{informeMB.status eq 'SEARCH'}">
-				<p:commandButton id="btnInforme" action="#{informeMB.showInforme}"
-					update="@form :frmInforme"
-					style="margin-right:500px;font-size: 6em;" icon="informe-icon" title="Nuevo Informe">
-				</p:commandButton>
-				<p:commandButton id="btnActaLectura"
-					action="#{informeMB.showActaLectura}" update="@form :frmConvocatoriaActa"
-					style="margin-right:500px;font-size: 6em;" icon="convocatoria-icon"
-					title="Convocatoria">
-				</p:commandButton>
-				<p:commandButton id="btnCarta" action="#{informeMB.showCarta}"
-					update="@form :frmCarta"
-					style="margin-right:500px;font-size: 6em;" icon="carta-icon" title="Carta Gerencia">
-				</p:commandButton>
-				
+				<p:panelGrid columns="3" columnClasses="ui-g-12 ui-md-4 ui-lg-4"
+					layout="grid" styleClass="ui-panelgrid-blank form-group form-elements"
+					style="margin-top:100px; text-align:center;">
+					<p:commandLink value="" actionListener="#{informeMB.showInforme}" update="@form :frmInforme">
+						<p:graphicImage value="/resources/images/informe.png"
+							style="height:200px;" />
+					</p:commandLink>
+
+					<p:commandLink value="" actionListener="#{informeMB.showActaLectura}" update="@form :frmConvocatoriaActa">
+						<p:graphicImage value="/resources/images/convocatoria.png"
+							style="height:200px;" />
+					</p:commandLink>
+
+					<h:commandLink value="" actionListener="#{informeMB.showCarta}" update="@form :frmCarta">
+						<p:graphicImage value="/resources/images/carta.png"
+							style="height:200px;" />
+					</h:commandLink>
+				</p:panelGrid>
 			</p:panel>
 		</h:form>
 		<h:form id="frmInforme">
@@ -38,6 +42,15 @@
 				</p:commandButton>
 				<p:commandButton id="btnGuardarTop" action="#{informeMB.onSave}"
 					value="Guardar" update="@form :frm" process="@this @form">
+				</p:commandButton>
+				<p:commandButton id="btnEditarInforme" action="#{informeMB.onEdit}"
+					value="Editar Informe" icon="pi pi-plus" update="@form :frm" process="@this @form">
+				</p:commandButton>
+				<p:commandButton id="btnGuardarTop2" action="#{informeMB.onSave}"
+					value="Generar Borrador de Informe" update="@form :frm" process="@this @form">
+				</p:commandButton>
+				<p:commandButton id="btnGuardarTop6" action="#{informeMB.onSave}"
+					value="Generar Informe" update="@form :frm" process="@this @form">
 				</p:commandButton>
 				<div class="ui-fluid p-formgrid p-grid">
 					<div class="p-field p-col">

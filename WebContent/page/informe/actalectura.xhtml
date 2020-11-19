@@ -20,8 +20,11 @@
 								update=":frmConvocatoriaActa :frm" process="@this @form">
 							</p:commandButton>
 							<p:commandButton id="btnEditarConvocatoria"
-								action="#{convocatoriaMB.onEdit}" value="Editar Acta Lectura"
+								action="#{convocatoriaMB.onEdit}" value="Editar Convocatoria"
 								icon="pi pi-plus" update=":frmConvocatoriaActa :frm">
+							</p:commandButton>
+							<p:commandButton id="btnGuardarTop3" action="#{informeMB.onSave}"
+								value="Generar Convocatoria" update="@form :frm" process="@this @form">
 							</p:commandButton>
 
 							<div class="ui-fluid p-formgrid p-grid">
@@ -45,7 +48,7 @@
 
 									<p:commandButton id="btnGuardarBottom"
 										action="#{convocatoriaMB.onSave}" value="Guardar"
-										update="@form :frm" process="@this @form" />
+										update="@form" process="@this frmConvocatoria" />
 								</div>
 							</div>
 						</p:panel>
@@ -66,6 +69,9 @@
 								action="#{actaLecturaMB.onEdit}" value="Editar Acta Lectura"
 								icon="pi pi-plus" update=":frmConvocatoriaActa :frm">
 							</p:commandButton>
+							<p:commandButton id="btnGuardarTop5" action="#{informeMB.onSave}"
+								value="Generar Acta de Lectura" update="@form :frm" process="@this @form">
+							</p:commandButton>
 
 							<div class="ui-fluid p-formgrid p-grid">
 								<div class="p-field p-col" style="margin-top: 25px;">
@@ -83,7 +89,7 @@
 											</p:tabView>
 											<p:commandButton id="btnGuardarBottom1"
 												action="#{actaLecturaMB.onSave}" value="Guardar"
-												update="@form :frm" process="@this @form" />
+												update="@form" process="@this frmActaLectura" />
 										</div>
 									</p:tab>
 								</div>

@@ -4,17 +4,21 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
+import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
 import audigoes.ues.edu.sv.entities.planeacion.TipoAuditoria;
+import audigoes.ues.edu.sv.entities.planificacion.ProgramaPlanificacion;
 
 @ManagedBean(name = "audMB")
 @ViewScoped
@@ -30,6 +34,8 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	private List<TipoAuditoria> tipoAuditoriaList;
 	private TipoAuditoria tipoAuditoriaSelected;
+		
+	private Informe informe;
 	
 	@ManagedProperty(value = "#{pplaMB}")
 	private ProgramaPlanificacionMB pplaMB = new ProgramaPlanificacionMB();
@@ -43,6 +49,17 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		try {
 			super.init();
 			fillListado();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void informeAud(){
+		try {
+			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+			sessionMap.put("auditoria",getRegistro());
+			FacesContext.getCurrentInstance().getExternalContext().redirect("/audigoes/page/informe/informe.xhtml");
+			System.out.println(getRegistro().getAudId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -282,4 +299,12 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		this.pplaMB = pplaMB;
 	}
 
+	public Informe getInforme() {
+		return informe;
+	}
+
+	public void setInforme(Informe informe) {
+		this.informe = informe;
+	}
+	
 }
