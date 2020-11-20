@@ -13,10 +13,6 @@
 		</div>
 		<h:form id="frm">
 			<p:panel rendered="#{audMB.status eq 'SEARCH'}">
-				<p:panelGrid id="pgPlanesAuditoria">
-
-				</p:panelGrid>
-
 				<p:dataTable id="dtAuditorias" value="#{audMB.listado}"
 					widgetVar="wvAuditorias" reflow="true" var="aud"
 					style="margin-top:20px;" paginator="true" rowKey="#{aud.audId}"
@@ -46,13 +42,16 @@
 						<p:commandButton id="btnAuditEjecucion" value="Ejecución"
 							rendered="#{audMB.registro.selected}">
 						</p:commandButton>
-						<p:commandButton id="btnAuditInforme" value="Informe" 
-							actionListener="#{audMB.informeAud()}"  rendered="#{audMB.registro.selected}" ajax="false">
+						<p:commandButton id="btnAuditInforme" value="Informe"
+							actionListener="#{audMB.informeAud()}"
+							rendered="#{audMB.registro.selected}" ajax="false">
 						</p:commandButton>
 						<p:commandButton update=":frm" value="Eliminar"
 							icon="pi pi-delete" actionListener="#{audMB.onDelete}"
 							rendered="#{audMB.registro.selected}" process="@this">
-								<p:confirm header="Confirmación" message="Seguro(a) que desea eliminar el registros" icon="pi pi-exclamation-triangle" />
+							<p:confirm header="Confirmación"
+								message="Seguro(a) que desea eliminar el registros"
+								icon="pi pi-exclamation-triangle" />
 						</p:commandButton>
 					</f:facet>
 					<p:column headerText="N°" sortBy="#{aud.audCorrelativo}" width="">

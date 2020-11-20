@@ -28,6 +28,10 @@
 					<p:commandButton value="Nuevo" update=":frmNewEditAuditoria"
 						icon="pi pi-eye" actionListener="#{audMB.onNew()}" process="@this">
 					</p:commandButton>
+					<p:commandButton id="btnEditarAuditoria" action="#{audMB.onEdit}"
+						rendered="#{audMB.registro.selected}" value="Editar Auditoría"
+						icon="pi pi-plus" update="@form :frmNewEditAuditoria">
+					</p:commandButton>
 					<p:commandButton id="btnActividades" value="Actividades"
 						rendered="#{audMB.registro.selected}">
 					</p:commandButton>
