@@ -17,10 +17,16 @@ public class FaseAuditoriaConverter implements Converter {
 	public String getAsString(FacesContext arg0, UIComponent arg1, Object value) {
 		String valor = value.toString();
 		if (!valor.isEmpty()) {
-			if (valor.equals("1")) {
-				valor = "ACTIVO";
-			} else if (valor.equals("0")) {
-				valor = "INACTIVO";
+			if (valor.equals("0")) {
+				valor = "PROGRAMADA";
+			} else if (valor.equals("1")) {
+				valor = "FASE PLANIFICACIÓN";
+			} else if (valor.equals("2")) {
+				valor = "FASE EJECUCIÓN";
+			} else if (valor.equals("3")) {
+				valor = "FASE INFORME";
+			} else if (valor.equals("4")) {
+				valor = "FASE SEGUIMIENTO";
 			} else {
 				valor = "---";
 			}

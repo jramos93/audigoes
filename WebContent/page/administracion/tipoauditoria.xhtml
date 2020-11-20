@@ -7,19 +7,22 @@
 	<ui:define name="title">Audigoes</ui:define>
 
 	<ui:define name="content">
-	<div class="name" align="center">
-		<span class="app-name">Gestion de Tipos de Auditorias</span>
-	</div>
+		<div class="name" align="center">
+			<span class="app-name">Gestion de Tipos de Auditorias</span>
+		</div>
 		<h:form id="frm">
-			<p:dataTable var="tpa" value="#{tpaMB.listado}" widgetVar="wvTiposAuditorias"
-				reflow="true" id="dtTiposAuditorias" style="margin-top:20px;" paginator="true"
-				filteredValue="#{tpaMB.filteredTiposAuditoria}" selection="#{tpaMB.regSelected}"
-				selectionMode="single" rowKey="#{tpa.tpaId}"
+			<p:dataTable var="tpa" value="#{tpaMB.listado}"
+				widgetVar="wvTiposAuditorias" reflow="true" id="dtTiposAuditorias"
+				style="margin-top:20px;" paginator="true"
+				filteredValue="#{tpaMB.filteredTiposAuditoria}"
+				selection="#{tpaMB.regSelected}" selectionMode="single"
+				rowKey="#{tpa.tpaId}"
 				globalFilterFunction="#{tpaMB.globalFilterFunction}"
 				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
-				<p:ajax event="rowSelect" listener="#{tpaMB.onRowSelect}" update="dtTiposAuditorias" />
+				<p:ajax event="rowSelect" listener="#{tpaMB.onRowSelect}"
+					update="dtTiposAuditorias" />
 
 				<f:facet name="paginatorTopLeft">
 					<p:commandButton value="Agregar" icon="pi pi-plus"
@@ -28,19 +31,24 @@
 					</p:commandButton>
 					<p:commandButton update=":frmTpaNewEdit" value="Editar"
 						oncomplete="PF('wvTpaNewEdit').show()" icon="pi pi-pencil"
-						actionListener="#{tpaMB.onEdit}" rendered="#{tpaMB.registro.selected}">
+						actionListener="#{tpaMB.onEdit}"
+						rendered="#{tpaMB.registro.selected}">
 					</p:commandButton>
-					<p:commandButton update=":frm" value="Eliminar"
-						icon="pi pi-delete"
-						actionListener="#{tpaMB.onDelete}" rendered="#{tpaMB.registro.selected}">
+					<p:commandButton update=":frm" value="Eliminar" icon="pi pi-delete"
+						actionListener="#{tpaMB.onDelete}"
+						rendered="#{tpaMB.registro.selected}">
+						<p:confirm header="Confirmación"
+							message="Seguro(a) que desea eliminar el tipo de auditoría seleccionado?"
+							icon="pi pi-exclamation-triangle" />
 					</p:commandButton>
 				</f:facet>
 
 				<f:facet name="paginatorTopRight">
 					<p:outputPanel>
 						<h:outputText value="Búsqueda global: " />
-						<p:inputText id="globalFilter" onkeyup="PF('wvTiposAuditorias').filter();"
-							style="width:150px" placeholder="Ingresa una palabra" />
+						<p:inputText id="globalFilter"
+							onkeyup="PF('wvTiposAuditorias').filter();" style="width:150px"
+							placeholder="Ingresa una palabra" />
 					</p:outputPanel>
 				</f:facet>
 
@@ -72,7 +80,8 @@
 		</h:form>
 
 		<p:dialog widgetVar="wvTpaNewEdit" responsive="true" width="500"
-			closeOnEscape="true" header="Gestión de Tipos de Auditoria" modal="true">
+			closeOnEscape="true" header="Gestión de Tipos de Auditoria"
+			modal="true">
 			<h:form id="frmTpaNewEdit">
 				<div class="ui-fluid p-formgrid p-grid">
 					<div class="p-field p-col">
@@ -81,7 +90,8 @@
 							required="true" maxlength="250" />
 					</div>
 					<div class="p-field p-col">
-						<p:outputLabel for="descripcion" value="Descripción del tipo de auditoria:" />
+						<p:outputLabel for="descripcion"
+							value="Descripción del tipo de auditoria:" />
 						<p:inputTextarea id="descripcion" rows="4" required="true"
 							value="#{tpaMB.registro.tpaDescripcion}" maxlength="1000" />
 					</div>
@@ -95,7 +105,8 @@
 					</div>
 
 					<p:commandButton actionListener="#{tpaMB.onSave}" value="Guardar"
-						oncomplete="PF('wvTpaNewEdit').hide();" update=":frm:dtTiposAuditorias"></p:commandButton>
+						oncomplete="PF('wvTpaNewEdit').hide();"
+						update=":frm:dtTiposAuditorias"></p:commandButton>
 				</div>
 			</h:form>
 		</p:dialog>

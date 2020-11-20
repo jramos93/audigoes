@@ -104,6 +104,10 @@ public class Institucion extends SuperEntity implements Serializable {
 	@OneToMany(mappedBy = "institucion")
 	private List<TipoAuditoria> tipoAuditoria;
 
+	// bi-directional many-to-one association to Rol
+	@OneToMany(mappedBy = "institucion")
+	private Set<Rol> rol;
+
 	public Institucion() {
 	}
 
@@ -342,7 +346,7 @@ public class Institucion extends SuperEntity implements Serializable {
 
 		return planAnual;
 	}
-	
+
 	public List<TipoAuditoria> getTipoAuditoria() {
 		return this.tipoAuditoria;
 	}
@@ -350,7 +354,7 @@ public class Institucion extends SuperEntity implements Serializable {
 	public void setTipoAuditoria(List<TipoAuditoria> tipoAuditoria) {
 		this.tipoAuditoria = tipoAuditoria;
 	}
-	
+
 	public TipoAuditoria addTipoAuditoria(TipoAuditoria tipoAuditoria) {
 		getTipoAuditoria().add(tipoAuditoria);
 		tipoAuditoria.setInstitucion(this);
@@ -363,6 +367,28 @@ public class Institucion extends SuperEntity implements Serializable {
 		tipoAuditoria.setInstitucion(null);
 
 		return tipoAuditoria;
+	}
+	
+	public Set<Rol> getRol() {
+		return this.rol;
+	}
+
+	public void setRol(Set<Rol> rol) {
+		this.rol = rol;
+	}
+
+	public Rol addRol(Rol rol) {
+		getRol().add(rol);
+		rol.setInstitucion(this);
+
+		return rol;
+	}
+
+	public Rol removeRol(Rol rol) {
+		getRol().remove(rol);
+		rol.setInstitucion(null);
+
+		return rol;
 	}
 
 	@Override
@@ -394,7 +420,8 @@ public class Institucion extends SuperEntity implements Serializable {
 				+ ", insNombre=" + insNombre + ", insSlogan=" + insSlogan + ", insTelefono=" + insTelefono
 				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", configuracion="
 				+ configuracion + ", marca=" + marca + ", normativaCedula=" + normativaCedula + ", unidad=" + unidad
-				+ ", usuario=" + usuario + ", planAnual=" + planAnual + ", tipoAuditoria=" + tipoAuditoria + "]";
+				+ ", usuario=" + usuario + ", planAnual=" + planAnual + ", tipoAuditoria=" + tipoAuditoria + ", rol="
+				+ rol + "]";
 	}
 
 }

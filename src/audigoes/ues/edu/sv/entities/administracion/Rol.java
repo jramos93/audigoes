@@ -8,56 +8,60 @@ import audigoes.ues.edu.sv.entities.SuperEntity;
 import java.util.Date;
 import java.util.Set;
 
-
 /**
  * The persistent class for the rol database table.
  * 
  */
 @Entity
-@NamedQuery(name="Rol.findAll", query="SELECT r FROM Rol r")
+@NamedQuery(name = "Rol.findAll", query = "SELECT r FROM Rol r")
 public class Rol extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "rol_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "rol_id", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "rol_id")
-	@Column(name="rol_id")
+	@Column(name = "rol_id")
 	private int rolId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_crea")
+	@Column(name = "fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_modi")
+	@Column(name = "fec_modi")
 	private Date fecModi;
 
-	@Column(name="reg_activo")
+	@Column(name = "reg_activo")
 	private int regActivo;
 
-	@Column(name="rol_descripcion")
+	@Column(name = "rol_descripcion")
 	private String rolDescripcion;
 
-	@Column(name="rol_nombre")
+	@Column(name = "rol_nombre")
 	private String rolNombre;
 
-	@Column(name="usu_crea")
+	@Column(name = "usu_crea")
 	private String usuCrea;
 
-	@Column(name="usu_modi")
+	@Column(name = "usu_modi")
 	private String usuModi;
 
-	//bi-directional many-to-one association to RolMenu
-	@OneToMany(mappedBy="rol", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to RolMenu
+	@OneToMany(mappedBy = "rol", fetch = FetchType.EAGER)
 	private Set<RolMenu> rolMenu;
 
-	//bi-directional many-to-one association to RolPermiso
-	@OneToMany(mappedBy="rol", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to RolPermiso
+	@OneToMany(mappedBy = "rol", fetch = FetchType.EAGER)
 	private Set<RolPermiso> rolPermiso;
 
-	//bi-directional many-to-one association to UsuarioPermiso
-	@OneToMany(mappedBy="rol", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to UsuarioPermiso
+	@OneToMany(mappedBy = "rol", fetch = FetchType.EAGER)
 	private Set<UsuarioPermiso> usuarioPermiso;
+
+	// bi-directional many-to-one association to Institucion
+	@ManyToOne
+	@JoinColumn(name = "rol_ins_id")
+	private Institucion institucion;
 
 	public Rol() {
 	}
@@ -192,6 +196,14 @@ public class Rol extends SuperEntity implements Serializable {
 		return usuarioPermiso;
 	}
 
+	public Institucion getInstitucion() {
+		return this.institucion;
+	}
+
+	public void setInstitucion(Institucion institucion) {
+		this.institucion = institucion;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -217,9 +229,9 @@ public class Rol extends SuperEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "Rol [rolId=" + rolId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo=" + regActivo
-				+ ", rolDescripcion=" + rolDescripcion + ", rolNombre=" + rolNombre
-				+ ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", rolMenu=" + rolMenu + ", rolPermiso="
-				+ rolPermiso + ", usuarioPermiso=" + usuarioPermiso + "]";
+				+ ", rolDescripcion=" + rolDescripcion + ", rolNombre=" + rolNombre + ", usuCrea=" + usuCrea
+				+ ", usuModi=" + usuModi + ", rolMenu=" + rolMenu + ", rolPermiso=" + rolPermiso + ", usuarioPermiso="
+				+ usuarioPermiso + ", institucion=" + institucion + "]";
 	}
 
 }

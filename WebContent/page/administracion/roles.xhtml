@@ -22,10 +22,26 @@
 				<p:ajax event="rowSelect" listener="#{rolMB.onRowSelect}"
 					update="dtRoles" />
 				<f:facet name="paginatorTopLeft">
+					<p:commandButton id="bntNuevoRol" value="Nuevo Rol"
+						actionListener="#{rolMB.onNew}" icon="pi pi-plus"
+						oncomplete="PF('wvNewEditRol').show();" update=":dgNewEditRol">
+					</p:commandButton>
+					<p:commandButton id="bntEditarRol" value="Editar Rol"
+						actionListener="#{rolMB.onEdit}" icon="pi pi-plus"
+						oncomplete="PF('wvNewEditRol').show();" update=":dgNewEditRol"
+						rendered="#{rolMB.registro.selected}">
+					</p:commandButton>
 					<p:commandButton update=":frmRolNewEdit" value="Permisos"
 						oncomplete="PF('wvRolNewEdit').show()" icon="pi pi-eye"
 						actionListener="#{rolMB.fillPermisos}"
 						rendered="#{rolMB.registro.selected}">
+					</p:commandButton>
+					<p:commandButton id="btnEliminar" value="Eliminar"
+						actionListener="#{rolMB.onDelete}" update="@form"
+						rendered="#{rolMB.registro.selected}">
+						<p:confirm header="Confirmación"
+							message="Seguro(a) que desea eliminar el rol seleccionado?"
+							icon="pi pi-exclamation-triangle" />
 					</p:commandButton>
 				</f:facet>
 				<f:facet name="paginatorTopRight">
@@ -66,7 +82,6 @@
 		<p:dialog id="dgRolNewEdit" widgetVar="wvRolNewEdit" responsive="true"
 			width="600" closeOnEscape="true" header="Permisos Asignados"
 			modal="true">
-
 			<h:form id="frmRolNewEdit">
 				<div class="name" align="center">
 					<span class="app-name">Permisos asignados a rol
@@ -110,11 +125,42 @@
 					filterMatchMode="contains" converter="permisoConverter">
 					<f:facet name="sourceCaption"> Disponibles</f:facet>
 					<f:facet name="targetCaption"> Asignados</f:facet>
-					<p:ajax event="transfer" listener="#{rlpMB.asignarPermiso}" update=":frmRolNewEdit" />
+					<p:ajax event="transfer" listener="#{rlpMB.asignarPermiso}"
+						update=":frmRolNewEdit" />
 					<p:column style="text-align:left">
 						<h:outputText value="#{permiso.perNombre}" />
 					</p:column>
 				</p:pickList>
+			</h:form>
+		</p:dialog>
+		
+		<p:dialog id="dgNewEditRol" widgetVar="wvNewEditRol" responsive="true"
+			width="600" closeOnEscape="true"
+			header="#{rolMB.status eq 'NEW' ? 'Nuevo Rol' : 'Editar Rol'}"
+			modal="true">
+			<h:form id="frmNewEditRol">
+				<div class="ui-fluid p-formgrid p-grid">
+					<div class="p-field p-col">
+						<p:outputLabel for="nombre" value="Nombre rol:" />
+						<p:inputText id="nombre" value="#{rolMB.registro.rolNombre}"
+							required="true" maxlength="250" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="roldescripcion" value="Nombre rol:" />
+						<p:inputTextarea id="roldescripcion"
+							value="#{rolMB.registro.rolDescripcion}" required="true"
+							maxlength="1000" rows="4" />
+					</div>
+					<div class="p-field-radiobutton">
+						<p:outputLabel for="estado" value="Estado:" />
+						<p:selectOneRadio id="estado" value="#{rolMB.registro.regActivo}"
+							required="true" disabled="#{rolMB.status=='NEW'}">
+							<f:selectItems value="#{rolMB.regActivoList}"></f:selectItems>
+						</p:selectOneRadio>
+					</div>
+					<p:commandButton actionListener="#{rolMB.onSave}" value="Guardar"
+						oncomplete="PF('wvNewEditRol').hide();" update="@form :frm" />
+				</div>
 			</h:form>
 		</p:dialog>
 	</ui:define>
