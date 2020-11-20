@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -92,6 +93,15 @@ public class RolMB extends AudigoesController implements Serializable {
 	public void afterSaveNew() {
 		getListado().add(getRegistro());
 		super.afterSaveNew();
+	}
+	
+	@Override
+	public boolean beforeDelete() {
+		if(getRegistro().getRolPermiso().size() > 0 ) {
+			addWarn(new FacesMessage(SYSTEM_NAME, "El rol tiene permisos asignados, no puede ser eliminado"));
+			return false;
+		}
+		return super.beforeDelete();
 	}
 
 	public List<Rol> getFilteredRoles() {

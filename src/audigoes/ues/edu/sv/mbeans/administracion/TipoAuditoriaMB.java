@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -96,6 +97,15 @@ public class TipoAuditoriaMB extends AudigoesController implements Serializable 
 		getListado().add(getRegistro());
 		super.afterSaveNew();
 	}
+	@Override
+	public boolean beforeDelete() {
+		if(getRegistro().getAuditoria().size() > 0) {
+			addWarn(new FacesMessage(SYSTEM_NAME, "Tipo de auditoría seleccinada ya tiene auditorías asignadas. No puede ser elimanada"));
+			return false;
+		}
+		return super.beforeDelete();
+	}
+	
 	@Override
 	public void afterDelete() {
 		getListado().remove(getRegistro());
