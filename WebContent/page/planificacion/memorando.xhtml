@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<h:form id="frmMemo">
+		<p:panel
+			rendered="#{audMB.status eq 'SEARCH' and memoMB.status ne 'SEARCH'}">
+			<div align="left" style="margin-top: 50px;">
+				<p:commandButton id="btnCancel" action="#{memoMB.onCancel}"
+					value="Regresar" icon="pi pi-arrow-left" style="float:left;"
+					update=":frmPlanificacion, :frmMemo">
+				</p:commandButton>
+			</div>
+			<div class="name" align="center" style="margin-top: 100px;">
+				<span class="app-name">Memorando de Planificación </span>
+			</div>
+
+
+			<div class="ui-fluid p-formgrid p-grid">
+				<p:tabView>
+					<p:tab title="Encabezado del Memorando">
+						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+							styleClass="ui-panelgrid-blank form-group form-elements">
+							<pe:ckEditor id="indice" width="100%"
+								value="#{memoMB.registro.memIndice}" />
+						</p:panelGrid>
+					</p:tab>
+					<p:tab title="Contenido del Memorando">
+						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+							styleClass="ui-panelgrid-blank form-group form-elements">
+							<pe:ckEditor id="contenido" width="100%"
+								value="#{memoMB.registro.memContenido}" />
+						</p:panelGrid>
+					</p:tab>
+					<p:tab title="Papeles de Trabajo"></p:tab>
+				</p:tabView>
+				<p:panelGrid columns="2"
+					columnClasses="ui-g-9 ui-lg-10,ui-g-3 ui-md-4 ui-lg-2"
+					layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+					<p:column></p:column>
+					<p:commandButton id="btn" value="Guardar" icon="fa fa-check"
+						actionListener="#{memoMB.onSave}" update=":frmMemo" />
+				</p:panelGrid>
+			</div>
+
+
+		</p:panel>
+	</h:form>
+
+</ui:composition>

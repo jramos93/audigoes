@@ -13,12 +13,15 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import org.primefaces.PrimeFaces;
+
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
 import audigoes.ues.edu.sv.entities.planeacion.TipoAuditoria;
-import audigoes.ues.edu.sv.entities.planificacion.ProgramaPlanificacion;
+import audigoes.ues.edu.sv.mbean.planificacion.MemoPlanificacionMB;
+import audigoes.ues.edu.sv.mbean.planificacion.ProgramaPlanificacionMB;
 
 @ManagedBean(name = "audMB")
 @ViewScoped
@@ -34,11 +37,14 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	private List<TipoAuditoria> tipoAuditoriaList;
 	private TipoAuditoria tipoAuditoriaSelected;
-		
+	
 	private Informe informe;
 	
 	@ManagedProperty(value = "#{pplaMB}")
 	private ProgramaPlanificacionMB pplaMB = new ProgramaPlanificacionMB();
+	
+	@ManagedProperty(value = "#{memoMB}")
+	private MemoPlanificacionMB memoMB = new MemoPlanificacionMB();
 
 	public AuditoriaMB() {
 		super(new Auditoria());
@@ -53,7 +59,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public void informeAud(){
 		try {
 			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
@@ -79,6 +85,11 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	public void onPrograma() {
 		pplaMB.fillPrograma();
 		pplaMB.onEdit();
+	}
+	
+	public void onMemo() {
+		memoMB.fillMemo();
+		memoMB.onEdit();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -215,6 +226,15 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		}
 
 	}
+	
+	public void planificacion() {
+		try {
+			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+			sessionMap.put("auditoria", getRegistro());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void afterSaveNew() {
@@ -299,12 +319,12 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		this.pplaMB = pplaMB;
 	}
 
-	public Informe getInforme() {
-		return informe;
+	public MemoPlanificacionMB getMemoMB() {
+		return memoMB;
 	}
 
-	public void setInforme(Informe informe) {
-		this.informe = informe;
+	public void setMemoMB(MemoPlanificacionMB memoMB) {
+		this.memoMB = memoMB;
 	}
-	
+
 }

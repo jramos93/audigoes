@@ -1,36 +1,36 @@
-package audigoes.ues.edu.sv.mbeans.planeacion;
+package audigoes.ues.edu.sv.mbean.planificacion;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
+import audigoes.ues.edu.sv.entities.planificacion.Memorando;
 import audigoes.ues.edu.sv.entities.planificacion.ProgramaPlanificacion;
 import audigoes.ues.edu.sv.mbeans.administracion.UsuarioPermisoMB;
 
-@ManagedBean(name = "pplaMB")
+@ManagedBean(name = "memoMB")
 @ViewScoped
-public class ProgramaPlanificacionMB extends AudigoesController implements Serializable {
+public class MemoPlanificacionMB extends AudigoesController implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private List<ProgramaPlanificacion> filteredPrograma;
+	private List<Memorando> filteredMemo;
 	private Auditoria auditoria;
-	
-	@ManagedProperty(value = "#{proplaMB}")
-	private ProcedimientosPlaniMB proplaMB = new ProcedimientosPlaniMB();
 
-	public ProgramaPlanificacionMB() {
-		super(new ProgramaPlanificacion());
+	public MemoPlanificacionMB() {
+		super(new Memorando());
 	}
 
 	@PostConstruct
@@ -45,23 +45,30 @@ public class ProgramaPlanificacionMB extends AudigoesController implements Seria
 
 
 	@SuppressWarnings("unchecked")
-	public void fillPrograma() {
+	public void fillMemo() {
 		try {
 //			setListado((List<ProgramaPlanificacion>) audigoesLocal.findByNamedQuery(ProgramaPlanificacion.class,
 //					"programa.by.auditoria",
 //					new Object[] { auditoria.getAudId() }));
-			setListado((List<ProgramaPlanificacion>) audigoesLocal.findByNamedQuery(ProgramaPlanificacion.class,
-					"programa.by.auditoria",
-					new Object[] { 1 }));
+			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+			setAuditoria(((Auditoria) sessionMap.get("auditoria")));
+			System.out.println("auditoria "+auditoria.getAudId());
+			setListado((List<Memorando>) audigoesLocal.findByNamedQuery(Memorando.class,
+					"memo.by.auditoria",
+					new Object[] { auditoria.getAudId() }));
 			if(!getListado().isEmpty()) {
 				setRegistro(getListado().get(0));
-				proplaMB.setPrograma(getRegistro());
-				proplaMB.fillProcedimientos();
+				
 			} else {
-				addWarn(new FacesMessage("Advertencia", "Auditoria No cuenta con Programa de Planificación"));
+				getRegistro().setAuditoria(auditoria);
+				getRegistro().setFecCrea(getToday());
+				getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+				getRegistro().setRegActivo(1);
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			addWarn(new FacesMessage("Advertencia", "Auditoria No cuenta con Programa de Planificación"));
 		}
 	}
 	
@@ -79,8 +86,8 @@ public class ProgramaPlanificacionMB extends AudigoesController implements Seria
 			return true;
 		}
 
-		ProgramaPlanificacion programa = (ProgramaPlanificacion) value;
-		return programa.getPrpObjE().toLowerCase().contains(filterText);
+		Memorando memo = (Memorando) value;
+		return memo.getMemNombre().toLowerCase().contains(filterText);
 	}
 	
 	@Override
@@ -96,14 +103,14 @@ public class ProgramaPlanificacionMB extends AudigoesController implements Seria
 	/* GETS y SETS */
 
 	@Override
-	public ProgramaPlanificacion getRegistro() {
-		return (ProgramaPlanificacion) super.getRegistro();
+	public Memorando getRegistro() {
+		return (Memorando) super.getRegistro();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ProgramaPlanificacion> getListado() {
-		return (List<ProgramaPlanificacion>) super.getListado();
+	public List<Memorando> getListado() {
+		return (List<Memorando>) super.getListado();
 	}
 	
 	@Override
@@ -117,15 +124,7 @@ public class ProgramaPlanificacionMB extends AudigoesController implements Seria
 		//getListado().add(getRegistro());
 		super.afterSaveNew();
 	}
-
-	public List<ProgramaPlanificacion> getFilteredPrograma() {
-		return filteredPrograma;
-	}
-
-	public void setFilteredPrograma(List<ProgramaPlanificacion> filteredPrograma) {
-		this.filteredPrograma = filteredPrograma;
-	}
-
+	
 	public Auditoria getAuditoria() {
 		return auditoria;
 	}
@@ -134,14 +133,11 @@ public class ProgramaPlanificacionMB extends AudigoesController implements Seria
 		this.auditoria = auditoria;
 	}
 
-	public ProcedimientosPlaniMB getProplaMB() {
-		return proplaMB;
+	public List<Memorando> getFilteredMemo() {
+		return filteredMemo;
 	}
 
-	public void setProplaMB(ProcedimientosPlaniMB proplaMB) {
-		this.proplaMB = proplaMB;
+	public void setFilteredMemo(List<Memorando> filteredMemo) {
+		this.filteredMemo = filteredMemo;
 	}
-
-	
-	
 }

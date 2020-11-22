@@ -1,4 +1,4 @@
-package audigoes.ues.edu.sv.mbeans.planeacion;
+package audigoes.ues.edu.sv.mbean.planificacion;
 
 import java.io.Serializable;
 import java.util.List;
@@ -46,7 +46,7 @@ public class ProcedimientosPlaniMB extends AudigoesController implements Seriali
 		try {
 			setListado((List<ProcedimientoPlanificacion>) audigoesLocal.findByNamedQuery(ProcedimientoPlanificacion.class,
 					"procedimientos.planificacion.by.programa",
-					new Object[] { 1 }));
+					new Object[] { programa.getPrpId() }));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

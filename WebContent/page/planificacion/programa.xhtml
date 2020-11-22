@@ -8,7 +8,7 @@
 	<h:form id="frmPrograma">
 		<p:panel rendered="#{audMB.status eq 'SEARCH' and pplaMB.status ne 'SEARCH' and proplaMB.status eq 'SEARCH'}">
 			<div align="left" style="margin-top: 50px;">
-				<p:commandButton id="btnCancel" action="#{pplaMB.onCancel}"
+				<p:commandButton id="btnCancel" action="#{pplaMB.onCancel}" process="@this"
 					value="Regresar" icon="pi pi-arrow-left" style="float:left;"
 					update=":frmPlanificacion, :frmPrograma" >
 				</p:commandButton>
