@@ -5,6 +5,7 @@ import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
+import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planificacion.Actividad;
 
 import java.util.Date;
@@ -36,12 +37,16 @@ public class ProgramaEjecucion extends SuperEntity implements Serializable {
 	private Date fecModi;
 
 	@Lob
-	@Column(name="pre_encabezado")
-	private String preEncabezado;
+	@Column(name="pre_narrativa")
+	private String preNarrativa;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="pre_fecha")
-	private Date preFecha;
+	@Column(name="pre_fecha_inicio")
+	private Date preFechaInicio;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name="pre_fecha_fin")
+	private Date preFechaFin;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="pre_fecha_elaboro")
@@ -67,6 +72,12 @@ public class ProgramaEjecucion extends SuperEntity implements Serializable {
 
 	@Column(name="usu_modi")
 	private String usuModi;
+	
+	@Column(name="pre_nombre")
+	private String preNombre;
+	
+	@Column(name="pre_referencia")
+	private String preReferencia;
 
 	//bi-directional many-to-one association to ProcedimientoEjecucion
 	@OneToMany(mappedBy="programaEjecucion", fetch=FetchType.EAGER)
@@ -86,6 +97,11 @@ public class ProgramaEjecucion extends SuperEntity implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="pre_usu_usu_id")
 	private Usuario usuario2;
+	
+	// bi-directional many-to-one association to Auditoria
+	@ManyToOne
+	@JoinColumn(name = "pre_aud_id")
+	private Auditoria auditoria;
 
 	public ProgramaEjecucion() {
 	}
@@ -114,20 +130,44 @@ public class ProgramaEjecucion extends SuperEntity implements Serializable {
 		this.fecModi = fecModi;
 	}
 
-	public String getPreEncabezado() {
-		return this.preEncabezado;
+	public String getPreNarrativa() {
+		return preNarrativa;
 	}
 
-	public void setPreEncabezado(String preEncabezado) {
-		this.preEncabezado = preEncabezado;
+	public void setPreNarrativa(String preNarrativa) {
+		this.preNarrativa = preNarrativa;
 	}
 
-	public Date getPreFecha() {
-		return this.preFecha;
+	public Date getPreFechaInicio() {
+		return preFechaInicio;
 	}
 
-	public void setPreFecha(Date preFecha) {
-		this.preFecha = preFecha;
+	public void setPreFechaInicio(Date preFechaInicio) {
+		this.preFechaInicio = preFechaInicio;
+	}
+
+	public Date getPreFechaFin() {
+		return preFechaFin;
+	}
+
+	public void setPreFechaFin(Date preFechaFin) {
+		this.preFechaFin = preFechaFin;
+	}
+
+	public String getPreNombre() {
+		return preNombre;
+	}
+
+	public void setPreNombre(String preNombre) {
+		this.preNombre = preNombre;
+	}
+
+	public String getPreReferencia() {
+		return preReferencia;
+	}
+
+	public void setPreReferencia(String preReferencia) {
+		this.preReferencia = preReferencia;
 	}
 
 	public Date getPreFechaElaboro() {
@@ -232,6 +272,14 @@ public class ProgramaEjecucion extends SuperEntity implements Serializable {
 		this.usuario2 = usuario2;
 	}
 
+	public Auditoria getAuditoria() {
+		return auditoria;
+	}
+
+	public void setAuditoria(Auditoria auditoria) {
+		this.auditoria = auditoria;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -257,7 +305,7 @@ public class ProgramaEjecucion extends SuperEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "ProgramaEjecucion [preId=" + preId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi
-				+ ", preEncabezado=" + preEncabezado + ", preFecha=" + preFecha + ", preFechaElaboro=" + preFechaElaboro
+				+ ", preEncabezado=" + preNarrativa + ", preFecha=" + preFechaInicio + ", preFechaElaboro=" + preFechaElaboro
 				+ ", preFechaReviso=" + preFechaReviso + ", preObjE=" + preObjE + ", preObjG=" + preObjG
 				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi
 				+ ", procedimientoEjecucion=" + procedimientoEjecucion + ", actividad=" + actividad + ", usuario1="

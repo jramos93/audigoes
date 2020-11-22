@@ -12,6 +12,10 @@
 		<query>select o from ProgramaPlanificacion o where o.auditoria.audId=?1 and o.regActivo=1</query>
 	</named-query>
 	
+	<named-query name="programa.ejecucion.by.auditoria">
+		<query>select o from ProgramaEjecucion o where o.auditoria.audId=?1 and o.regActivo=1</query>
+	</named-query>
+	
 	<named-query name="procedimientos.planificacion.by.programa">
 		<query>select o from ProcedimientoPlanificacion o where o.programaPlanificacion.prpId=?1 and o.regActivo=1</query>
 	</named-query>

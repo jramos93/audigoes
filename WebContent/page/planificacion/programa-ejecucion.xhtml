@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<h:form id="frmProgramaEje">
+		<p:panel rendered="#{audMB.status eq 'SEARCH' and pejeMB.status ne 'SEARCH'}">
+			<div align="left" style="margin-top: 50px;">
+				<p:commandButton id="btnCancel" action="#{pejeMB.onCancel}" process="@this"
+					value="Regresar" icon="pi pi-arrow-left" style="float:left;"
+					update=":frmPlanificacion, :frmProgramaEje" >
+				</p:commandButton>
+			</div>
+			<div class="name" align="center" style="margin-top: 100px;">
+				<span class="app-name">Programa de Planificación </span>
+			</div>
+
+
+			<div class="ui-fluid p-formgrid p-grid">
+				<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+
+					<p:outputLabel for="objg" value="Objetivo General:"
+						style="font-weight:bold;" />
+					<p:inputTextarea id="objg" value="#{pejeMB.registro.preObjG}"
+						rows="4" required="true" maxlength="250" />
+
+					<p:outputLabel for="obje" value="Objetivos Especificos:"
+						style="font-weight:bold;" />
+					<p:inputTextarea id="obje" value="#{pejeMB.registro.preObjE}"
+						rows="4" required="true" maxlength="250" />
+				</p:panelGrid>
+				<p:panelGrid columns="4"
+					columnClasses="ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4, ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4"
+					layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+
+					<p:outputLabel for="obje" value="Fecha de inicio:"
+						style="font-weight:bold;" />
+					<p:calendar mode="inline" value="#{pejeMB.registro.preFechaInicio}"></p:calendar>
+
+					<p:outputLabel for="obje" value="Fecha de fin:"
+						style="font-weight:bold;" />
+					<p:calendar mode="inline" value="#{pejeMB.registro.preFechaFin}"></p:calendar>
+				</p:panelGrid>
+				<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+
+					<p:outputLabel for="alc" value="Alcance:" style="font-weight:bold;" />
+					<p:inputTextarea id="alc" value="#{pplaMB.registro.prpAlcance}"
+						rows="4" required="true" maxlength="250" />
+				</p:panelGrid>
+				<p:panelGrid columns="2"
+					columnClasses="ui-g-9 ui-lg-10,ui-g-3 ui-md-4 ui-lg-2"
+					layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+					<p:column></p:column>
+					<p:commandButton id="btn" value="Guardar" icon="fa fa-check"
+						actionListener="#{pplaMB.onSave}" update=":frmPrograma" />
+				</p:panelGrid>
+			</div>
+
+			<div class="ui-fluid p-formgrid p-grid">
+				<div class="name" align="center">
+					<span class="app-name">Procedimientos de Planificación</span>
+				</div>
+
+				<p:panelGrid columns="4"
+					columnClasses="ui-lg-1,ui-lg-1,ui-lg-1,ui-lg-1" layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+					<p:commandButton value="Agregar" icon="pi pi-plus"
+						update=":frmPrograma, :frmProcedimiento"
+						actionListener="#{proplaMB.onNew}">
+					</p:commandButton>
+					<p:commandButton value="Editar" icon="pi pi-pencil"
+						update=":frmPrograma, :frmProcedimiento"
+						rendered="#{proplaMB.registro.selected}"
+						actionListener="#{proplaMB.onEditSelected}">
+					</p:commandButton>
+				</p:panelGrid>
+
+				<p:dataTable var="p" value="#{proplaMB.listado}" rowIndexVar="index"
+					widgetVar="wvProcPlanificacion" reflow="true"
+					id="dtProcPlanificacion" style="margin-top:20px;" paginator="true"
+					filteredValue="#{proplaMB.filteredProcedimiento}"
+					globalFilterFunction="#{proplaMB.globalFilterFunction}"
+					selection="#{proplaMB.regSelected}" selectionMode="single"
+					paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+					rowKey="#{p.proId}">
+
+					<p:ajax event="rowSelect" listener="#{proplaMB.onRowSelect}"
+						update=":frmPrograma" />
+
+					<f:facet name="paginatorTopRight">
+						<p:outputPanel>
+							<h:outputText value="Búsqueda global: " />
+							<p:inputText id="globalFilter"
+								onkeyup="PF('wvProcPlanificacion').filter();"
+								style="width:150px" placeholder="Ingresa una palabra" />
+						</p:outputPanel>
+					</f:facet>
+
+					<p:column headerText="No.">
+						<h:outputText value="#{index+1}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Nombre">
+						<h:outputText value="#{p.proNombre}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Referencia">
+						<h:outputText value="#{p.proReferencia}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Fecha Elaboración">
+						<h:outputText value="#{p.proFechaElaboro}"></h:outputText>
+					</p:column>
+
+				</p:dataTable>
+			</div>
+		</p:panel>
+	</h:form>
+
+	<ui:include src="procedimiento.xhtml"></ui:include>
+
+</ui:composition>
