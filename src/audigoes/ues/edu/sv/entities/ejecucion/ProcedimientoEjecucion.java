@@ -49,11 +49,26 @@ public class ProcedimientoEjecucion extends SuperEntity implements Serializable 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fec_modi")
 	private Date fecModi;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "pej_fecha_elaboro")
+	private Date pejFechaElaboro;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "pej_fecha_reviso")
+	private Date pejFechaReviso;
 
 	@Lob
 	@Column(name = "pej_descripcion")
 	private String pejDescripcion;
+	
+	@Lob
+	@Column(name = "pej_narrativa")
+	private String pejNarrativa;
 
+	@Column(name = "pej_referencia")
+	private String pejReferencia;
+	
 	@Column(name = "pej_nombre")
 	private String pejNombre;
 
@@ -228,6 +243,38 @@ public class ProcedimientoEjecucion extends SuperEntity implements Serializable 
 		this.usuario2 = usuario2;
 	}
 	
+	public String getPejNarrativa() {
+		return pejNarrativa;
+	}
+
+	public void setPejNarrativa(String pejNarrativa) {
+		this.pejNarrativa = pejNarrativa;
+	}
+
+	public String getPejReferencia() {
+		return pejReferencia;
+	}
+
+	public void setPejReferencia(String pejReferencia) {
+		this.pejReferencia = pejReferencia;
+	}
+
+	public Date getPejFechaElaboro() {
+		return pejFechaElaboro;
+	}
+
+	public void setPejFechaElaboro(Date pejFechaElaboro) {
+		this.pejFechaElaboro = pejFechaElaboro;
+	}
+
+	public Date getPejFechaReviso() {
+		return pejFechaReviso;
+	}
+
+	public void setPejFechaReviso(Date pejFechaReviso) {
+		this.pejFechaReviso = pejFechaReviso;
+	}
+
 	public Set<Archivo> getArchivo() {
 		return this.archivo;
 	}

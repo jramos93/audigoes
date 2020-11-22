@@ -21,6 +21,7 @@ import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
 import audigoes.ues.edu.sv.entities.planeacion.TipoAuditoria;
 import audigoes.ues.edu.sv.mbean.planificacion.MemoPlanificacionMB;
+import audigoes.ues.edu.sv.mbean.planificacion.ProgramaEjecucionMB;
 import audigoes.ues.edu.sv.mbean.planificacion.ProgramaPlanificacionMB;
 
 @ManagedBean(name = "audMB")
@@ -42,6 +43,9 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	
 	@ManagedProperty(value = "#{pplaMB}")
 	private ProgramaPlanificacionMB pplaMB = new ProgramaPlanificacionMB();
+	
+	@ManagedProperty(value = "#{pejeMB}")
+	private ProgramaEjecucionMB pejeMB = new ProgramaEjecucionMB();
 	
 	@ManagedProperty(value = "#{memoMB}")
 	private MemoPlanificacionMB memoMB = new MemoPlanificacionMB();
@@ -85,6 +89,11 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	public void onPrograma() {
 		pplaMB.fillPrograma();
 		pplaMB.onEdit();
+	}
+	
+	public void onProgramaEje() {
+		pejeMB.fillPrograma();
+		pejeMB.onEdit();
 	}
 	
 	public void onMemo() {
@@ -317,6 +326,14 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	public void setPplaMB(ProgramaPlanificacionMB pplaMB) {
 		this.pplaMB = pplaMB;
+	}
+
+	public ProgramaEjecucionMB getPejeMB() {
+		return pejeMB;
+	}
+
+	public void setPejeMB(ProgramaEjecucionMB pejeMB) {
+		this.pejeMB = pejeMB;
 	}
 
 	public MemoPlanificacionMB getMemoMB() {

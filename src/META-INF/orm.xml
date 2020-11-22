@@ -56,4 +56,10 @@
 	<named-query name="usuario.permiso.delete">
 		<query>select o from UsuarioPermiso o where o.usuario.usuId=?1</query>
 	</named-query>
+	<named-query name="archivos.planificacion">
+		<query>select o from Archivo o where o.procedimientoPlanificacion.proId=?1 and o.regActivo=1</query>
+	</named-query>
+	<named-query name="archivos.ejecucion">
+		<query>select o from Archivo o where o.procedimientoEjecucion.pejId=?1 and o.regActivo=1</query>
+	</named-query>
 </entity-mappings>

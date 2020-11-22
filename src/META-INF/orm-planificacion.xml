@@ -20,6 +20,10 @@
 		<query>select o from ProcedimientoPlanificacion o where o.programaPlanificacion.prpId=?1 and o.regActivo=1</query>
 	</named-query>
 	
+	<named-query name="procedimientos.ejecucion.by.programa">
+		<query>select o from ProcedimientoEjecucion o where o.programaEjecucion.preId=?1 and o.regActivo=1</query>
+	</named-query>
+	
 	<named-query name="memo.by.auditoria">
 		<query>select o from Memorando o where o.auditoria.audId=?1 and o.regActivo=1</query>
 	</named-query>

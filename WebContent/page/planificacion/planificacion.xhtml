@@ -7,11 +7,11 @@
 	<ui:define name="content">
 		<h:form id="frmPlanificacion">
 			<p:panel
-				rendered="#{audMB.status eq 'SEARCH' and (pplaMB.status eq 'SEARCH' and memoMB.status eq 'SEARCH')}">
+				rendered="#{audMB.status eq 'SEARCH' and (pplaMB.status eq 'SEARCH' and memoMB.status eq 'SEARCH' and pejeMB.status eq 'SEARCH')}">
 				<div align="left" style="margin-top: 50px;">
 					<p:commandButton id="btnCancel" ajax="false"
-						action="/page/planeacion/auditoria.xhtml?faces-redirect=true" value="Regresar"
-						icon="pi pi-arrow-left" style="float:left;">
+						action="/page/planeacion/auditoria.xhtml?faces-redirect=true"
+						value="Regresar" icon="pi pi-arrow-left" style="float:left;">
 					</p:commandButton>
 				</div>
 
@@ -19,22 +19,24 @@
 					layout="grid"
 					styleClass="ui-panelgrid-blank form-group form-elements"
 					style="margin-top:100px; text-align:center;">
-					
+
 					<p:commandLink value="" actionListener="#{audMB.onPrograma}"
 						update=":frmPlanificacion, :frmPrograma">
 						<p:graphicImage value="/resources/images/programa.png"
 							style="height:200px;" />
 					</p:commandLink>
 
-					<p:commandLink value="" update=":frmPlanificacion, :frmMemo" actionListener="#{audMB.onMemo}">
+					<p:commandLink value="" update=":frmPlanificacion, :frmMemo"
+						actionListener="#{audMB.onMemo}">
 						<p:graphicImage value="/resources/images/memo.png"
 							style="height:200px;" />
 					</p:commandLink>
 
-					<h:commandLink value="">
+					<p:commandLink value="" actionListener="#{audMB.onProgramaEje}"
+						update=":frmPlanificacion, :frmProgramaEje">
 						<p:graphicImage value="/resources/images/programa-ejecucion.png"
 							style="height:200px;" />
-					</h:commandLink>
+					</p:commandLink>
 				</p:panelGrid>
 			</p:panel>
 		</h:form>
@@ -42,6 +44,7 @@
 
 		<ui:include src="programa.xhtml"></ui:include>
 		<ui:include src="memorando.xhtml"></ui:include>
+		<ui:include src="programa-ejecucion.xhtml"></ui:include>
 	</ui:define>
 
 </ui:composition>

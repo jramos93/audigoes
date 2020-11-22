@@ -6,17 +6,17 @@
 	xmlns:p="http://primefaces.org/ui">
 
 
-	<h:form id="frmProcedimiento">
-		<p:panel rendered="#{proplaMB.status ne 'SEARCH'}">
+	<h:form id="frmProcedimientoEje">
+		<p:panel rendered="#{proejeMB.status ne 'SEARCH'}">
 
 			<div align="left" style="margin-top: 50px;">
-				<p:commandButton id="btnCancel" action="#{proplaMB.onCancel}"
+				<p:commandButton id="btnCancel" action="#{proejeMB.onCancel}"
 					value="Cancelar" icon="pi pi-ban" style="float:left;"
-					update=":frmPrograma, :frmProcedimiento" process="@this">
+					update=":frmProgramaEje, :frmProcedimientoEje" process="@this">
 				</p:commandButton>
 			</div>
 			<div class="name" align="center" style="margin-top: 100px;">
-				<span class="app-name">Procedimiento de Planificación </span>
+				<span class="app-name">Procedimiento de Ejecución </span>
 			</div>
 			<div class="ui-fluid p-formgrid p-grid">
 				<p:tabView id="tview">
@@ -27,27 +27,19 @@
 							<p:outputLabel for="nombre" value="Nombre:"
 								style="font-weight:bold;" />
 							<p:inputTextarea id="nombre"
-								value="#{proplaMB.registro.proNombre}" rows="2" required="true"
+								value="#{proejeMB.registro.pejNombre}" rows="2" required="true"
 								maxlength="250" />
 
 							<p:outputLabel for="ref" value="Referencia:"
 								style="font-weight:bold;" />
-							<p:inputTextarea id="ref"
-								value="#{proplaMB.registro.proReferencia}" rows="2"
+							<p:inputText id="ref" value="#{proejeMB.registro.pejReferencia}"
+								required="true" />
+
+							<p:outputLabel for="des" value="Descripción:"
+								style="font-weight:bold;" />
+							<p:inputTextarea id="des"
+								value="#{proejeMB.registro.pejDescripcion}" rows="2"
 								required="true" maxlength="250" />
-						</p:panelGrid>
-						<p:panelGrid columns="4"
-							columnClasses="ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4, ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4"
-							layout="grid"
-							styleClass="ui-panelgrid-blank form-group form-elements">
-
-							<p:outputLabel value="Fecha de inicio:" style="font-weight:bold;" />
-							<p:calendar mode="inline"
-								value="#{proplaMB.registro.proFechaInicio}"></p:calendar>
-
-							<p:outputLabel value="Fecha de fin:" style="font-weight:bold;" />
-							<p:calendar mode="inline"
-								value="#{proplaMB.registro.proFechaFin}"></p:calendar>
 						</p:panelGrid>
 
 					</p:tab>
@@ -58,17 +50,17 @@
 							<p:outputLabel for="narra" value="Narrativa"
 								style="font-weight:bold;" />
 							<pe:ckEditor id="narra" width="100%"
-								value="#{proplaMB.registro.proNarrativa}" />
+								value="#{proejeMB.registro.pejNarrativa}" />
 						</p:panelGrid>
 					</p:tab>
 					<p:tab title="Papeles de Trabajo">
 						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
 							styleClass="ui-panelgrid-blank form-group form-elements">
 							<h:outputText value="Subida de archivos:"></h:outputText>
-							<p:fileUpload listener="#{proplaMB.handleFileUpload}" multiple="true"
-								mode="advanced" dragDropSupport="false" cancelLabel="Cancelar"
-								uploadLabel="Subir" label="Elegir" disabled="#{proplaMB.status eq 'NEW'}"
-								update=":frmProcedimiento:tview:dtArchivos"
+							<p:fileUpload listener="#{proejeMB.handleFileUpload}" disabled="#{proejeMB.status eq 'NEW'}"
+								multiple="true" mode="advanced" dragDropSupport="false"
+								cancelLabel="Cancelar" uploadLabel="Subir" label="Elegir"
+								update=":frmProcedimientoEje:tview:dtArchivos"
 								allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
 						</p:panelGrid>
 						<p:dataTable var="a" value="#{arcMB.listado}" rowIndexVar="index"
@@ -90,9 +82,10 @@
 
 							<p:column headerText="Eliminar" style="width:60px;">
 								<p:commandButton actionListener="#{arcMB.onBorrar(a)}"
-									update=":frmProcedimiento:tview:dtArchivos" icon="pi pi-trash"
+									update=":frmProcedimientoEje:tview:dtArchivos" icon="pi pi-trash"
 									title="Clic para eliminar el archivo">
-									<p:confirm header="Confirmación" message="¿Eliminar?" icon="pi pi-info-circle"></p:confirm>
+									<p:confirm header="Confirmación" message="¿Eliminar?"
+										icon="pi pi-info-circle"></p:confirm>
 								</p:commandButton>
 							</p:column>
 
@@ -106,7 +99,7 @@
 					styleClass="ui-panelgrid-blank form-group form-elements">
 					<p:column></p:column>
 					<p:commandButton value="Guardar" icon="fa fa-check"
-						actionListener="#{proplaMB.onSave}" update=":frmProcedimiento" />
+						actionListener="#{proejeMB.onSave}" update=":frmProcedimientoEje" />
 				</p:panelGrid>
 			</div>
 

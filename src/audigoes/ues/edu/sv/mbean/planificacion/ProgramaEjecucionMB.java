@@ -27,8 +27,8 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 	private List<ProgramaEjecucion> filteredPrograma;
 	private Auditoria auditoria;
 	
-//	@ManagedProperty(value = "#{proplaMB}")
-//	private ProcedimientosPlaniMB proplaMB = new ProcedimientosPlaniMB();
+	@ManagedProperty(value = "#{proejeMB}")
+	private ProcedimientosEjeMB proejeMB = new ProcedimientosEjeMB();
 
 	public ProgramaEjecucionMB() {
 		super(new ProgramaEjecucion());
@@ -59,8 +59,8 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 					new Object[] { auditoria.getAudId() }));
 			if(!getListado().isEmpty()) {
 				setRegistro(getListado().get(0));
-//				proplaMB.setPrograma(getRegistro());
-//				proplaMB.fillProcedimientos();
+				proejeMB.setPrograma(getRegistro());
+				proejeMB.fillProcedimientos();
 			} else {
 				onNew();
 				getRegistro().setAuditoria(auditoria);
@@ -71,8 +71,8 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 				getRegistro().setPreFechaElaboro(getToday());
 				audigoesLocal.insert(getRegistro());
 				
-//				proplaMB.setPrograma(getRegistro());
-//				proplaMB.fillProcedimientos();
+				proejeMB.setPrograma(getRegistro());
+				proejeMB.fillProcedimientos();
 				//addWarn(new FacesMessage("Advertencia", "Auditoria No cuenta con Programa de Planificación"));
 			}
 		} catch (Exception e) {
@@ -148,6 +148,14 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 
 	public void setAuditoria(Auditoria auditoria) {
 		this.auditoria = auditoria;
+	}
+
+	public ProcedimientosEjeMB getProejeMB() {
+		return proejeMB;
+	}
+
+	public void setProejeMB(ProcedimientosEjeMB proejeMB) {
+		this.proejeMB = proejeMB;
 	}
 
 	

@@ -9,6 +9,8 @@ import javax.faces.bean.ViewScoped;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Archivo;
+import audigoes.ues.edu.sv.entities.ejecucion.ProcedimientoEjecucion;
+import audigoes.ues.edu.sv.entities.planificacion.ProcedimientoPlanificacion;
 
 @ManagedBean(name = "arcMB")
 @ViewScoped
@@ -41,6 +43,38 @@ public class ArchivoMB extends AudigoesController implements Serializable {
 			e.printStackTrace();
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void fillByPlanificacion(ProcedimientoPlanificacion p) {
+		try {
+			setListado((List<Archivo>) audigoesLocal.findByNamedQuery(Archivo.class, "archivos.planificacion",
+					new Object[] {  p.getProId()}));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void fillByEjecucion(ProcedimientoEjecucion p) {
+		try {
+			setListado((List<Archivo>) audigoesLocal.findByNamedQuery(Archivo.class, "archivos.ejecucion",
+					new Object[] {  p.getPejId()}));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void onBorrar(Archivo a) {
+		setRegistro(a);
+		onDelete();
+	}
+	
+	@Override
+	public void afterDelete() {
+		getListado().remove(getRegistro());
+		super.afterDelete();
+	}
+	
 
 	/* GETS y SETS */
 
@@ -57,7 +91,7 @@ public class ArchivoMB extends AudigoesController implements Serializable {
 
 	@Override
 	public void afterSaveNew() {
-		//getListado().add(getRegistro());
+		getListado().add(getRegistro());
 		super.afterSaveNew();
 	}
 
