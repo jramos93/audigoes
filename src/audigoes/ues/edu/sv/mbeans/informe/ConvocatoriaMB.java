@@ -13,6 +13,7 @@ import org.primefaces.component.tabview.TabView;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.informe.Convocatoria;
+import audigoes.ues.edu.sv.entities.informe.Informe;
 
 @ManagedBean(name = "convocatoriaMB")
 @ViewScoped
@@ -23,6 +24,8 @@ public class ConvocatoriaMB extends AudigoesController implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private List<Convocatoria> filteredConvocatorias;
+	
+	private Informe informe;
 
 	public ConvocatoriaMB() {
 		super(new Convocatoria());
@@ -38,12 +41,44 @@ public class ConvocatoriaMB extends AudigoesController implements Serializable {
 		}
 
 	}
+	@Override
+	public void onSave() {
+		if(getRegistro().getCvcId() > 0 ) {
+			setStatus("EDIT");
+		} else {
+			setStatus("NEW");
+		}
+		super.onSave();
+	}
+	
+	@Override
+	public boolean beforeSaveNew() {
+		getRegistro().setInforme(getInforme());
+		getRegistro().setRegActivo(1);
+		getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+		getRegistro().setFecCrea(getToday());
+		return super.beforeSaveNew();
+	}
 
 	@SuppressWarnings("unchecked")
 	public void fillListado() {
 		try {
 			setListado((List<Convocatoria>) audigoesLocal.findByNamedQuery(Convocatoria.class,"convocatoria.all",
 					new Object[] {}));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void fillConvocatoria() {
+		try {
+			setListado((List<Convocatoria>) audigoesLocal.findByNamedQuery(Convocatoria.class,
+					"convocatoria.by.informe",
+					new Object[] {getInforme().getInfId()}));
+			if(!getListado().isEmpty()) {
+				setRegistro(getListado().get(0));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -71,7 +106,7 @@ public class ConvocatoriaMB extends AudigoesController implements Serializable {
 	@Override
 	public void afterCancel() {
 		try {
-			TabView tv = (TabView) FacesContext.getCurrentInstance().getViewRoot().findComponent("frmNewEdit2:tvConvocatoria");
+			TabView tv = (TabView) FacesContext.getCurrentInstance().getViewRoot().findComponent("frmConvocatoria:tvConvocatoria");
 			tv.setActiveIndex(0);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -105,6 +140,14 @@ public class ConvocatoriaMB extends AudigoesController implements Serializable {
 
 	public void setFilteredConvocatorias(List<Convocatoria> filteredConvocatorias) {
 		this.filteredConvocatorias = filteredConvocatorias;
+	}
+
+	public Informe getInforme() {
+		return informe;
+	}
+
+	public void setInforme(Informe informe) {
+		this.informe = informe;
 	}
 
 }

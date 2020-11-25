@@ -13,6 +13,9 @@ import org.primefaces.component.tabview.TabView;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.informe.ActaLectura;
+import audigoes.ues.edu.sv.entities.informe.Convocatoria;
+import audigoes.ues.edu.sv.entities.informe.Informe;
+import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 
 @ManagedBean(name = "actaLecturaMB")
 @ViewScoped
@@ -23,6 +26,8 @@ public class ActaLecturaMB extends AudigoesController implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private List<ActaLectura> filteredActaLecturas;
+	
+	private Informe informe;
 
 	public ActaLecturaMB() {
 		super(new ActaLectura());
@@ -38,6 +43,24 @@ public class ActaLecturaMB extends AudigoesController implements Serializable {
 		}
 
 	}
+	@Override
+	public void onSave() {
+		if(getRegistro().getAclId() > 0 ) {
+			setStatus("EDIT");
+		} else {
+			setStatus("NEW");
+		}
+		super.onSave();
+	}
+	
+	@Override
+	public boolean beforeSaveNew() {
+		getRegistro().setInforme(getInforme());
+		getRegistro().setRegActivo(1);
+		getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+		getRegistro().setFecCrea(getToday());
+		return super.beforeSaveNew();
+	}
 
 	@SuppressWarnings("unchecked")
 	public void fillListado() {
@@ -48,6 +71,20 @@ public class ActaLecturaMB extends AudigoesController implements Serializable {
 			e.printStackTrace();
 		}
 	}
+	@SuppressWarnings("unchecked")
+	public void fillActaLectura() {
+		try {
+			setListado((List<ActaLectura>) audigoesLocal.findByNamedQuery(ActaLectura.class,
+					"actaLectura.by.informe",
+					new Object[] {getInforme().getInfId()}));
+			if(!getListado().isEmpty()) {
+				setRegistro(getListado().get(0));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
 		String filterText = (filter == null) ? null : filter.toString().trim().toLowerCase();
@@ -71,7 +108,7 @@ public class ActaLecturaMB extends AudigoesController implements Serializable {
 	@Override
 	public void afterCancel() {
 		try {
-			TabView tv = (TabView) FacesContext.getCurrentInstance().getViewRoot().findComponent("frmNewEdit1:tvActa");
+			TabView tv = (TabView) FacesContext.getCurrentInstance().getViewRoot().findComponent("frmConvocatoriaActa:tvActa");
 			tv.setActiveIndex(0);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -105,6 +142,14 @@ public class ActaLecturaMB extends AudigoesController implements Serializable {
 
 	public void setFilteredActaLecturas(List<ActaLectura> filteredActaLecturas) {
 		this.filteredActaLecturas = filteredActaLecturas;
+	}
+
+	public Informe getInforme() {
+		return informe;
+	}
+
+	public void setInforme(Informe informe) {
+		this.informe = informe;
 	}
 
 }

@@ -16,11 +16,13 @@ import org.primefaces.component.tabview.TabView;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.informe.ActaLectura;
+import audigoes.ues.edu.sv.entities.informe.CartaGerencia;
+import audigoes.ues.edu.sv.entities.informe.Convocatoria;
 import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planificacion.ProgramaPlanificacion;
 import audigoes.ues.edu.sv.mbeans.planeacion.AuditoriaMB;
-import audigoes.ues.edu.sv.mbeans.planeacion.ProcedimientosPlaniMB;
 
 @ManagedBean(name = "informeMB")
 @ViewScoped
@@ -53,6 +55,7 @@ public class InformeMB extends AudigoesController implements Serializable {
 		try {
 			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 			setAuditoria((Auditoria) sessionMap.get("auditoria"));
+			setInforme();
 			System.out.println(getAuditoria().getAudId());
 			super.init();
 		} catch (Exception e) {
@@ -68,6 +71,15 @@ public class InformeMB extends AudigoesController implements Serializable {
 			setStatus("NEW");
 		}
 		super.onSave();
+	}
+	
+	public void setInforme() {
+		try {
+			setRegistro((Informe)audigoesLocal.findByNamedQuery(Informe.class,"informe.by.auditoria",
+					new Object[] {getAuditoria().getAudId()}).get(0));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -94,6 +106,34 @@ public class InformeMB extends AudigoesController implements Serializable {
 			setListado((List<Informe>) audigoesLocal.findByNamedQuery(Informe.class,
 					"informe.by.auditoria",
 					new Object[] {getAuditoria().getAudId()}));
+			if(!getListado().isEmpty()) {
+				setRegistro(getListado().get(0));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void fillActaLectura() {
+		try {
+			setListado((List<ActaLectura>) audigoesLocal.findByNamedQuery(ActaLectura.class,
+					"actaLectura.by.informe",
+					new Object[] {getRegistro().getInfId()}));
+			if(!getListado().isEmpty()) {
+				setRegistro(getListado().get(0));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void fillConvocatoria() {
+		try {
+			setListado((List<Convocatoria>) audigoesLocal.findByNamedQuery(Convocatoria.class,
+					"convocatoria.by.informe",
+					new Object[] {getRegistro().getInfId()}));
 			if(!getListado().isEmpty()) {
 				setRegistro(getListado().get(0));
 			}
@@ -146,10 +186,19 @@ public class InformeMB extends AudigoesController implements Serializable {
 	}
 	
 	public void showActaLectura() {
+		this.getConvMB().setInforme(getRegistro());
+		this.getConvMB().fillConvocatoria();
+		this.getActLecMB().setInforme(getRegistro());
+		this.getActLecMB().fillActaLectura();
+		//fillActaLectura();
+		//fillConvocatoria();
 		setStatus("ACTA_LECTURA");
 	}
 	
 	public void showCarta() {
+		//fillCartaGerencia();
+		this.getCartaGMB().setInforme(getRegistro());
+		this.getCartaGMB().fillCartaGerencia();
 		setStatus("CARTA_GERENCIA");
 	}
 	

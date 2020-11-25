@@ -9,22 +9,21 @@
 		<p:panel rendered="#{informeMB.status eq 'ACTA_LECTURA'}">
 			<p:tabView>
 				<p:tab title="Convocatoria">
-					<h:form id="frmConvocatoria">
 						<p:panel>
-							<p:commandButton id="btnCancel"
+							<p:commandButton id="btnCancelConvocatoria"
 								action="#{informeMB.onCancel}" value="Cancelar"
-								update=":frmConvocatoriaActa :frm" process="@this">
+								update=":frmConvocatoriaActa :frm" process="@this @form">
 							</p:commandButton>
 							<p:commandButton id="btnGuardarTop"
-								action="#{actaLecturaMB.onSave}" value="Guardar"
-								update=":frmConvocatoriaActa :frm" process="@this @form">
+								action="#{convocatoriaMB.onSave}" value="Guardar"
+								update="@form" process="@this tvConvocatoria">
 							</p:commandButton>
 							<p:commandButton id="btnEditarConvocatoria"
 								action="#{convocatoriaMB.onEdit}" value="Editar Convocatoria"
-								icon="pi pi-plus" update=":frmConvocatoriaActa :frm">
+								icon="pi pi-plus" update=":frmConvocatoriaActa">
 							</p:commandButton>
 							<p:commandButton id="btnGuardarTop3" action="#{informeMB.onSave}"
-								value="Generar Convocatoria" update="@form :frm" process="@this @form">
+								value="Generar Convocatoria" update="@form" process="@this @form">
 							</p:commandButton>
 
 							<div class="ui-fluid p-formgrid p-grid">
@@ -48,29 +47,27 @@
 
 									<p:commandButton id="btnGuardarBottom"
 										action="#{convocatoriaMB.onSave}" value="Guardar"
-										update="@form" process="@this frmConvocatoria" />
+										update="@form" process="@this tvConvocatoria" />
 								</div>
 							</div>
 						</p:panel>
-					</h:form>
 				</p:tab>
 				<p:tab title="Acta de Lectura">
-					<h:form id="frmActaLectura">
 						<p:panel>
-							<p:commandButton id="btnCancel"
+							<p:commandButton id="btnCancelActa"
 								action="#{informeMB.onCancel}" value="Cancelar"
 								update=":frmConvocatoriaActa :frm" process="@this">
 							</p:commandButton>
-							<p:commandButton id="btnGuardarTop"
+							<p:commandButton id="btnGuardarTop1"
 								action="#{actaLecturaMB.onSave}" value="Guardar"
-								update=":frmConvocatoriaActa :frm" process="@this @form">
+								update="@form" process="@this tvActaLectura">
 							</p:commandButton>
 							<p:commandButton id="btnEditarActaLectura"
 								action="#{actaLecturaMB.onEdit}" value="Editar Acta Lectura"
-								icon="pi pi-plus" update=":frmConvocatoriaActa :frm">
+								icon="pi pi-plus" update=":frmConvocatoriaActa">
 							</p:commandButton>
 							<p:commandButton id="btnGuardarTop5" action="#{informeMB.onSave}"
-								value="Generar Acta de Lectura" update="@form :frm" process="@this @form">
+								value="Generar Acta de Lectura" update="@form" process="@this @form">
 							</p:commandButton>
 
 							<div class="ui-fluid p-formgrid p-grid">
@@ -89,13 +86,12 @@
 											</p:tabView>
 											<p:commandButton id="btnGuardarBottom1"
 												action="#{actaLecturaMB.onSave}" value="Guardar"
-												update="@form" process="@this frmActaLectura" />
+												update="@form" process="@this tvActaLectura" />
 										</div>
 									</p:tab>
 								</div>
 							</div>
 						</p:panel>
-					</h:form>
 				</p:tab>
 			</p:tabView>
 		</p:panel>

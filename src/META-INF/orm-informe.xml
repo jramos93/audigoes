@@ -13,11 +13,20 @@
 	<named-query name="actaLectura.all">
 		<query>select o from ActaLectura o</query>
 	</named-query>
+	<named-query name="actaLectura.by.informe">
+		<query>select o from ActaLectura o where o.informe.infId=?1 and o.regActivo=1</query>
+	</named-query>
 	<named-query name="convocatoria.all">
 		<query>select o from Convocatoria o</query>
 	</named-query>
+		<named-query name="convocatoria.by.informe">
+		<query>select o from Convocatoria o where o.informe.infId=?1 and o.regActivo=1</query>
+	</named-query>
 	<named-query name="cartaGerencia.all">
 		<query>select o from CartaGerencia o</query>
+	</named-query>
+	<named-query name="cartaGerencia.get.all.auditoria.informe">
+		<query>select o from CartaGerencia o where o.informe.infId = ?1 and o.regActivo=1</query>
 	</named-query>
 	
 </entity-mappings>

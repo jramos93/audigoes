@@ -100,6 +100,15 @@ public class Informe extends SuperEntity implements Serializable {
 	//bi-directional many-to-one association to ActaLectura
 	@OneToMany(mappedBy="informe", fetch=FetchType.EAGER)
 	private Set<ActaLectura> actaLectura;
+	
+	//bi-directional many-to-one association to ActaLectura
+	@OneToMany(mappedBy="informe", fetch=FetchType.EAGER)
+	private Set<CartaGerencia> cartaGerencia;
+		
+	//bi-directional many-to-one association to ActaLectura
+	@OneToMany(mappedBy="informe", fetch=FetchType.EAGER)
+	private Set<Convocatoria> convocatoria;
+	
 
 	//bi-directional many-to-one association to CedulaNota
 	@OneToMany(mappedBy="informe", fetch=FetchType.EAGER)
@@ -323,6 +332,50 @@ public class Informe extends SuperEntity implements Serializable {
 		return cedulaNota;
 	}
 
+	public Set<CartaGerencia> getCartaGerencia() {
+		return cartaGerencia;
+	}
+
+	public void setCartaGerencia(Set<CartaGerencia> cartaGerencia) {
+		this.cartaGerencia = cartaGerencia;
+	}
+	
+	public CartaGerencia addCartaGerencia(CartaGerencia cartaGerencia) {
+		getCartaGerencia().add(cartaGerencia);
+		cartaGerencia.setInforme(this);
+
+		return cartaGerencia;
+	}
+
+	public CartaGerencia removeCartaGerencia(CartaGerencia cartaGerencia) {
+		getCartaGerencia().remove(cartaGerencia);
+		cartaGerencia.setInforme(null);
+
+		return cartaGerencia;
+	}
+
+	public Set<Convocatoria> getConvocatoria() {
+		return convocatoria;
+	}
+
+	public void setConvocatoria(Set<Convocatoria> convocatoria) {
+		this.convocatoria = convocatoria;
+	}
+	
+	public Convocatoria addConvocatoria(Convocatoria convocatoria) {
+		getConvocatoria().add(convocatoria);
+		convocatoria.setInforme(this);
+
+		return convocatoria;
+	}
+
+	public Convocatoria removeConvocatoria(Convocatoria convocatoria) {
+		getConvocatoria().remove(convocatoria);
+		convocatoria.setInforme(null);
+
+		return convocatoria;
+	}
+
 	public Actividad getActividad() {
 		return this.actividad;
 	}
@@ -370,7 +423,7 @@ public class Informe extends SuperEntity implements Serializable {
 				+ infProcedimientos + ", infRecomendaciones=" + infRecomendaciones + ", infResultados=" + infResultados
 				+ ", infSeguimiento=" + infSeguimiento + ", infTitulo=" + infTitulo + ", infVersion=" + infVersion
 				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", actaLectura="
-				+ actaLectura + ", cedulaNotas=" + cedulaNotas + ", actividad=" + actividad + "]";
+				+ actaLectura + ", cartaGerencia=" + cartaGerencia + ", convocatoria=" + convocatoria + ", cedulaNotas=" + cedulaNotas + ", actividad=" + actividad + "]";
 	}
 
 }

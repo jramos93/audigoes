@@ -8,10 +8,10 @@
 		<h:form id="frmCarta">
 			<p:panel rendered="#{informeMB.status eq 'CARTA_GERENCIA'}">
 				<p:commandButton id="btnCancel" action="#{informeMB.onCancel}"
-					value="Cancelar" update="@form :frm" process="@this">
+					value="Cancelar" update=":frmCarta :frm" process="@form">
 				</p:commandButton>
 				<p:commandButton id="btnGuardarTop" action="#{cartaGerenciaMB.onSave}"
-					value="Guardar" update="@form :frm" process="@this @form">
+					value="Guardar" update=":frmCarta :frm" process="@form">
 				</p:commandButton>
 				<p:commandButton id="btnEditarCarta" action="#{cartaGerenciaMB.onEdit}"
 					 value="Editar Carta"
@@ -38,7 +38,7 @@
 						</p:tabView>
 					</div>
 					<p:commandButton id="btnGuardarBottom" action="#{cartaGerenciaMB.onSave}"
-						value="Guardar" update="@form :frm" process="@this @frm" />
+						value="Guardar" update=":frmCarta :frm" process="@form" />
 				</div>
 			</p:panel>
 		</h:form>
