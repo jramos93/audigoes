@@ -77,6 +77,10 @@ public class Informe extends SuperEntity implements Serializable {
 	@Lob
 	@Column(name="inf_resultados")
 	private String infResultados;
+	
+	@Lob
+	@Column(name="inf_observaciones")
+	private String infObservaciones;
 
 	@Lob
 	@Column(name="inf_seguimiento")
@@ -255,6 +259,13 @@ public class Informe extends SuperEntity implements Serializable {
 		this.infTitulo = infTitulo;
 	}
 	
+	public String getInfObservaciones() {
+		return this.infObservaciones;
+	}
+
+	public void setInfObservaciones(String infObservaciones) {
+		this.infObservaciones = infObservaciones;
+	}
 
 	public int getInfVersion() {
 		return this.infVersion;
@@ -420,7 +431,7 @@ public class Informe extends SuperEntity implements Serializable {
 				+ ", infAclaracion=" + infAclaracion + ", infConclusion=" + infConclusion + ", infEncabezado="
 				+ infEncabezado + ", infIntroduccion=" + infIntroduccion + ", infLogros=" + infLogros
 				+ ", infPiePagina=" + infPiePagina + ", infPortada=" + infPortada  + ", infDestinatario=" + infDestinatario  + ", infProcedimientos="
-				+ infProcedimientos + ", infRecomendaciones=" + infRecomendaciones + ", infResultados=" + infResultados
+				+ infProcedimientos + ", infRecomendaciones=" + infRecomendaciones + ", infObservaciones=" + infObservaciones + ", infResultados=" + infResultados
 				+ ", infSeguimiento=" + infSeguimiento + ", infTitulo=" + infTitulo + ", infVersion=" + infVersion
 				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", actaLectura="
 				+ actaLectura + ", cartaGerencia=" + cartaGerencia + ", convocatoria=" + convocatoria + ", cedulaNotas=" + cedulaNotas + ", actividad=" + actividad + "]";

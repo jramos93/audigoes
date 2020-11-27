@@ -52,6 +52,10 @@
 				<p:commandButton id="btnGuardarTop6" action="#{informeMB.onSave}"
 					value="Generar Informe" update="@form :frm" process="@this @form">
 				</p:commandButton>
+				<p:commandButton value="Agregar Observacion" icon="pi pi-plus"
+						actionListener="#{informeMB.onSave}"
+						oncomplete="PF('wvObservaciones').show();" update=":frmInforme">
+				</p:commandButton>
 				<div class="ui-fluid p-formgrid p-grid">
 					<div class="p-field p-col">
 						<p:outputLabel for="titulo" value="Titulo del Informe" />
@@ -111,6 +115,23 @@
 				</div>
 			</p:panel>
 		</h:form>
+		<p:dialog widgetVar="wvObservaciones" responsive="true" width="500"
+			closeOnEscape="true" header="Agregar Observaciones" modal="true">
+			<h:form id="frmObsNewEdit">
+
+				<div class="ui-fluid p-formgrid p-grid">
+					<div class="p-field p-col">
+						<p:outputLabel for="Observacion"
+							value="Agregar Observaciones:" />
+						<p:inputTextarea id="Observacion" rows="4" required="true"
+							value="#{informeMB.registro.infObservaciones}"/>
+					</div>
+					<p:commandButton actionListener="#{informeMB.onSave}" value="Guardar"
+						oncomplete="PF('frmObsNewEdit').hide();" update="@form :frm">
+					</p:commandButton>
+				</div>
+			</h:form>
+		</p:dialog>
 		<ui:include src="actalectura.xhtml"></ui:include>
 		<ui:include src="cartagerencia.xhtml"></ui:include>
 	</ui:define>
