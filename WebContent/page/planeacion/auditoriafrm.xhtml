@@ -42,6 +42,11 @@
 						rendered="#{audMB.registro.selected}">
 					</p:commandButton>
 					<p:commandButton id="btnAuditInforme" value="Informe"
+						actionListener="#{audMB.informeAud}"
+						rendered="#{audMB.registro.selected}" ajax="false">
+					</p:commandButton>
+					<p:commandButton id="btnAuditSeguimiento" value="Seguimiento"
+						actionListener="#{audMB.seguimiento}" ajax="false"
 						rendered="#{audMB.registro.selected}">
 					</p:commandButton>
 					<p:commandButton update=":frm" value="Eliminar" icon="pi pi-times"

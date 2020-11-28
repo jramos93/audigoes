@@ -8,7 +8,7 @@
 	<h:form id="frmNewEditAuditoria">
 		<p:panel rendered="#{audMB.status eq 'NEW' or audMB.status eq 'EDIT'}">
 			<p:commandButton id="btnCancel" action="#{audMB.onCancel}"
-				value="Cancelar" update="@form" process="@this">
+				value="Cancelar" update="@form :frmAuditoria" process="@this">
 			</p:commandButton>
 			<p:separator />
 			<div class="ui-fluid p-formgrid p-grid">
@@ -30,12 +30,6 @@
 					</p:selectOneMenu>
 				</div>
 				<div class="p-field p-col">
-					<p:outputLabel for="codigo" value="Código auditoría:" />
-					<p:inputText id="codigo" value="#{audMB.registro.audCodigo}"
-						required="true" maxlength="250"
-						requiredMessage="Debe ingresar código de la auditoría" />
-				</div>
-				<div class="p-field p-col">
 					<p:outputLabel for="anio" value="Año auditoria:" />
 					<p:inputMask id="anio" value="#{audMB.registro.audAnio}"
 						required="true" placeholder="20XX"
@@ -46,6 +40,18 @@
 					<p:inputText id="nombre" value="#{audMB.registro.audNombre}"
 						required="true" maxlength="250"
 						requiredMessage="Debe ingresar nombre de auditoría" />
+				</div>
+				<div class="p-field p-col">
+					<p:outputLabel for="coordinador" value="Coordinador" />
+					<p:selectOneMenu id="coordinador" converter="usuarioConverter"
+						converterMessage="Problemas al guardar coordinador"
+						value="#{audMB.coordinador}">
+						<f:selectItem itemLabel="Seleccione coordinador de auditoría"
+							noSelectionOption="true" />
+						<f:selectItems value="#{audMB.usuariosInstitucionList}" var="coor"
+							itemLabel="#{coor.usuNombre} #{coor.usuApellido}"
+							itemValue="#{coor}" />
+					</p:selectOneMenu>
 				</div>
 				<div class="p-field p-col">
 					<p:outputLabel for="audfechainicio" value="Fecha Inicio" />
@@ -61,6 +67,44 @@
 						pattern="dd-MM-yyyy" navigator="true"
 						requiredMessage="Debe ingresar fecha de fin" />
 				</div>
+
+				<p:separator />
+				<p:outputLabel
+					value="Seleccione unidades que intervienen en la auditoría" />
+				<div class="p-field p-col">
+					<p:selectOneMenu id="unidadauditada" converter="unidadConverter"
+						converterMessage="Problemas al agregar unidad"
+						value="#{audMB.unidadSelected}">
+						<f:selectItem itemLabel="Seleccione unidad auditada"
+							noSelectionOption="true" />
+						<f:selectItems value="#{audMB.unidadList}" var="und"
+							itemLabel="#{und.uniNombre}" itemValue="#{und}" />
+					</p:selectOneMenu>
+
+				</div>
+				<br/>
+				<div class="p-field p-col">
+					<p:commandButton id="btnAgregarUnidad" value="Agregar"
+						update="dtAuditoriaResponsables" process="@this"
+						actionListener="#{audMB.agregarUnidadAuditada}"></p:commandButton>
+				</div>
+				<p:dataTable id="dtAuditoriaResponsables" var="unidad"
+					value="#{audMB.unidadesSelectedList}"
+					widgetVar="wvAuditoriaResponsables" reflow="true"
+					style="margin-top:20px;" paginator="true" rowKey="#{unidad.uniId}"
+					selectionMode="single" rowsPerPageTemplate="5,10,15,20,25"
+					rows="10" paginatorPosition="bottom"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+					<f:facet name="header"> Unidades Auditadas</f:facet>
+					<p:column headerText="N°" sortBy="#{aud.audCorrelativo}" width="">
+						<h:outputText value="#{unidad.uniId}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{unidad.uniNombre}" />
+					</p:column>
+
+				</p:dataTable>
 
 				<p:tabView id="tvAuditoriaNewEdit">
 					<p:tab id="tabDescripcion" title="Descripcion">

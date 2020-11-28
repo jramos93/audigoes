@@ -2,6 +2,7 @@ package audigoes.ues.edu.sv.mbeans.planeacion;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -13,16 +14,18 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import org.primefaces.PrimeFaces;
-
 import audigoes.ues.edu.sv.controller.AudigoesController;
+import audigoes.ues.edu.sv.entities.administracion.Unidad;
+import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
 import audigoes.ues.edu.sv.entities.planeacion.TipoAuditoria;
+import audigoes.ues.edu.sv.mbean.planificacion.AuditoriaUnidadMB;
 import audigoes.ues.edu.sv.mbean.planificacion.MemoPlanificacionMB;
 import audigoes.ues.edu.sv.mbean.planificacion.ProgramaEjecucionMB;
 import audigoes.ues.edu.sv.mbean.planificacion.ProgramaPlanificacionMB;
+import audigoes.ues.edu.sv.mbeans.seguimiento.SeguimientoMB;
 
 @ManagedBean(name = "audMB")
 @ViewScoped
@@ -39,6 +42,12 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	private List<TipoAuditoria> tipoAuditoriaList;
 	private TipoAuditoria tipoAuditoriaSelected;
 	
+	private List<Unidad> unidadList;
+	private List<Unidad> unidadesSelectedList;
+	private Unidad unidadSelected;
+	
+	private Usuario coordinador;
+	
 	private Informe informe;
 	
 	@ManagedProperty(value = "#{pplaMB}")
@@ -53,6 +62,12 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	@ManagedProperty(value = "#{respMB}")
 	private AuditoriaResponsableMB respMB = new AuditoriaResponsableMB();
 
+	@ManagedProperty(value = "#{audUniMB}")
+	private AuditoriaUnidadMB audUniMB = new AuditoriaUnidadMB();
+	
+	@ManagedProperty(value = "#{segMB}")
+	private SeguimientoMB segMB = new SeguimientoMB();
+	
 	public AuditoriaMB() {
 		super(new Auditoria());
 	}
@@ -88,6 +103,17 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 			e.printStackTrace();
 		}
 	}
+
+	@SuppressWarnings("unchecked")
+	public void fillUnidadList() {
+		try {
+			setUnidadList((List<Unidad>) audigoesLocal.findByNamedQuery(Unidad.class, "unidad.get.all.institucion",
+					new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() }));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 	
 	public void onPrograma() {
 		pplaMB.fillPrograma();
@@ -102,6 +128,16 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	public void onMemo() {
 		memoMB.fillMemo();
 		memoMB.onEdit();
+	}
+	
+	public void seguimiento(){
+		try {
+			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+			sessionMap.put("auditoria", getRegistro());
+			FacesContext.getCurrentInstance().getExternalContext().redirect("/audigoes/page/seguimiento/seguimiento.xhtml");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void asignarPersonal() {
@@ -191,7 +227,21 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	}
 	
 	public void createCodAuditoria() {
-		
+		try {
+			getRegistro().setAudCodigo(getTipoAuditoriaSelected().getTpaAcronimo() + "-" + getRegistro().getAudAnio()
+					+ "-" + getCorrelativoAuditoria());
+		} catch (Exception e) {
+			addWarn(new FacesMessage(SYSTEM_NAME, "Problema al asignar código de auditoría"));
+			e.printStackTrace();
+		}
+	}
+
+	public void agregarUnidadAuditada() {
+		if (getUnidadesSelectedList() == null) {
+			setUnidadesSelectedList(new ArrayList<Unidad>());
+		}
+		getUnidadesSelectedList().add(getUnidadSelected());
+		getUnidadList().remove(getUnidadSelected());
 	}
 	
 	@Override
@@ -209,6 +259,15 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		setTipoAuditoriaSelected(getRegistro().getTipoAuditoria());
 		setPlanSelected(getRegistro().getPlanAnual());
 		return super.beforeEdit();
+	}
+
+	private boolean isFechaAuditoriaValida() {
+		return getRegistro().getAudFechaInicioProgramado().compareTo(getRegistro().getAudFechaFinProgramado()) < 0;
+	}
+
+	private boolean isFechaPlanValido() {
+		return getRegistro().getAudFechaInicioProgramado().compareTo(getPlanSelected().getPlaFechaInicio()) >= 0
+				&& getRegistro().getAudFechaFinProgramado().compareTo(getPlanSelected().getPlaFechaFin()) <= 0;
 	}
 
 	@Override
@@ -258,8 +317,28 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	@Override
 	public void afterSaveNew() {
 		getListado().add(getRegistro());
+		this.respMB.onNew();
+		this.respMB.getRegistro().setUsuario(getCoordinador());
+		this.respMB.getRegistro().setAudRol(0);
+		this.respMB.getRegistro().setAuditoria(getRegistro());
+		this.respMB.onSave();
+
+		guardarUnidadesAuditadas();
 		onNew();
 		super.afterSaveNew();
+	}
+
+	public void guardarUnidadesAuditadas() {
+		try {
+			for (Unidad reg : getUnidadesSelectedList()) {
+				this.audUniMB.onNew();
+				this.audUniMB.getRegistro().setAuditoria(getRegistro());
+				this.audUniMB.getRegistro().setUnidad(reg);
+				this.audUniMB.onSave();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -267,6 +346,13 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		if(getRegistro().getActividad().size() > 0 ) {
 			addWarn(new FacesMessage(SYSTEM_NAME, "La auditoría ya tiene actividades asignadas, no puede eliminarse"));
 			return false;
+		}
+		if(getRegistro().getAuditoriaResponsable().size() > 0) {
+			addWarn(new FacesMessage(SYSTEM_NAME,"La auditoría tiene responsable asignado. No puede ser eliminada"));
+			return false;
+		}
+		if(getRegistro().getAuditoriaUnidad().size() > 0) {
+			addWarn(new FacesMessage(SYSTEM_NAME,"La auditoría tiene unidades asignadas. No puede ser eliminada"));
 		}
 		return super.beforeDelete();
 	}
@@ -361,5 +447,53 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	public void setRespMB(AuditoriaResponsableMB respMB) {
 		this.respMB = respMB;
 	}
+
+	public Usuario getCoordinador() {
+		return coordinador;
+	}
+
+	public void setCoordinador(Usuario coordinador) {
+		this.coordinador = coordinador;
+	}
+
+	public AuditoriaUnidadMB getAudUniMB() {
+		return audUniMB;
+	}
+
+	public void setAudUniMB(AuditoriaUnidadMB audUniMB) {
+		this.audUniMB = audUniMB;
+	}
+
+	public List<Unidad> getUnidadList() {
+		return unidadList;
+	}
+
+	public void setUnidadList(List<Unidad> unidadList) {
+		this.unidadList = unidadList;
+	}
+
+	public List<Unidad> getUnidadesSelectedList() {
+		return unidadesSelectedList;
+	}
+
+	public void setUnidadesSelectedList(List<Unidad> unidadesSelectedList) {
+		this.unidadesSelectedList = unidadesSelectedList;
+	}
+
+	public Unidad getUnidadSelected() {
+		return unidadSelected;
+	}
+
+	public void setUnidadSelected(Unidad unidadSelected) {
+		this.unidadSelected = unidadSelected;
+	}
+
+	public SeguimientoMB getSegMB() {
+		return segMB;
+	}
+
+	public void setSegMB(SeguimientoMB segMB) {
+		this.segMB = segMB;
+	} 
 
 }

@@ -22,4 +22,13 @@
 	<named-query name="auditoria.get.max.id">
 		<query>SELECT a FROM Auditoria a where a.planAnual.institucion.insId = ?1 order by a.audCorrelativo DESC </query>
 	</named-query>
+	<named-query name="unidad.get.all.institucion">
+		<query>select o from Unidad o where o.institucion.insId = ?1 and o.regActivo = 1</query>
+	</named-query>
+	<named-query name="usuario.get.all.institucion">
+		<query>select o from Usuario o where o.institucion.insId = ?1 and o.regActivo = 1</query>
+	</named-query>
+	<named-query name="usuario.get.coordinador">
+		<query>select o.usuario from AuditoriaResponsable o where o.auditoria.audId = ?1 </query>
+	</named-query>
 </entity-mappings>

@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.PrimeFacesContext;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.security.ObjAppsSession;
 import audigoes.ues.edu.sv.session.audigoesSBSLLocal;
 import net.sf.jasperreports.engine.JRExporter;
@@ -76,6 +77,10 @@ public class AudigoesController {
 	private List<SelectItem> regActivoList;
 	private List<SelectItem> generoList;
 	private List<SelectItem> faseAuditoriaList;
+	
+	/* Listado de usuarios de una institución - usuario seleccionado */
+	private List<Usuario> usuariosInstitucionList;
+	private Usuario usuarioSelected;
 	
 	/* propiedades para los reportes */
 	private String pathReporte;
@@ -271,6 +276,7 @@ public class AudigoesController {
 			}
 		} catch (Exception e) {
 			this.addWarn(new FacesMessage("Error!", "Consulte con el Administrador"));
+			setError(true);
 			e.printStackTrace();
 		}
 	}
@@ -351,7 +357,8 @@ public class AudigoesController {
 		Map params = new HashMap();
 		try {
 			setReportId("rpt_plan.jasper");
-			File archivo = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath(REPORT_PATH+getReportId()));
+			File archivo = new File(
+					FacesContext.getCurrentInstance().getExternalContext().getRealPath(REPORT_PATH+getReportId()));
 			
 			HttpServletResponse httpServletResponse = (HttpServletResponse) FacesContext.getCurrentInstance()
 					.getExternalContext().getResponse();
@@ -373,6 +380,17 @@ public class AudigoesController {
 				}
 			}
 			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void fillUsuariosInstitucionList() {
+		try {
+			setUsuariosInstitucionList(
+					(List<Usuario>) audigoesLocal.findByNamedQuery(Usuario.class, "usuario.get.all.institucion",
+							new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() }));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -473,6 +491,22 @@ public class AudigoesController {
 		this.faseAuditoriaList = faseAuditoriaList;
 	}
 
+	public List<Usuario> getUsuariosInstitucionList() {
+		return usuariosInstitucionList;
+	}
+
+	public void setUsuariosInstitucionList(List<Usuario> usuariosInstitucionList) {
+		this.usuariosInstitucionList = usuariosInstitucionList;
+	}
+
+	public Usuario getUsuarioSelected() {
+		return usuarioSelected;
+	}
+
+	public void setUsuarioSelected(Usuario usuarioSelected) {
+		this.usuarioSelected = usuarioSelected;
+	}
+	
 	public ObjAppsSession getObjAppsSession() {
 		if (this.objAppsSession == null) {
 			this.objAppsSession = (ObjAppsSession) FacesContext.getCurrentInstance().getExternalContext()
