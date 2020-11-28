@@ -49,6 +49,9 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	
 	@ManagedProperty(value = "#{memoMB}")
 	private MemoPlanificacionMB memoMB = new MemoPlanificacionMB();
+	
+	@ManagedProperty(value = "#{respMB}")
+	private AuditoriaResponsableMB respMB = new AuditoriaResponsableMB();
 
 	public AuditoriaMB() {
 		super(new Auditoria());
@@ -99,6 +102,13 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	public void onMemo() {
 		memoMB.fillMemo();
 		memoMB.onEdit();
+	}
+	
+	public void asignarPersonal() {
+		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+		sessionMap.put("auditoria", getRegistro());
+		respMB.fillListado();
+		
 	}
 
 	@SuppressWarnings("unchecked")
@@ -342,6 +352,14 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	public void setMemoMB(MemoPlanificacionMB memoMB) {
 		this.memoMB = memoMB;
+	}
+
+	public AuditoriaResponsableMB getRespMB() {
+		return respMB;
+	}
+
+	public void setRespMB(AuditoriaResponsableMB respMB) {
+		this.respMB = respMB;
 	}
 
 }

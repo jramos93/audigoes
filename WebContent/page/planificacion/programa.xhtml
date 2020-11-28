@@ -1,16 +1,28 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
 
 	<h:form id="frmPrograma">
-		<p:panel rendered="#{audMB.status eq 'SEARCH' and pplaMB.status ne 'SEARCH' and proplaMB.status eq 'SEARCH'}">
-			<div align="left" style="margin-top: 50px;">
-				<p:commandButton id="btnCancel" action="#{pplaMB.onCancel}" process="@this"
-					value="Regresar" icon="pi pi-arrow-left" style="float:left;"
-					update=":frmPlanificacion, :frmPrograma" >
+		<p:panel
+			rendered="#{audMB.status eq 'SEARCH' and pplaMB.status ne 'SEARCH' and proplaMB.status eq 'SEARCH'}">
+			<div align="left" style="margin-top: 50px; float: left;">
+				<p:commandButton id="btnCancel" action="#{pplaMB.onCancel}"
+					styleClass="pink-btn raised-btn" process="@this" value="Regresar"
+					icon="pi pi-arrow-left" style="float:left;"
+					update=":frmPlanificacion, :frmPrograma">
+				</p:commandButton>
+			</div>
+
+			<div align="right" style="margin-top: 50px; float: right;">
+				<p:commandButton id="btnEnviar" oncomplete="PF('wvCorreo').show();" actionListener="#{pplaMB.prepararCorreo}"
+					title="Clic para enviar a revisión de la coordinación el programa de planificación"
+					process="@this" value="Enviar a Revisión" icon="pi pi-check-circle"
+					style="float:left;" styleClass="blue-btn raised-btn"
+					update=":frmCorreo">
 				</p:commandButton>
 			</div>
 			<div class="name" align="center" style="margin-top: 100px;">
@@ -62,68 +74,86 @@
 				</p:panelGrid>
 			</div>
 
-			<div class="ui-fluid p-formgrid p-grid">
-				<div class="name" align="center">
-					<span class="app-name">Procedimientos de Planificación</span>
-				</div>
-
-				<p:panelGrid columns="4"
-					columnClasses="ui-lg-1,ui-lg-1,ui-lg-1,ui-lg-1" layout="grid"
-					styleClass="ui-panelgrid-blank form-group form-elements">
-					<p:commandButton value="Agregar" icon="pi pi-plus"
-						update=":frmPrograma, :frmProcedimiento"
-						actionListener="#{proplaMB.onNew}">
-					</p:commandButton>
-					<p:commandButton value="Editar" icon="pi pi-pencil"
-						update=":frmPrograma, :frmProcedimiento"
-						rendered="#{proplaMB.registro.selected}"
-						actionListener="#{proplaMB.onEditSelected}">
-					</p:commandButton>
-				</p:panelGrid>
-
-				<p:dataTable var="p" value="#{proplaMB.listado}" rowIndexVar="index"
-					widgetVar="wvProcPlanificacion" reflow="true"
-					id="dtProcPlanificacion" style="margin-top:20px;" paginator="true"
-					filteredValue="#{proplaMB.filteredProcedimiento}"
-					globalFilterFunction="#{proplaMB.globalFilterFunction}"
-					selection="#{proplaMB.regSelected}" selectionMode="single"
-					paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
-					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
-					rowKey="#{p.proId}">
-
-					<p:ajax event="rowSelect" listener="#{proplaMB.onRowSelect}"
-						update=":frmPrograma" />
-
-					<f:facet name="paginatorTopRight">
-						<p:outputPanel>
-							<h:outputText value="Búsqueda global: " />
-							<p:inputText id="globalFilter"
-								onkeyup="PF('wvProcPlanificacion').filter();"
-								style="width:150px" placeholder="Ingresa una palabra" />
-						</p:outputPanel>
-					</f:facet>
-
-					<p:column headerText="No.">
-						<h:outputText value="#{index+1}"></h:outputText>
-					</p:column>
-
-					<p:column headerText="Nombre">
-						<h:outputText value="#{p.proNombre}"></h:outputText>
-					</p:column>
-
-					<p:column headerText="Referencia">
-						<h:outputText value="#{p.proReferencia}"></h:outputText>
-					</p:column>
-
-					<p:column headerText="Fecha Elaboración">
-						<h:outputText value="#{p.proFechaElaboro}"></h:outputText>
-					</p:column>
-
-				</p:dataTable>
+			<div class="name" align="center">
+				<span class="app-name">Procedimientos de Planificación</span>
 			</div>
+			<p:dataTable var="p" value="#{proplaMB.listado}" rowIndexVar="index"
+				widgetVar="wvProcPlanificacion" reflow="true"
+				id="dtProcPlanificacion" style="margin-top:20px;" paginator="true"
+				filteredValue="#{proplaMB.filteredProcedimiento}"
+				globalFilterFunction="#{proplaMB.globalFilterFunction}"
+				selection="#{proplaMB.regSelected}" selectionMode="single"
+				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+				rowKey="#{p.proId}">
+
+				<p:ajax event="rowSelect" listener="#{proplaMB.onRowSelect}"
+					update=":frmPrograma:dtProcPlanificacion:tMenu" />
+
+				<f:facet name="header">
+					<p:toolbar id="tMenu">
+						<p:toolbarGroup>
+							<p:commandButton value="Agregar" icon="pi pi-plus"
+								styleClass="raised-btn" update=":frmPrograma, :frmProcedimiento"
+								actionListener="#{proplaMB.onNew}">
+							</p:commandButton>
+							<p:commandButton value="Editar" icon="pi pi-pencil"
+								styleClass="raised-btn" update=":frmPrograma, :frmProcedimiento"
+								rendered="#{proplaMB.registro.selected}"
+								actionListener="#{proplaMB.onEditSelected}">
+							</p:commandButton>
+						</p:toolbarGroup>
+					</p:toolbar>
+				</f:facet>
+
+				<f:facet name="paginatorTopRight">
+					<p:outputPanel>
+						<h:outputText value="Búsqueda global: " />
+						<p:inputText id="globalFilter"
+							onkeyup="PF('wvProcPlanificacion').filter();" style="width:150px"
+							placeholder="Ingresa una palabra" />
+					</p:outputPanel>
+				</f:facet>
+
+				<p:column headerText="No.">
+					<h:outputText value="#{index+1}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Nombre">
+					<h:outputText value="#{p.proNombre}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Referencia">
+					<h:outputText value="#{p.proReferencia}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Fecha Elaboración">
+					<h:outputText value="#{p.proFechaElaboro}"></h:outputText>
+				</p:column>
+
+			</p:dataTable>
 		</p:panel>
 	</h:form>
+
+	<p:dialog widgetVar="wvCorreo" modal="true" showEffect="fade"
+		closable="true" closeOnEscape="true" responsive="true">
+		<h:form id="frmCorreo">
+			<p:commandButton id="btnEnviar" action="#{pplaMB.onEnviarRevision}"
+				title="Clic para enviar a revisión de la coordinación el programa de planificación"
+				process=":frmCorreo" value="Enviar a Revisión" icon="pi pi-check-circle"
+				style="float:left;" styleClass="blue-btn raised-btn"
+				update=":frmPlanificacion, :frmPrograma">
+				<p:confirm header="Confirmación" message="¿Enviar a revisión?"></p:confirm>
+			</p:commandButton>
+			<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+				<p:outputLabel for="narra" value="Digite el texto del correo:"
+					style="font-weight:bold;" />
+				<pe:ckEditor id="narra" width="100%" value="#{pplaMB.textoCorreo}" />
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
 
 	<ui:include src="procedimiento.xhtml"></ui:include>
 

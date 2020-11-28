@@ -1,5 +1,7 @@
 package audigoes.ues.edu.sv.mbean.planificacion;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
@@ -9,9 +11,13 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.ws.rs.GET;
 
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+
+import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.io.source.ByteArrayOutputStream;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
@@ -30,6 +36,8 @@ public class ProcedimientosPlaniMB extends AudigoesController implements Seriali
 	private List<ProcedimientoPlanificacion> filteredProcedimiento;
 	private Auditoria auditoria;
 	private ProgramaPlanificacion programa;
+	
+	private StreamedContent narrativa;
 
 	@ManagedProperty(value = "#{arcMB}")
 	private ArchivoMB arcMB = new ArchivoMB();
@@ -186,6 +194,38 @@ public class ProcedimientosPlaniMB extends AudigoesController implements Seriali
 
 	public void setArcMB(ArchivoMB arcMB) {
 		this.arcMB = arcMB;
+	}
+
+	public StreamedContent getNarrativa() {
+		
+		try {
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			
+			// Para definir los encabezados de pagina y los pie de pagina
+			String str = "<html><head>"
+					+ "<style>#header{position: running(header);} @page {margin: 150px 70px 100px;@bottom-right {content: \"Página \" counter(page) \" de \" counter(pages); } @top-center {content: element(header);} }</style>"
+					+ "</head><body style='width:500px; font-size:smaller;'>";
+			
+			// Defino el texto del encabezado de pagina con el id header que es que se pone arriba running(header)
+			str=str+"<div id='header' style='margin-top:20px;'> "
+					+ "<strong>Unidad de Auditoría Interna</strong><br/><strong>Narrativa de Procedimiento de Planificación</strong></div>";
+			// Concateno el texto a agregar
+			str=str+"<div style='text-align:justify'>"+getRegistro().getProNarrativa();
+			str=str+"</div></body></html>";
+			
+			HtmlConverter.convertToPdf(str, os);
+			
+			InputStream is = new ByteArrayInputStream(os.toByteArray());
+			return new DefaultStreamedContent(is, "application/pdf", "narrativa.pdf");
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage("Advertencia", "Hubo un error al generar el documento de la narrativa"));
+		}
+		return narrativa;
+	}
+
+	public void setNarrativa(StreamedContent narrativa) {
+		this.narrativa = narrativa;
 	}
 
 }

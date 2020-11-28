@@ -9,10 +9,19 @@
 	<h:form id="frmProcedimiento">
 		<p:panel rendered="#{proplaMB.status ne 'SEARCH'}">
 
-			<div align="left" style="margin-top: 50px;">
+			<div align="left" style="margin-top: 50px; float: left;">
 				<p:commandButton id="btnCancel" action="#{proplaMB.onCancel}"
-					value="Cancelar" icon="pi pi-ban" style="float:left;"
+					value="Cancelar" icon="pi pi-ban" style="float:left;" styleClass="pink-btn raised-btn"
 					update=":frmPrograma, :frmProcedimiento" process="@this">
+				</p:commandButton>
+			</div>
+			
+			<div align="right" style="margin-top: 50px; float: right;">
+				<p:commandButton id="btnNarrativa"
+					title="Clic para generar la narrativa del procedimiento"
+					process="@this" value="Generar Narrativa" icon="pi pi-check-circle"
+					style="float:left;" styleClass="blue-btn raised-btn" ajax="false">
+					<p:fileDownload value="#{proplaMB.narrativa}"></p:fileDownload>
 				</p:commandButton>
 			</div>
 			<div class="name" align="center" style="margin-top: 100px;">

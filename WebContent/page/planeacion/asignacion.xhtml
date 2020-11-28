@@ -1,0 +1,120 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
+
+	<h:head>
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{respMB.fillListado}" />
+		</f:metadata>
+	</h:head>
+
+	<ui:define name="content">
+
+		<div class="name" align="center">
+			<span class="app-name">Asignación de Personal a la Auditoría</span>
+		</div>
+
+		<h:form id="frmAsignación">
+			<p:panel>
+				<p:commandButton id="btnCancel" ajax="false" icon="pi pi-arrow-left"
+					action="/page/planeacion/auditoria.xhtml?faces-redirect=true"
+					value="Regresar" update="@form :frm" process="@this">
+				</p:commandButton>
+				<p:separator />
+				<div class="ui-fluid p-formgrid p-grid">
+					<div class="p-field p-col">
+						<p:outputLabel for="codigo" value="Código auditoría:" />
+						<h:outputText id="codigo" value="#{respMB.auditoria.audCodigo}"
+							readonly="true" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="nombre" value="Nombre auditoría:" />
+						<p:inputText id="nombre" value="#{respMB.auditoria.audNombre}"
+							readonly="true" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="tipo" value="Tipo Auditoría" />
+						<p:inputText id="tipo"
+							value="#{respMB.auditoria.tipoAuditoria.tpaNombre}"
+							readonly="true" />
+					</div>
+
+					<div class="p-field p-col">
+						<p:outputLabel for="audfechainicio" value="Fecha Inicio" />
+						<p:calendar id="audfechainicio" mask="true" disabled="true"
+							value="#{respMB.auditoria.audFechaInicioProgramado}"
+							required="true" pattern="dd-MM-yyyy" navigator="true"
+							requiredMessage="Debe ingresar fecha inicio" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="audfechafin" value="Fecha Fin" />
+						<p:calendar id="audfechafin" mask="true" disabled="true"
+							value="#{respMB.auditoria.audFechaFinProgramado}" required="true"
+							pattern="dd-MM-yyyy" navigator="true"
+							requiredMessage="Debe ingresar fecha de fin" />
+					</div>
+
+					<p:panelGrid columns="3" columnClasses="ui-lg-1,ui-lg-9,ui-lg-2"
+						layout="grid"
+						styleClass="ui-panelgrid-blank form-group form-elements">
+						<h:outputText value="Auditor:	" />
+						<p:selectOneMenu id="personal" converter="usuConverter"
+							title="Seleccione el personal que desea agregar"
+							value="#{respMB.selectedUsuario}" label="Personal"
+							multiple="true" filter="true" filterMatchMode="startsWith">
+							<f:selectItems value="#{respMB.usuariosList}" var="usu"
+								itemLabel="#{usu.usuNombre}" itemValue="#{usu}" />
+						</p:selectOneMenu>
+						<p:commandButton value="Agregar" icon="pi pi-plus"
+							title="Clic para agregar a la lista"
+							actionListener="#{respMB.addResponsable}" update=":frmAsignación"></p:commandButton>
+					</p:panelGrid>
+				</div>
+
+
+
+				<p:dataTable var="r" value="#{respMB.listado}" rowIndexVar="index"
+					widgetVar="wvResponsables" reflow="true" id="dtResponsables"
+					style="margin-top:20px;" paginator="true" paginatorPosition="top"
+					rowsPerPageTemplate="1,5,10,15" rows="5"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+					rowKey="#{r.aurId}">
+
+					<f:facet name="header">Lista de Personal Asignado a la Auditoría</f:facet>
+
+					<p:column headerText="No.">
+						<h:outputText value="#{index+1}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Empleado" filterBy="#{r.usuario.usuNombre}"
+						filterMatchMode="contains">
+						<h:outputText
+							value="#{r.usuario.usuNombre} #{r.usuario.usuApellido}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Rol">
+						<h:outputText value="Auditor" rendered="#{r.audRol==1}"></h:outputText>
+						<h:outputText value="Coordinador" rendered="#{r.audRol==0}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Eliminar" style="width:60px;">
+						<p:commandButton actionListener="#{respMB.onBorrar(r)}"
+							update=":frmAsignación" icon="pi pi-trash"
+							title="Clic para eliminar el usuario">
+							<p:confirm header="Confirmación" message="¿Eliminar?"
+								icon="pi pi-info-circle"></p:confirm>
+						</p:commandButton>
+					</p:column>
+
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

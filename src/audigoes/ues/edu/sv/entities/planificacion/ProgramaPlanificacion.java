@@ -93,6 +93,9 @@ public class ProgramaPlanificacion extends SuperEntity implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "prp_usu_usu_id")
 	private Usuario usuario2;
+	
+	@Column(name = "prp_estado")
+	private int prpEstado;
 
 	public ProgramaPlanificacion() {
 	}
@@ -256,6 +259,14 @@ public class ProgramaPlanificacion extends SuperEntity implements Serializable {
 
 	public void setUsuario2(Usuario usuario2) {
 		this.usuario2 = usuario2;
+	}
+
+	public int getPrpEstado() {
+		return prpEstado;
+	}
+
+	public void setPrpEstado(int prpEstado) {
+		this.prpEstado = prpEstado;
 	}
 
 	@Override

@@ -9,7 +9,7 @@
 			<p:panel
 				rendered="#{audMB.status eq 'SEARCH' and (pplaMB.status eq 'SEARCH' and memoMB.status eq 'SEARCH' and pejeMB.status eq 'SEARCH')}">
 				<div align="left" style="margin-top: 50px;">
-					<p:commandButton id="btnCancel" ajax="false"
+					<p:commandButton id="btnCancel" ajax="false" styleClass="pink-btn raised-btn"
 						action="/page/planeacion/auditoria.xhtml?faces-redirect=true"
 						value="Regresar" icon="pi pi-arrow-left" style="float:left;">
 					</p:commandButton>

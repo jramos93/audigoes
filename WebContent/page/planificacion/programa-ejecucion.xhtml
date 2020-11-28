@@ -1,16 +1,29 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
 
 	<h:form id="frmProgramaEje">
-		<p:panel rendered="#{audMB.status eq 'SEARCH' and pejeMB.status ne 'SEARCH' and proejeMB.status eq 'SEARCH'}">
-			<div align="left" style="margin-top: 50px;">
-				<p:commandButton id="btnCancel" action="#{pejeMB.onCancel}" process="@this"
-					value="Regresar" icon="pi pi-arrow-left" style="float:left;"
-					update=":frmPlanificacion, :frmProgramaEje" >
+		<p:panel
+			rendered="#{audMB.status eq 'SEARCH' and pejeMB.status ne 'SEARCH' and proejeMB.status eq 'SEARCH'}">
+			<div align="left" style="margin-top: 50px; float: left;">
+				<p:commandButton id="btnCancel" action="#{pejeMB.onCancel}"
+					styleClass="pink-btn raised-btn" process="@this" value="Regresar"
+					icon="pi pi-arrow-left" style="float:left;"
+					update=":frmPlanificacion, :frmProgramaEje">
+				</p:commandButton>
+			</div>
+
+			<div align="right" style="margin-top: 50px; float: right;">
+				<p:commandButton id="btnEnviar" action="#{pejeMB.prepararCorreo}"
+					oncomplete="PF('wvCorreo2').show();"
+					title="Clic para enviar a revisión de la coordinación el programa de planificación"
+					process="@this" value="Enviar a Revisión" icon="pi pi-check-circle"
+					style="float:left;" styleClass="blue-btn raised-btn"
+					update=":frmCorreo2">
 				</p:commandButton>
 			</div>
 			<div class="name" align="center" style="margin-top: 100px;">
@@ -75,8 +88,8 @@
 				</p:panelGrid>
 
 				<p:dataTable var="p" value="#{proejeMB.listado}" rowIndexVar="index"
-					widgetVar="wvProcEjecucion" reflow="true"
-					id="dtProcEjecucion" style="margin-top:20px;" paginator="true"
+					widgetVar="wvProcEjecucion" reflow="true" id="dtProcEjecucion"
+					style="margin-top:20px;" paginator="true"
 					filteredValue="#{proejeMB.filteredProcedimiento}"
 					globalFilterFunction="#{proejeMB.globalFilterFunction}"
 					selection="#{proejeMB.regSelected}" selectionMode="single"
@@ -92,8 +105,8 @@
 						<p:outputPanel>
 							<h:outputText value="Búsqueda global: " />
 							<p:inputText id="globalFilter"
-								onkeyup="PF('wvProcEjecucion').filter();"
-								style="width:150px" placeholder="Ingresa una palabra" />
+								onkeyup="PF('wvProcEjecucion').filter();" style="width:150px"
+								placeholder="Ingresa una palabra" />
 						</p:outputPanel>
 					</f:facet>
 
@@ -117,6 +130,26 @@
 			</div>
 		</p:panel>
 	</h:form>
+
+	<p:dialog widgetVar="wvCorreo2" modal="true" showEffect="fade"
+		closable="true" closeOnEscape="true" responsive="true">
+		<h:form id="frmCorreo2">
+			<p:commandButton id="btnEnviar" action="#{pejeMB.onEnviarRevision}"
+				title="Clic para enviar a revisión de la coordinación el programa de ejecución"
+				process=":frmCorreo" value="Enviar a Revisión"
+				icon="pi pi-check-circle" style="float:left;"
+				styleClass="blue-btn raised-btn"
+				update=":frmPlanificacion, :frmProgramaEje">
+				<p:confirm header="Confirmación" message="¿Enviar a revisión?"></p:confirm>
+			</p:commandButton>
+			<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+				<p:outputLabel for="narra" value="Digite el texto del correo:"
+					style="font-weight:bold;" />
+				<pe:ckEditor id="narra" width="100%" value="#{pejeMB.textoCorreo}" />
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
 
 	<ui:include src="procedimiento-ejecucion.xhtml"></ui:include>
 
