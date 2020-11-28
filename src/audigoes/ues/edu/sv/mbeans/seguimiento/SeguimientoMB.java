@@ -48,12 +48,14 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 	@SuppressWarnings("unchecked")
 	public void obtenerCoordinador() {
 		try {
-			List<Usuario> usrs = (List<Usuario>) audigoesLocal.findByNamedQuery(Usuario.class,
-					"usuario.get.coordinador", new Object[] { getAuditoria().getAudId() });
-			if (!usrs.isEmpty()) {
-				setCoordinador(usrs.get(0));
-			} else {
-				setCoordinador(new Usuario());
+			if (getAuditoria() != null) {
+				List<Usuario> usrs = (List<Usuario>) audigoesLocal.findByNamedQuery(Usuario.class,
+						"usuario.get.coordinador", new Object[] { getAuditoria().getAudId() });
+				if (!usrs.isEmpty()) {
+					setCoordinador(usrs.get(0));
+				} else {
+					setCoordinador(new Usuario());
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
