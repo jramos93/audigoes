@@ -237,18 +237,24 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	}
 
 	public void agregarUnidadAuditada() {
-		if (getUnidadesSelectedList() == null) {
-			setUnidadesSelectedList(new ArrayList<Unidad>());
+		try {
+			if (getUnidadesSelectedList() == null) {
+				setUnidadesSelectedList(new ArrayList<Unidad>());
+			}
+			getUnidadesSelectedList().add(getUnidadSelected());
+			getUnidadList().remove(getUnidadSelected());
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage(SYSTEM_NAME,"Problema al agregar unidad"));
 		}
-		getUnidadesSelectedList().add(getUnidadSelected());
-		getUnidadList().remove(getUnidadSelected());
 	}
 	
 	@Override
 	public boolean beforeNew() {
 		fillTipoAuditoriaList();
 		fillPlanAnualList();
-		createCodAuditoria();
+		fillUnidadList();
+		fillUsuariosInstitucionList();
 		return super.beforeNew();
 	}
 	
@@ -256,6 +262,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	public boolean beforeEdit() {
 		fillTipoAuditoriaList();
 		fillPlanAnualList();
+		fillUnidadList();
 		setTipoAuditoriaSelected(getRegistro().getTipoAuditoria());
 		setPlanSelected(getRegistro().getPlanAnual());
 		return super.beforeEdit();
@@ -271,29 +278,20 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	}
 
 	@Override
-	public boolean beforeSave() {
-		// validando fecha de auditoría: fechaInicio < fechaFin
-		boolean fechaValida = getRegistro().getAudFechaInicioProgramado()
-				.compareTo(getRegistro().getAudFechaFinProgramado()) < 0;
-		if (fechaValida) {
-			/* 
-			 * validando fecha de auditoria: fecha de la nueva auditoría debe estar dentro
-			 * del rango de fecha del plan seleccionado 
-			*/
-			fechaValida = getRegistro().getAudFechaInicioProgramado()
-					.compareTo(getPlanSelected().getPlaFechaInicio()) >= 0
-					&& getRegistro().getAudFechaFinProgramado().compareTo(getPlanSelected().getPlaFechaFin()) <= 0;
-			if (fechaValida) {
+	public boolean beforeSaveNew() {
+		if (isFechaAuditoriaValida()) {
+			if (isFechaPlanValido()) {
 				getRegistro().setAudCorrelativo(getCorrelativoAuditoria());
 				getRegistro().setPlanAnual(getPlanSelected());
 				getRegistro().setTipoAuditoria(getTipoAuditoriaSelected());
+				createCodAuditoria();
 				return super.beforeSave();
 			} else {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 				addWarn(new FacesMessage(SYSTEM_NAME,
 						"La fecha de la auditoría se sale del rango programado para el plan seleccionado, DATOS DEL PLAN: "
-						+ " Fecha Inicio " + dateFormat.format(getPlanSelected().getPlaFechaInicio()) 
-						+ " Fecha Fin "	+ dateFormat.format(getPlanSelected().getPlaFechaFin())));
+								+ " Fecha Inicio " + dateFormat.format(getPlanSelected().getPlaFechaInicio())
+								+ " Fecha Fin " + dateFormat.format(getPlanSelected().getPlaFechaFin())));
 				return false;
 			}
 
@@ -302,7 +300,6 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 					"La fecha de inicio debe ser menor a la fecha de finalización, favor verificar las fechas ingresadas"));
 			return false;
 		}
-
 	}
 	
 	public void planificacion() {
@@ -316,16 +313,22 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	@Override
 	public void afterSaveNew() {
-		getListado().add(getRegistro());
-		this.respMB.onNew();
-		this.respMB.getRegistro().setUsuario(getCoordinador());
-		this.respMB.getRegistro().setAudRol(0);
-		this.respMB.getRegistro().setAuditoria(getRegistro());
-		this.respMB.onSave();
+		try {
+			getListado().add(getRegistro());
+			this.respMB.onNew();
+			this.respMB.getRegistro().setUsuario(getCoordinador());
+			this.respMB.getRegistro().setAudRol(0);
+			this.respMB.getRegistro().setAuditoria(getRegistro());
+			this.respMB.onSave();
 
-		guardarUnidadesAuditadas();
-		onNew();
-		super.afterSaveNew();
+			guardarUnidadesAuditadas();
+			onNew();
+			super.afterSaveNew();
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage(SYSTEM_NAME,"Problema al guardar coordinador de la auditoría"));
+		}
+		
 	}
 
 	public void guardarUnidadesAuditadas() {

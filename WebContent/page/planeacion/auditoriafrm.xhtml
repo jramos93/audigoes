@@ -24,38 +24,63 @@
 				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
 				<p:ajax event="rowSelect" listener="#{audMB.onRowSelect}"
 					update="dtAuditorias" />
-				<f:facet name="paginatorTopLeft">
-					<p:commandButton value="Nuevo" update=":frmNewEditAuditoria"
-						icon="pi pi-eye" actionListener="#{audMB.onNew()}" process="@this">
-					</p:commandButton>
-					<p:commandButton id="btnEditarAuditoria" action="#{audMB.onEdit}"
-						rendered="#{audMB.registro.selected}" value="Editar Auditoría"
-						icon="pi pi-plus" update="@form :frmNewEditAuditoria">
-					</p:commandButton>
-					<p:commandButton id="btnActividades" value="Actividades"
-						rendered="#{audMB.registro.selected}">
-					</p:commandButton>
-					<p:commandButton id="btnAuditPlanificacion" value="Planificación"
-						rendered="#{audMB.registro.selected}">
-					</p:commandButton>
-					<p:commandButton id="btnAuditEjecucion" value="Ejecución"
-						rendered="#{audMB.registro.selected}">
-					</p:commandButton>
-					<p:commandButton id="btnAuditInforme" value="Informe"
-						actionListener="#{audMB.informeAud}"
-						rendered="#{audMB.registro.selected}" ajax="false">
-					</p:commandButton>
-					<p:commandButton id="btnAuditSeguimiento" value="Seguimiento"
-						actionListener="#{audMB.seguimiento}" ajax="false"
-						rendered="#{audMB.registro.selected}">
-					</p:commandButton>
-					<p:commandButton update=":frm" value="Eliminar" icon="pi pi-times"
-						actionListener="#{audMB.onDelete}"
-						rendered="#{audMB.registro.selected}" process="@this">
-						<p:confirm header="Confirmación"
-							message="Seguro(a) que desea eliminar el registros"
-							icon="pi pi-exclamation-triangle" />
-					</p:commandButton>
+				<f:facet name="header">
+					<p:toolbar id="tMenu">
+						<p:toolbarGroup>
+							<p:commandButton value="Agregar"
+								update="@form :frmNewEditAuditoria" icon="pi pi-eye"
+								actionListener="#{audMB.onNew()}" styleClass="raised-btn"
+								process="@this">
+							</p:commandButton>
+							<p:commandButton id="btnEditarAuditoria" action="#{audMB.onEdit}"
+								styleClass="raised-btn" rendered="#{audMB.registro.selected}"
+								value="Editar" icon="pi pi-plus"
+								update="@form :frmNewEditAuditoria">
+							</p:commandButton>
+							<p:commandButton update=":frm" value="Eliminar"
+								icon="pi pi-trash" actionListener="#{audMB.onDelete}"
+								styleClass="raised-btn" rendered="#{audMB.registro.selected}"
+								process="@this">
+								<p:confirm header="Confirmación"
+									message="Seguro(a) que desea eliminar el registros"
+									icon="pi pi-exclamation-triangle" />
+							</p:commandButton>
+							<p:separator></p:separator>
+							<p:commandButton id="btnActividades" value="Actividades"
+								styleClass="blue-btn raised-btn" icon="pi pi-list"
+								rendered="#{audMB.registro.selected}">
+							</p:commandButton>
+							<p:commandButton id="btnAuditAsignacion" value="Asignar Personal"
+								styleClass="blue-btn raised-btn"
+								actionListener="#{audMB.asignarPersonal}" ajax="false"
+								icon="pi pi-users"
+								action="/page/planeacion/asignacion.xhtml?faces-redirect=true"
+								rendered="#{audMB.registro.selected}">
+							</p:commandButton>
+							<p:commandButton id="btnAuditPlanificacion" value="Planificación"
+								styleClass="blue-btn raised-btn"
+								actionListener="#{audMB.planificacion}" ajax="false"
+								icon="pi pi-folder"
+								action="/page/planificacion/planificacion.xhtml"
+								rendered="#{audMB.registro.selected}">
+							</p:commandButton>
+							<p:commandButton id="btnAuditEjecucion" value="Ejecución"
+								styleClass="blue-btn raised-btn" icon="pi pi-folder"
+								rendered="#{audMB.registro.selected}">
+							</p:commandButton>
+							<p:commandButton id="btnAuditInforme" value="Informe"
+								styleClass="blue-btn raised-btn" icon="pi pi-folder"
+								actionListener="#{audMB.informeAud()}"
+								rendered="#{audMB.registro.selected}" ajax="false">
+							</p:commandButton>
+							<p:commandButton id="btnAuditSeguimiento" value="Seguimiento"
+								actionListener="#{audMB.seguimiento}" ajax="false"
+								rendered="#{audMB.registro.selected}"
+								styleClass="blue-btn raised-btn">
+							</p:commandButton>
+						</p:toolbarGroup>
+					</p:toolbar>
+
 				</f:facet>
 				<p:column headerText="N°" sortBy="#{aud.audCorrelativo}" width="">
 					<h:outputText value="#{aud.audCorrelativo}" />
