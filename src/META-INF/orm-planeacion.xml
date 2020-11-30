@@ -29,6 +29,9 @@
 		<query>select o from Usuario o where o.institucion.insId = ?1 and o.regActivo = 1</query>
 	</named-query>
 	<named-query name="usuario.get.coordinador">
-		<query>select o.usuario from AuditoriaResponsable o where o.auditoria.audId = ?1 </query>
+		<query>select o.usuario from AuditoriaResponsable o where o.auditoria.audId = ?1 and o.aurRol = 0 and o.regActivo = 1</query>
+	</named-query>
+	<named-query name="unidad.get.all.unidades.disponibles">
+		<query>select o.unidad from AuditoriaUnidad o left outer join o.unidad f  where o.unidad.uniId is null</query>
 	</named-query>
 </entity-mappings>

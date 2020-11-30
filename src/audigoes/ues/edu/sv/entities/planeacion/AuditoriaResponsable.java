@@ -43,7 +43,7 @@ public class AuditoriaResponsable extends SuperEntity implements Serializable {
 	private String usuModi;
 	
 	@Column(name="aur_rol")
-	private int audRol;
+	private int aurRol;
 
 	//bi-directional many-to-one association to Auditoria
 	@ManyToOne
@@ -122,12 +122,12 @@ public class AuditoriaResponsable extends SuperEntity implements Serializable {
 		this.usuario = usuario;
 	}
 
-	public int getAudRol() {
-		return audRol;
+	public int getAurRol() {
+		return aurRol;
 	}
 
-	public void setAudRol(int audRol) {
-		this.audRol = audRol;
+	public void setAurRol(int aurRol) {
+		this.aurRol = aurRol;
 	}
 
 	@Override
@@ -155,8 +155,8 @@ public class AuditoriaResponsable extends SuperEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "AuditoriaResponsable [aurId=" + aurId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo="
-				+ regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", auditoria=" + auditoria
-				+ ", usuario=" + usuario + "]";
+				+ regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", aurRol=" + aurRol + ", auditoria="
+				+ auditoria + ", usuario=" + usuario + "]";
 	}
 
 }

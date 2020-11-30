@@ -6,7 +6,7 @@
 
 
 	<h:form id="frmAuditoria">
-		<p:panel rendered="#{planMB.status eq 'VIEW_AUDITORIAS'}">
+		<p:panel rendered="#{planMB.status eq 'VIEW_AUDITORIAS' and audMB.status eq 'SEARCH'}">
 			<h:outputText styleClass="tituloDialog"
 				value="#{audMB.planSelected.plaNombre}" />
 			<p:commandButton id="btnCancel" action="#{planMB.onCancel}"
@@ -23,9 +23,9 @@
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
 				<p:ajax event="rowSelect" listener="#{audMB.onRowSelect}"
-					update="dtAuditorias" />
+					update="frmAuditoria:dtAuditorias:tMenuAuditoria" />
 				<f:facet name="header">
-					<p:toolbar id="tMenu">
+					<p:toolbar id="tMenuAuditoria">
 						<p:toolbarGroup>
 							<p:commandButton value="Agregar"
 								update="@form :frmNewEditAuditoria" icon="pi pi-eye"
@@ -80,16 +80,18 @@
 							</p:commandButton>
 						</p:toolbarGroup>
 					</p:toolbar>
-
 				</f:facet>
 				<p:column headerText="N°" sortBy="#{aud.audCorrelativo}" width="">
 					<h:outputText value="#{aud.audCorrelativo}" />
 				</p:column>
-				<p:column headerText="Año" sortBy="#{aud.audAnio}">
-					<h:outputText value="#{aud.audAnio}" />
+				<p:column headerText="Código" sortBy="#{aud.audCodigo}" width="">
+					<h:outputText value="#{aud.audCodigo}" />
 				</p:column>
 				<p:column headerText="Auditoría" sortBy="#{aud.audNombre}">
 					<h:outputText value="#{aud.audNombre}" />
+				</p:column>
+				<p:column headerText="Plan" sortBy="#{aud.planAnual.plaNombre}">
+					<h:outputText value="#{aud.planAnual.plaNombre}" />
 				</p:column>
 				<p:column headerText="Tipo Auditoría"
 					sortBy="#{aud.tipoAuditoria.tpaNombre}">

@@ -19,6 +19,7 @@ import audigoes.ues.edu.sv.entities.administracion.Unidad;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
+import audigoes.ues.edu.sv.entities.planeacion.AuditoriaResponsable;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
 import audigoes.ues.edu.sv.entities.planeacion.TipoAuditoria;
 import audigoes.ues.edu.sv.mbean.planificacion.AuditoriaUnidadMB;
@@ -41,33 +42,33 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	private List<TipoAuditoria> tipoAuditoriaList;
 	private TipoAuditoria tipoAuditoriaSelected;
-	
+
 	private List<Unidad> unidadList;
 	private List<Unidad> unidadesSelectedList;
 	private Unidad unidadSelected;
-	
+
 	private Usuario coordinador;
-	
+
 	private Informe informe;
-	
+
 	@ManagedProperty(value = "#{pplaMB}")
 	private ProgramaPlanificacionMB pplaMB = new ProgramaPlanificacionMB();
-	
+
 	@ManagedProperty(value = "#{pejeMB}")
 	private ProgramaEjecucionMB pejeMB = new ProgramaEjecucionMB();
-	
+
 	@ManagedProperty(value = "#{memoMB}")
 	private MemoPlanificacionMB memoMB = new MemoPlanificacionMB();
-	
+
 	@ManagedProperty(value = "#{respMB}")
 	private AuditoriaResponsableMB respMB = new AuditoriaResponsableMB();
 
 	@ManagedProperty(value = "#{audUniMB}")
 	private AuditoriaUnidadMB audUniMB = new AuditoriaUnidadMB();
-	
+
 	@ManagedProperty(value = "#{segMB}")
 	private SeguimientoMB segMB = new SeguimientoMB();
-	
+
 	public AuditoriaMB() {
 		super(new Auditoria());
 	}
@@ -81,11 +82,11 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	
-	public void informeAud(){
+
+	public void informeAud() {
 		try {
 			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-			sessionMap.put("auditoria",getRegistro());
+			sessionMap.put("auditoria", getRegistro());
 			FacesContext.getCurrentInstance().getExternalContext().redirect("/audigoes/page/informe/informe.xhtml");
 			System.out.println(getRegistro().getAudId());
 		} catch (Exception e) {
@@ -114,37 +115,38 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		}
 
 	}
-	
+
 	public void onPrograma() {
 		pplaMB.fillPrograma();
 		pplaMB.onEdit();
 	}
-	
+
 	public void onProgramaEje() {
 		pejeMB.fillPrograma();
 		pejeMB.onEdit();
 	}
-	
+
 	public void onMemo() {
 		memoMB.fillMemo();
 		memoMB.onEdit();
 	}
-	
-	public void seguimiento(){
+
+	public void seguimiento() {
 		try {
 			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 			sessionMap.put("auditoria", getRegistro());
-			FacesContext.getCurrentInstance().getExternalContext().redirect("/audigoes/page/seguimiento/seguimiento.xhtml");
+			FacesContext.getCurrentInstance().getExternalContext()
+					.redirect("/audigoes/page/seguimiento/seguimiento.xhtml");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void asignarPersonal() {
 		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 		sessionMap.put("auditoria", getRegistro());
 		respMB.fillListado();
-		
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -211,12 +213,12 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	public int getCorrelativoAuditoria() {
 		List<Auditoria> maxIdList;
 		try {
-			maxIdList = (List<Auditoria>) audigoesLocal.findByNamedQuery(Auditoria.class, "auditoria.get.max.id", new Object [] {
-					getObjAppsSession().getUsuario().getInstitucion().getInsId()});
-			if(maxIdList.size()>0) {
-				System.out.println(maxIdList.get(0).getAudCorrelativo()+1);
-				return maxIdList.get(0).getAudCorrelativo()+1;
-			}else {
+			maxIdList = (List<Auditoria>) audigoesLocal.findByNamedQuery(Auditoria.class, "auditoria.get.max.id",
+					new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() });
+			if (maxIdList.size() > 0) {
+				System.out.println(maxIdList.get(0).getAudCorrelativo() + 1);
+				return maxIdList.get(0).getAudCorrelativo() + 1;
+			} else {
 				System.out.println("1");
 				return 1;
 			}
@@ -225,7 +227,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 			return -1;
 		}
 	}
-	
+
 	public void createCodAuditoria() {
 		try {
 			getRegistro().setAudCodigo(getTipoAuditoriaSelected().getTpaAcronimo() + "-" + getRegistro().getAudAnio()
@@ -238,17 +240,31 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	public void agregarUnidadAuditada() {
 		try {
-			if (getUnidadesSelectedList() == null) {
-				setUnidadesSelectedList(new ArrayList<Unidad>());
+			if(getStatus().equals("NEW")) {
+				if (getUnidadesSelectedList() == null) {
+					setUnidadesSelectedList(new ArrayList<Unidad>());
+				}
+				getUnidadesSelectedList().add(getUnidadSelected());
+				getUnidadList().remove(getUnidadSelected());
+			} else if (getStatus().equals("EDIT")) {
+				this.audUniMB.onNew();
+				this.audUniMB.getRegistro().setAuditoria(getRegistro());
+				this.audUniMB.getRegistro().setUnidad(getUnidadSelected());
+				this.audUniMB.onSave();
+				getRegistro().getAuditoriaUnidad().add(this.audUniMB.getRegistro());
+				getUnidadList().remove(getUnidadSelected());
 			}
-			getUnidadesSelectedList().add(getUnidadSelected());
-			getUnidadList().remove(getUnidadSelected());
+			
 		} catch (Exception e) {
 			e.printStackTrace();
-			addWarn(new FacesMessage(SYSTEM_NAME,"Problema al agregar unidad"));
+			addWarn(new FacesMessage(SYSTEM_NAME, "Problema al agregar unidad"));
 		}
 	}
-	
+
+	public void eliminarUnidadAuditada(Unidad unidad) {
+		getUnidadesSelectedList().remove(unidad);
+	}
+
 	@Override
 	public boolean beforeNew() {
 		fillTipoAuditoriaList();
@@ -257,12 +273,13 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		fillUsuariosInstitucionList();
 		return super.beforeNew();
 	}
-	
+
 	@Override
 	public boolean beforeEdit() {
 		fillTipoAuditoriaList();
 		fillPlanAnualList();
 		fillUnidadList();
+		fillUsuariosInstitucionList();
 		setTipoAuditoriaSelected(getRegistro().getTipoAuditoria());
 		setPlanSelected(getRegistro().getPlanAnual());
 		return super.beforeEdit();
@@ -275,6 +292,22 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	private boolean isFechaPlanValido() {
 		return getRegistro().getAudFechaInicioProgramado().compareTo(getPlanSelected().getPlaFechaInicio()) >= 0
 				&& getRegistro().getAudFechaFinProgramado().compareTo(getPlanSelected().getPlaFechaFin()) <= 0;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void onRowSelect() {
+		super.onRowSelect();
+		try {
+			List<Usuario> coord = (List<Usuario>) audigoesLocal.findByNamedQuery(Usuario.class,
+					"usuario.get.coordinador", new Object[] { getRegistro().getAudId() });
+			if (!coord.isEmpty()) {
+				setCoordinador(coord.get(0));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -301,7 +334,42 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 			return false;
 		}
 	}
-	
+
+	@Override
+	public void afterSaveEdit() {
+		boolean valido = false;
+		for (AuditoriaResponsable cor : getRegistro().getAuditoriaResponsable()) {
+			if (cor.getAurRol() == 0) {
+				if (cor.getUsuario().getUsuId() != getCoordinador().getUsuId()) {
+					try {
+						//inactivar coordinador actual
+						this.respMB.setRegSelected(cor);
+						this.respMB.onEditSelected();
+						this.respMB.getRegistro().setRegActivo(0);
+						this.respMB.onSaveEdit();
+						
+						//ingresar nuevo coordinador
+						guardarCoordinador();
+					} catch (Exception e) {
+						e.printStackTrace();
+						addWarn(new FacesMessage(SYSTEM_NAME, "Problema al actualizar el coordinador"));
+					}
+				}
+				valido = true;
+				break;
+			}
+		}
+		if(!valido) {
+			try {
+				guardarCoordinador();
+			} catch (Exception e) {
+				e.printStackTrace();
+				addWarn(new FacesMessage(SYSTEM_NAME, "Problema al ingresar nuevo coordinador"));
+			}
+			
+		}
+	}
+
 	public void planificacion() {
 		try {
 			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
@@ -315,20 +383,25 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	public void afterSaveNew() {
 		try {
 			getListado().add(getRegistro());
-			this.respMB.onNew();
-			this.respMB.getRegistro().setUsuario(getCoordinador());
-			this.respMB.getRegistro().setAudRol(0);
-			this.respMB.getRegistro().setAuditoria(getRegistro());
-			this.respMB.onSave();
-
+			
+			guardarCoordinador();
 			guardarUnidadesAuditadas();
+			
 			onNew();
 			super.afterSaveNew();
 		} catch (Exception e) {
 			e.printStackTrace();
-			addWarn(new FacesMessage(SYSTEM_NAME,"Problema al guardar coordinador de la auditoría"));
+			addWarn(new FacesMessage(SYSTEM_NAME, "Problema al guardar coordinador de la auditoría"));
 		}
-		
+
+	}
+	
+	public void guardarCoordinador() {
+		this.respMB.onNew();
+		this.respMB.getRegistro().setUsuario(getCoordinador());
+		this.respMB.getRegistro().setAurRol(0);
+		this.respMB.getRegistro().setAuditoria(getRegistro());
+		this.respMB.onSaveNew();
 	}
 
 	public void guardarUnidadesAuditadas() {
@@ -343,23 +416,23 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public boolean beforeDelete() {
-		if(getRegistro().getActividad().size() > 0 ) {
+		if (getRegistro().getActividad().size() > 0) {
 			addWarn(new FacesMessage(SYSTEM_NAME, "La auditoría ya tiene actividades asignadas, no puede eliminarse"));
 			return false;
 		}
-		if(getRegistro().getAuditoriaResponsable().size() > 0) {
-			addWarn(new FacesMessage(SYSTEM_NAME,"La auditoría tiene responsable asignado. No puede ser eliminada"));
+		if (getRegistro().getAuditoriaResponsable().size() > 0) {
+			addWarn(new FacesMessage(SYSTEM_NAME, "La auditoría tiene responsable asignado. No puede ser eliminada"));
 			return false;
 		}
-		if(getRegistro().getAuditoriaUnidad().size() > 0) {
-			addWarn(new FacesMessage(SYSTEM_NAME,"La auditoría tiene unidades asignadas. No puede ser eliminada"));
+		if (getRegistro().getAuditoriaUnidad().size() > 0) {
+			addWarn(new FacesMessage(SYSTEM_NAME, "La auditoría tiene unidades asignadas. No puede ser eliminada"));
 		}
 		return super.beforeDelete();
 	}
-	
+
 	@Override
 	public void afterDelete() {
 		getListado().remove(getRegistro());
@@ -402,7 +475,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	public void setPlanSelected(PlanAnual planSelected) {
 		this.planSelected = planSelected;
 	}
-	
+
 	public List<TipoAuditoria> getTipoAuditoriaList() {
 		return tipoAuditoriaList;
 	}
@@ -497,6 +570,6 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	public void setSegMB(SeguimientoMB segMB) {
 		this.segMB = segMB;
-	} 
+	}
 
 }

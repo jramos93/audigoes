@@ -11,7 +11,7 @@
 		<h:form id="frmSeguimiento">
 			<p:panel>
 				<div align="left" style="margin-top: 50px;">
-					<p:commandButton id="btnCancel" action="#{recoMB.onCancel}"
+					<p:commandButton id="btnCancel" action="#{recMB.onCancel}"
 						process="@this" value="Regresar" icon="pi pi-arrow-left"
 						style="float:left;" update="@form">
 					</p:commandButton>
@@ -22,18 +22,18 @@
 				</div>
 
 				<div class="ui-fluid p-formgrid p-grid">
-					<p:dataTable var="recomendacion" value="#{recoMB.listado}"
+					<p:dataTable var="recomendacion" value="#{recMB.listado}"
 						rowIndexVar="indexRecomendacion" widgetVar="wvRecomendaciones"
 						reflow="true" id="dtRecomendacion" style="margin-top:20px;"
-						paginator="true" filteredValue="#{recoMB.filteredRecomendaciones}"
-						globalFilterFunction="#{recoMB.globalFilterFunction}"
-						selection="#{recoMB.regSelected}" selectionMode="single"
+						paginator="true" filteredValue="#{recMB.filteredRecomendaciones}"
+						globalFilterFunction="#{recMB.globalFilterFunction}"
+						selection="#{recMB.regSelected}" selectionMode="single"
 						paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
 						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 						currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
 						rowKey="#{recomendacion.recId}">
 
-						<p:ajax event="rowSelect" listener="#{recoMB.onRowSelect}"
+						<p:ajax event="rowSelect" listener="#{recMB.onRowSelect}"
 							update=":frmSeguimiento" />
 						<f:facet name="header"> Recomendaciones </f:facet>
 
@@ -100,7 +100,8 @@
 								<p:commandButton value="Iniciar Seguimiento" />
 							</p:column>
 							<p:column>
-								<p:commandButton value="Guardar Seguimiento" />
+								<p:commandButton id="btnGuardarSeguimiento" value="Guardar Seguimiento" icon="fa fa-check" 
+								actionListener="#{segMB.onSave}"/>
 							</p:column>
 						</p:row>
 					</p:panelGrid>

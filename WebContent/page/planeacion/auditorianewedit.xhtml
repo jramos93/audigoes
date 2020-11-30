@@ -13,12 +13,12 @@
 			<p:separator />
 			<div class="ui-fluid p-formgrid p-grid">
 				<div class="p-field p-col">
-					<p:outputLabel for="nombre" value="Plan Anual:" />
+					<p:outputLabel for="audPlan" value="Plan Anual:" />
 					<p:inputText id="audPlan" value="#{audMB.planSelected.plaNombre}"
 						required="true" readonly="true" />
 				</div>
 				<div class="p-field p-col">
-					<p:outputLabel for="nombre" value="Tipo Auditoría" />
+					<p:outputLabel for="audTipoAuditoria" value="Tipo Auditoría" />
 					<p:selectOneMenu id="audTipoAuditoria"
 						converter="tipoAuditoriaConverter"
 						converterMessage="Problemas al guardar tipo de auditoría"
@@ -82,26 +82,64 @@
 					</p:selectOneMenu>
 
 				</div>
-				<br/>
+				<br />
 				<div class="p-field p-col">
 					<p:commandButton id="btnAgregarUnidad" value="Agregar"
-						update="dtAuditoriaResponsables" process="@this"
-						actionListener="#{audMB.agregarUnidadAuditada}"></p:commandButton>
+						update="dtAuditoriaUnidades unidadauditada"
+						process="@this unidadauditada"
+						actionListener="#{audMB.agregarUnidadAuditada}">
+					</p:commandButton>
 				</div>
-				<p:dataTable id="dtAuditoriaResponsables" var="unidad"
+				<p:dataTable id="dtAuditoriaUnidades" var="unidad"
 					value="#{audMB.unidadesSelectedList}"
-					widgetVar="wvAuditoriaResponsables" reflow="true"
-					style="margin-top:20px;" paginator="true" rowKey="#{unidad.uniId}"
-					selectionMode="single" rowsPerPageTemplate="5,10,15,20,25"
-					rows="10" paginatorPosition="bottom"
+					widgetVar="wvAuditoriaUnidades" reflow="true"
+					style="margin-top:20px;" paginator="true"
+					rowsPerPageTemplate="5,10,15,20,25" rows="10"
+					paginatorPosition="bottom" rendered="#{audMB.status eq 'NEW'}"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
 					<f:facet name="header"> Unidades Auditadas</f:facet>
-					<p:column headerText="N°" sortBy="#{aud.audCorrelativo}" width="">
+					<p:column headerText="ID Unidad" sortBy="#{unidad.uniId}">
 						<h:outputText value="#{unidad.uniId}" />
 					</p:column>
-					<p:column>
+					<p:column headerText="Unidad Administrativa"
+						sortBy="#{unidad.uniNombre}">
 						<h:outputText value="#{unidad.uniNombre}" />
+					</p:column>
+					<p:column headerText="Eliminar">
+						<p:commandButton actionListener="#{audMB.eliminarUnidadAuditada(unidad)}"
+							update=":frmNewEditAuditoria:dtAuditoriaUnidades" icon="pi pi-trash"
+							title="Clic para eliminar unidad seleccionada" process="@this">
+							<p:confirm header="Confirmación" message="¿Eliminar?"
+								icon="pi pi-info-circle"></p:confirm>
+						</p:commandButton>
+					</p:column>
+
+				</p:dataTable>
+				
+				<p:dataTable id="dtAuditoriaUnidadesEdit" var="auditund"
+					value="#{audMB.registro.auditoriaUnidad}"
+					widgetVar="wvAuditoriaUnidadesEdit" reflow="true"
+					style="margin-top:20px;" paginator="true"
+					rowsPerPageTemplate="5,10,15,20,25" rows="10"
+					paginatorPosition="bottom" rendered="#{audMB.status eq 'EDIT'}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+					<f:facet name="header">Unidades Auditadas</f:facet>
+					<p:column headerText="ID Unidad" sortBy="#{auditund.unidad.uniId}">
+						<h:outputText value="#{auditund.unidad.uniId}" />
+					</p:column>
+					<p:column headerText="Unidad Administrativa"
+						sortBy="#{auditund.unidad.uniNombre}">
+						<h:outputText value="#{auditund.unidad.uniNombre}" />
+					</p:column>
+					<p:column headerText="Eliminar">
+						<p:commandButton actionListener="#{audMB.eliminarUnidadAuditada(und)}"
+							update=":frmNewEditAuditoria:dtAuditoriaUnidadesEdit" icon="pi pi-trash"
+							title="Clic para eliminar unidad seleccionada">
+							<p:confirm header="Confirmación" message="¿Eliminar?"
+								icon="pi pi-info-circle"></p:confirm>
+						</p:commandButton>
 					</p:column>
 
 				</p:dataTable>
@@ -121,7 +159,8 @@
 					</p:tab>
 				</p:tabView>
 				<p:commandButton actionListener="#{audMB.onSave}" value="Guardar"
-					update="@form :frmAuditoria" />
+					update="@form :frmAuditoria"
+					process="@this audPlan audTipoAuditoria anio nombre coordinador audfechainicio audfechafin tvAuditoriaNewEdit:audDescripcion tvAuditoriaNewEdit:audObjetivos tvAuditoriaNewEdit:audAlcances" />
 			</div>
 		</p:panel>
 	</h:form>

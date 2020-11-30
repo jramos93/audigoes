@@ -19,9 +19,9 @@
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
 				<p:ajax event="rowSelect" listener="#{planMB.onRowSelect}"
-					update="@form" />
+					update="frm:dtPlanAnual:tMenuPlan" />
 				<f:facet name="header">
-					<p:toolbar>
+					<p:toolbar id="tMenuPlan">
 						<p:toolbarGroup>
 							<p:commandButton id="btnNuevoPlan" action="#{planMB.onNew}"
 								value="Agregar" icon="pi pi-plus" update="@form :frmNewEdit"

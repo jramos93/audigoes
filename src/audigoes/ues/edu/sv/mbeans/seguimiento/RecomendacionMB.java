@@ -13,7 +13,7 @@ import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.seguimiento.Recomendacion;
 import audigoes.ues.edu.sv.entities.seguimiento.Seguimiento;
 
-@ManagedBean(name = "recoMB")
+@ManagedBean(name = "recMB")
 @ViewScoped
 public class RecomendacionMB extends AudigoesController implements Serializable {
 	/**
