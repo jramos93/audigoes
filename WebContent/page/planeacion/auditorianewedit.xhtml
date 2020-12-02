@@ -86,7 +86,12 @@
 				<div class="p-field p-col">
 					<p:commandButton id="btnAgregarUnidad" value="Agregar"
 						update="dtAuditoriaUnidades unidadauditada"
-						process="@this unidadauditada"
+						process="@this unidadauditada" rendered="#{audMB.status eq 'NEW'}"
+						actionListener="#{audMB.agregarUnidadAuditada}">
+					</p:commandButton>
+					<p:commandButton id="btnAgregarUnidadEdit" value="Agregar"
+						update="dtAuditoriaUnidadesEdit unidadauditada"
+						process="@this unidadauditada" rendered="#{audMB.status eq 'EDIT'}"
 						actionListener="#{audMB.agregarUnidadAuditada}">
 					</p:commandButton>
 				</div>
@@ -136,7 +141,7 @@
 					<p:column headerText="Eliminar">
 						<p:commandButton actionListener="#{audMB.eliminarUnidadAuditada(und)}"
 							update=":frmNewEditAuditoria:dtAuditoriaUnidadesEdit" icon="pi pi-trash"
-							title="Clic para eliminar unidad seleccionada">
+							title="Clic para eliminar unidad seleccionada" process="@this">
 							<p:confirm header="Confirmación" message="¿Eliminar?"
 								icon="pi pi-info-circle"></p:confirm>
 						</p:commandButton>

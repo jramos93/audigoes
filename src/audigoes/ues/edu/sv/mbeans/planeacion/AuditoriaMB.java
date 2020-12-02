@@ -88,7 +88,6 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 			sessionMap.put("auditoria", getRegistro());
 			FacesContext.getCurrentInstance().getExternalContext().redirect("/audigoes/page/informe/informe.xhtml");
-			System.out.println(getRegistro().getAudId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -216,10 +215,8 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 			maxIdList = (List<Auditoria>) audigoesLocal.findByNamedQuery(Auditoria.class, "auditoria.get.max.id",
 					new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() });
 			if (maxIdList.size() > 0) {
-				System.out.println(maxIdList.get(0).getAudCorrelativo() + 1);
 				return maxIdList.get(0).getAudCorrelativo() + 1;
 			} else {
-				System.out.println("1");
 				return 1;
 			}
 		} catch (Exception e) {
@@ -262,7 +259,13 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	}
 
 	public void eliminarUnidadAuditada(Unidad unidad) {
-		getUnidadesSelectedList().remove(unidad);
+		if(getStatus().equals("NEW")) {
+			getUnidadesSelectedList().remove(unidad);
+			getUnidadList().add(unidad);
+		}else if (getStatus().equals("EDIT")) {
+			
+		}
+		
 	}
 
 	@Override
@@ -283,6 +286,12 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		setTipoAuditoriaSelected(getRegistro().getTipoAuditoria());
 		setPlanSelected(getRegistro().getPlanAnual());
 		return super.beforeEdit();
+	}
+	
+	@Override
+	protected void afterEdit() {
+		getRegistro().getAuditoriaUnidad();
+		super.afterEdit();
 	}
 
 	private boolean isFechaAuditoriaValida() {

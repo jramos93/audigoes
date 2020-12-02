@@ -1,0 +1,109 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" >
+
+	<h:form id="frmSeguimiento">
+		<p:panel>
+			<div align="left" style="margin-top: 50px;">
+				<p:commandButton id="btnCancel" action="#{recMB.onCancel}"
+					process="@this" value="Regresar" icon="pi pi-arrow-left"
+					style="float:left;" update="@form">
+				</p:commandButton>
+			</div>
+			<div class="name" align="center" style="margin-top: 100px;">
+				<span class="app-name">Seguimiento Recomendaciones de
+					Auditoría </span>
+			</div>
+
+			<div class="ui-fluid p-formgrid p-grid">
+				<p:dataTable var="recomendacion" value="#{recMB.listado}"
+					rowIndexVar="indexRecomendacion" widgetVar="wvRecomendaciones"
+					reflow="true" id="dtRecomendacion" style="margin-top:20px;"
+					paginator="true" filteredValue="#{recMB.filteredRecomendaciones}"
+					globalFilterFunction="#{recMB.globalFilterFunction}"
+					selection="#{recMB.regSelected}" selectionMode="single"
+					paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+					rowKey="#{recomendacion.recId}">
+
+					<p:ajax event="rowSelect" listener="#{recMB.onRowSelect}"
+						update=":frmSeguimiento" />
+					<f:facet name="header"> Recomendaciones </f:facet>
+
+					<f:facet name="paginatorTopRight">
+						<p:outputPanel>
+							<h:outputText value="Búsqueda global: " />
+							<p:inputText id="globalFilter"
+								onkeyup="PF('wvRecomendaciones').filter();" style="width:150px"
+								placeholder="Ingresa una palabra" />
+						</p:outputPanel>
+					</f:facet>
+
+					<p:column headerText="No.">
+						<h:outputText value="#{indexRecomendacion+1}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Titulo Recomendación">
+						<h:outputText value="#{recomendacion.recTitulo}"></h:outputText>
+					</p:column>
+				</p:dataTable>
+			</div>
+
+			<div class="ui-fluid p-formgrid p-grid">
+				<div class="name" align="center">
+					<span class="app-name">Auditor Asignado</span>
+				</div>
+
+				<p:panelGrid columnClasses="ui-lg-1,ui-lg-1,ui-lg-1,ui-lg-1"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+					<p:row>
+						<p:column>
+							<p:graphicImage value="/resources/images/logo_usuario.png"
+								style="height:200px;">
+							</p:graphicImage>
+						</p:column>
+						<p:column style="text-align:center;">
+							<p:outputLabel style="font-size:2em;"
+								value="#{segMB.coordinador.usuNombre} #{segMB.coordinador.usuApellido}" />
+						</p:column>
+						<p:column>
+							<p:commandButton value="Cambiar Auditor Asignado"
+								icon="pi pi-pencil" update="@form">
+							</p:commandButton>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Indicaciones generales para el auditor"></p:outputLabel>
+						</p:column>
+
+						<p:column colspan="2">
+							<p:inputTextarea id="indicaciones"
+								value="#{segMB.registro.segObservacion}" rows="4" cols="300">
+							</p:inputTextarea>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				<p:panelGrid style="width:100%">
+					<p:row style="text-align:center;">
+						<p:column>
+							<p:commandButton value="Notificar Seguimiento" />
+						</p:column>
+						<p:column>
+							<p:commandButton value="Iniciar Seguimiento" />
+						</p:column>
+						<p:column>
+							<p:commandButton id="btnGuardarSeguimiento"
+								value="Guardar Seguimiento" icon="fa fa-check"
+								actionListener="#{segMB.onSave}" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</div>
+		</p:panel>
+	</h:form>
+
+</ui:composition>

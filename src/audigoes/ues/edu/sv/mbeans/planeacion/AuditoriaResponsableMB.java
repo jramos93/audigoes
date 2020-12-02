@@ -154,7 +154,7 @@ public class AuditoriaResponsableMB extends AudigoesController implements Serial
 
 	@Override
 	public void afterSaveNew() {
-		getListado().add(getRegistro());
+		//getListado().add(getRegistro());
 		super.afterSaveNew();
 	}
 

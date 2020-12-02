@@ -1,0 +1,116 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="frmSeguimiento">
+		<p:panel>
+			<div align="left" style="margin-top: 50px;">
+				<p:commandButton id="btnCancel" action="#{recMB.onCancel}"
+					process="@this" value="Regresar" icon="pi pi-arrow-left"
+					style="float:left;" update="@form">
+				</p:commandButton>
+			</div>
+			<div class="name" align="center" style="margin-top: 100px;">
+				<span class="app-name">Comentarios</span>
+			</div>
+			<div class="ui-fluid p-formgrid p-grid">
+				<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+
+					<p:outputLabel for="audRec" value="Auditoría:"
+						style="font-weight:bold;" />
+					<p:inputTextarea id="audRec" value="#{recMB.auditoria.audNombre}"
+						rows="2" readonly="true" />
+
+					<p:outputLabel for="rectitulo" value="Recomendación Título:"
+						style="font-weight:bold;" />
+					<p:inputTextarea id="rectitulo" value="#{recMB.registro.recTitulo}"
+						rows="2" readonly="true" />
+
+					<p:outputLabel for="recomendacion" value="Recomendación Detalle:"
+						style="font-weight:bold;" />
+					<p:inputTextarea id="recomendacion"
+						value="#{recMB.registro.recRecomendacion}" readonly="true" />
+				</p:panelGrid>
+			</div>
+			<div class="ui-fluid p-formgrid p-grid">
+				<p:tabView id="tvComentarios">
+					<p:tab title="Comentarios de Unidad(es) Auditada(s)">
+						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+							styleClass="ui-panelgrid-blank form-group form-elements">
+							<p:outputLabel for="Comentario de la persona responsable:" />
+							<p:inputTextarea id="recomendacion"
+								value="#{recMB.registro.recRecomendacion}" readonly="true" />
+
+							<div class="name" align="center">
+								<span class="app-name">Evidencias</span>
+							</div>
+							<p:dataTable var="evidencia" value="#{comMB.listado}"
+								rowIndexVar="index" widgetVar="wvEvidencias"
+								reflow="true" id="dtEvidencias" style="margin-top:20px;"
+								paginator="true"
+								filteredValue="#{proplaMB.filteredProcedimiento}"
+								globalFilterFunction="#{proplaMB.globalFilterFunction}"
+								selection="#{proplaMB.regSelected}" selectionMode="single"
+								paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+								rowKey="#{p.proId}">
+
+								<p:ajax event="rowSelect" listener="#{proplaMB.onRowSelect}"
+									update=":frmPrograma:dtProcPlanificacion:tMenu" />
+
+								<f:facet name="header">
+									<p:toolbar id="tMenu">
+										<p:toolbarGroup>
+											<p:commandButton value="Agregar" icon="pi pi-plus"
+												styleClass="raised-btn"
+												update=":frmPrograma, :frmProcedimiento"
+												actionListener="#{proplaMB.onNew}">
+											</p:commandButton>
+											<p:commandButton value="Editar" icon="pi pi-pencil"
+												styleClass="raised-btn"
+												update=":frmPrograma, :frmProcedimiento"
+												rendered="#{proplaMB.registro.selected}"
+												actionListener="#{proplaMB.onEditSelected}">
+											</p:commandButton>
+										</p:toolbarGroup>
+									</p:toolbar>
+								</f:facet>
+
+								<f:facet name="paginatorTopRight">
+									<p:outputPanel>
+										<h:outputText value="Búsqueda global: " />
+										<p:inputText id="globalFilter"
+											onkeyup="PF('wvProcPlanificacion').filter();"
+											style="width:150px" placeholder="Ingresa una palabra" />
+									</p:outputPanel>
+								</f:facet>
+
+								<p:column headerText="No.">
+									<h:outputText value="#{index+1}" />
+								</p:column>
+
+								<p:column headerText="Nombre">
+									<h:outputText value="AAAAAAAAAAAAAAA" />
+								</p:column>
+
+								
+
+							</p:dataTable>
+						</p:panelGrid>
+					</p:tab>
+					<p:tab title="Comentarios de Auditoría">
+						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+							styleClass="ui-panelgrid-blank form-group form-elements">
+							<p:outputLabel for="" />
+						</p:panelGrid>
+					</p:tab>
+				</p:tabView>
+			</div>
+		</p:panel>
+	</h:form>
+
+</ui:composition>
