@@ -139,9 +139,9 @@
 						<h:outputText value="#{auditund.unidad.uniNombre}" />
 					</p:column>
 					<p:column headerText="Eliminar">
-						<p:commandButton actionListener="#{audMB.eliminarUnidadAuditada(und)}"
+						<p:commandButton actionListener="#{audMB.eliminarUnidadAuditadaEdit(auditund)}"
 							update=":frmNewEditAuditoria:dtAuditoriaUnidadesEdit" icon="pi pi-trash"
-							title="Clic para eliminar unidad seleccionada" process="@this">
+							title="Clic para eliminar unidad seleccionada" process="@this" >
 							<p:confirm header="Confirmación" message="¿Eliminar?"
 								icon="pi pi-info-circle"></p:confirm>
 						</p:commandButton>

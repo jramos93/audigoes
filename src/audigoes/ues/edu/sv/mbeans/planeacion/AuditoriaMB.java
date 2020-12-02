@@ -20,6 +20,7 @@ import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planeacion.AuditoriaResponsable;
+import audigoes.ues.edu.sv.entities.planeacion.AuditoriaUnidad;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
 import audigoes.ues.edu.sv.entities.planeacion.TipoAuditoria;
 import audigoes.ues.edu.sv.mbean.planificacion.AuditoriaUnidadMB;
@@ -262,10 +263,20 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		if(getStatus().equals("NEW")) {
 			getUnidadesSelectedList().remove(unidad);
 			getUnidadList().add(unidad);
-		}else if (getStatus().equals("EDIT")) {
-			
 		}
-		
+	}
+	
+	public void eliminarUnidadAuditadaEdit(AuditoriaUnidad auditoriaunidad) {
+		if(getStatus().equals("EDIT")) {
+			try {
+				this.audUniMB.setRegistro(auditoriaunidad);
+				this.audUniMB.onDelete();
+				getRegistro().getAuditoriaUnidad().remove(auditoriaunidad);
+			} catch (Exception e) {
+				e.printStackTrace();
+				addWarn(new FacesMessage(SYSTEM_NAME,"Problema al eliminar unidad seleccionada"));
+			}
+		}
 	}
 
 	@Override
