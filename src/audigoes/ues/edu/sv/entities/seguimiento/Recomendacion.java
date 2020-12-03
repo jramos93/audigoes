@@ -5,68 +5,73 @@ import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
 import audigoes.ues.edu.sv.entities.informe.CedulaNota;
+import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 
 import java.util.Date;
 import java.util.Set;
-
 
 /**
  * The persistent class for the recomendacion database table.
  * 
  */
 @Entity
-@NamedQuery(name="Recomendacion.findAll", query="SELECT r FROM Recomendacion r")
+@NamedQuery(name = "Recomendacion.findAll", query = "SELECT r FROM Recomendacion r")
 public class Recomendacion extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "rec_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "rec_id", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "rec_id")
-	@Column(name="rec_id")
+	@Column(name = "rec_id")
 	private int recId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_crea")
+	@Column(name = "fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_modi")
+	@Column(name = "fec_modi")
 	private Date fecModi;
 
-	@Column(name="rec_estado")
+	@Column(name = "rec_estado")
 	private int recEstado;
 
-	@Column(name="rec_recomendacion")
+	@Column(name = "rec_recomendacion")
 	private String recRecomendacion;
 
-	@Column(name="rec_situacion")
+	@Column(name = "rec_situacion")
 	private String recSituacion;
 
-	@Column(name="rec_titulo")
+	@Column(name = "rec_titulo")
 	private String recTitulo;
 
-	@Column(name="reg_activo")
+	@Column(name = "reg_activo")
 	private int regActivo;
 
-	@Column(name="usu_crea")
+	@Column(name = "usu_crea")
 	private String usuCrea;
 
-	@Column(name="usu_modi")
+	@Column(name = "usu_modi")
 	private String usuModi;
 
-	//bi-directional many-to-one association to Comentario
-	@OneToMany(mappedBy="recomendacion", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to Comentario
+	@OneToMany(mappedBy = "recomendacion", fetch = FetchType.EAGER)
 	private Set<Comentario> comentario;
 
-	//bi-directional many-to-one association to CedulaNota
+	// bi-directional many-to-one association to CedulaNota
 	@ManyToOne
-	@JoinColumn(name="rec_ced_id")
+	@JoinColumn(name = "rec_ced_id")
 	private CedulaNota cedulaNota;
 
-	//bi-directional many-to-one association to Seguimiento
+	// bi-directional many-to-one association to Seguimiento
 	@ManyToOne
-	@JoinColumn(name="rec_seg_id")
+	@JoinColumn(name = "rec_seg_id")
 	private Seguimiento seguimiento;
+
+	// bi-directional many-to-one association to Auditoria
+	@ManyToOne
+	@JoinColumn(name = "rec_aud_id")
+	private Auditoria auditoria;
 
 	public Recomendacion() {
 	}
@@ -188,6 +193,14 @@ public class Recomendacion extends SuperEntity implements Serializable {
 	public void setSeguimiento(Seguimiento seguimiento) {
 		this.seguimiento = seguimiento;
 	}
+	
+	public Auditoria getAuditoria() {
+		return this.auditoria;
+	}
+
+	public void setAuditoria(Auditoria auditoria) {
+		this.auditoria = auditoria;
+	}
 
 	@Override
 	public int hashCode() {
@@ -217,7 +230,7 @@ public class Recomendacion extends SuperEntity implements Serializable {
 				+ recEstado + ", recRecomendacion=" + recRecomendacion + ", recSituacion=" + recSituacion
 				+ ", recTitulo=" + recTitulo + ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi="
 				+ usuModi + ", comentario=" + comentario + ", cedulaNota=" + cedulaNota + ", seguimiento=" + seguimiento
-				+ "]";
+				+ ", auditoria=" + auditoria + "]";
 	}
 
 }

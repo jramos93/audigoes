@@ -23,122 +23,126 @@ import audigoes.ues.edu.sv.entities.SuperEntity;
 import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planificacion.Actividad;
 import audigoes.ues.edu.sv.entities.planificacion.Memorando;
+import audigoes.ues.edu.sv.entities.seguimiento.Recomendacion;
 import audigoes.ues.edu.sv.entities.seguimiento.Seguimiento;
-
 
 /**
  * The persistent class for the auditoria database table.
  * 
  */
 @Entity
-@NamedQuery(name="Auditoria.findAll", query="SELECT a FROM Auditoria a")
+@NamedQuery(name = "Auditoria.findAll", query = "SELECT a FROM Auditoria a")
 public class Auditoria extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "aud_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "aud_id", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "aud_id")
-	@Column(name="aud_id")
+	@Column(name = "aud_id")
 	private int audId;
-	
-	@Column(name="aud_anio")
+
+	@Column(name = "aud_anio")
 	private int audAnio;
 
-	@Column(name="aud_codigo")
+	@Column(name = "aud_codigo")
 	private String audCodigo;
-	
-	@Column(name="aud_correlativo")
+
+	@Column(name = "aud_correlativo")
 	private int audCorrelativo;
 
 	@Lob
-	@Column(name="aud_descripcion")
+	@Column(name = "aud_descripcion")
 	private String audDescripcion;
-	
+
 	@Lob
-	@Column(name="aud_objetivos")
+	@Column(name = "aud_objetivos")
 	private String audObjetivos;
-	
+
 	@Lob
-	@Column(name="aud_alcances")
+	@Column(name = "aud_alcances")
 	private String audAlcances;
 
-	@Column(name="aud_fase")
+	@Column(name = "aud_fase")
 	private int audFase;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="aud_fecha_fin_programado")
+	@Column(name = "aud_fecha_fin_programado")
 	private Date audFechaFinProgramado;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="aud_fecha_fin_real")
+	@Column(name = "aud_fecha_fin_real")
 	private Date audFechaFinReal;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="aud_fecha_inicio_programado")
+	@Column(name = "aud_fecha_inicio_programado")
 	private Date audFechaInicioProgramado;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="aud_fecha_inicio_real")
+	@Column(name = "aud_fecha_inicio_real")
 	private Date audFechaInicioReal;
 
-	@Column(name="aud_nombre")
+	@Column(name = "aud_nombre")
 	private String audNombre;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_crea")
+	@Column(name = "fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_modi")
+	@Column(name = "fec_modi")
 	private Date fecModi;
 
-	@Column(name="reg_activo")
+	@Column(name = "reg_activo")
 	private int regActivo;
 
-	@Column(name="usu_crea")
+	@Column(name = "usu_crea")
 	private String usuCrea;
 
-	@Column(name="usu_modi")
+	@Column(name = "usu_modi")
 	private String usuModi;
 
-	//bi-directional many-to-one association to Actividad
-	@OneToMany(mappedBy="auditoria", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to Actividad
+	@OneToMany(mappedBy = "auditoria", fetch = FetchType.EAGER)
 	private Set<Actividad> actividad;
 
-	//bi-directional many-to-one association to OrigenAuditoria
+	// bi-directional many-to-one association to OrigenAuditoria
 	@ManyToOne
-	@JoinColumn(name="aud_ori_id")
+	@JoinColumn(name = "aud_ori_id")
 	private OrigenAuditoria origenAuditoria;
 
-	//bi-directional many-to-one association to PlanAnual
+	// bi-directional many-to-one association to PlanAnual
 	@ManyToOne
-	@JoinColumn(name="aud_pla_id")
+	@JoinColumn(name = "aud_pla_id")
 	private PlanAnual planAnual;
 
-	//bi-directional many-to-one association to TipoAuditoria
+	// bi-directional many-to-one association to TipoAuditoria
 	@ManyToOne
-	@JoinColumn(name="aud_tpa_id")
+	@JoinColumn(name = "aud_tpa_id")
 	private TipoAuditoria tipoAuditoria;
 
-	//bi-directional many-to-one association to AuditoriaResponsable
-	@OneToMany(mappedBy="auditoria", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to AuditoriaResponsable
+	@OneToMany(mappedBy = "auditoria", fetch = FetchType.EAGER)
 	private Set<AuditoriaResponsable> auditoriaResponsable;
 
-	//bi-directional many-to-one association to AuditoriaUnidad
-	@OneToMany(mappedBy="auditoria", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to AuditoriaUnidad
+	@OneToMany(mappedBy = "auditoria", fetch = FetchType.EAGER)
 	private Set<AuditoriaUnidad> auditoriaUnidad;
 
-	//bi-directional many-to-one association to Memorando
-	@OneToMany(mappedBy="auditoria", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to Memorando
+	@OneToMany(mappedBy = "auditoria", fetch = FetchType.EAGER)
 	private Set<Memorando> memorando;
 
-	//bi-directional many-to-one association to Seguimiento
-	@OneToMany(mappedBy="auditoria", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to Seguimiento
+	@OneToMany(mappedBy = "auditoria", fetch = FetchType.EAGER)
 	private Set<Seguimiento> seguimiento;
-	
-	//bi-directional many-to-one association to Informe
-		@OneToMany(mappedBy="auditoria")
-		private Set<Informe> informe;
+
+	// bi-directional many-to-one association to Informe
+	@OneToMany(mappedBy = "auditoria")
+	private Set<Informe> informe;
+
+	// bi-directional many-to-one association to Recomendacion
+	@OneToMany(mappedBy = "auditoria")
+	private Set<Recomendacion> recomendacion;
 
 	public Auditoria() {
 	}
@@ -420,7 +424,7 @@ public class Auditoria extends SuperEntity implements Serializable {
 
 		return seguimiento;
 	}
-	
+
 	public Set<Informe> getInforme() {
 		return this.informe;
 	}
@@ -428,6 +432,7 @@ public class Auditoria extends SuperEntity implements Serializable {
 	public void setInforme(Set<Informe> informe) {
 		this.informe = informe;
 	}
+
 	public Informe addInforme(Informe informe) {
 		getInforme().add(informe);
 		informe.setAuditoria(this);
@@ -440,6 +445,28 @@ public class Auditoria extends SuperEntity implements Serializable {
 		informe.setAuditoria(null);
 
 		return informe;
+	}
+	
+	public Set<Recomendacion> getRecomendacion() {
+		return this.recomendacion;
+	}
+
+	public void setRecomendacion(Set<Recomendacion> recomendacion) {
+		this.recomendacion = recomendacion;
+	}
+
+	public Recomendacion addRecomendacion(Recomendacion recomendacion) {
+		getRecomendacion().add(recomendacion);
+		recomendacion.setAuditoria(this);
+
+		return recomendacion;
+	}
+
+	public Recomendacion removeRecomendacion(Recomendacion recomendacion) {
+		getRecomendacion().remove(recomendacion);
+		recomendacion.setAuditoria(null);
+
+		return recomendacion;
 	}
 
 	@Override
@@ -466,15 +493,16 @@ public class Auditoria extends SuperEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Auditoria [audId=" + audId + ", audAnio=" + audAnio + ", audCodigo=" + audCodigo + ", audDescripcion="
-				+ audDescripcion + ", audObjetivos=" + audObjetivos + ", audAlcances=" + audAlcances + ", audFase="
-				+ audFase + ", audFechaFinProgramado=" + audFechaFinProgramado + ", audFechaFinReal=" + audFechaFinReal
-				+ ", audFechaInicioProgramado=" + audFechaInicioProgramado + ", audFechaInicioReal="
-				+ audFechaInicioReal + ", audNombre=" + audNombre + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi
-				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", actividad="
-				+ actividad + ", origenAuditoria=" + origenAuditoria + ", planAnual=" + planAnual + ", tipoAuditoria="
-				+ tipoAuditoria + ", auditoriaResponsable=" + auditoriaResponsable + ", auditoriaUnidad="
-				+ auditoriaUnidad + ", memorando=" + memorando + ", seguimiento=" + seguimiento + "]";
+		return "Auditoria [audId=" + audId + ", audAnio=" + audAnio + ", audCodigo=" + audCodigo + ", audCorrelativo="
+				+ audCorrelativo + ", audDescripcion=" + audDescripcion + ", audObjetivos=" + audObjetivos
+				+ ", audAlcances=" + audAlcances + ", audFase=" + audFase + ", audFechaFinProgramado="
+				+ audFechaFinProgramado + ", audFechaFinReal=" + audFechaFinReal + ", audFechaInicioProgramado="
+				+ audFechaInicioProgramado + ", audFechaInicioReal=" + audFechaInicioReal + ", audNombre=" + audNombre
+				+ ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo=" + regActivo + ", usuCrea=" + usuCrea
+				+ ", usuModi=" + usuModi + ", actividad=" + actividad + ", origenAuditoria=" + origenAuditoria
+				+ ", planAnual=" + planAnual + ", tipoAuditoria=" + tipoAuditoria + ", auditoriaResponsable="
+				+ auditoriaResponsable + ", auditoriaUnidad=" + auditoriaUnidad + ", memorando=" + memorando
+				+ ", seguimiento=" + seguimiento + ", informe=" + informe + ", recomendacion=" + recomendacion + "]";
 	}
 
 }
