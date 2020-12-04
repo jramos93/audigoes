@@ -19,13 +19,15 @@
 								update="@form" process="@this tvConvocatoria">
 							</p:commandButton>
 							<p:commandButton id="btnEditarConvocatoria"
-								action="#{convocatoriaMB.onEdit}" value="Editar Convocatoria"
-								icon="pi pi-plus" update=":frmConvocatoriaActa">
+								action="#{convocatoriaMB.onSave}" value="Editar Convocatoria"
+								update="@form" process="@this tvConvocatoria">
 							</p:commandButton>
-							<p:commandButton id="btnGuardarTop3" action="#{informeMB.onSave}"
-								value="Generar Convocatoria" update="@form" process="@this @form">
+							<p:commandButton id="btnConvocatoria"
+								title="Clic para generar la convocatoria"
+								process="@this tvConvocatoria" value="Generar Convocatoria" icon="pi pi-check-circle"
+								style="float:Righ;" styleClass="blue-btn raised-btn" ajax="false">
+								<p:fileDownload value="#{convocatoriaMB.convocatoria}"></p:fileDownload>
 							</p:commandButton>
-
 							<div class="ui-fluid p-formgrid p-grid">
 								<div class="p-field p-col" style="margin-top: 25px;">
 									<p:panel>
@@ -42,6 +44,42 @@
 												<pe:ckEditor id="cvccuerpo" width="100%"
 													value="#{convocatoriaMB.registro.cvcCuerpo}" />
 											</p:tab>
+											<p:tab title="Convocatorias Firmadas">
+												<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+													styleClass="ui-panelgrid-blank form-group form-elements">
+													<h:outputText value="Subida de archivos:"></h:outputText>
+													<p:fileUpload listener="#{convocatoriaMB.handleFileUpload}" multiple="true"
+														mode="advanced" dragDropSupport="false" cancelLabel="Cancelar"
+														uploadLabel="Subir" label="Elegir" 
+														update="dtArchivos"
+														allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
+												</p:panelGrid>
+												<p:dataTable var="a" value="#{arcMB.listado}" rowIndexVar="index"
+													widgetVar="wvArchivos" reflow="true" id="dtArchivos"
+													style="margin-top:20px;" paginator="true" paginatorPosition="top"
+													rowsPerPageTemplate="1,5,10,15" rows="5"
+													paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+													currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+													rowKey="#{a.arcId}">
+						
+													<p:column headerText="No.">
+														<h:outputText value="#{index+1}"></h:outputText>
+													</p:column>
+						
+													<p:column headerText="Nombre" filterBy="#{a.arcNombre}"
+														filterMatchMode="contains">
+														<h:outputText value="#{a.arcNombre}"></h:outputText>
+													</p:column>
+						
+													<p:column headerText="Eliminar" style="width:60px;">
+														<p:commandButton actionListener="#{arcMB.onBorrar(a)}"
+															update="dtArchivos" icon="pi pi-trash"
+															title="Clic para eliminar el archivo">
+															<p:confirm header="Confirmación" message="¿Eliminar?" icon="pi pi-info-circle"></p:confirm>
+														</p:commandButton>
+													</p:column>
+												</p:dataTable>
+									</p:tab>
 										</p:tabView>
 									</p:panel>
 
@@ -63,13 +101,15 @@
 								update="@form" process="@this tvActaLectura">
 							</p:commandButton>
 							<p:commandButton id="btnEditarActaLectura"
-								action="#{actaLecturaMB.onEdit}" value="Editar Acta Lectura"
-								icon="pi pi-plus" update=":frmConvocatoriaActa">
+								action="#{actaLecturaMB.onSave}" value="Editar Acta Lectura"
+								icon="pi pi-plus" update="@form" process="@this tvActaLectura">
 							</p:commandButton>
-							<p:commandButton id="btnGuardarTop5" action="#{informeMB.onSave}"
-								value="Generar Acta de Lectura" update="@form" process="@this @form">
+							<p:commandButton id="btnActa"
+								title="Clic para generar Acta de Lectura"
+								process="@this tvActaLectura" value="Generar Acta de Lectura" icon="pi pi-check-circle"
+								style="float:Righ;" styleClass="blue-btn raised-btn" ajax="false">
+								<p:fileDownload value="#{actaLecturaMB.acta}"></p:fileDownload>
 							</p:commandButton>
-
 							<div class="ui-fluid p-formgrid p-grid">
 								<div class="p-field p-col" style="margin-top: 25px;">
 									<p:tab title="Acta lectura">
@@ -82,6 +122,42 @@
 												<p:tab title="Cuerpo">
 													<pe:ckEditor id="aclcuerpo" width="100%"
 														value="#{actaLecturaMB.registro.aclCuerpo}" />
+												</p:tab>
+												<p:tab title="Actas Firmadas">
+													<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+														styleClass="ui-panelgrid-blank form-group form-elements">
+														<h:outputText value="Subida de archivos:"></h:outputText>
+														<p:fileUpload listener="#{actaLecturaMB.handleFileUpload}" multiple="true"
+															mode="advanced" dragDropSupport="false" cancelLabel="Cancelar"
+															uploadLabel="Subir" label="Elegir" 
+															update="dtArchivos"
+															allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
+													</p:panelGrid>
+													<p:dataTable var="a" value="#{arcMB.listado}" rowIndexVar="index"
+														widgetVar="wvArchivos" reflow="true" id="dtArchivos"
+														style="margin-top:20px;" paginator="true" paginatorPosition="top"
+														rowsPerPageTemplate="1,5,10,15" rows="5"
+														paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+														currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+														rowKey="#{a.arcId}">
+							
+														<p:column headerText="No.">
+															<h:outputText value="#{index+1}"></h:outputText>
+														</p:column>
+							
+														<p:column headerText="Nombre" filterBy="#{a.arcNombre}"
+															filterMatchMode="contains">
+															<h:outputText value="#{a.arcNombre}"></h:outputText>
+														</p:column>
+							
+														<p:column headerText="Eliminar" style="width:60px;">
+															<p:commandButton actionListener="#{arcMB.onBorrar(a)}"
+																update="dtArchivos" icon="pi pi-trash"
+																title="Clic para eliminar el archivo">
+																<p:confirm header="Confirmación" message="¿Eliminar?" icon="pi pi-info-circle"></p:confirm>
+															</p:commandButton>
+														</p:column>
+													</p:dataTable>
 												</p:tab>
 											</p:tabView>
 											<p:commandButton id="btnGuardarBottom1"

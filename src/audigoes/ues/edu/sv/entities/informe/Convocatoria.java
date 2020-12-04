@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.administracion.Archivo;
 
 import java.util.Date;
 import java.util.Set;
@@ -63,6 +64,10 @@ public class Convocatoria extends SuperEntity implements Serializable {
 	//bi-directional many-to-one association to Destinatario
 	@OneToMany(mappedBy="actaLectura", fetch=FetchType.EAGER)
 	private Set<Destinatario> destinatario;
+	
+	// bi-directional many-to-one association to Archivo
+	@OneToMany(mappedBy = "convocatoria", fetch = FetchType.EAGER)
+	private Set<Archivo> archivo;
 
 	public Convocatoria() {
 	}
@@ -176,6 +181,28 @@ public class Convocatoria extends SuperEntity implements Serializable {
 
 		return destinatario;
 	}
+	
+	public Set<Archivo> getArchivo() {
+		return this.archivo;
+	}
+
+	public void setArchivo(Set<Archivo> archivo) {
+		this.archivo = archivo;
+	}
+
+	public Archivo addArchivo(Archivo archivo) {
+		getArchivo().add(archivo);
+		archivo.setConvocatoria(this);
+
+		return archivo;
+	}
+
+	public Archivo removeArchivo(Archivo archivo) {
+		getArchivo().remove(archivo);
+		archivo.setConvocatoria(null);
+
+		return archivo;
+	}
 
 	@Override
 	public int hashCode() {
@@ -204,7 +231,7 @@ public class Convocatoria extends SuperEntity implements Serializable {
 		return "Convocatoria [cvcId=" + cvcId + ", cvcCuerpo=" + cvcCuerpo 
 				+ ", cvcRef=" + cvcRef + ", cvcEncabezado=" + cvcEncabezado + ", cvcDestinatario=" + cvcDestinatario + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi
 				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", informe=" + informe
-				+ ", destinatario=" + destinatario + "]";
+				+ ", destinatario=" + destinatario + ", archivo=" + archivo +"]";
 	}
 
 }

@@ -10,6 +10,10 @@ import javax.faces.bean.ViewScoped;
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Archivo;
 import audigoes.ues.edu.sv.entities.ejecucion.ProcedimientoEjecucion;
+import audigoes.ues.edu.sv.entities.informe.ActaLectura;
+import audigoes.ues.edu.sv.entities.informe.CartaGerencia;
+import audigoes.ues.edu.sv.entities.informe.Convocatoria;
+import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planificacion.ProcedimientoPlanificacion;
 
 @ManagedBean(name = "arcMB")
@@ -59,6 +63,46 @@ public class ArchivoMB extends AudigoesController implements Serializable {
 		try {
 			setListado((List<Archivo>) audigoesLocal.findByNamedQuery(Archivo.class, "archivos.ejecucion",
 					new Object[] {  p.getPejId()}));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void fillByInforme(Informe i) {
+		try {
+			setListado((List<Archivo>) audigoesLocal.findByNamedQuery(Archivo.class, "archivos.informe",
+					new Object[] {  i.getInfId()}));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void fillByCarta(CartaGerencia c) {
+		try {
+			setListado((List<Archivo>) audigoesLocal.findByNamedQuery(Archivo.class, "archivos.carta",
+					new Object[] {  c.getCtgId()}));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void fillByConvocatoria(Convocatoria c) {
+		try {
+			setListado((List<Archivo>) audigoesLocal.findByNamedQuery(Archivo.class, "archivos.convocatoria",
+					new Object[] {  c.getCvcId()}));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void fillByActa(ActaLectura a) {
+		try {
+			setListado((List<Archivo>) audigoesLocal.findByNamedQuery(Archivo.class, "archivos.acta",
+					new Object[] {  a.getAclId()}));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

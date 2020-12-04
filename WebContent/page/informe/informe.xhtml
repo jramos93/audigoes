@@ -15,6 +15,12 @@
 		</div>
 		<h:form id="frm">
 			<p:panel rendered="#{informeMB.status eq 'SEARCH'}">
+			<div align="left" style="margin-top: 50px;">
+					<p:commandButton id="btnCancel" ajax="false"
+						action="/page/planeacion/auditoria.xhtml?faces-redirect=true"
+						value="Regresar" icon="pi pi-arrow-left" style="float:left;">
+					</p:commandButton>
+				</div>
 				<p:panelGrid columns="3" columnClasses="ui-g-12 ui-md-4 ui-lg-4"
 					layout="grid" styleClass="ui-panelgrid-blank form-group form-elements"
 					style="margin-top:100px; text-align:center;">
@@ -37,24 +43,34 @@
 		</h:form>
 		<h:form id="frmInforme">
 			<p:panel rendered="#{informeMB.status eq 'INFORME'}">
+			<div align="right" style="margin-top: 50px; float: right;">
+			</div>
 				<p:commandButton id="btnCancel" action="#{informeMB.onCancel}"
 					value="Cancelar" update="@form :frm" process="@this">
 				</p:commandButton>
 				<p:commandButton id="btnGuardarTop" action="#{informeMB.onSave}"
 					value="Guardar" update="@form :frm" process="@this @form">
 				</p:commandButton>
-				<p:commandButton id="btnEditarInforme" action="#{informeMB.onEdit}"
+				<p:commandButton id="btnEditarInforme" action="#{informeMB.onSave}"
 					value="Editar Informe" icon="pi pi-plus" update="@form :frm" process="@this @form">
 				</p:commandButton>
-				<p:commandButton id="btnGuardarTop2" action="#{informeMB.onSave}"
-					value="Generar Borrador de Informe" update="@form :frm" process="@this @form">
+				<p:commandButton id="btnBorradorInform"
+					title="Clic para generar el informe"
+					process="@this" value="Generar Borrador de Informe" icon="pi pi-check-circle"
+					style="float:Righ;" styleClass="blue-btn raised-btn" ajax="false">
+					<p:fileDownload value="#{informeMB.informe}"></p:fileDownload>
 				</p:commandButton>
-				<p:commandButton id="btnGuardarTop6" action="#{informeMB.onSave}"
-					value="Generar Informe" update="@form :frm" process="@this @form">
+				<p:commandButton id="btnInform"
+					title="Clic para generar el informe"
+					process="@this" value="Generar Informe" icon="pi pi-check-circle"
+					style="float:Righ;" styleClass="blue-btn raised-btn" ajax="false">
+					<p:fileDownload value="#{informeMB.informe}"></p:fileDownload>
 				</p:commandButton>
-				<p:commandButton value="Agregar Observacion" icon="pi pi-plus"
-						actionListener="#{informeMB.onSave}"
-						oncomplete="PF('wvObservaciones').show();" update=":frmInforme">
+				<p:commandButton id="btnEnviar" oncomplete="PF('wvCorreo').show();" actionListener="#{informeMB.prepararCorreo}"
+					title="Clic para enviar a revisión del informe"
+					process="@this" value="Enviar a Revisión" icon="pi pi-check-circle"
+					style="float:Righ;" styleClass="blue-btn raised-btn"
+					update=":frmCorreo">
 				</p:commandButton>
 				<div class="ui-fluid p-formgrid p-grid">
 					<div class="p-field p-col">
@@ -95,6 +111,10 @@
 										<pe:ckEditor id="infseguimiento" width="100%"
 											value="#{informeMB.registro.infSeguimiento}" />
 									</p:tab>
+									<p:tab title="Recomendaciones">
+										<pe:ckEditor id="infrecomendaciones" width="100%"
+											value="#{informeMB.registro.infRecomendaciones}" />
+									</p:tab>
 									<p:tab title="Conclusion">
 										<pe:ckEditor id="infconclusion" width="100%"
 											value="#{informeMB.registro.infConclusion}" />
@@ -107,7 +127,46 @@
 										<pe:ckEditor id="infpiePagina" width="100%"
 											value="#{informeMB.registro.infPiePagina}" />
 									</p:tab>
+									<p:tab title="Observaciones">
+										<pe:ckEditor id="infobservaciones" width="100%"
+											value="#{informeMB.registro.infObservaciones}" />
+									</p:tab>
+									<p:tab title="Informes Firmados">
+										<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+											styleClass="ui-panelgrid-blank form-group form-elements">
+											<h:outputText value="Subida de archivos:"></h:outputText>
+											<p:fileUpload listener="#{informeMB.handleFileUpload}" multiple="true"
+												mode="advanced" dragDropSupport="false" cancelLabel="Cancelar"
+												uploadLabel="Subir" label="Elegir" 
+												update="dtArchivos"
+												allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
+										</p:panelGrid>
+										<p:dataTable var="a" value="#{arcMB.listado}" rowIndexVar="index"
+											widgetVar="wvArchivos" reflow="true" id="dtArchivos"
+											style="margin-top:20px;" paginator="true" paginatorPosition="top"
+											rowsPerPageTemplate="1,5,10,15" rows="5"
+											paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+											currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+											rowKey="#{a.arcId}">
 				
+											<p:column headerText="No.">
+												<h:outputText value="#{index+1}"></h:outputText>
+											</p:column>
+				
+											<p:column headerText="Nombre" filterBy="#{a.arcNombre}"
+												filterMatchMode="contains">
+												<h:outputText value="#{a.arcNombre}"></h:outputText>
+											</p:column>
+				
+											<p:column headerText="Eliminar" style="width:60px;">
+												<p:commandButton actionListener="#{arcMB.onBorrar(a)}"
+													update="dtArchivos" icon="pi pi-trash"
+													title="Clic para eliminar el archivo">
+													<p:confirm header="Confirmación" message="¿Eliminar?" icon="pi pi-info-circle"></p:confirm>
+												</p:commandButton>
+											</p:column>
+										</p:dataTable>
+									</p:tab>
 						</p:tabView>
 					</div>
 					<p:commandButton id="btnGuardarBottom" action="#{informeMB.onSave}"
@@ -132,6 +191,24 @@
 				</div>
 			</h:form>
 		</p:dialog>
+		<p:dialog widgetVar="wvCorreo" modal="true" showEffect="fade"
+		closable="true" closeOnEscape="true" responsive="true">
+		<h:form id="frmCorreo">
+			<p:commandButton id="btnEnviar" action="#{informeMB.onEnviarRevision}"
+				title="Clic para enviar a revision el informe"
+				process=":frmCorreo" value="Enviar a Revisión" icon="pi pi-check-circle"
+				style="float:left;" styleClass="blue-btn raised-btn"
+				update=":frm, :frmInforme">
+				<p:confirm header="Confirmación" message="¿Enviar a revisión?"></p:confirm>
+			</p:commandButton>
+			<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+				<p:outputLabel for="inf" value="Digite el texto del correo:"
+					style="font-weight:bold;" />
+				<pe:ckEditor id="inf" width="100%" value="#{informeMB.textoCorreo}" />
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
 		<ui:include src="actalectura.xhtml"></ui:include>
 		<ui:include src="cartagerencia.xhtml"></ui:include>
 	</ui:define>

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.administracion.Archivo;
 
 import java.util.Date;
 import java.util.Set;
@@ -64,6 +65,10 @@ public class ActaLectura extends SuperEntity implements Serializable {
 	//bi-directional many-to-one association to Destinatario
 	@OneToMany(mappedBy="actaLectura", fetch=FetchType.EAGER)
 	private Set<Destinatario> destinatario;
+	
+	// bi-directional many-to-one association to Archivo
+	@OneToMany(mappedBy = "actaLectura", fetch = FetchType.EAGER)
+	private Set<Archivo> archivo;
 
 	public ActaLectura() {
 	}
@@ -177,6 +182,28 @@ public class ActaLectura extends SuperEntity implements Serializable {
 
 		return destinatario;
 	}
+	
+	public Set<Archivo> getArchivo() {
+		return this.archivo;
+	}
+
+	public void setArchivo(Set<Archivo> archivo) {
+		this.archivo = archivo;
+	}
+
+	public Archivo addArchivo(Archivo archivo) {
+		getArchivo().add(archivo);
+		archivo.setActaLectura(this);
+
+		return archivo;
+	}
+
+	public Archivo removeArchivo(Archivo archivo) {
+		getArchivo().remove(archivo);
+		archivo.setActaLectura(null);
+
+		return archivo;
+	}
 
 	@Override
 	public int hashCode() {
@@ -205,7 +232,8 @@ public class ActaLectura extends SuperEntity implements Serializable {
 		return "ActaLectura [aclId=" + aclId + ", aclCuerpo=" + aclCuerpo + ", aclFecEnviada=" + aclFecEnviada
 				+ ", aclRef=" + aclRef + ", aclEncabezado=" + aclEncabezado + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi
 				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", informe=" + informe
-				+ ", destinatario=" + destinatario + "]";
+				+ ", destinatario=" + destinatario + ", archivo=" + archivo
+				+ "]";
 	}
 
 }

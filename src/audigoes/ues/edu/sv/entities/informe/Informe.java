@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.administracion.Archivo;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planificacion.Actividad;
 
@@ -81,7 +82,11 @@ public class Informe extends SuperEntity implements Serializable {
 	@Lob
 	@Column(name="inf_observaciones")
 	private String infObservaciones;
-
+	
+	@Lob
+	@Column(name="inf_estado")
+	private String infEstado;
+	
 	@Lob
 	@Column(name="inf_seguimiento")
 	private String infSeguimiento;
@@ -124,9 +129,13 @@ public class Informe extends SuperEntity implements Serializable {
 	private Actividad actividad;
 	
 	//bi-directional many-to-one association to Auditoria
-		@ManyToOne
-		@JoinColumn(name="inf_aud_id")
-		private Auditoria auditoria;
+	@ManyToOne
+	@JoinColumn(name="inf_aud_id")
+	private Auditoria auditoria;
+	
+	// bi-directional many-to-one association to Archivo
+	@OneToMany(mappedBy = "procedimientoPlanificacion", fetch = FetchType.EAGER)
+	private Set<Archivo> archivo;
 
 	public Informe() {
 	}
@@ -266,6 +275,14 @@ public class Informe extends SuperEntity implements Serializable {
 	public void setInfObservaciones(String infObservaciones) {
 		this.infObservaciones = infObservaciones;
 	}
+	
+	public String getInfEstado() {
+		return infEstado;
+	}
+
+	public void setInfEstado(String infEstado) {
+		this.infEstado = infEstado;
+	}
 
 	public int getInfVersion() {
 		return this.infVersion;
@@ -402,6 +419,28 @@ public class Informe extends SuperEntity implements Serializable {
 	public void setAuditoria(Auditoria auditoria) {
 		this.auditoria = auditoria;
 	}
+	
+	public Set<Archivo> getArchivo() {
+		return this.archivo;
+	}
+
+	public void setArchivo(Set<Archivo> archivo) {
+		this.archivo = archivo;
+	}
+
+	public Archivo addArchivo(Archivo archivo) {
+		getArchivo().add(archivo);
+		archivo.setInforme(this);
+
+		return archivo;
+	}
+
+	public Archivo removeArchivo(Archivo archivo) {
+		getArchivo().remove(archivo);
+		archivo.setInforme(null);
+
+		return archivo;
+	}
 
 	@Override
 	public int hashCode() {
@@ -432,9 +471,10 @@ public class Informe extends SuperEntity implements Serializable {
 				+ infEncabezado + ", infIntroduccion=" + infIntroduccion + ", infLogros=" + infLogros
 				+ ", infPiePagina=" + infPiePagina + ", infPortada=" + infPortada  + ", infDestinatario=" + infDestinatario  + ", infProcedimientos="
 				+ infProcedimientos + ", infRecomendaciones=" + infRecomendaciones + ", infObservaciones=" + infObservaciones + ", infResultados=" + infResultados
-				+ ", infSeguimiento=" + infSeguimiento + ", infTitulo=" + infTitulo + ", infVersion=" + infVersion
+				+ ", infSeguimiento=" + infSeguimiento + ", infTitulo=" + infTitulo + ", infVersion=" + infVersion + ", infEstado=" + infEstado
 				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", actaLectura="
-				+ actaLectura + ", cartaGerencia=" + cartaGerencia + ", convocatoria=" + convocatoria + ", cedulaNotas=" + cedulaNotas + ", actividad=" + actividad + "]";
+				+ actaLectura + ", cartaGerencia=" + cartaGerencia + ", convocatoria=" + convocatoria + ", cedulaNotas=" + cedulaNotas + ", actividad=" + actividad 
+				+ ", archivo=" + archivo + "]";
 	}
 
 }

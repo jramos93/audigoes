@@ -13,12 +13,15 @@
 				<p:commandButton id="btnGuardarTop" action="#{cartaGerenciaMB.onSave}"
 					value="Guardar" update=":frmCarta :frm" process="@form">
 				</p:commandButton>
-				<p:commandButton id="btnEditarCarta" action="#{cartaGerenciaMB.onEdit}"
+				<p:commandButton id="btnEditarCarta" action="#{cartaGerenciaMB.onSave}"
 					 value="Editar Carta"
-					icon="pi pi-plus" update="@form frmCarta">
+					icon="pi pi-plus" pdate=":frmCarta :frm" process="@form">
 				</p:commandButton>
-				<p:commandButton id="btnGuardarTop4" action="#{informeMB.onSave}"
-					value="Generar Carta" update="@form :frm" process="@this @form">
+				<p:commandButton id="btnCarta"
+					title="Clic para generar la carta a la gerencia"
+					process="@this" value="Generar Carta a la Gerencia" icon="pi pi-check-circle"
+					style="float:Righ;" styleClass="blue-btn raised-btn" ajax="false">
+					<p:fileDownload value="#{cartaGerenciaMB.carta}"></p:fileDownload>
 				</p:commandButton>
 				<div class="ui-fluid p-formgrid p-grid">
 					<div class="p-field p-col" style="margin-top: 25px;">
@@ -35,6 +38,42 @@
 									<pe:ckEditor id="ctgCuerpo" width="100%"
 											value="#{cartaGerenciaMB.registro.ctgCuerpo}" />
 							</p:tab>
+							<p:tab title="Cartas Firmadas">
+										<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+											styleClass="ui-panelgrid-blank form-group form-elements">
+											<h:outputText value="Subida de archivos:"></h:outputText>
+											<p:fileUpload listener="#{cartaGerenciaMB.handleFileUpload}" multiple="true"
+												mode="advanced" dragDropSupport="false" cancelLabel="Cancelar"
+												uploadLabel="Subir" label="Elegir" 
+												update="dtArchivos"
+												allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
+										</p:panelGrid>
+										<p:dataTable var="a" value="#{arcMB.listado}" rowIndexVar="index"
+											widgetVar="wvArchivos" reflow="true" id="dtArchivos"
+											style="margin-top:20px;" paginator="true" paginatorPosition="top"
+											rowsPerPageTemplate="1,5,10,15" rows="5"
+											paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+											currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+											rowKey="#{a.arcId}">
+				
+											<p:column headerText="No.">
+												<h:outputText value="#{index+1}"></h:outputText>
+											</p:column>
+				
+											<p:column headerText="Nombre" filterBy="#{a.arcNombre}"
+												filterMatchMode="contains">
+												<h:outputText value="#{a.arcNombre}"></h:outputText>
+											</p:column>
+				
+											<p:column headerText="Eliminar" style="width:60px;">
+												<p:commandButton actionListener="#{arcMB.onBorrar(a)}"
+													update="dtArchivos" icon="pi pi-trash"
+													title="Clic para eliminar el archivo">
+													<p:confirm header="Confirmación" message="¿Eliminar?" icon="pi pi-info-circle"></p:confirm>
+												</p:commandButton>
+											</p:column>
+										</p:dataTable>
+									</p:tab>
 						</p:tabView>
 					</div>
 					<p:commandButton id="btnGuardarBottom" action="#{cartaGerenciaMB.onSave}"

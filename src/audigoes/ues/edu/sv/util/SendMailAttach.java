@@ -83,6 +83,7 @@ public class SendMailAttach {
 		props.put("mail.smtp.port","587");
 		props.put("mail.smtp.starttls.enable", "true");
 		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 		
 		final String username = "audigoes.sv@gmail.com";
         final String password = "audigoes20";

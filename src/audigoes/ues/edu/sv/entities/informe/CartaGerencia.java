@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.administracion.Archivo;
 
 import java.util.Date;
 import java.util.Set;
@@ -63,6 +64,10 @@ public class CartaGerencia extends SuperEntity implements Serializable {
 	//bi-directional many-to-one association to Destinatario
 	@OneToMany(mappedBy="cartaGerencia", fetch=FetchType.EAGER)
 	private Set<Destinatario> destinatario;
+	
+	// bi-directional many-to-one association to Archivo
+	@OneToMany(mappedBy = "cartaGerencia", fetch = FetchType.EAGER)
+	private Set<Archivo> archivo;
 
 	public CartaGerencia() {
 	}
@@ -172,10 +177,33 @@ public class CartaGerencia extends SuperEntity implements Serializable {
 
 	public Destinatario removeDestinatario(Destinatario destinatario) {
 		getDestinatario().remove(destinatario);
-		destinatario.setConvocatoria(null);
+		destinatario.setCartaGerencia(null);
 
 		return destinatario;
 	}
+	
+	public Set<Archivo> getArchivo() {
+		return this.archivo;
+	}
+
+	public void setArchivo(Set<Archivo> archivo) {
+		this.archivo = archivo;
+	}
+
+	public Archivo addArchivo(Archivo archivo) {
+		getArchivo().add(archivo);
+		archivo.setCartaGerencia(this);
+
+		return archivo;
+	}
+
+	public Archivo removeArchivo(Archivo archivo) {
+		getArchivo().remove(archivo);
+		archivo.setCartaGerencia(null);
+
+		return archivo;
+	}
+
 
 	@Override
 	public int hashCode() {
@@ -204,7 +232,7 @@ public class CartaGerencia extends SuperEntity implements Serializable {
 		return "Convocatoria [ctgId=" + ctgId + ", ctgCuerpo=" + ctgCuerpo 
 				+ ", ctgRef=" + ctgRef + ", ctgEncabezado=" + ctgEncabezado + ", ctgDestinatario=" + ctgDestinatario + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi
 				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", informe=" + informe
-				+ ", ctgDestinatario=" + ctgDestinatario + "]";
+				+ ", ctgDestinatario=" + ctgDestinatario + ", archivo=" + archivo + "]";
 	}
 
 }

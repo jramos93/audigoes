@@ -62,4 +62,16 @@
 	<named-query name="archivos.ejecucion">
 		<query>select o from Archivo o where o.procedimientoEjecucion.pejId=?1 and o.regActivo=1</query>
 	</named-query>
+	<named-query name="archivos.informe">
+		<query>select o from Archivo o where o.informe.infId=?1 and o.regActivo=1</query>
+	</named-query>
+	<named-query name="archivos.carta">
+		<query>select o from Archivo o where o.cartaGerencia.ctgId=?1 and o.regActivo=1</query>
+	</named-query>
+	<named-query name="archivos.acta">
+		<query>select o from Archivo o where o.actaLectura.aclId=?1 and o.regActivo=1</query>
+	</named-query>
+	<named-query name="archivos.convocatoria">
+		<query>select o from Archivo o where o.convocatoria.cvcId=?1 and o.regActivo=1</query>
+	</named-query>
 </entity-mappings>

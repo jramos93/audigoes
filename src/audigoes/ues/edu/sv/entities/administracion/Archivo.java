@@ -5,6 +5,10 @@ import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
 import audigoes.ues.edu.sv.entities.ejecucion.ProcedimientoEjecucion;
+import audigoes.ues.edu.sv.entities.informe.ActaLectura;
+import audigoes.ues.edu.sv.entities.informe.CartaGerencia;
+import audigoes.ues.edu.sv.entities.informe.Convocatoria;
+import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
 import audigoes.ues.edu.sv.entities.planificacion.ProcedimientoPlanificacion;
 
@@ -63,12 +67,32 @@ public class Archivo extends SuperEntity implements Serializable  {
 	@ManyToOne
 	@JoinColumn(name="arc_pej_id")
 	private ProcedimientoEjecucion procedimientoEjecucion;
-
+	
 	//bi-directional many-to-one association to ProcedimientoPlanificacion
 	@ManyToOne
 	@JoinColumn(name="arc_pro_id")
 	private ProcedimientoPlanificacion procedimientoPlanificacion;
 
+	//bi-directional many-to-one association to Informe
+	@ManyToOne
+	@JoinColumn(name="arc_inf_id")
+	private Informe informe;
+	
+	//bi-directional many-to-one association to Convocatoria
+	@ManyToOne
+	@JoinColumn(name="arc_cvc_id")
+	private Convocatoria convocatoria;
+	
+	//bi-directional many-to-one association to Carta a la Gerencia
+	@ManyToOne
+	@JoinColumn(name="arc_ctg_id")
+	private CartaGerencia cartaGerencia;
+	
+	//bi-directional many-to-one association to Acta Lectura
+	@ManyToOne
+	@JoinColumn(name="arc_acl_id")
+	private ActaLectura actaLectura;
+	
 	public Archivo() {
 	}
 
@@ -167,6 +191,38 @@ public class Archivo extends SuperEntity implements Serializable  {
 	public void setProcedimientoPlanificacion(ProcedimientoPlanificacion procedimientoPlanificacion) {
 		this.procedimientoPlanificacion = procedimientoPlanificacion;
 	}
+	
+	public Informe getInforme() {
+		return informe;
+	}
+
+	public void setInforme(Informe informe) {
+		this.informe = informe;
+	}
+
+	public Convocatoria getConvocatoria() {
+		return convocatoria;
+	}
+
+	public void setConvocatoria(Convocatoria convocatoria) {
+		this.convocatoria = convocatoria;
+	}
+
+	public CartaGerencia getCartaGerencia() {
+		return cartaGerencia;
+	}
+
+	public void setCartaGerencia(CartaGerencia cartaGerencia) {
+		this.cartaGerencia = cartaGerencia;
+	}
+
+	public ActaLectura getActaLectura() {
+		return actaLectura;
+	}
+
+	public void setActaLectura(ActaLectura actaLectura) {
+		this.actaLectura = actaLectura;
+	}
 
 	@Override
 	public int hashCode() {
@@ -196,7 +252,9 @@ public class Archivo extends SuperEntity implements Serializable  {
 				+ ", arcNombre=" + arcNombre + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo="
 				+ regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", planAnual=" + planAnual
 				+ ", procedimientoEjecucion=" + procedimientoEjecucion + ", procedimientoPlanificacion="
-				+ procedimientoPlanificacion + "]";
+				+ procedimientoPlanificacion + ", informe=" + informe
+				+ ", cartaGerencia=" + cartaGerencia + ", actaLectura=" + actaLectura 
+				+ ", convocatoria=" + convocatoria +"]";
 	}
 	
 
