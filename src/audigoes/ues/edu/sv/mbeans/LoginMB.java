@@ -1,13 +1,19 @@
 package audigoes.ues.edu.sv.mbeans;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
+import javax.servlet.http.HttpSession;
 
+import audigoes.ues.edu.sv.entities.administracion.Institucion;
+import audigoes.ues.edu.sv.mbeans.administracion.InstitucionMB;
+import audigoes.ues.edu.sv.mbeans.informe.ActaLecturaMB;
 import audigoes.ues.edu.sv.security.SecurityController;
 import audigoes.ues.edu.sv.util.Test;
 import audigoes.ues.edu.sv.util.Utils;
@@ -20,13 +26,16 @@ public class LoginMB extends SecurityController implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	
+	private List<Institucion> institucionList;
+	private Institucion institucionSelected;
+	
 	public LoginMB() {
-
 	}
 
 	@PostConstruct
 	public void init() {
+		fillInstitucionList();
 		Test.main(null);
 	}
 
@@ -34,7 +43,17 @@ public class LoginMB extends SecurityController implements Serializable{
 		this.setOutcome("/page/main.xhtml");
 		return true;
 	}
-
+	
+	//Método para cerrar sesión
+		public String logout() {
+		        FacesContext facesContext = FacesContext.getCurrentInstance();
+		        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
+		        if (session != null) {
+		            session.invalidate(); //Cierre de sesion
+		        }
+		        return "/inicio.xhtml";// indicas a donde quieres direccionar después de cerrar sesión 
+		    }
+	
 	public void onVerificarLogin(ComponentSystemEvent event) {
 		if (this.isLoggedIn()) {
 			FacesContext ctx = FacesContext.getCurrentInstance();
@@ -45,9 +64,36 @@ public class LoginMB extends SecurityController implements Serializable{
 			}
 		}
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public void fillInstitucionList() {
+		try {
+			setInstitucionList((List<Institucion>) audigoesLocal.findByNamedQuery(Institucion.class,
+					"institucion.login",
+					new Object[] {}));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	protected boolean beforeLogout() {
 		this.setOutcome("/index.xhtml");
 		return true;
+	}
+
+	public List<Institucion> getInstitucionList() {
+		return institucionList;
+	}
+
+	public void setInstitucionList(List<Institucion> institucionList) {
+		this.institucionList = institucionList;
+	}
+
+	public Institucion getInstitucionSelected() {
+		return institucionSelected;
+	}
+
+	public void setInstitucionSelected(Institucion institucionSelected) {
+		this.institucionSelected = institucionSelected;
 	}
 }

@@ -15,4 +15,8 @@
 	<named-query name="usuario.permiso">
 		<query>select o from UsuarioPermiso o where o.rol.rolId=?1 and o.permiso.perId=?2 and o.usuario.usuId=?3</query>
 	</named-query>
+	
+	<named-query name="institucion.login">
+		<query>select o from Institucion o where o.regActivo=1</query>
+	</named-query>
 </entity-mappings>

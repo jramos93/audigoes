@@ -25,8 +25,19 @@
 				</p:growl>
 				<div class="ui-g-12 logo-container">
 					<p:graphicImage name="images/logo-azul.png" library="verona-layout" />
-					<h1>INGRESO AL SISTEMA</h1>
+					<h1>INGRESO AL SISTEMA INFORMATICO AUDIGOES</h1>
 					<h2>BIENVENIDO</h2>
+				</div>
+				<div class="ui-g-12">
+					<p:selectOneMenu id="logInstitucion"
+							converter="institucionConverter"
+							converterMessage="Problemas al seleccionar institucion"
+							value="#{loginMB.institucionSelected}">
+							<f:selectItem itemLabel="Seleccione la institucion"
+							itemValue="#{null}" noSelectionOption="true" />
+							<f:selectItems  id="siInstituciones" value="#{loginMB.institucionList}" var="ins"
+								itemLabel="#{ins.insNombre}" itemValue="#{ins}" />
+					</p:selectOneMenu>
 				</div>
 				<div class="ui-g-12">
 					<p:inputText id="usuario" placeholder="Usuario"

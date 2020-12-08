@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.primefaces.model.menu.MenuModel;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
+import audigoes.ues.edu.sv.entities.administracion.Institucion;
 import audigoes.ues.edu.sv.entities.administracion.Sesiones;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.administracion.UsuarioPermiso;
@@ -49,6 +50,8 @@ public class SecurityController extends AudigoesController {
 	@PostConstruct
 	public void init() {
 	}
+	
+	private List<Institucion> institucionList;
 
 	@SuppressWarnings("unchecked")
 	public String onLogin() {
@@ -132,6 +135,17 @@ public class SecurityController extends AudigoesController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void fillInstitucionList() {
+		try {
+			setInstitucionList((List<Institucion>) audigoesLocal.findByNamedQuery(Institucion.class,
+					"institucion.login",
+					new Object[] {}));
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -233,6 +247,14 @@ public class SecurityController extends AudigoesController {
 
 	public void setMsgCodigo(Integer msgCodigo) {
 		this.msgCodigo = msgCodigo;
+	}
+
+	public List<Institucion> getInstitucionList() {
+		return institucionList;
+	}
+
+	public void setInstitucionList(List<Institucion> institucionList) {
+		this.institucionList = institucionList;
 	}
 
 }
