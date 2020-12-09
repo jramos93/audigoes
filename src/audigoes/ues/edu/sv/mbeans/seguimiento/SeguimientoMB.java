@@ -193,4 +193,12 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 		this.recMB = recMB;
 	}
 
+	public ComentarioMB getComMB() {
+		return comMB;
+	}
+
+	public void setComMB(ComentarioMB comMB) {
+		this.comMB = comMB;
+	}
+
 }
