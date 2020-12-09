@@ -15,130 +15,257 @@
 					icon="pi pi-arrow-left" style="float:left;"
 					update=":frmPlanificacion, :frmProgramaEje">
 				</p:commandButton>
+				<p:commandButton id="btn" value="Guardar" icon="fa fa-check"
+					styleClass="raised-btn" actionListener="#{pejeMB.onSave}"
+					update=":frmProgramaEje"
+					rendered="#{pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado ne 3}" />
 			</div>
 
 			<div align="right" style="margin-top: 50px; float: right;">
+
 				<p:commandButton id="btnEnviar" action="#{pejeMB.prepararCorreo}"
 					oncomplete="PF('wvCorreo2').show();"
-					title="Clic para enviar a revisión de la coordinación el programa de planificación"
+					rendered="#{pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado eq 1}"
+					title="Clic para enviar a revisión de la coordinación el programa de ejecución"
 					process="@this" value="Enviar a Revisión" icon="pi pi-check-circle"
 					style="float:left;" styleClass="blue-btn raised-btn"
 					update=":frmCorreo2">
 				</p:commandButton>
+
+				<p:commandButton id="btnEnviarObs"
+					oncomplete="PF('wvCorreoObs2').show();"
+					actionListener="#{pejeMB.prepararCorreoObs}"
+					title="Clic para enviar las observaciones al auditor"
+					process="@this" value="Comunicar Observaciones"
+					rendered="#{pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado eq 2}"
+					icon="pi pi-check-circle" style="float:left;"
+					styleClass="blue-btn raised-btn" update=":frmCorreoObs2">
+				</p:commandButton>
+
+				<p:commandButton id="btnFin" oncomplete="PF('wvCorreoFin2').show();"
+					actionListener="#{pejeMB.prepararCorreoFin}"
+					rendered="#{pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado eq 2}"
+					title="Clic para finalizar la revisión" process="@this"
+					value="Finalizar Revisión" icon="pi pi-check-circle"
+					style="float:left;" styleClass="blue-btn raised-btn"
+					update=":frmCorreoFin2">
+				</p:commandButton>
+
+				<p:commandButton value="Importar Programa" icon="pi pi-cloud-upload"
+					title="Importar programa de años anteriores" update=":frmProgramas"
+					oncomplete="PF('wvProgramas').show();" process="@this"
+					actionListener="#{pejeMB.buscarProgramas}"
+					rendered="#{pejeMB.status eq 'NEW'}"
+					styleClass="green-btn raised-btn"></p:commandButton>
+
+				<p:commandButton value="Utilizar Programa" icon="pi pi-check"
+					actionListener="#{pejeMB.utilizarPrograma}"
+					update=":frmProgramaEje" rendered="#{pejeMB.registro.selected}"
+					styleClass="raised-btn">
+					<p:confirm header="Confirmación"
+						message="Utilizar el programa seleccionado?" icon="pi pi-info"></p:confirm>
+				</p:commandButton>
+
+				<p:commandButton value="Iniciar nuevo Programa"
+					icon="pi pi-plus-circle" rendered="#{pejeMB.status eq 'NEW'}"
+					styleClass="raised-btn" actionListener="#{pejeMB.iniciarPrograma}"></p:commandButton>
 			</div>
 			<div class="name" align="center" style="margin-top: 100px;">
-				<span class="app-name">Programa de Ejecución </span>
+
+
+				<h:outputText rendered="#{pejeMB.registro.preEstado eq 1}"
+					style="float:right; font-size:large; font-weight: bold; color:#2ab1be;"
+					value="Elaboración"></h:outputText>
+				<h:outputText rendered="#{pejeMB.registro.preEstado eq 2}"
+					style="float:right; font-size:large; font-weight: bold; color:#2ab1be;"
+					value="Revisión"></h:outputText>
+				<h:outputText rendered="#{pejeMB.registro.preEstado eq 3}"
+					style="float:right; font-size:large; font-weight: bold; color:#2ab1be;"
+					value="Finalizado"></h:outputText>
+				<h:outputText
+					style="float:right; font-size:large; font-weight: bold; color:#525c65; margin-right:10px;"
+					value="Estado:"></h:outputText>
+				<br /> <br /> <span class="app-name">Programa de Ejecución
+				</span>
+				<h3>Auditoría:
+					#{pejeMB.auditoria.audCodigo}-#{pejeMB.auditoria.audNombre}</h3>
 			</div>
 
+			<p:tabView id="tViewPeje">
+				<p:tab title="Información">
+					<div class="ui-fluid p-formgrid p-grid">
+						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+							styleClass="ui-panelgrid-blank form-group form-elements">
+							<p:outputLabel for="nombre" value="Nombre del Programa:"
+								style="font-weight:bold;" />
+							<p:inputTextarea id="nombre" value="#{pejeMB.registro.preNombre}"
+								rows="2" required="true" maxlength="250"
+								requiredMessage="El nombre es requerido" />
 
-			<div class="ui-fluid p-formgrid p-grid">
-				<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
-					styleClass="ui-panelgrid-blank form-group form-elements">
+							<p:outputLabel for="objg" value="Objetivo General:"
+								style="font-weight:bold;" />
+							<p:inputTextarea id="objg" value="#{pejeMB.registro.preObjG}"
+								rows="2" maxlength="250" />
 
-					<p:outputLabel for="objg" value="Objetivo General:"
-						style="font-weight:bold;" />
-					<p:inputTextarea id="objg" value="#{pejeMB.registro.preObjG}"
-						rows="4" required="true" maxlength="250" />
+							<p:outputLabel for="obje" value="Objetivos Especificos:"
+								style="font-weight:bold;" />
+							<p:inputTextarea id="obje" value="#{pejeMB.registro.preObjE}"
+								rows="4" maxlength="250" />
+						</p:panelGrid>
+						<p:panelGrid columns="4"
+							columnClasses="ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4, ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4"
+							layout="grid"
+							styleClass="ui-panelgrid-blank form-group form-elements">
 
-					<p:outputLabel for="obje" value="Objetivos Especificos:"
-						style="font-weight:bold;" />
-					<p:inputTextarea id="obje" value="#{pejeMB.registro.preObjE}"
-						rows="4" required="true" maxlength="250" />
-				</p:panelGrid>
-				<p:panelGrid columns="4"
-					columnClasses="ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4, ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4"
-					layout="grid"
-					styleClass="ui-panelgrid-blank form-group form-elements">
+							<p:outputLabel for="obje" value="Fecha de inicio:"
+								style="font-weight:bold;" />
+							<p:calendar mode="inline"
+								value="#{pejeMB.registro.preFechaInicio}"></p:calendar>
 
-					<p:outputLabel for="obje" value="Fecha de inicio:"
-						style="font-weight:bold;" />
-					<p:calendar mode="inline" value="#{pejeMB.registro.preFechaInicio}"></p:calendar>
+							<p:outputLabel for="obje" value="Fecha de fin:"
+								style="font-weight:bold;" />
+							<p:calendar mode="inline" value="#{pejeMB.registro.preFechaFin}"></p:calendar>
+						</p:panelGrid>
+						<p:panelGrid columns="2"
+							columnClasses="ui-g-9 ui-lg-10,ui-g-3 ui-md-4 ui-lg-2"
+							layout="grid"
+							styleClass="ui-panelgrid-blank form-group form-elements">
+							<p:column></p:column>
+							<p:commandButton id="btn" value="Guardar" icon="fa fa-check"
+								rendered="#{pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado ne 3}"
+								actionListener="#{pejeMB.onSave}" update=":frmProgramaEje" />
+						</p:panelGrid>
+					</div>
 
-					<p:outputLabel for="obje" value="Fecha de fin:"
-						style="font-weight:bold;" />
-					<p:calendar mode="inline" value="#{pejeMB.registro.preFechaFin}"></p:calendar>
-				</p:panelGrid>
-				<p:panelGrid columns="2"
-					columnClasses="ui-g-9 ui-lg-10,ui-g-3 ui-md-4 ui-lg-2"
-					layout="grid"
-					styleClass="ui-panelgrid-blank form-group form-elements">
-					<p:column></p:column>
-					<p:commandButton id="btn" value="Guardar" icon="fa fa-check"
-						actionListener="#{pejeMB.onSave}" update=":frmProgramaEje" />
-				</p:panelGrid>
-			</div>
+					<div class="name" align="center">
+						<span class="app-name">Listado de Procedimientos de
+							Ejecución</span>
+					</div>
 
-			<div class="ui-fluid p-formgrid p-grid">
-				<div class="name" align="center">
-					<span class="app-name">Procedimientos de Ejecución</span>
-				</div>
+					<p:dataTable var="p" value="#{proejeMB.listado}"
+						rowIndexVar="index" widgetVar="wvProcEjecucion" reflow="true"
+						id="dtProcEjecucion" style="margin-top:20px;" paginator="true"
+						filteredValue="#{proejeMB.filteredProcedimiento}"
+						globalFilterFunction="#{proejeMB.globalFilterFunction}"
+						selection="#{proejeMB.regSelected}" selectionMode="single"
+						paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+						rowKey="#{p.pejId}">
 
-				<p:panelGrid columns="4"
-					columnClasses="ui-lg-1,ui-lg-1,ui-lg-1,ui-lg-1" layout="grid"
-					styleClass="ui-panelgrid-blank form-group form-elements">
-					<p:commandButton value="Agregar" icon="pi pi-plus"
-						update=":frmProgramaEje, :frmProcedimientoEje"
-						actionListener="#{proejeMB.onNew}">
-					</p:commandButton>
-					<p:commandButton value="Editar" icon="pi pi-pencil"
-						update=":frmProgramaEje, :frmProcedimientoEje"
-						rendered="#{proejeMB.registro.selected}"
-						actionListener="#{proejeMB.onEditSelected}">
-					</p:commandButton>
-				</p:panelGrid>
+						<p:ajax event="rowSelect" listener="#{proejeMB.onRowSelect}"
+							update=":frmProgramaEje:tViewPeje:dtProcEjecucion:tMenu" />
 
-				<p:dataTable var="p" value="#{proejeMB.listado}" rowIndexVar="index"
-					widgetVar="wvProcEjecucion" reflow="true" id="dtProcEjecucion"
-					style="margin-top:20px;" paginator="true"
-					filteredValue="#{proejeMB.filteredProcedimiento}"
-					globalFilterFunction="#{proejeMB.globalFilterFunction}"
-					selection="#{proejeMB.regSelected}" selectionMode="single"
-					paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
-					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
-					rowKey="#{p.pejId}">
+						<f:facet name="header">
+							<p:toolbar id="tMenu">
+								<p:toolbarGroup>
+									<p:commandButton value="Agregar" icon="pi pi-plus"
+										rendered="#{pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado ne 3}"
+										update=":frmProgramaEje, :frmProcedimientoEje"
+										actionListener="#{proejeMB.onNew}">
+									</p:commandButton>
+									<p:commandButton value="Editar" icon="pi pi-pencil"
+										update=":frmProgramaEje, :frmProcedimientoEje"
+										rendered="#{proejeMB.registro.selected and pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado ne 3}"
+										actionListener="#{proejeMB.onEditSelected}">
+									</p:commandButton>
+								</p:toolbarGroup>
+							</p:toolbar>
+						</f:facet>
 
-					<p:ajax event="rowSelect" listener="#{proejeMB.onRowSelect}"
-						update=":frmProgramaEje" />
+						<f:facet name="paginatorTopRight">
+							<p:outputPanel>
+								<h:outputText value="Búsqueda global: " />
+								<p:inputText id="globalFilter"
+									onkeyup="PF('wvProcEjecucion').filter();" style="width:150px"
+									placeholder="Ingresa una palabra" />
+							</p:outputPanel>
+						</f:facet>
 
-					<f:facet name="paginatorTopRight">
-						<p:outputPanel>
-							<h:outputText value="Búsqueda global: " />
-							<p:inputText id="globalFilter"
-								onkeyup="PF('wvProcEjecucion').filter();" style="width:150px"
-								placeholder="Ingresa una palabra" />
-						</p:outputPanel>
-					</f:facet>
+						<p:column headerText="No.">
+							<h:outputText value="#{index+1}"></h:outputText>
+						</p:column>
 
-					<p:column headerText="No.">
-						<h:outputText value="#{index+1}"></h:outputText>
-					</p:column>
+						<p:column headerText="Nombre">
+							<h:outputText value="#{p.pejNombre}"></h:outputText>
+						</p:column>
 
-					<p:column headerText="Nombre">
-						<h:outputText value="#{p.pejNombre}"></h:outputText>
-					</p:column>
+						<p:column headerText="Referencia">
+							<h:outputText value="#{p.pejReferencia}"></h:outputText>
+						</p:column>
 
-					<p:column headerText="Referencia">
-						<h:outputText value="#{p.pejReferencia}"></h:outputText>
-					</p:column>
+						<p:column headerText="Fecha Elaboración">
+							<h:outputText value="#{p.pejFechaElaboro}">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
 
-					<p:column headerText="Fecha Elaboración">
-						<h:outputText value="#{p.pejFechaElaboro}"></h:outputText>
-					</p:column>
+					</p:dataTable>
+				</p:tab>
 
-				</p:dataTable>
-			</div>
+				<p:tab title="Observaciones de la Coordinación">
+					<pe:ckEditor id="obs" width="100%" skin="office2013"
+						customConfig="#{request.contextPath}/resources/js/customck.js"
+						value="#{pejeMB.registro.preObservaciones}" />
+				</p:tab>
+			</p:tabView>
 		</p:panel>
 	</h:form>
 
-	<p:dialog widgetVar="wvCorreo2" modal="true" showEffect="fade"
+	<p:dialog widgetVar="wvProgramas" modal="true" showEffect="fade"
+		closable="true" closeOnEscape="true" responsive="true" width="70%">
+		<h:form id="frmProgramas">
+			<p:fieldset legend="Indicaciones">
+				<h:panelGrid columns="1">
+					<h:outputText style="font-weight:bold;"
+						value="Seleccione el programa que desea utilizar y 
+						confirme en la siguiente pantalla con el botón 'Utilizar Programa'" />
+				</h:panelGrid>
+			</p:fieldset>
+			<p:dataTable var="p" value="#{pejeMB.programasList}"
+				rowIndexVar="index" widgetVar="wvProcEjecucion" reflow="true"
+				id="dtProgramas" style="margin-top:20px;" paginator="true"
+				filteredValue="#{pejeMB.filteredPrograma}"
+				globalFilterFunction="#{pejeMB.globalFilterFunction}"
+				selection="#{pejeMB.regSelected}" selectionMode="single"
+				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+				rowKey="#{p.preId}">
+
+				<p:ajax event="rowSelect" listener="#{pejeMB.onRowSelect}"
+					update=":frmProgramaEje" oncomplete="PF('wvProgramas').hide();" />
+
+				<f:facet name="header">
+					Listado de Programas de Auditoría Almacenados
+				</f:facet>
+				<p:column headerText="No.">
+					<h:outputText value="#{index+1}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Año" filterMatchMode="contains"
+					filterBy="#{p.auditoria.audAnio}">
+					<h:outputText value="#{p.auditoria.audAnio}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Nombre" filterBy="#{p.preNombre}"
+					filterMatchMode="contains">
+					<h:outputText value="#{p.preNombre}"></h:outputText>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog widgetVar="wvCorreo2" modal="true" showEffect="fade" dynamic="true"
 		closable="true" closeOnEscape="true" responsive="true">
 		<h:form id="frmCorreo2">
 			<p:commandButton id="btnEnviar" action="#{pejeMB.onEnviarRevision}"
 				title="Clic para enviar a revisión de la coordinación el programa de ejecución"
-				process=":frmCorreo" value="Enviar a Revisión"
+				process=":frmCorreo2" value="Enviar a Revisión"
 				icon="pi pi-check-circle" style="float:left;"
 				styleClass="blue-btn raised-btn"
+				oncomplete="PF('wvCorreo2').hide();"
 				update=":frmPlanificacion, :frmProgramaEje">
 				<p:confirm header="Confirmación" message="¿Enviar a revisión?"></p:confirm>
 			</p:commandButton>
@@ -146,7 +273,57 @@
 				styleClass="ui-panelgrid-blank form-group form-elements">
 				<p:outputLabel for="narra" value="Digite el texto del correo:"
 					style="font-weight:bold;" />
-				<pe:ckEditor id="narra" width="100%" value="#{pejeMB.textoCorreo}" />
+				<pe:ckEditor id="narra" width="100%" value="#{pejeMB.textoCorreo}"
+					skin="office2013"
+					customConfig="#{request.contextPath}/resources/js/customck.js" />
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+
+
+	<p:dialog widgetVar="wvCorreoObs2" modal="true" showEffect="fade"
+		closable="true" closeOnEscape="true" responsive="true">
+		<h:form id="frmCorreoObs2">
+			<p:commandButton id="btnEnviar"
+				action="#{pejeMB.onEnviarObservacion}"
+				title="Clic para enviar las observaciones al auditor"
+				process=":frmCorreoObs2" value="Comunicar Observaciones"
+				icon="pi pi-check-circle" style="float:left;"
+				styleClass="blue-btn raised-btn"
+				oncomplete="PF('wvCorreoObs2').hide();"
+				update=":frmPlanificacion, :frmProgramaEje">
+				<p:confirm header="Confirmación" message="¿Enviar observaciones?"></p:confirm>
+			</p:commandButton>
+			<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+				<p:outputLabel for="narra" value="Digite el texto del correo:"
+					style="font-weight:bold;" />
+				<pe:ckEditor id="narra" width="100%" skin="office2013"
+					customConfig="#{request.contextPath}/resources/js/customck.js"
+					value="#{pejeMB.textoCorreoObs}" />
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog widgetVar="wvCorreoFin2" modal="true" showEffect="fade"
+		closable="true" closeOnEscape="true" responsive="true">
+		<h:form id="frmCorreoFin2">
+			<p:commandButton id="btnEnviar" action="#{pejeMB.onFinalizar}"
+				title="Clic para finalizar la revisión del programa de planificación"
+				process=":frmCorreoFin2" value="Finalizar Revisión"
+				icon="pi pi-check-circle" style="float:left;"
+				styleClass="blue-btn raised-btn"
+				oncomplete="PF('wvCorreoFin2').hide();"
+				update=":frmPlanificacion, :frmProgramaEje">
+				<p:confirm header="Confirmación" message="¿Finalizar Revisión?"></p:confirm>
+			</p:commandButton>
+			<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+				<p:outputLabel for="narra" value="Digite el texto del correo:"
+					style="font-weight:bold;" />
+				<pe:ckEditor id="narra" width="100%" skin="office2013"
+					customConfig="#{request.contextPath}/resources/js/customck.js"
+					value="#{pejeMB.textoCorreoFin}" />
 			</p:panelGrid>
 		</h:form>
 	</p:dialog>

@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<h:form id="frmEjecucion">
+			<p:panel
+				rendered="#{audMB.status eq 'SEARCH' and (pejeMB.status eq 'SEARCH')}">
+				<div align="left" style="margin-top: 50px;">
+					<p:commandButton id="btnCancel" ajax="false"
+						styleClass="pink-btn raised-btn"
+						action="/page/planeacion/auditoria.xhtml?faces-redirect=true"
+						value="Regresar" icon="pi pi-arrow-left" style="float:left;">
+					</p:commandButton>
+				</div>
+
+				<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-6 ui-lg-6"
+					layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements"
+					style="margin-top:100px; text-align:center;">
+
+					<p:commandLink value="" actionListener="#{audMB.onProgramaEje}" title="Procedimientos a ejecutar en auditoría"
+						update=":frmEjecucion, :frmProgramaEje">
+						<p:graphicImage
+							value="/resources/images/procedimientos-ejecucion.png"
+							style="height:200px;" />
+					</p:commandLink>
+
+					<p:commandLink value="" actionListener="#{audMB.onProgramaEje}" title="Hallazgos preliminares de auditoría"
+						update=":frmEjecucion">
+						<p:graphicImage value="/resources/images/hallazgos.png"
+							style="height:200px;" />
+					</p:commandLink>
+				</p:panelGrid>
+			</p:panel>
+		</h:form>
+
+
+		<ui:include src="programa-ejecucion.xhtml"></ui:include>
+	</ui:define>
+
+</ui:composition>

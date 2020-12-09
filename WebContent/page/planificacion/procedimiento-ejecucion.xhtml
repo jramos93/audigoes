@@ -11,11 +11,16 @@
 
 			<div align="left" style="margin-top: 50px;">
 				<p:commandButton id="btnCancel" action="#{proejeMB.onCancel}"
-					value="Cancelar" icon="pi pi-ban" style="float:left;" styleClass="pink-btn raised-btn"
+					value="Regresar" icon="pi pi-arrow-left" style="float:left;"
+					styleClass="pink-btn raised-btn"
 					update=":frmProgramaEje, :frmProcedimientoEje" process="@this">
 				</p:commandButton>
+
+				<p:commandButton value="Guardar" icon="fa fa-check"
+					styleClass="raised-btn" actionListener="#{proejeMB.onSave}"
+					update=":frmProcedimientoEje" />
 			</div>
-			<div class="name" align="center" style="margin-top: 100px;">
+			<div class="name" align="center" style="margin-top: 50px;">
 				<span class="app-name">Procedimiento de Ejecución </span>
 			</div>
 			<div class="ui-fluid p-formgrid p-grid">
@@ -43,53 +48,10 @@
 						</p:panelGrid>
 
 					</p:tab>
-					<p:tab title="Narrativa">
-						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
-							styleClass="ui-panelgrid-blank form-group form-elements">
-
-							<p:outputLabel for="narra" value="Narrativa"
-								style="font-weight:bold;" />
-							<pe:ckEditor id="narra" width="100%"
-								value="#{proejeMB.registro.pejNarrativa}" />
-						</p:panelGrid>
-					</p:tab>
-					<p:tab title="Papeles de Trabajo">
-						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
-							styleClass="ui-panelgrid-blank form-group form-elements">
-							<h:outputText value="Subida de archivos:"></h:outputText>
-							<p:fileUpload listener="#{proejeMB.handleFileUpload}" disabled="#{proejeMB.status eq 'NEW'}"
-								multiple="true" mode="advanced" dragDropSupport="false"
-								cancelLabel="Cancelar" uploadLabel="Subir" label="Elegir"
-								update=":frmProcedimientoEje:tview:dtArchivos"
-								allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
-						</p:panelGrid>
-						<p:dataTable var="a" value="#{arcMB.listado}" rowIndexVar="index"
-							widgetVar="wvArchivos" reflow="true" id="dtArchivos"
-							style="margin-top:20px;" paginator="true" paginatorPosition="top"
-							rowsPerPageTemplate="1,5,10,15" rows="5"
-							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-							currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
-							rowKey="#{a.arcId}">
-
-							<p:column headerText="No.">
-								<h:outputText value="#{index+1}"></h:outputText>
-							</p:column>
-
-							<p:column headerText="Nombre" filterBy="#{a.arcNombre}"
-								filterMatchMode="contains">
-								<h:outputText value="#{a.arcNombre}"></h:outputText>
-							</p:column>
-
-							<p:column headerText="Eliminar" style="width:60px;">
-								<p:commandButton actionListener="#{arcMB.onBorrar(a)}"
-									update=":frmProcedimientoEje:tview:dtArchivos" icon="pi pi-trash"
-									title="Clic para eliminar el archivo">
-									<p:confirm header="Confirmación" message="¿Eliminar?"
-										icon="pi pi-info-circle"></p:confirm>
-								</p:commandButton>
-							</p:column>
-
-						</p:dataTable>
+					<p:tab title="Observaciones">
+						<pe:ckEditor id="obs" width="100%" skin="office2013"
+							customConfig="#{request.contextPath}/resources/js/customck.js"
+							value="#{proejeMB.registro.pejObservaciones}" />
 					</p:tab>
 				</p:tabView>
 

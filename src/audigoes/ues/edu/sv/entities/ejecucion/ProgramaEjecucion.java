@@ -102,6 +102,12 @@ public class ProgramaEjecucion extends SuperEntity implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "pre_aud_id")
 	private Auditoria auditoria;
+	
+	@Column(name="pre_observaciones")
+	private String preObservaciones;
+	
+	@Column(name="pre_estado")
+	private int preEstado;
 
 	public ProgramaEjecucion() {
 	}
@@ -278,6 +284,22 @@ public class ProgramaEjecucion extends SuperEntity implements Serializable {
 
 	public void setAuditoria(Auditoria auditoria) {
 		this.auditoria = auditoria;
+	}
+
+	public String getPreObservaciones() {
+		return preObservaciones;
+	}
+
+	public void setPreObservaciones(String preObservaciones) {
+		this.preObservaciones = preObservaciones;
+	}
+
+	public int getPreEstado() {
+		return preEstado;
+	}
+
+	public void setPreEstado(int preEstado) {
+		this.preEstado = preEstado;
 	}
 
 	@Override

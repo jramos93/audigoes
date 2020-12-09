@@ -1,0 +1,14 @@
+@charset "ISO-8859-1";
+
+.ir-arriba {
+	z-index: 2626262;
+	display: none;
+	padding: 15px;
+	background: #024959;
+	font-size: 18px;
+	color: #fff;
+	cursor: pointer;
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+}

@@ -54,6 +54,10 @@ public class ProcedimientoPlanificacion extends SuperEntity implements Serializa
 	@Lob
 	@Column(name = "pro_narrativa")
 	private String proNarrativa;
+	
+	@Lob
+	@Column(name = "pro_observaciones")
+	private String proObservaciones;
 
 	@Column(name = "pro_nombre")
 	private String proNombre;
@@ -272,6 +276,14 @@ public class ProcedimientoPlanificacion extends SuperEntity implements Serializa
 		this.proFechaFin = proFechaFin;
 	}
 	
+	public String getProObservaciones() {
+		return proObservaciones;
+	}
+
+	public void setProObservaciones(String proObservaciones) {
+		this.proObservaciones = proObservaciones;
+	}
+
 	public Set<Archivo> getArchivo() {
 		return this.archivo;
 	}

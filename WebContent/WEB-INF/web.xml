@@ -64,6 +64,7 @@
  		<servlet-name>Faces Servlet</servlet-name>
 	</filter-mapping>
 	
+	
 	<mime-mapping>
 		<extension>ttf</extension>
 		<mime-type>application/font-sfnt</mime-type>

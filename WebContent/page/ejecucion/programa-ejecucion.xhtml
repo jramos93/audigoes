@@ -1,0 +1,128 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<h:form id="frmProgramaEje">
+		<p:panel
+			rendered="#{audMB.status eq 'SEARCH' and pejeMB.status ne 'SEARCH' and proejeMB.status eq 'SEARCH'}">
+			<div align="left" style="margin-top: 50px; float: left;">
+				<p:commandButton id="btnCancel" action="#{pejeMB.onCancel}"
+					styleClass="pink-btn raised-btn" process="@this" value="Regresar"
+					icon="pi pi-arrow-left" style="float:left;"
+					update=":frmEjecucion, :frmProgramaEje">
+				</p:commandButton>
+			</div>
+
+			<div class="ui-fluid p-formgrid p-grid">
+				<div class="name" align="center" style="margin-top: 100px;">
+					<span class="app-name">Procedimientos de Ejecución a
+						Desarrollar</span>
+					<h3>Auditoría:
+						#{pejeMB.auditoria.audCodigo}-#{pejeMB.auditoria.audNombre}</h3>
+				</div>
+				<br />
+				<p:fieldset legend="Programa de Auditoría"
+					style="font-size:larger; font-weight:bold;">
+					<h:panelGrid columns="4" cellspacing="15" style="font-size:small;" columnClasses="ui-lg-3,ui-lg-3,ui-lg-3,ui-lg-3">
+						<h:outputText style="font-weight:bold;" value="Identificador:" />
+						<h:outputText style="color:#2ab1be;"
+							value="#{pejeMB.auditoria.audAnio} - #{pejeMB.registro.preNombre}" />
+						<p:column></p:column>
+						<p:column></p:column>
+
+						<h:outputText style="font-weight:bold;" value="Elaborado Por:" />
+						<h:outputText style="color:#2ab1be;"
+							value="#{pejeMB.registro.usuario1.usuNombre} #{pejeMB.registro.usuario1.usuApellido}">
+						</h:outputText>
+						<h:outputText style="font-weight:bold;" value="Fecha Elaboración:" />
+						<h:outputText value="#{pejeMB.registro.preFechaElaboro}" style="color:#2ab1be;">
+							<f:convertDateTime pattern="dd-MM-yyyy" />
+						</h:outputText>
+
+						<h:outputText style="font-weight:bold;" value="Revisado Por:" />
+						<h:outputText style="color:#2ab1be;"
+							value="#{pejeMB.registro.usuario2.usuNombre} #{pejeMB.registro.usuario2.usuApellido}" />
+						<h:outputText style="font-weight:bold;" value="Fecha Revisión:" />
+						<h:outputText value="#{pejeMB.registro.preFechaReviso}" style="color:#2ab1be;">
+							<f:convertDateTime pattern="dd-MM-yyyy" />
+						</h:outputText>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<p:dataTable var="p" value="#{proejeMB.listado}" rowIndexVar="index"
+					widgetVar="wvProcEjecucion" reflow="true" id="dtProcEjecucion"
+					style="margin-top:20px;" paginator="true"
+					filteredValue="#{proejeMB.filteredProcedimiento}"
+					globalFilterFunction="#{proejeMB.globalFilterFunction}"
+					selection="#{proejeMB.regSelected}" selectionMode="single"
+					paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+					rowKey="#{p.pejId}">
+
+					<p:ajax event="rowSelect" listener="#{proejeMB.onRowSelect}"
+						update=":frmProgramaEje:dtProcEjecucion:tMenu" />
+
+					<f:facet name="header">
+						<p:toolbar id="tMenu">
+							<p:toolbarGroup>
+								<p:commandButton value="Desarrollo de Procedimiento"
+									icon="pi pi-comments"
+									update=":frmProgramaEje, :frmProcedimientoEje"
+									rendered="#{proejeMB.registro.selected}"
+									actionListener="#{proejeMB.onEditSelected}">
+								</p:commandButton>
+							</p:toolbarGroup>
+						</p:toolbar>
+					</f:facet>
+					<f:facet name="paginatorTopRight">
+						<p:outputPanel>
+							<h:outputText value="Búsqueda global: " />
+							<p:inputText id="globalFilter"
+								onkeyup="PF('wvProcEjecucion').filter();" style="width:150px"
+								placeholder="Ingresa una palabra" />
+						</p:outputPanel>
+					</f:facet>
+
+					<p:column headerText="No.">
+						<h:outputText value="#{index+1}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Nombre">
+						<h:outputText value="#{p.pejNombre}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Descripcion">
+						<h:outputText value="#{p.pejDescripcion}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Referencia">
+						<h:outputText value="#{p.pejReferencia}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Fecha Elaboración">
+						<h:outputText value="#{p.pejFechaElaboro}">
+							<f:convertDateTime pattern="dd-MM-yyyy" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Fecha Revisión">
+						<h:outputText value="#{p.pejFechaReviso}">
+							<f:convertDateTime pattern="dd-MM-yyyy" />
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+			</div>
+
+		</p:panel>
+	</h:form>
+
+
+	<ui:include src="procedimiento-ejecucion.xhtml"></ui:include>
+
+</ui:composition>

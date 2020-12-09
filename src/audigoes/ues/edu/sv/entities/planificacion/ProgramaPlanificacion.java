@@ -96,6 +96,9 @@ public class ProgramaPlanificacion extends SuperEntity implements Serializable {
 	
 	@Column(name = "prp_estado")
 	private int prpEstado;
+	
+	@Column(name="prp_observaciones")
+	private String prpObservaciones;
 
 	public ProgramaPlanificacion() {
 	}
@@ -267,6 +270,14 @@ public class ProgramaPlanificacion extends SuperEntity implements Serializable {
 
 	public void setPrpEstado(int prpEstado) {
 		this.prpEstado = prpEstado;
+	}
+
+	public String getPrpObservaciones() {
+		return prpObservaciones;
+	}
+
+	public void setPrpObservaciones(String prpObservaciones) {
+		this.prpObservaciones = prpObservaciones;
 	}
 
 	@Override

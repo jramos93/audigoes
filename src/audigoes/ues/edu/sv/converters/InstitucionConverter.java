@@ -8,7 +8,6 @@ import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 
 import audigoes.ues.edu.sv.entities.administracion.Institucion;
-import audigoes.ues.edu.sv.entities.planeacion.TipoAuditoria;
 import audigoes.ues.edu.sv.security.SecurityController;
 
 @FacesConverter(value = "institucionConverter")
@@ -25,10 +24,17 @@ public class InstitucionConverter implements Converter {
 				registro = new Institucion();
 				return registro;
 			} else {
-				id = Integer.parseInt(arg2);
+				if (arg2.equals("Seleccione la institucion")) {
+//					PrimeFacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+//							FacesMessage.SEVERITY_ERROR, "Error!", "Favor seleccione una institución"));
+					return null;
+				} else {
+					id = Integer.parseInt(arg2);
+				}
 			}
-			
-			setSecurityMB((SecurityController) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("loginMB"));
+
+			setSecurityMB((SecurityController) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+					.get("loginMB"));
 			registro = (Institucion) getSecurityMB().getAudigoesLocal().findByPk(Institucion.class, id);
 			if (registro == null) {
 				throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error en conversión",

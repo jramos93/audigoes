@@ -1,46 +1,42 @@
-<ui:composition 
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:p="http://primefaces.org/ui"
-    xmlns:pa="http://primefaces.org/verona">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pa="http://primefaces.org/verona">
 
-    <div class="topbar">
-        <div class="topbar-main1">
-        <div class="app-name">AUDIGOES</div>
-            <a href="#" id="user-display1">
-            	<span class="name"></span>
-                 <span class="fecha"></span>
-            </a>
-            
-            <a href="#" id="user-display">
-                <span class="username">Usuario</span>
-                <span class="userrole">#{loginMB.objAppsSession.usuario.usuUsuario}</span>
-                <p:graphicImage name="images/user.png" library="verona-layout" />
-            </a>
-        </div>
-        <div class="topbar-main">
-            <a href="#" id="menu-button">
-                <span class="fa fa-bars"></span>
-            </a>
-            <h:link outcome="/page/main.xhtml">
-                <p:graphicImage name="images/logo-azul.png" library="verona-layout" styleClass="logo"/>
-            </h:link>
-            <div class="app-insti">#{loginMB.objAppsSession.usuario.institucion.insNombre}</div>
-             
-            <ul id="topbar-menu">
-                      	<h:form>
-                      	<b>
-                         <p:commandLink action="#{loginMB.logout}" update="frmLogin"
-						ajax="false" value="Cerrar Session" style="text-align:center; color:#000000"/>
-						</b>
-                        </h:form>
-            </ul>
-        </div>
-        
+	<div class="topbar">
+		<div class="topbar-main1">
+			<div class="app-name">AUDIGOES</div>
+			<a href="#" id="user-display1"> <span class="name"></span> <span
+				class="fecha"></span>
+			</a> <a href="#" id="user-display"> <span class="username">Usuario</span>
+				<span class="userrole">Auditor: #{loginMB.objAppsSession.usuario.usuUsuario}</span>
+				<p:graphicImage name="images/user.png" library="verona-layout" />
+			</a>
+		</div>
+		<div class="topbar-main">
+			<a href="#" id="menu-button"> <span class="fa fa-bars"></span>
+			</a>
+			<h:link outcome="/page/main.xhtml">
+				<p:graphicImage name="images/logo-azul.png" library="verona-layout"
+					styleClass="logo" />
+			</h:link>
+			<div class="app-insti">#{loginMB.objAppsSession.usuario.institucion.insNombre}</div>
 
-        <ui:include src="./menu.xhtml" />
-    </div>
+			<ul id="topbar-menu" class="fadeInDown animated">
+				<h:form>
+					<li role="menuitem"><p:commandLink action="#{loginMB.logout}"
+							update="frmLogin" ajax="false">
+							<i class="fa fa-fw fa-sign-out"></i>
+							<span>Cerrar Sesión</span>
+						</p:commandLink></li>
+				</h:form>
+			</ul>
+		</div>
+
+
+		<ui:include src="./menu.xhtml" />
+	</div>
 
 </ui:composition>

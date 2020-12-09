@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 
 import java.util.Date;
@@ -35,6 +36,10 @@ public class Memorando extends SuperEntity implements Serializable {
 	@Lob
 	@Column(name="mem_contenido")
 	private String memContenido;
+	
+	@Lob
+	@Column(name="mem_observaciones")
+	private String memObservaciones;
 
 	@Lob
 	@Column(name="mem_descripcion")
@@ -62,11 +67,32 @@ public class Memorando extends SuperEntity implements Serializable {
 
 	@Column(name="usu_modi")
 	private String usuModi;
+	
+	@Column(name="mem_estado")
+	private int memEstado;
 
 	//bi-directional many-to-one association to Auditoria
 	@ManyToOne
 	@JoinColumn(name="mem_aud_id")
 	private Auditoria auditoria;
+	
+	// bi-directional many-to-one association to Usuario
+	@ManyToOne
+	@JoinColumn(name = "mem_usu_id")
+	private Usuario usuario1;
+
+	// bi-directional many-to-one association to Usuario
+	@ManyToOne
+	@JoinColumn(name = "mem_usu_usu_id")
+	private Usuario usuario2;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "mem_fecha_elaboro")
+	private Date memFechaElaboro;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "mem_fecha_reviso")
+	private Date memFechaReviso;
 
 	public Memorando() {
 	}
@@ -151,6 +177,14 @@ public class Memorando extends SuperEntity implements Serializable {
 		this.regActivo = regActivo;
 	}
 
+	public int getMemEstado() {
+		return memEstado;
+	}
+
+	public void setMemEstado(int memEstado) {
+		this.memEstado = memEstado;
+	}
+
 	public String getUsuCrea() {
 		return this.usuCrea;
 	}
@@ -173,6 +207,48 @@ public class Memorando extends SuperEntity implements Serializable {
 
 	public void setAuditoria(Auditoria auditoria) {
 		this.auditoria = auditoria;
+	}
+
+	public String getMemObservaciones() {
+		return memObservaciones;
+	}
+
+	public void setMemObservaciones(String memObservaciones) {
+		this.memObservaciones = memObservaciones;
+	}
+
+	public Usuario getUsuario1() {
+		return usuario1;
+	}
+
+	public void setUsuario1(Usuario usuario1) {
+		this.usuario1 = usuario1;
+	}
+
+	public Usuario getUsuario2() {
+		return usuario2;
+	}
+
+	public void setUsuario2(Usuario usuario2) {
+		this.usuario2 = usuario2;
+	}
+
+	
+
+	public Date getMemFechaElaboro() {
+		return memFechaElaboro;
+	}
+
+	public void setMemFechaElaboro(Date memFechaElaboro) {
+		this.memFechaElaboro = memFechaElaboro;
+	}
+
+	public Date getMemFechaReviso() {
+		return memFechaReviso;
+	}
+
+	public void setMemFechaReviso(Date memFechaReviso) {
+		this.memFechaReviso = memFechaReviso;
 	}
 
 	@Override

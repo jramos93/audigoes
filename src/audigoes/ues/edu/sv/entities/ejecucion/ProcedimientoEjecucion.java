@@ -80,6 +80,13 @@ public class ProcedimientoEjecucion extends SuperEntity implements Serializable 
 
 	@Column(name = "usu_modi")
 	private String usuModi;
+	
+	@Lob
+	@Column(name = "pej_observaciones")
+	private String pejObservaciones;
+	
+	@Column(name = "pej_estado")
+	private int pejEstado;
 
 	// bi-directional many-to-one association to CedulaNota
 	@OneToMany(mappedBy = "procedimientoEjecucion", fetch = FetchType.EAGER)
@@ -173,6 +180,22 @@ public class ProcedimientoEjecucion extends SuperEntity implements Serializable 
 
 	public void setUsuModi(String usuModi) {
 		this.usuModi = usuModi;
+	}
+
+	public String getPejObservaciones() {
+		return pejObservaciones;
+	}
+
+	public void setPejObservaciones(String pejObservaciones) {
+		this.pejObservaciones = pejObservaciones;
+	}
+
+	public int getPejEstado() {
+		return pejEstado;
+	}
+
+	public void setPejEstado(int pejEstado) {
+		this.pejEstado = pejEstado;
 	}
 
 	public Set<CedulaNota> getCedulaNotas() {

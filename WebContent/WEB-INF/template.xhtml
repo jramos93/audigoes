@@ -19,6 +19,7 @@
 	<h:outputStylesheet name="primeicons/primeicons.css"
 		library="primefaces" />
 	<h:outputStylesheet name="estilos.css" library="css" />
+	
 
 	<ui:insert name="head" />
 	<script>
@@ -40,6 +41,11 @@
 </h:head>
 
 <h:body styleClass="main-body">
+	<h:outputScript name="js/boton.js" />
+	<h:outputStylesheet name="estilo.css" library="css" />
+	<!-- 	<h:outputScript name="js/jquery-latest.js" /> -->
+
+	<span class="ir-arriba fa fa-arrow-up"></span>
 	<div class="layout-wrapper layout-menu-horizontal">
 		<ui:include src="./topbar.xhtml" />
 

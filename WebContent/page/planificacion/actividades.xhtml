@@ -1,0 +1,150 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+
+	<ui:define name="content">
+		<h:form id="frmActividades">
+			<p:panel rendered="#{actMB.status eq 'SEARCH'}">
+
+				<div align="left" style="margin-top: 50px;">
+					<p:commandButton id="btnCancel" ajax="false"
+						styleClass="pink-btn raised-btn"
+						actionListener="#{actMB.onCancel}"
+						action="/page/planeacion/auditoria.xhtml?faces-redirect=true"
+						value="Regresar" icon="pi pi-arrow-left" style="float:left;">
+					</p:commandButton>
+				</div>
+
+				<div class="name" align="center" style="margin-top: 100px;">
+					<span class="app-name">Actividades</span>
+				</div>
+
+				<p:dataTable var="a" value="#{actMB.listado}" rowIndexVar="index"
+					widgetVar="wvActividades" reflow="true" id="dtActividades"
+					style="margin-top:20px;" paginator="true"
+					filteredValue="#{actMB.filteredProcedimiento}"
+					globalFilterFunction="#{actMB.globalFilterFunction}"
+					selection="#{actMB.regSelected}" selectionMode="single"
+					paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+					rowKey="#{a.actId}">
+
+					<p:ajax event="rowSelect" listener="#{actMB.onRowSelect}"
+						update=":frmActividades:dtActividades:tMenu" />
+
+					<f:facet name="header">
+						<p:toolbar id="tMenu">
+							<p:toolbarGroup>
+								<p:commandButton value="Agregar" icon="pi pi-plus"
+									styleClass="raised-btn" update=":frmActividad, :frmActividades"
+									actionListener="#{actMB.onNew}">
+								</p:commandButton>
+								<p:commandButton value="Editar" icon="pi pi-pencil"
+									styleClass="raised-btn" update=":frmActividad, :frmActividades"
+									rendered="#{actMB.registro.selected}"
+									actionListener="#{actMB.onEditSelected}">
+								</p:commandButton>
+							</p:toolbarGroup>
+						</p:toolbar>
+					</f:facet>
+
+					<f:facet name="paginatorTopRight">
+						<p:outputPanel>
+							<h:outputText value="Búsqueda global: " />
+							<p:inputText id="globalFilter"
+								onkeyup="PF('wvActividades').filter();" style="width:150px"
+								placeholder="Ingresa una palabra" />
+						</p:outputPanel>
+					</f:facet>
+
+					<p:column headerText="No.">
+						<h:outputText value="#{index+1}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Nombre">
+						<h:outputText value="#{a.actNombre}"></h:outputText>
+					</p:column>
+					
+					<p:column headerText="Descripcion">
+						<h:outputText value="#{a.actDescripcion}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Fecha Inicio">
+						<h:outputText value="#{a.actFecIni}">
+							<f:convertDateTime pattern="dd-MM-yyyy" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Fecha Fin">
+						<h:outputText value="#{a.actFecFin}">
+							<f:convertDateTime pattern="dd-MM-yyyy" />
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+
+		<h:form id="frmActividad">
+			<p:panel rendered="#{actMB.status ne 'SEARCH'}">
+
+				<div align="left" style="margin-top: 50px; float: left;">
+					<p:commandButton id="btnCancel" action="#{actMB.onCancel}"
+						value="Regresar" icon="pi pi-arrow-left" style="float:left;"
+						styleClass="pink-btn raised-btn"
+						update=":frmActividades, :frmActividad" process="@this">
+					</p:commandButton>
+				</div>
+
+				<div class="name" align="center" style="margin-top: 100px;">
+					<span class="app-name">Gestión Actividad</span>
+				</div>
+				<div class="ui-fluid p-formgrid p-grid">
+					<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+						styleClass="ui-panelgrid-blank form-group form-elements">
+
+						<p:outputLabel for="nombre" value="Nombre:"
+							style="font-weight:bold;" />
+						<p:inputTextarea id="nombre" value="#{actMB.registro.actNombre}"
+							rows="2" required="true" maxlength="250" />
+
+						<p:outputLabel for="ref" value="Descripcion:"
+							style="font-weight:bold;" />
+						<p:inputTextarea id="ref" value="#{actMB.registro.actDescripcion}"
+							rows="4" required="true" maxlength="1000" />
+					</p:panelGrid>
+					<p:panelGrid columns="4"
+						columnClasses="ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4, ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4"
+						layout="grid"
+						styleClass="ui-panelgrid-blank form-group form-elements">
+
+						<p:outputLabel value="Fecha de inicio:" style="font-weight:bold;" />
+						<p:calendar mode="inline" pattern="dd-MM-yyyy"
+							value="#{actMB.registro.actFecIni}"></p:calendar>
+
+						<p:outputLabel value="Fecha de fin:" style="font-weight:bold;" />
+						<p:calendar mode="inline" value="#{actMB.registro.actFecFin}"
+							pattern="dd-MM-yyyy"></p:calendar>
+					</p:panelGrid>
+
+
+
+					<p:panelGrid columns="2"
+						columnClasses="ui-g-9 ui-lg-10,ui-g-3 ui-md-4 ui-lg-2"
+						layout="grid"
+						styleClass="ui-panelgrid-blank form-group form-elements">
+						<p:column></p:column>
+						<p:commandButton value="Guardar" icon="fa fa-check"
+							actionListener="#{actMB.onSave}" update=":frmActividades, :frmActividad" />
+					</p:panelGrid>
+				</div>
+
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -14,6 +14,8 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import org.primefaces.PrimeFaces;
+
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Unidad;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
@@ -24,6 +26,7 @@ import audigoes.ues.edu.sv.entities.planeacion.AuditoriaUnidad;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
 import audigoes.ues.edu.sv.entities.planeacion.TipoAuditoria;
 import audigoes.ues.edu.sv.mbean.planificacion.AuditoriaUnidadMB;
+import audigoes.ues.edu.sv.mbean.planificacion.ActividadesMB;
 import audigoes.ues.edu.sv.mbean.planificacion.MemoPlanificacionMB;
 import audigoes.ues.edu.sv.mbean.planificacion.ProgramaEjecucionMB;
 import audigoes.ues.edu.sv.mbean.planificacion.ProgramaPlanificacionMB;
@@ -70,6 +73,11 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	@ManagedProperty(value = "#{segMB}")
 	private SeguimientoMB segMB = new SeguimientoMB();
+	
+	
+
+	@ManagedProperty(value = "#{actMB}")
+	private ActividadesMB actMB = new ActividadesMB();
 	
 	
 
@@ -126,7 +134,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	public void onProgramaEje() {
 		pejeMB.fillPrograma();
-		pejeMB.onEdit();
+		// pejeMB.onEdit();
 	}
 
 	public void onMemo() {
@@ -147,6 +155,13 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 		sessionMap.put("auditoria", getRegistro());
 		respMB.fillListado();
+
+	}
+
+	public void actividades() {
+		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+		sessionMap.put("auditoria", getRegistro());
+		actMB.fillActividades();
 
 	}
 
@@ -400,6 +415,15 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		}
 	}
 
+	public void ejecucion() {
+		try {
+			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+			sessionMap.put("auditoria", getRegistro());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public void afterSaveNew() {
 		try {
@@ -545,6 +569,14 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		this.respMB = respMB;
 	}
 
+	public ActividadesMB getActMB() {
+		return actMB;
+	}
+
+	public void setActMB(ActividadesMB actMB) {
+		this.actMB = actMB;
+	}
+	
 	public Usuario getCoordinador() {
 		return coordinador;
 	}

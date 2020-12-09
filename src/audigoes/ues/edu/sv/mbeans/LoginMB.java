@@ -5,18 +5,13 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.servlet.http.HttpSession;
 
 import audigoes.ues.edu.sv.entities.administracion.Institucion;
-import audigoes.ues.edu.sv.mbeans.administracion.InstitucionMB;
-import audigoes.ues.edu.sv.mbeans.informe.ActaLecturaMB;
 import audigoes.ues.edu.sv.security.SecurityController;
-import audigoes.ues.edu.sv.util.Test;
-import audigoes.ues.edu.sv.util.Utils;
 
 @ManagedBean(name = "loginMB")
 @SessionScoped
@@ -28,7 +23,7 @@ public class LoginMB extends SecurityController implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private List<Institucion> institucionList;
-	private Institucion institucionSelected;
+	
 	
 	public LoginMB() {
 	}
@@ -36,7 +31,7 @@ public class LoginMB extends SecurityController implements Serializable{
 	@PostConstruct
 	public void init() {
 		fillInstitucionList();
-		Test.main(null);
+		//Test.main(null);
 	}
 
 	protected boolean beforeLogin() {
@@ -87,13 +82,5 @@ public class LoginMB extends SecurityController implements Serializable{
 
 	public void setInstitucionList(List<Institucion> institucionList) {
 		this.institucionList = institucionList;
-	}
-
-	public Institucion getInstitucionSelected() {
-		return institucionSelected;
-	}
-
-	public void setInstitucionSelected(Institucion institucionSelected) {
-		this.institucionSelected = institucionSelected;
 	}
 }

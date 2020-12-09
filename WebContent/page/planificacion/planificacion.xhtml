@@ -20,19 +20,19 @@
 					styleClass="ui-panelgrid-blank form-group form-elements"
 					style="margin-top:100px; text-align:center;">
 
-					<p:commandLink value="" actionListener="#{audMB.onPrograma}"
+					<p:commandLink value="" actionListener="#{audMB.onPrograma}" title="Programa de planificación de auditoría"
 						update=":frmPlanificacion, :frmPrograma">
 						<p:graphicImage value="/resources/images/programa.png"
 							style="height:200px;" />
 					</p:commandLink>
 
-					<p:commandLink value="" update=":frmPlanificacion, :frmMemo"
+					<p:commandLink value="" update=":frmPlanificacion, :frmMemo" title="Memorando de planificación de auditoría"
 						actionListener="#{audMB.onMemo}">
 						<p:graphicImage value="/resources/images/memo.png"
 							style="height:200px;" />
 					</p:commandLink>
 
-					<p:commandLink value="" actionListener="#{audMB.onProgramaEje}"
+					<p:commandLink value="" actionListener="#{audMB.onProgramaEje}" title="Programa de ejecución de auditoría"
 						update=":frmPlanificacion, :frmProgramaEje">
 						<p:graphicImage value="/resources/images/programa-ejecucion.png"
 							style="height:200px;" />

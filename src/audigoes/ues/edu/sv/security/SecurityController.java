@@ -33,6 +33,7 @@ public class SecurityController extends AudigoesController {
 	private MenuModel menu;
 	private String usuario;
 	private String clave;
+	private Institucion institucionSelected;
 	private String claveNueva;
 	private String claveConfirmada;
 	private String changePassOutcome;
@@ -50,23 +51,25 @@ public class SecurityController extends AudigoesController {
 	@PostConstruct
 	public void init() {
 	}
-	
+
 	private List<Institucion> institucionList;
 
 	@SuppressWarnings("unchecked")
 	public String onLogin() {
 		this.loggedIn = false;
 		FacesMessage message = new FacesMessage();
+		// System.out.println("institucion "+institucionSelected.getInsNombre());
 		try {
 			FacesContext ctx = FacesContext.getCurrentInstance();
 			if (this.beforeLogin()) {
-				if (this.usuario != null && this.clave != null) {
-					this.msgCodigo = this.validacionSBSL.validar(this.usuario, this.clave);
+				if (this.usuario != null && this.clave != null && this.institucionSelected != null) {
+					this.msgCodigo = this.validacionSBSL.validar(this.usuario, this.clave,
+							this.institucionSelected.getInsId());
 					if (this.msgCodigo.equals(ValidacionSBSLLocal.VAL_USUARIO_VALIDO)) {
 						ObjAppsSession objAppsSession = new ObjAppsSession();
 						Sesiones sesion = null;
 						List<Usuario> usrs = (List<Usuario>) this.audigoesLocal.findByNamedQuery(Usuario.class,
-								"usuario.findByUsuario", new Object[] { usuario });
+								"usuario.findByUsuario", new Object[] { usuario, institucionSelected.getInsId() });
 						Usuario usr = usrs.get(0);
 						if (usr == null) {
 							message.setDetail("Error en login");
@@ -95,7 +98,8 @@ public class SecurityController extends AudigoesController {
 						}
 
 					} else {
-						message.setDetail("Error! Usuario y/o clave no valido");
+						message.setDetail(
+								"Error! Usuario y/o clave no valido o no pertenece a la institución seleccionada");
 						this.addWarn(message);
 						return null;
 					}
@@ -137,13 +141,12 @@ public class SecurityController extends AudigoesController {
 			return null;
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void fillInstitucionList() {
 		try {
 			setInstitucionList((List<Institucion>) audigoesLocal.findByNamedQuery(Institucion.class,
-					"institucion.login",
-					new Object[] {}));
+					"institucion.login", new Object[] {}));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -255,6 +258,14 @@ public class SecurityController extends AudigoesController {
 
 	public void setInstitucionList(List<Institucion> institucionList) {
 		this.institucionList = institucionList;
+	}
+
+	public Institucion getInstitucionSelected() {
+		return institucionSelected;
+	}
+
+	public void setInstitucionSelected(Institucion institucionSelected) {
+		this.institucionSelected = institucionSelected;
 	}
 
 }

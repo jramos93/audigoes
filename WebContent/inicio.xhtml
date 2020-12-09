@@ -29,34 +29,39 @@
 					<h2>BIENVENIDO</h2>
 				</div>
 				<div class="ui-g-12">
-					<p:selectOneMenu id="logInstitucion"
-							converter="institucionConverter"
-							converterMessage="Problemas al seleccionar institucion"
-							value="#{loginMB.institucionSelected}">
-							<f:selectItem itemLabel="Seleccione la institucion"
+					<p:selectOneMenu id="logInstitucion" required="true"
+						requiredMessage="Por favor seleccione la institución"
+						converter="institucionConverter"
+						converterMessage="Problemas al seleccionar institucion"
+						value="#{loginMB.institucionSelected}">
+						<f:selectItem itemLabel="Seleccione la institucion"
 							itemValue="#{null}" noSelectionOption="true" />
-							<f:selectItems  id="siInstituciones" value="#{loginMB.institucionList}" var="ins"
-								itemLabel="#{ins.insNombre}" itemValue="#{ins}" />
+						<f:selectItems id="siInstituciones"
+							value="#{loginMB.institucionList}" var="ins"
+							itemLabel="#{ins.insNombre}" itemValue="#{ins}" />
 					</p:selectOneMenu>
 				</div>
 				<div class="ui-g-12">
 					<p:inputText id="usuario" placeholder="Usuario"
-						value="#{loginMB.usuario}" required="true" requiredMessage="Ingresa el Usuario"/>
+						value="#{loginMB.usuario}" required="true"
+						requiredMessage="Ingresa el Usuario" />
 				</div>
 				<div class="ui-g-12">
 					<p:password id="clave" placeholder="Clave" feedback="false"
-						value="#{loginMB.clave}" requiredMessage="Ingresa la clave"/>
+						value="#{loginMB.clave}" requiredMessage="Ingresa la clave" />
 				</div>
 				<div class="ui-g-12 button-container">
 					<p:commandButton action="#{loginMB.onLogin}" update="frmLogin"
-						ajax="false" process="@this,usuario,clave " value="Ingresar"
-						icon="fa fa-user" styleClass="blue-btn raised-btn rounded-btn" />
+						ajax="false" process="@this,usuario,clave,logInstitucion "
+						value="Ingresar" icon="fa fa-user"
+						styleClass="blue-btn raised-btn rounded-btn" />
 				</div>
 			</h:form>
 		</div>
 	</div>
 
 	<h:outputStylesheet name="css/layout-blue.css" library="verona-layout" />
+	<h:outputStylesheet name="estilo-growl.css" library="css" />
 </h:body>
 
 </html>

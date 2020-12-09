@@ -16,6 +16,10 @@
 		<query>select o from ProgramaEjecucion o where o.auditoria.audId=?1 and o.regActivo=1</query>
 	</named-query>
 	
+	<named-query name="list.programas.ejecucion">
+		<query>select o from ProgramaEjecucion o where o.regActivo=1</query>
+	</named-query>
+	
 	<named-query name="procedimientos.planificacion.by.programa">
 		<query>select o from ProcedimientoPlanificacion o where o.programaPlanificacion.prpId=?1 and o.regActivo=1</query>
 	</named-query>
@@ -34,6 +38,14 @@
 	
 	<named-query name="usuarios.auditoria">
 		<query>select o from Usuario o where o.regActivo=1 and o.institucion.insId=1 and o.usuId not in (select b.usuario.usuId from AuditoriaResponsable b where b.auditoria.audId=1)</query>
+	</named-query>
+	
+	<named-query name="find.coordinador.by.auditoria">
+		<query>select o from AuditoriaResponsable o where o.auditoria.audId=?1 and o.aurRol=0 and o.regActivo=1</query>
+	</named-query>
+	
+	<named-query name="actividades.by.auditoria">
+		<query>select o from Actividad o where o.auditoria.audId=?1 and o.regActivo=1</query>
 	</named-query>
 	
 </entity-mappings>

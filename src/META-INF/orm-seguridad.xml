@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd">
 
 	<named-query name="usuario.findByUsuario">
-		<query>select o from Usuario o where o.usuUsuario = ?1</query>
+		<query>select o from Usuario o where o.usuUsuario = ?1 and o.institucion.insId=?2</query>
 	</named-query>
 
 	<named-query name="permisos.findByUsuario">

@@ -13,6 +13,6 @@ public interface ValidacionSBSLLocal {
 	//private static final Integer VAL_USUARIO_EXPIRADO=4;
 	Integer VAL_USUARIO_DE_BAJA=5;
 	//private static final Integer VAL_USUARIO_NO_TIENE_ACCESO=6;
-	Integer validar(String usuario, String clave);
+	Integer validar(String usuario, String clave, int institucion);
 	boolean isClaveEstandar(String usuario, String clave);
 }

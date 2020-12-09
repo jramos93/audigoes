@@ -216,7 +216,7 @@ public class ProcedimientosPlaniMB extends AudigoesController implements Seriali
 			HtmlConverter.convertToPdf(str, os);
 			
 			InputStream is = new ByteArrayInputStream(os.toByteArray());
-			return new DefaultStreamedContent(is, "application/pdf", "narrativa.pdf");
+			return new DefaultStreamedContent(is, "application/pdf", "narrativa-ejecucion.pdf");
 		} catch (Exception e) {
 			e.printStackTrace();
 			addWarn(new FacesMessage("Advertencia", "Hubo un error al generar el documento de la narrativa"));
