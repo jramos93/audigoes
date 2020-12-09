@@ -27,6 +27,7 @@ import audigoes.ues.edu.sv.mbean.planificacion.AuditoriaUnidadMB;
 import audigoes.ues.edu.sv.mbean.planificacion.MemoPlanificacionMB;
 import audigoes.ues.edu.sv.mbean.planificacion.ProgramaEjecucionMB;
 import audigoes.ues.edu.sv.mbean.planificacion.ProgramaPlanificacionMB;
+import audigoes.ues.edu.sv.mbeans.seguimiento.RecomendacionMB;
 import audigoes.ues.edu.sv.mbeans.seguimiento.SeguimientoMB;
 
 @ManagedBean(name = "audMB")
@@ -69,6 +70,8 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	@ManagedProperty(value = "#{segMB}")
 	private SeguimientoMB segMB = new SeguimientoMB();
+	
+	
 
 	public AuditoriaMB() {
 		super(new Auditoria());
@@ -135,8 +138,6 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		try {
 			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 			sessionMap.put("auditoria", getRegistro());
-			FacesContext.getCurrentInstance().getExternalContext()
-					.redirect("/audigoes/page/seguimiento/seguimiento.xhtml");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

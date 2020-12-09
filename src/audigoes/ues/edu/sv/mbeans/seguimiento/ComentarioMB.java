@@ -10,22 +10,22 @@ import javax.faces.bean.ViewScoped;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
-import audigoes.ues.edu.sv.entities.seguimiento.Recomendacion;
+import audigoes.ues.edu.sv.entities.seguimiento.Comentario;
 
-@ManagedBean(name = "recMB")
+@ManagedBean(name = "comMB")
 @ViewScoped
-public class RecomendacionMB extends AudigoesController implements Serializable {
+public class ComentarioMB extends AudigoesController implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private List<Recomendacion> filteredRecomendaciones;
+	private List<Comentario> filteredComentarios;
 
 	private Auditoria auditoria;
 
-	public RecomendacionMB() {
-		super(new Recomendacion());
+	public ComentarioMB() {
+		super(new Comentario());
 	}
 
 	@PostConstruct
@@ -40,7 +40,7 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 	@SuppressWarnings("unchecked")
 	public void fillRecomendacionesAuditoria() {
 		try {
-			setListado((List<Recomendacion>) audigoesLocal.findByNamedQuery(Recomendacion.class,
+			setListado((List<Comentario>) audigoesLocal.findByNamedQuery(Comentario.class,
 					"recomendacion.get.all.auditoria", new Object[] { getAuditoria().getAudId() }));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -82,22 +82,22 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 	/* GETS y SETS */
 
 	@Override
-	public Recomendacion getRegistro() {
-		return (Recomendacion) super.getRegistro();
+	public Comentario getRegistro() {
+		return (Comentario) super.getRegistro();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Recomendacion> getListado() {
-		return (List<Recomendacion>) super.getListado();
+	public List<Comentario> getListado() {
+		return (List<Comentario>) super.getListado();
 	}
 
-	public List<Recomendacion> getFilteredRecomendaciones() {
-		return filteredRecomendaciones;
+	public List<Comentario> getFilteredComentarios() {
+		return filteredComentarios;
 	}
 
-	public void setFilteredRecomendaciones(List<Recomendacion> filteredRecomendaciones) {
-		this.filteredRecomendaciones = filteredRecomendaciones;
+	public void setFilteredRecomendaciones(List<Comentario> filteredComentarios) {
+		this.filteredComentarios= filteredComentarios;
 	}
 
 	public Auditoria getAuditoria() {

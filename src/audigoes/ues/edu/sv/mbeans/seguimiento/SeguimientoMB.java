@@ -7,12 +7,14 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
+import audigoes.ues.edu.sv.entities.seguimiento.Comentario;
 import audigoes.ues.edu.sv.entities.seguimiento.Seguimiento;
 
 @ManagedBean(name = "segMB")
@@ -25,6 +27,12 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 
 	private Usuario coordinador;
 	private Auditoria auditoria;
+	
+	@ManagedProperty(value = "#{recMB}")
+	private RecomendacionMB recMB = new RecomendacionMB();
+	
+	@ManagedProperty(value = "#{comMB}")
+	private ComentarioMB comMB = new ComentarioMB();
 
 	public SeguimientoMB() {
 		super(new Seguimiento());
@@ -36,13 +44,27 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 			setAuditoria((Auditoria) sessionMap.get("auditoria"));
 
+			obtenerRecomendaciones();
 			obtenerCoordinador();
+			obtenerSeguimiento();
 
 			super.init();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public void obtenerAuditoria() {
+		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+		setAuditoria((Auditoria) sessionMap.get("auditoria"));
+	}
+	
+	public void obtenerRecomendaciones() {
+		if(getAuditoria() != null) {
+			getRecMB().setAuditoria(getAuditoria());
+			getRecMB().fillRecomendacionesAuditoria();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -57,6 +79,7 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 					setCoordinador(new Usuario());
 				}
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -65,16 +88,23 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 	@SuppressWarnings("unchecked")
 	public void obtenerSeguimiento() {
 		try {
-			List<Seguimiento> seg = (List<Seguimiento>) audigoesLocal.findByNamedQuery(Seguimiento.class,
-					"seguimiento.get,by.auditoria", new Object[] { getAuditoria().getAudId() });
-			if(!seg.isEmpty()) {
-				setRegistro(seg.get(0));
-			}else {
-				setRegistro(new Seguimiento());
+			if (getAuditoria() != null) {
+				List<Seguimiento> seg = (List<Seguimiento>) audigoesLocal.findByNamedQuery(Seguimiento.class,
+						"seguimiento.get.by.auditoria", new Object[] { getAuditoria().getAudId() });
+				if (!seg.isEmpty()) {
+					setRegistro(seg.get(0));
+					onEdit();
+				} else {
+					onNew();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void mostrarComentarios() {
+		
 	}
 
 	public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
@@ -98,15 +128,32 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 		}
 	}
 
-	@Override
-	public void afterNew() {
-		super.afterNew();
+	public void iniciarSeguimiento() {
+		try {
+			if(getStatus().equals("NEW")) {
+				getRegistro().setAuditoria(getAuditoria());
+				getRegistro().setSegFecInicio(getToday());
+				onSaveNew();
+				onEdit();
+			} else 	if(getStatus().equals("EDIT")) {
+				getRegistro().setSegFecInicio(getToday());
+				onSaveEdit();
+				onEdit();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-
-	@Override
-	public void afterSaveNew() {
-		getListado().add(getRegistro());
-		super.afterSaveNew();
+	
+	public void finalizarSeguimiento() {
+		try {
+			getRegistro().setSegFecFin(getToday());
+			onSaveEdit();
+			onEdit();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 
 	/* GETS y SETS */
@@ -136,6 +183,14 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 
 	public void setAuditoria(Auditoria auditoria) {
 		this.auditoria = auditoria;
+	}
+
+	public RecomendacionMB getRecMB() {
+		return recMB;
+	}
+
+	public void setRecMB(RecomendacionMB recMB) {
+		this.recMB = recMB;
 	}
 
 }

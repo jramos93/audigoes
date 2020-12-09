@@ -2,19 +2,44 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui" >
+	xmlns:p="http://primefaces.org/ui">
 
 	<h:form id="frmSeguimiento">
 		<p:panel>
 			<div align="left" style="margin-top: 50px;">
-				<p:commandButton id="btnCancel" action="#{recMB.onCancel}"
+				<p:commandButton id="btnCancel" actionListener="#{recMB.onCancel}"
 					process="@this" value="Regresar" icon="pi pi-arrow-left"
-					style="float:left;" update="@form">
+					style="float:left;" update="@form"
+					action="/page/planeacion/plan.xhtml">
 				</p:commandButton>
 			</div>
 			<div class="name" align="center" style="margin-top: 100px;">
 				<span class="app-name">Seguimiento Recomendaciones de
 					Auditoría </span>
+			</div>
+			<div class="ui-fluid p-formgrid p-grid">
+				<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+
+					<p:outputLabel for="audSeg" value="Auditoría:"
+						style="font-weight:bold;" />
+					<p:inputTextarea id="audSeg" value="#{segMB.auditoria.audNombre}"
+						rows="2" readonly="true" />
+
+					<p:outputLabel for="fechainicio" value="Fecha inicio seguimiento:"
+						style="font-weight:bold;" />
+					<p:calendar id="fechainicio" value="#{segMB.registro.segFecInicio}"
+						readonly="true">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</p:calendar>
+
+					<p:outputLabel for="fechafin" value="Fecha fin:"
+						style="font-weight:bold;" />
+					<p:calendar id="fechafin" value="#{segMB.registro.segFecFin}"
+						readonly="true">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</p:calendar>
+				</p:panelGrid>
 			</div>
 
 			<div class="ui-fluid p-formgrid p-grid">
@@ -30,29 +55,33 @@
 					rowKey="#{recomendacion.recId}">
 
 					<p:ajax event="rowSelect" listener="#{recMB.onRowSelect}"
-						update=":frmSeguimiento" />
-					<f:facet name="header"> Recomendaciones </f:facet>
-
-					<f:facet name="paginatorTopRight">
-						<p:outputPanel>
-							<h:outputText value="Búsqueda global: " />
-							<p:inputText id="globalFilter"
-								onkeyup="PF('wvRecomendaciones').filter();" style="width:150px"
-								placeholder="Ingresa una palabra" />
-						</p:outputPanel>
+						update="dtRecomendacion:tMenuRecomendaciones" />
+					<f:facet name="header"> Recomendaciones
+						<p:toolbar id="tMenuRecomendaciones">
+							<p:toolbarGroup>
+								<p:commandButton id="btnComentarios" value="Comentarios"
+									icon="pi pi-plus" update="@form :frmComentarios"
+									styleClass="raised-btn" actionListener="#{segMB.mostrarComentarios}">
+								</p:commandButton>
+							</p:toolbarGroup>
+						</p:toolbar>
 					</f:facet>
 
-					<p:column headerText="No.">
+					<p:column headerText="No." width="30">
 						<h:outputText value="#{indexRecomendacion+1}"></h:outputText>
 					</p:column>
 
 					<p:column headerText="Titulo Recomendación">
 						<h:outputText value="#{recomendacion.recTitulo}"></h:outputText>
 					</p:column>
+					<p:column headerText="Titulo Recomendación">
+						<h:outputText value="#{recomendacion.recSituacion}"></h:outputText>
+					</p:column>
 				</p:dataTable>
 			</div>
 
 			<div class="ui-fluid p-formgrid p-grid">
+			<p:separator />
 				<div class="name" align="center">
 					<span class="app-name">Auditor Asignado</span>
 				</div>
@@ -87,18 +116,30 @@
 						</p:column>
 					</p:row>
 				</p:panelGrid>
-				<p:panelGrid style="width:100%">
+				<p:panelGrid style="width:100%"
+					styleClass="ui-panelgrid-blank form-group form-elements">
 					<p:row style="text-align:center;">
 						<p:column>
-							<p:commandButton value="Notificar Seguimiento" />
+							<p:commandButton id="btnNotificarSeguimiento"
+								value="Notificar Seguimiento"
+								rendered="#{segMB.registro.segFecInicio != null and segMB.registro.segFecFin == null}" />
 						</p:column>
 						<p:column>
-							<p:commandButton value="Iniciar Seguimiento" />
+							<p:commandButton id="btnIniciarSeguimiento"
+								value="Iniciar Seguimiento"
+								actionListener="#{segMB.iniciarSeguimiento}" update="@form"
+								rendered="#{segMB.registro.segFecInicio == null}" />
+							<p:commandButton id="btnFinalizarSeguimiento"
+								value="Finalizar Seguimiento"
+								actionListener="#{segMB.finalizarSeguimiento}" update="@form"
+								rendered="#{segMB.registro.segFecInicio != null and segMB.registro.segFecFin == null}">
+							</p:commandButton>
 						</p:column>
 						<p:column>
 							<p:commandButton id="btnGuardarSeguimiento"
 								value="Guardar Seguimiento" icon="fa fa-check"
-								actionListener="#{segMB.onSave}" />
+								actionListener="#{segMB.onSave}"
+								rendered="#{segMB.registro.segFecFin == null}" />
 						</p:column>
 					</p:row>
 				</p:panelGrid>

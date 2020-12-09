@@ -11,6 +11,7 @@
 		<mapping-file>META-INF/orm-planeacion.xml</mapping-file>
 		<mapping-file>META-INF/orm-planificacion.xml</mapping-file>
 		<mapping-file>META-INF/orm-informe.xml</mapping-file>
+		<mapping-file>META-INF/orm-seguimiento.xml</mapping-file>
 		<class>audigoes.ues.edu.sv.entities.SuperEntity</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Bitacora</class>
 		<class>audigoes.ues.edu.sv.entities.informe.ActaLectura</class>

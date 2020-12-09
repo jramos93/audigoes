@@ -4,8 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-	<h:form id="frmSeguimiento">
-		<p:panel>
+	<h:form id="frmComentarios">
+		<p:panel rendered="#{comMB.status eq 'VIEW_COMENTARIOS'}">
 			<div align="left" style="margin-top: 50px;">
 				<p:commandButton id="btnCancel" action="#{recMB.onCancel}"
 					process="@this" value="Regresar" icon="pi pi-arrow-left"
@@ -40,72 +40,13 @@
 					<p:tab title="Comentarios de Unidad(es) Auditada(s)">
 						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
 							styleClass="ui-panelgrid-blank form-group form-elements">
-							<p:outputLabel for="Comentario de la persona responsable:" />
-							<p:inputTextarea id="recomendacion"
-								value="#{recMB.registro.recRecomendacion}" readonly="true" />
-
-							<div class="name" align="center">
-								<span class="app-name">Evidencias</span>
-							</div>
-							<p:dataTable var="evidencia" value="#{comMB.listado}"
-								rowIndexVar="index" widgetVar="wvEvidencias"
-								reflow="true" id="dtEvidencias" style="margin-top:20px;"
-								paginator="true"
-								filteredValue="#{proplaMB.filteredProcedimiento}"
-								globalFilterFunction="#{proplaMB.globalFilterFunction}"
-								selection="#{proplaMB.regSelected}" selectionMode="single"
-								paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
-								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-								currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
-								rowKey="#{p.proId}">
-
-								<p:ajax event="rowSelect" listener="#{proplaMB.onRowSelect}"
-									update=":frmPrograma:dtProcPlanificacion:tMenu" />
-
-								<f:facet name="header">
-									<p:toolbar id="tMenu">
-										<p:toolbarGroup>
-											<p:commandButton value="Agregar" icon="pi pi-plus"
-												styleClass="raised-btn"
-												update=":frmPrograma, :frmProcedimiento"
-												actionListener="#{proplaMB.onNew}">
-											</p:commandButton>
-											<p:commandButton value="Editar" icon="pi pi-pencil"
-												styleClass="raised-btn"
-												update=":frmPrograma, :frmProcedimiento"
-												rendered="#{proplaMB.registro.selected}"
-												actionListener="#{proplaMB.onEditSelected}">
-											</p:commandButton>
-										</p:toolbarGroup>
-									</p:toolbar>
-								</f:facet>
-
-								<f:facet name="paginatorTopRight">
-									<p:outputPanel>
-										<h:outputText value="Búsqueda global: " />
-										<p:inputText id="globalFilter"
-											onkeyup="PF('wvProcPlanificacion').filter();"
-											style="width:150px" placeholder="Ingresa una palabra" />
-									</p:outputPanel>
-								</f:facet>
-
-								<p:column headerText="No.">
-									<h:outputText value="#{index+1}" />
-								</p:column>
-
-								<p:column headerText="Nombre">
-									<h:outputText value="AAAAAAAAAAAAAAA" />
-								</p:column>
-
-								
-
-							</p:dataTable>
+							
 						</p:panelGrid>
 					</p:tab>
 					<p:tab title="Comentarios de Auditoría">
 						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
 							styleClass="ui-panelgrid-blank form-group form-elements">
-							<p:outputLabel for="" />
+							
 						</p:panelGrid>
 					</p:tab>
 				</p:tabView>
