@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<h:form id="frmSeguimiento">
-		<p:panel>
+		<p:panel rendered="#{comMB.status eq 'SEARCH'}">
 			<div align="left" style="margin-top: 50px;">
 				<p:commandButton id="btnCancel" actionListener="#{recMB.onCancel}"
 					process="@this" value="Regresar" icon="pi pi-arrow-left"
@@ -60,8 +60,10 @@
 						<p:toolbar id="tMenuRecomendaciones">
 							<p:toolbarGroup>
 								<p:commandButton id="btnComentarios" value="Comentarios"
-									icon="pi pi-plus" update="@form :frmComentarios"
-									styleClass="raised-btn" actionListener="#{segMB.mostrarComentarios}">
+									icon="pi pi-plus" rendered="#{recMB.registro.selected}"
+									action="#{recMB.mostrarComentarios}" update="@form :frmComentarios"
+									styleClass="raised-btn" actionListener="#{segMB.mostrarComentarios}" 
+									process="@this">
 								</p:commandButton>
 							</p:toolbarGroup>
 						</p:toolbar>

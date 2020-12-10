@@ -31,8 +31,7 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 	@ManagedProperty(value = "#{recMB}")
 	private RecomendacionMB recMB = new RecomendacionMB();
 	
-	@ManagedProperty(value = "#{comMB}")
-	private ComentarioMB comMB = new ComentarioMB();
+	
 
 	public SeguimientoMB() {
 		super(new Seguimiento());
@@ -53,11 +52,6 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 			e.printStackTrace();
 		}
 
-	}
-	
-	public void obtenerAuditoria() {
-		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-		setAuditoria((Auditoria) sessionMap.get("auditoria"));
 	}
 	
 	public void obtenerRecomendaciones() {
@@ -191,14 +185,6 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 
 	public void setRecMB(RecomendacionMB recMB) {
 		this.recMB = recMB;
-	}
-
-	public ComentarioMB getComMB() {
-		return comMB;
-	}
-
-	public void setComMB(ComentarioMB comMB) {
-		this.comMB = comMB;
 	}
 
 }

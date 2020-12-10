@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
@@ -23,6 +24,9 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 	private List<Recomendacion> filteredRecomendaciones;
 
 	private Auditoria auditoria;
+	
+	@ManagedProperty(value = "#{comMB}")
+	private ComentarioMB comMB = new ComentarioMB();
 
 	public RecomendacionMB() {
 		super(new Recomendacion());
@@ -45,6 +49,11 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void mostrarComentarios() {
+		comMB.setRecomendacion(getRegistro());
+		comMB.obtenerComentario();
 	}
 
 	public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
@@ -106,6 +115,14 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 
 	public void setAuditoria(Auditoria auditoria) {
 		this.auditoria = auditoria;
+	}
+
+	public ComentarioMB getComMB() {
+		return comMB;
+	}
+
+	public void setComMB(ComentarioMB comMB) {
+		this.comMB = comMB;
 	}
 
 }

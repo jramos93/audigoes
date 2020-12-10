@@ -2,14 +2,15 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 
 	<h:form id="frmComentarios">
-		<p:panel rendered="#{comMB.status eq 'VIEW_COMENTARIOS'}">
+		<p:panel rendered="#{comMB.status eq 'NEW' or comMB.status eq 'EDIT'}">
 			<div align="left" style="margin-top: 50px;">
-				<p:commandButton id="btnCancel" action="#{recMB.onCancel}"
+				<p:commandButton id="btnCancelComentario" action="#{comMB.onCancel}"
 					process="@this" value="Regresar" icon="pi pi-arrow-left"
-					style="float:left;" update="@form">
+					style="float:left;" update="@form :frmSeguimiento">
 				</p:commandButton>
 			</div>
 			<div class="name" align="center" style="margin-top: 100px;">
@@ -38,18 +39,16 @@
 			<div class="ui-fluid p-formgrid p-grid">
 				<p:tabView id="tvComentarios">
 					<p:tab title="Comentarios de Unidad(es) Auditada(s)">
-						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
-							styleClass="ui-panelgrid-blank form-group form-elements">
-							
-						</p:panelGrid>
+						<pe:ckEditor id="comentarioAuditado" width="100%"
+								value="#{comMB.registro.comComentario}" />
 					</p:tab>
 					<p:tab title="Comentarios de Auditoría">
-						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
-							styleClass="ui-panelgrid-blank form-group form-elements">
-							
-						</p:panelGrid>
+						<pe:ckEditor id="comentarioAuditaria" width="100%"
+								value="#{comMB.registro.comComentarioAuditoria}" />
 					</p:tab>
 				</p:tabView>
+				<p:commandButton id="btnGuardarBottom" action="#{comMB.onSave}"
+					value="Guardar" update="@form" process="@this @form" />
 			</div>
 		</p:panel>
 	</h:form>

@@ -11,4 +11,8 @@
 	<named-query name="recomendacion.get.all.auditoria">
 		<query>select o from Recomendacion o where o.auditoria.audId = ?1 and o.regActivo = 1</query>
 	</named-query>
+	
+	<named-query name="comentario.by.recomendacion">
+		<query>select o from Comentario o where o.recomendacion.recId = ?1</query>
+	</named-query>
 </entity-mappings>

@@ -23,7 +23,7 @@
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
 				<p:ajax event="rowSelect" listener="#{audMB.onRowSelect}"
-					update="frmAuditoria:dtAuditorias:tMenuAuditoria" />
+					update="dtAuditorias:tMenuAuditoria" />
 				<f:facet name="header">
 					<p:toolbar id="tMenuAuditoria">
 						<p:toolbarGroup>

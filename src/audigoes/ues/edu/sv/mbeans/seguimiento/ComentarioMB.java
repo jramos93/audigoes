@@ -11,6 +11,7 @@ import javax.faces.bean.ViewScoped;
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.seguimiento.Comentario;
+import audigoes.ues.edu.sv.entities.seguimiento.Recomendacion;
 
 @ManagedBean(name = "comMB")
 @ViewScoped
@@ -23,6 +24,7 @@ public class ComentarioMB extends AudigoesController implements Serializable {
 	private List<Comentario> filteredComentarios;
 
 	private Auditoria auditoria;
+	private Recomendacion recomendacion;
 
 	public ComentarioMB() {
 		super(new Comentario());
@@ -60,6 +62,24 @@ public class ComentarioMB extends AudigoesController implements Serializable {
 				|| auditoria.getAudId() == filterInt;
 	}
 
+	@SuppressWarnings("unchecked")
+	public void obtenerComentario() {
+		try {
+			if (getRecomendacion() != null) {
+				List<Comentario> com = (List<Comentario>) audigoesLocal.findByNamedQuery(Comentario.class,
+						"comentario.by.recomendacion", new Object[] {getRecomendacion().getRecId()});
+				if(!com.isEmpty()) {
+					setRegistro(com.get(0));
+					onEdit();
+				} else {
+					onNew();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	private int getInteger(String string) {
 		try {
 			return Integer.valueOf(string);
@@ -67,16 +87,22 @@ public class ComentarioMB extends AudigoesController implements Serializable {
 			return 0;
 		}
 	}
+	
+	@Override
+	public boolean beforeSaveNew() {
+		getRegistro().setRecomendacion(getRecomendacion());
+		return super.beforeSaveNew();
+	}
 
 	@Override
 	public void afterNew() {
 		super.afterNew();
 	}
-
+	
 	@Override
-	public void afterSaveNew() {
-		getListado().add(getRegistro());
-		super.afterSaveNew();
+	public void afterSave() {
+		onEdit();
+		super.afterSave();
 	}
 
 	/* GETS y SETS */
@@ -96,8 +122,8 @@ public class ComentarioMB extends AudigoesController implements Serializable {
 		return filteredComentarios;
 	}
 
-	public void setFilteredRecomendaciones(List<Comentario> filteredComentarios) {
-		this.filteredComentarios= filteredComentarios;
+	public void setFilteredComentarios(List<Comentario> filteredComentarios) {
+		this.filteredComentarios = filteredComentarios;
 	}
 
 	public Auditoria getAuditoria() {
@@ -106,6 +132,14 @@ public class ComentarioMB extends AudigoesController implements Serializable {
 
 	public void setAuditoria(Auditoria auditoria) {
 		this.auditoria = auditoria;
+	}
+
+	public Recomendacion getRecomendacion() {
+		return recomendacion;
+	}
+
+	public void setRecomendacion(Recomendacion recomendacion) {
+		this.recomendacion = recomendacion;
 	}
 
 }
