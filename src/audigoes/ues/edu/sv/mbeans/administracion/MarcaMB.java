@@ -1,15 +1,27 @@
 package audigoes.ues.edu.sv.mbeans.administracion;
 
+import java.awt.Event;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+
+import org.primefaces.event.FileUploadEvent;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
+import audigoes.ues.edu.sv.entities.administracion.Archivo;
+import audigoes.ues.edu.sv.entities.administracion.Criterio;
+import audigoes.ues.edu.sv.entities.administracion.Institucion;
 import audigoes.ues.edu.sv.entities.administracion.Marca;
+import audigoes.ues.edu.sv.entities.informe.Informe;
+import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 
 
 @ManagedBean(name = "marMB")
@@ -22,6 +34,11 @@ public class MarcaMB extends AudigoesController implements Serializable {
 	
 	private List<Marca> filteredMarcas;
 
+	@ManagedProperty(value = "#{arcMB}")
+	private ArchivoMB arcMB = new ArchivoMB();
+	
+	private Institucion institucion;
+	
 	public MarcaMB() {
 		super(new Marca());
 	}
@@ -29,23 +46,25 @@ public class MarcaMB extends AudigoesController implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
-			super.init();
 			fillListado();
+			super.init();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public void fillListado() {
 		try {
-			setListado((List<Marca>) audigoesLocal.findByNamedQuery(Marca.class, "origenauditoria.all", new Object[] {}));
+			setListado(
+					(List<Marca>) audigoesLocal.findByNamedQuery(Marca.class, "marca.get.all.institucion",
+							new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() }));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
+		
 	public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
 		String filterText = (filter == null) ? null : filter.toString().trim().toLowerCase();
 		if (filterText == null || filterText.equals("")) {
@@ -92,6 +111,57 @@ public class MarcaMB extends AudigoesController implements Serializable {
 
 	public void setFilteredMarcas(List<Marca> filteredMarcas) {
 		this.filteredMarcas = filteredMarcas;
+	}
+	@SuppressWarnings("unchecked")
+	public void fillByMarca(Marca m) {
+		try {
+			setListado((List<Archivo>) audigoesLocal.findByNamedQuery(Archivo.class, "archivos.marca",
+					new Object[] {  m.getMarId()}));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public boolean beforeSaveNew() {
+		getRegistro().setInstitucion(getObjAppsSession().getUsuario().getInstitucion());
+		return super.beforeSaveNew();
+	}
+	@Override
+	public void afterSave() {
+		super.afterSave();
+	}
+	
+	public void handleFileUpload(FileUploadEvent event) {
+		try {
+			System.out.println(" archivo "+event.getFile().getFileName());
+			this.getRegistro().setMarArcArchivo(event.getFile().getContent());
+			this.getRegistro().setMarArcNombre(event.getFile().getFileName());
+			this.getRegistro().setMarArcExt(event.getFile().getContentType());
+			if (!getStatus().equals("NEW")) {
+				addWarn(new FacesMessage(SYSTEM_NAME, "Archivo Guardado con Éxito"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage(SYSTEM_NAME, "Problemas al guardar archivo."));
+		}
+
+	}
+	
+	public ArchivoMB getArcMB() {
+		return arcMB;
+	}
+
+	public void setArcMB(ArchivoMB arcMB) {
+		this.arcMB = arcMB;
+	}
+
+	public Institucion getInstitucion() {
+		return institucion;
+	}
+
+	public void setInstitucion(Institucion institucion) {
+		this.institucion = institucion;
 	}
 
 

@@ -36,12 +36,16 @@ public class Marca extends SuperEntity implements Serializable {
 
 	@Column(name="mar_nombre")
 	private String marNombre;
+	
+	@Lob
+	@Column(name="mar_arc_archivo")
+	private byte[] marArcArchivo;
 
-	@Column(name="mar_ruta")
-	private String marRuta;
+	@Column(name="mar_arc_ext")
+	private String marArcExt;
 
-	@Column(name="mar_simbolo")
-	private String marSimbolo;
+	@Column(name="mar_arc_nombre")
+	private String marArcNombre;
 
 	@Column(name="reg_activo")
 	private int regActivo;
@@ -100,22 +104,6 @@ public class Marca extends SuperEntity implements Serializable {
 		this.marNombre = marNombre;
 	}
 
-	public String getMarRuta() {
-		return this.marRuta;
-	}
-
-	public void setMarRuta(String marRuta) {
-		this.marRuta = marRuta;
-	}
-
-	public String getMarSimbolo() {
-		return this.marSimbolo;
-	}
-
-	public void setMarSimbolo(String marSimbolo) {
-		this.marSimbolo = marSimbolo;
-	}
-
 	public int getRegActivo() {
 		return this.regActivo;
 	}
@@ -147,6 +135,30 @@ public class Marca extends SuperEntity implements Serializable {
 	public void setInstitucion(Institucion institucion) {
 		this.institucion = institucion;
 	}
+	
+	public byte[] getMarArcArchivo() {
+		return marArcArchivo;
+	}
+
+	public void setMarArcArchivo(byte[] marArcArchivo) {
+		this.marArcArchivo = marArcArchivo;
+	}
+
+	public String getMarArcExt() {
+		return marArcExt;
+	}
+
+	public void setMarArcExt(String marArcExt) {
+		this.marArcExt = marArcExt;
+	}
+
+	public String getMarArcNombre() {
+		return marArcNombre;
+	}
+
+	public void setMarArcNombre(String marArcNombre) {
+		this.marArcNombre = marArcNombre;
+	}
 
 	@Override
 	public int hashCode() {
@@ -173,7 +185,8 @@ public class Marca extends SuperEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "Marca [marId=" + marId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", marDescripcion="
-				+ marDescripcion + ", marNombre=" + marNombre + ", marRuta=" + marRuta + ", marSimbolo=" + marSimbolo
+				+ marDescripcion + ", marNombre=" + marNombre 
+				+ ", marArcNombre=" + marArcNombre + ", marArcArchivo=" + marArcArchivo + ", marArcExt=" + marArcExt
 				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", institucion="
 				+ institucion + "]";
 	}

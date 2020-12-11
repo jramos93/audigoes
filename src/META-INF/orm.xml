@@ -23,6 +23,9 @@
 	<named-query name="normativacedula.all">
 		<query>select o from NormativaCedula o</query>
 	</named-query>
+	<named-query name="marca.all">
+		<query>select o from Marca o</query>
+	</named-query>
 	<named-query name="unidad.all">
 		<query>select o from Unidad o</query>
 	</named-query>
@@ -44,7 +47,9 @@
 	<named-query name="rolpermisos.delete">
 		<query>select o from RolPermiso o where o.rol.rolId = ?1 and o.permiso.perId = ?2</query>
 	</named-query>
-	
+	<named-query name="marca.get.all.institucion">
+		<query>select o from Marca o where o.institucion.insId = ?1 and o.regActivo = 1</query>
+	</named-query>
 	<named-query name="usuario.permiso.get.source.list">
 		<query>select o from Permiso o where o.perId in (select o.permiso.perId from RolPermiso o where o.rol.rolId = ?1) 
 		and o.perId not in (select o2.permiso.perId from UsuarioPermiso o2 where o2.rol.rolId=?1 and o2.usuario.usuId=?2)</query>
@@ -73,5 +78,8 @@
 	</named-query>
 	<named-query name="archivos.convocatoria">
 		<query>select o from Archivo o where o.convocatoria.cvcId=?1 and o.regActivo=1</query>
+	</named-query>
+	<named-query name="archivos.plan">
+		<query>select o from Archivo o where o.planAnual.plaId=?1 and o.regActivo=1</query>
 	</named-query>
 </entity-mappings>

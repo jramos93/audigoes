@@ -83,9 +83,8 @@ public class Informe extends SuperEntity implements Serializable {
 	@Column(name="inf_observaciones")
 	private String infObservaciones;
 	
-	@Lob
 	@Column(name="inf_estado")
-	private String infEstado;
+	private int infEstado;
 	
 	@Lob
 	@Column(name="inf_seguimiento")
@@ -276,14 +275,6 @@ public class Informe extends SuperEntity implements Serializable {
 		this.infObservaciones = infObservaciones;
 	}
 	
-	public String getInfEstado() {
-		return infEstado;
-	}
-
-	public void setInfEstado(String infEstado) {
-		this.infEstado = infEstado;
-	}
-
 	public int getInfVersion() {
 		return this.infVersion;
 	}
@@ -298,6 +289,14 @@ public class Informe extends SuperEntity implements Serializable {
 
 	public void setRegActivo(int regActivo) {
 		this.regActivo = regActivo;
+	}
+
+	public int getInfEstado() {
+		return infEstado;
+	}
+
+	public void setInfEstado(int infEstado) {
+		this.infEstado = infEstado;
 	}
 
 	public String getUsuCrea() {
