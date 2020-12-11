@@ -34,4 +34,7 @@
 	<named-query name="unidad.get.all.unidades.disponibles">
 		<query>select o.unidad from AuditoriaUnidad o left outer join o.unidad f  where o.unidad.uniId is null</query>
 	</named-query>
+	<named-query name="archivo.plan.anual">
+		<query>select o from Archivo o where o.planAnual.plaId = ?1 and o.regActivo = 1</query>
+	</named-query>
 </entity-mappings>

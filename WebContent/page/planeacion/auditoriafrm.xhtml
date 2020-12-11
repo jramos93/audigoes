@@ -6,7 +6,8 @@
 
 
 	<h:form id="frmAuditoria">
-		<p:panel rendered="#{planMB.status eq 'VIEW_AUDITORIAS' and audMB.status eq 'SEARCH'}">
+		<p:panel
+			rendered="#{planMB.status eq 'VIEW_AUDITORIAS' and audMB.status eq 'SEARCH'}">
 			<h:outputText styleClass="tituloDialog"
 				value="#{audMB.planSelected.plaNombre}" />
 			<p:commandButton id="btnCancel" action="#{planMB.onCancel}"
@@ -47,7 +48,9 @@
 							</p:commandButton>
 							<p:separator></p:separator>
 							<p:commandButton id="btnActividades" value="Actividades"
-								styleClass="blue-btn raised-btn" icon="pi pi-list"
+								styleClass="blue-btn raised-btn" icon="pi pi-list" ajax="false"
+								actionListener="#{audMB.actividades}"
+								action="/page/planificacion/actividades.xhtml?faces-redirect=true"
 								rendered="#{audMB.registro.selected}">
 							</p:commandButton>
 							<p:commandButton id="btnAuditAsignacion" value="Asignar Personal"
@@ -66,6 +69,8 @@
 							</p:commandButton>
 							<p:commandButton id="btnAuditEjecucion" value="Ejecución"
 								styleClass="blue-btn raised-btn" icon="pi pi-folder"
+								actionListener="#{audMB.ejecucion}" ajax="false"
+								action="/page/ejecucion/ejecucion.xhtml"
 								rendered="#{audMB.registro.selected}">
 							</p:commandButton>
 							<p:commandButton id="btnAuditInforme" value="Informe"

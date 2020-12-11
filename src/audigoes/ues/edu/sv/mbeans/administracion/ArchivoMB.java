@@ -2,6 +2,7 @@ package audigoes.ues.edu.sv.mbeans.administracion;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -14,6 +15,7 @@ import audigoes.ues.edu.sv.entities.informe.ActaLectura;
 import audigoes.ues.edu.sv.entities.informe.CartaGerencia;
 import audigoes.ues.edu.sv.entities.informe.Convocatoria;
 import audigoes.ues.edu.sv.entities.informe.Informe;
+import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
 import audigoes.ues.edu.sv.entities.planificacion.ProcedimientoPlanificacion;
 
 @ManagedBean(name = "arcMB")
@@ -23,6 +25,10 @@ public class ArchivoMB extends AudigoesController implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private List<Archivo> filteredArchivos;
+	
+	private PlanAnual planAnual;
 
 	public ArchivoMB() {
 		super(new Archivo());
@@ -35,7 +41,6 @@ public class ArchivoMB extends AudigoesController implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@SuppressWarnings("unchecked")
@@ -108,6 +113,35 @@ public class ArchivoMB extends AudigoesController implements Serializable {
 		}
 	}
 	
+	public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
+		String filterText = (filter == null) ? null : filter.toString().trim().toLowerCase();
+		if (filterText == null || filterText.equals("")) {
+			return true;
+		}
+		int filterInt = getInteger(filterText);
+
+		Archivo arch = (Archivo) value;
+		return arch.getArcNombre().toLowerCase().contains(filterText) || arch.getArcId() == filterInt;
+	}
+	
+	private int getInteger(String string) {
+		try {
+			return Integer.valueOf(string);
+		} catch (NumberFormatException ex) {
+			return 0;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void fillAnexosPlanAnual() {
+		try {
+			setListado((List<Archivo>) audigoesLocal.findByNamedQuery(Archivo.class, "archivo.plan.anual",
+					new Object[] { getPlanAnual().getPlaId()}));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void onBorrar(Archivo a) {
 		setRegistro(a);
 		onDelete();
@@ -137,6 +171,22 @@ public class ArchivoMB extends AudigoesController implements Serializable {
 	public void afterSaveNew() {
 		getListado().add(getRegistro());
 		super.afterSaveNew();
+	}
+
+	public List<Archivo> getFilteredArchivos() {
+		return filteredArchivos;
+	}
+
+	public void setFilteredArchivos(List<Archivo> filteredArchivos) {
+		this.filteredArchivos = filteredArchivos;
+	}
+
+	public PlanAnual getPlanAnual() {
+		return planAnual;
+	}
+
+	public void setPlanAnual(PlanAnual planAnual) {
+		this.planAnual = planAnual;
 	}
 
 }

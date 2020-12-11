@@ -81,6 +81,12 @@
 									actionListener="#{audMB.informeAud()}"
 									rendered="#{audMB.registro.selected}" ajax="false">
 								</p:commandButton>
+								<p:commandButton id="btnAuditSeguimiento" value="Seguimiento"
+									actionListener="#{audMB.seguimiento}" ajax="false"
+									rendered="#{audMB.registro.selected}"
+									styleClass="blue-btn raised-btn"
+									action="/page/seguimiento/seguimiento.xhtml">
+								</p:commandButton>
 							</p:toolbarGroup>
 						</p:toolbar>
 					</f:facet>

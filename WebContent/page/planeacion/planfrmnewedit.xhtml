@@ -117,8 +117,30 @@
 						</p:tab>
 						<p:tab title="Anexos" rendered="#{planMB.status eq 'EDIT'}">
 							<p:fileUpload listener="#{planMB.handleFileUpload}"
-								mode="advanced" dragDropSupport="false" update="msg"
-								fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
+								mode="advanced" dragDropSupport="false"
+								update="msg dtAnexosPlan" 
+								allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
+
+							<p:dataTable id="dtAnexosPlan" value="#{arcMB.listado}"
+								widgetVar="wvAnexosPlan" reflow="true" var="arc"
+								style="margin-top:20px;" paginator="true" rowKey="#{arc.arcId}"
+								filteredValue="#{arcMB.filteredArchivos}" rowIndexVar="indexarc"
+								selectionMode="single" selection="#{arcMB.regSelected}"
+								globalFilterFunction="#{arcMB.globalFilterFunction}"
+								rowsPerPageLabel="5,10,15,20,25" rows="10" sortMode="multiple"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+								<p:ajax event="rowSelect" listener="#{arcMB.onRowSelect}"
+									update="dtAnexosPlan" />
+								<p:column headerText="Nombre Archivo" sortBy="#{arc.arcNombre}">
+									<h:outputText value="#{arc.arcNombre}" />
+								</p:column>
+								<p:column headerText="Eliminar">
+									<p:commandButton id="btnEliminarArchivo" icon="ui-icon ui-icon-trash"
+										actionListener="#{arcMB.onBorrar(arc)}" update="dtAnexosPlan">
+									</p:commandButton>
+								</p:column>
+							</p:dataTable>
 						</p:tab>
 					</p:tabView>
 				</div>

@@ -65,6 +65,8 @@ public class PlaneacionMB extends AudigoesController implements Serializable {
 	@Override
 	protected void afterRowSelect() {
 		getAudMB().fillAuditoriasPlan();
+		getArcMB().setPlanAnual(getRegistro());
+		getArcMB().fillAnexosPlanAnual();
 		super.afterRowSelect();
 	}
 
@@ -168,7 +170,7 @@ public class PlaneacionMB extends AudigoesController implements Serializable {
 			this.arcMB.onNew();
 			this.arcMB.getRegistro().setPlanAnual(getRegistro());
 			this.arcMB.getRegistro().setArcArchivo(event.getFile().getContent());
-			this.arcMB.getRegistro().setArcNombre(event.getFile().getFileName());
+			this.arcMB.getRegistro().setArcNombre(reemplazarTildes(event.getFile().getFileName()));
 			this.arcMB.getRegistro().setArcExt(event.getFile().getContentType());
 			this.arcMB.onSave();
 		} catch (Exception e) {

@@ -30,7 +30,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 
 public class AudigoesController {
-	
+
 	public static final String SYSTEM_NAME = "AUDIGOES";
 	public static final String REPORT_PATH = "/WEB-INF/reportes/";
 
@@ -77,11 +77,11 @@ public class AudigoesController {
 	private List<SelectItem> regActivoList;
 	private List<SelectItem> generoList;
 	private List<SelectItem> faseAuditoriaList;
-	
+
 	/* Listado de usuarios de una institución - usuario seleccionado */
 	private List<Usuario> usuariosInstitucionList;
 	private Usuario usuarioSelected;
-	
+
 	/* propiedades para los reportes */
 	private String pathReporte;
 	private String reportId;
@@ -211,7 +211,7 @@ public class AudigoesController {
 		try {
 			if (beforeCancel()) {
 				if (getRegistro() != null) {
-					//setRegistro(null);
+					// setRegistro(null);
 					setRegistro((SuperEntity) getRegistro().getClass().newInstance());
 					setStatus("SEARCH");
 				}
@@ -283,7 +283,7 @@ public class AudigoesController {
 
 	public void saveNewAudit() {
 		if (this.getRegistro() instanceof SuperEntity) {
-			this.getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario()); 
+			this.getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
 			this.getRegistro().setFecCrea(Calendar.getInstance(Locale.getDefault()).getTime());
 		}
 	}
@@ -315,7 +315,7 @@ public class AudigoesController {
 
 	public void saveEditAudit() {
 		if (this.getRegistro() instanceof SuperEntity) {
-			this.getRegistro().setUsuModi(getObjAppsSession().getUsuario().getUsuUsuario()); 
+			this.getRegistro().setUsuModi(getObjAppsSession().getUsuario().getUsuUsuario());
 			this.getRegistro().setFecModi(Calendar.getInstance(Locale.getDefault()).getTime());
 		}
 	}
@@ -348,7 +348,7 @@ public class AudigoesController {
 		this.onRowSelect();
 		this.onEdit();
 	}
-	
+
 	/* Generar Reporte */
 
 	@SuppressWarnings({ "rawtypes", "deprecation", "null", "unchecked" })
@@ -358,33 +358,33 @@ public class AudigoesController {
 		try {
 			setReportId("rpt_plan.jasper");
 			File archivo = new File(
-					FacesContext.getCurrentInstance().getExternalContext().getRealPath(REPORT_PATH+getReportId()));
-			
+					FacesContext.getCurrentInstance().getExternalContext().getRealPath(REPORT_PATH + getReportId()));
+
 			HttpServletResponse httpServletResponse = (HttpServletResponse) FacesContext.getCurrentInstance()
 					.getExternalContext().getResponse();
 			httpServletResponse.setContentType("application/pdf");
 			httpServletResponse.addHeader("Content-Type", "application/pdf");
-			
+
 			JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(archivo.getPath());
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params);
-			
+
 			JRExporter jrExporter = null;
 			jrExporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
 			jrExporter.setParameter(JRExporterParameter.OUTPUT_STREAM, httpServletResponse);
-			
-			if(jrExporter != null) {
+
+			if (jrExporter != null) {
 				try {
 					jrExporter.exportReport();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void fillUsuariosInstitucionList() {
 		try {
@@ -395,7 +395,13 @@ public class AudigoesController {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public String reemplazarTildes(String text) {
+		return text.replace("á", "&aacute;").replace("Á", "&Aacute;").replace("é", "&aacute;").replace("É", "&Aacute;")
+				.replace("í", "&aacute;").replace("Í", "&Aacute;").replace("ó", "&aacute;").replace("Ó", "&Aacute;")
+				.replace("ú", "&aacute;").replace("Ú", "&Aacute;").replace("ñ", "&ntilde;").replace("Ñ", "&Nacute;");
+	}
+
 	/* GET Y SET */
 
 	public boolean isError() {
@@ -474,7 +480,7 @@ public class AudigoesController {
 	public void setRegActivoList(List<SelectItem> regActivoList) {
 		this.regActivoList = regActivoList;
 	}
-	
+
 	public List<SelectItem> getFaseAuditoriaList() {
 		if (this.faseAuditoriaList == null) {
 			this.faseAuditoriaList = new ArrayList<>();
@@ -506,7 +512,7 @@ public class AudigoesController {
 	public void setUsuarioSelected(Usuario usuarioSelected) {
 		this.usuarioSelected = usuarioSelected;
 	}
-	
+
 	public ObjAppsSession getObjAppsSession() {
 		if (this.objAppsSession == null) {
 			this.objAppsSession = (ObjAppsSession) FacesContext.getCurrentInstance().getExternalContext()
@@ -539,7 +545,7 @@ public class AudigoesController {
 	public void setGeneroList(List<SelectItem> generoList) {
 		this.generoList = generoList;
 	}
-	
+
 	public String getPathReporte() {
 		return pathReporte;
 	}
