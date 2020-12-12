@@ -10,7 +10,8 @@
 			<div align="left" style="margin-top: 50px;">
 				<p:commandButton id="btnCancelComentario" action="#{comMB.onCancel}"
 					process="@this" value="Regresar" icon="pi pi-arrow-left"
-					style="float:left;" update="@form :frmSeguimiento">
+					style="float:left;" update="@form :frmSeguimiento" 
+					actionListener="/audigoes/page/planeacion/auditoria.xhtml">
 				</p:commandButton>
 			</div>
 			<div class="name" align="center" style="margin-top: 100px;">
@@ -48,7 +49,7 @@
 					</p:tab>
 				</p:tabView>
 				<p:commandButton id="btnGuardarBottom" action="#{comMB.onSave}"
-					value="Guardar" update="@form" process="@this @form" />
+					value="Guardar" update="@form :frmSeguimiento" process="@this @form" />
 			</div>
 		</p:panel>
 	</h:form>

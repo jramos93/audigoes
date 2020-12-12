@@ -100,33 +100,39 @@
 						</p:outputPanel>
 					</f:facet>
 
-					<p:column headerText="N°" sortBy="#{aud.audCorrelativo}" style="text-align:center; width:50px;">
+					<p:column headerText="N°" sortBy="#{aud.audCorrelativo}"
+						style="text-align:center; width:50px;">
 						<h:outputText value="#{aud.audCorrelativo}" />
 					</p:column>
-					<p:column headerText="Año" sortBy="#{aud.audAnio}" style="text-align:center; width:50px;"> 
+					<p:column headerText="Año" sortBy="#{aud.audAnio}"
+						style="text-align:center; width:50px;">
 						<h:outputText value="#{aud.audAnio}" />
 					</p:column>
 					<p:column headerText="Auditoría" sortBy="#{aud.audNombre}">
 						<h:outputText value="#{aud.audNombre}" />
 					</p:column>
-					<p:column headerText="Tipo Auditoría" style="text-align:center; width:150px;"
+					<p:column headerText="Tipo Auditoría"
+						style="text-align:center; width:150px;"
 						sortBy="#{aud.tipoAuditoria.tpaNombre}">
 						<h:outputText value="#{aud.tipoAuditoria.tpaNombre}" />
 					</p:column>
-					<p:column headerText="Fecha Inicio" style="text-align:center; width:80px;"
+					<p:column headerText="Fecha Inicio"
+						style="text-align:center; width:80px;"
 						sortBy="#{aud.audFechaInicioProgramado}">
 						<h:outputText value="#{aud.audFechaInicioProgramado}">
 							<f:convertDateTime pattern="dd-MM-yyyy" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Fecha Fin" style="text-align:center; width:80px;"
+					<p:column headerText="Fecha Fin"
+						style="text-align:center; width:80px;"
 						sortBy="#{aud.audFechaFinProgramado}">
 						<h:outputText value="#{aud.audFechaInicioProgramado}">
 							<f:convertDateTime pattern="dd-MM-yyyy" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Fase" filterBy="#{aud.audFase}" filterStyle="width:80px;"
-						filterMatchMode="exact" style="text-align:center; width:150px;">
+					<p:column headerText="Fase" filterBy="#{aud.audFase}"
+						filterStyle="width:80px;" filterMatchMode="exact"
+						style="text-align:center; width:150px;">
 						<f:facet name="filter">
 							<p:selectOneMenu onchange="PF('wvAuditorias').filter();">
 								<f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}"
@@ -174,12 +180,6 @@
 						</p:selectOneMenu>
 					</div>
 					<div class="p-field p-col">
-						<p:outputLabel for="codigo" value="Código auditoría:" />
-						<p:inputText id="codigo" value="#{audMB.registro.audCodigo}"
-							required="true" maxlength="250"
-							requiredMessage="Debe ingresar código de la auditoría" />
-					</div>
-					<div class="p-field p-col">
 						<p:outputLabel for="anio" value="Año auditoria:" />
 						<p:inputMask id="anio" value="#{audMB.registro.audAnio}"
 							required="true" placeholder="20XX"
@@ -190,6 +190,18 @@
 						<p:inputText id="nombre" value="#{audMB.registro.audNombre}"
 							required="true" maxlength="250"
 							requiredMessage="Debe ingresar nombre de auditoría" />
+					</div>
+					<div class="p-field p-col">
+						<p:outputLabel for="coordinador" value="Coordinador" />
+						<p:selectOneMenu id="coordinador" converter="usuConverter"
+							converterMessage="Problemas al guardar coordinador"
+							value="#{audMB.coordinador}">
+							<f:selectItem itemLabel="Seleccione coordinador de auditoría"
+								noSelectionOption="true" />
+							<f:selectItems value="#{audMB.usuariosInstitucionList}"
+								var="coor" itemLabel="#{coor.usuNombre} #{coor.usuApellido}"
+								itemValue="#{coor}" />
+						</p:selectOneMenu>
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="audfechainicio" value="Fecha Inicio" />
@@ -206,17 +218,107 @@
 							requiredMessage="Debe ingresar fecha de fin" />
 					</div>
 
+					<p:separator />
+					<p:outputLabel
+						value="Seleccione unidades que intervienen en la auditoría" />
+					<div class="p-field p-col">
+						<p:selectOneMenu id="unidadauditada" converter="unidadConverter"
+							converterMessage="Problemas al agregar unidad"
+							value="#{audMB.unidadSelected}">
+							<f:selectItem itemLabel="Seleccione unidad auditada"
+								noSelectionOption="true" />
+							<f:selectItems value="#{audMB.unidadList}" var="und"
+								itemLabel="#{und.uniNombre}" itemValue="#{und}" />
+						</p:selectOneMenu>
+
+					</div>
+					<br />
+					<div class="p-field p-col">
+						<p:commandButton id="btnAgregarUnidad" value="Agregar"
+							update="dtAuditoriaUnidades unidadauditada"
+							process="@this unidadauditada"
+							rendered="#{audMB.status eq 'NEW'}"
+							actionListener="#{audMB.agregarUnidadAuditada}">
+						</p:commandButton>
+						<p:commandButton id="btnAgregarUnidadEdit" value="Agregar"
+							update="dtAuditoriaUnidadesEdit unidadauditada"
+							process="@this unidadauditada"
+							rendered="#{audMB.status eq 'EDIT'}"
+							actionListener="#{audMB.agregarUnidadAuditada}">
+						</p:commandButton>
+					</div>
+					<p:dataTable id="dtAuditoriaUnidades" var="unidad"
+						value="#{audMB.unidadesSelectedList}"
+						widgetVar="wvAuditoriaUnidades" reflow="true"
+						style="margin-top:20px;" paginator="true"
+						rowsPerPageTemplate="5,10,15,20,25" rows="10"
+						paginatorPosition="bottom" rendered="#{audMB.status eq 'NEW'}"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+						<f:facet name="header"> Unidades Auditadas</f:facet>
+						<p:column headerText="ID Unidad" sortBy="#{unidad.uniId}">
+							<h:outputText value="#{unidad.uniId}" />
+						</p:column>
+						<p:column headerText="Unidad Administrativa"
+							sortBy="#{unidad.uniNombre}">
+							<h:outputText value="#{unidad.uniNombre}" />
+						</p:column>
+						<p:column headerText="Eliminar">
+							<p:commandButton
+								actionListener="#{audMB.eliminarUnidadAuditada(unidad)}"
+								update=":frmNewEditAuditoria:dtAuditoriaUnidades"
+								icon="pi pi-trash"
+								title="Clic para eliminar unidad seleccionada" process="@this">
+								<p:confirm header="Confirmación" message="¿Eliminar?"
+									icon="pi pi-info-circle"></p:confirm>
+							</p:commandButton>
+						</p:column>
+
+					</p:dataTable>
+
+					<p:dataTable id="dtAuditoriaUnidadesEdit" var="auditund"
+						value="#{audMB.registro.auditoriaUnidad}"
+						widgetVar="wvAuditoriaUnidadesEdit" reflow="true"
+						style="margin-top:20px;" paginator="true"
+						rowsPerPageTemplate="5,10,15,20,25" rows="10"
+						paginatorPosition="bottom" rendered="#{audMB.status eq 'EDIT'}"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+						<f:facet name="header">Unidades Auditadas</f:facet>
+						<p:column headerText="ID Unidad" sortBy="#{auditund.unidad.uniId}">
+							<h:outputText value="#{auditund.unidad.uniId}" />
+						</p:column>
+						<p:column headerText="Unidad Administrativa"
+							sortBy="#{auditund.unidad.uniNombre}">
+							<h:outputText value="#{auditund.unidad.uniNombre}" />
+						</p:column>
+						<p:column headerText="Eliminar">
+							<p:commandButton
+								actionListener="#{audMB.eliminarUnidadAuditadaEdit(auditund)}"
+								update=":frmNewEditAuditoria:dtAuditoriaUnidadesEdit"
+								icon="pi pi-trash"
+								title="Clic para eliminar unidad seleccionada" process="@this">
+								<p:confirm header="Confirmación" message="¿Eliminar?"
+									icon="pi pi-info-circle"></p:confirm>
+							</p:commandButton>
+						</p:column>
+
+					</p:dataTable>
+
 					<p:tabView id="tvAuditoriaNewEdit">
 						<p:tab id="tabDescripcion" title="Descripcion">
-							<pe:ckEditor id="audDescripcion" width="100%"
+							<pe:ckEditor id="audDescripcion" width="100%" skin="office2013"
+								customConfig="#{request.contextPath}/resources/js/customck.js"
 								value="#{audMB.registro.audDescripcion}" />
 						</p:tab>
 						<p:tab id="tabAudObjetivos" title="Objetivos">
-							<pe:ckEditor id="audObjetivos" width="100%"
+							<pe:ckEditor id="audObjetivos" width="100%" skin="office2013"
+								customConfig="#{request.contextPath}/resources/js/customck.js"
 								value="#{audMB.registro.audObjetivos}" />
 						</p:tab>
 						<p:tab id="tabAudAlcances" title="Alcances">
-							<pe:ckEditor id="audAlcances" width="100%"
+							<pe:ckEditor id="audAlcances" width="100%" skin="office2013"
+								customConfig="#{request.contextPath}/resources/js/customck.js"
 								value="#{audMB.registro.audAlcances}" />
 						</p:tab>
 					</p:tabView>

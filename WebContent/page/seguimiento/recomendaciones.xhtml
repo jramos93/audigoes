@@ -10,7 +10,7 @@
 				<p:commandButton id="btnCancel" actionListener="#{recMB.onCancel}"
 					process="@this" value="Regresar" icon="pi pi-arrow-left"
 					style="float:left;" update="@form"
-					action="/page/planeacion/plan.xhtml">
+					action="/page/planeacion/auditoria.xhtml">
 				</p:commandButton>
 			</div>
 			<div class="name" align="center" style="margin-top: 100px;">
@@ -27,16 +27,16 @@
 						rows="2" readonly="true" />
 
 					<p:outputLabel for="fechainicio" value="Fecha inicio seguimiento:"
-						style="font-weight:bold;" />
+						style="font-weight:bold;"  />
 					<p:calendar id="fechainicio" value="#{segMB.registro.segFecInicio}"
-						readonly="true">
+						readonly="true" disabled="true">
 						<f:convertDateTime pattern="dd/MM/yyyy" />
 					</p:calendar>
 
 					<p:outputLabel for="fechafin" value="Fecha fin:"
 						style="font-weight:bold;" />
 					<p:calendar id="fechafin" value="#{segMB.registro.segFecFin}"
-						readonly="true">
+						readonly="true" disabled="true">
 						<f:convertDateTime pattern="dd/MM/yyyy" />
 					</p:calendar>
 				</p:panelGrid>

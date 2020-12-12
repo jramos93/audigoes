@@ -151,15 +151,18 @@
 
 				<p:tabView id="tvAuditoriaNewEdit">
 					<p:tab id="tabDescripcion" title="Descripcion">
-						<pe:ckEditor id="audDescripcion" width="100%"
+						<pe:ckEditor id="audDescripcion" width="100%" skin="office2013"
+								customConfig="#{request.contextPath}/resources/js/customck.js"
 							value="#{audMB.registro.audDescripcion}" />
 					</p:tab>
 					<p:tab id="tabAudObjetivos" title="Objetivos">
-						<pe:ckEditor id="audObjetivos" width="100%"
+						<pe:ckEditor id="audObjetivos" width="100%" skin="office2013"
+								customConfig="#{request.contextPath}/resources/js/customck.js"
 							value="#{audMB.registro.audObjetivos}" />
 					</p:tab>
 					<p:tab id="tabAudAlcances" title="Alcances">
-						<pe:ckEditor id="audAlcances" width="100%"
+						<pe:ckEditor id="audAlcances" width="100%" skin="office2013"
+								customConfig="#{request.contextPath}/resources/js/customck.js"
 							value="#{audMB.registro.audAlcances}" />
 					</p:tab>
 				</p:tabView>
