@@ -10,8 +10,10 @@
 			<div class="app-name">AUDIGOES</div>
 			<a href="#" id="user-display1"> <span class="name"></span> <span
 				class="fecha"></span>
-			</a> <a href="#" id="user-display"> <span class="username">Usuario</span>
-				<span class="userrole">Auditor: #{loginMB.objAppsSession.usuario.usuUsuario}</span>
+			</a> <a href="#" id="user-display"><span class="username">#{loginMB.objAppsSession.usuario.usuUsuario}</span>
+				<h:outputText styleClass="userrole"
+					value="#{loginMB.objAppsSession.usuario.usuRol}"
+					converter="rolusuario"></h:outputText> 
 				<p:graphicImage name="images/user.png" library="verona-layout" />
 			</a>
 		</div>

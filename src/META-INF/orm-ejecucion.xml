@@ -12,4 +12,8 @@
 		<query>select o from Recomendacion o where o.cedulaNota.cedId=?1 and o.auditoria.audId=?2 and o.regActivo=1</query>
 	</named-query>
 	
+	<named-query name="evidencia.cedula">
+		<query>select o from Evidencia o where o.cedula.cedId=?1 and o.regActivo=1</query>
+	</named-query>
+	
 </entity-mappings>

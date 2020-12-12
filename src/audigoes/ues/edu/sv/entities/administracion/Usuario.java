@@ -67,6 +67,9 @@ public class Usuario extends SuperEntity implements Serializable {
 
 	@Column(name="usu_dui")
 	private String usuDui;
+	
+	@Column(name="usu_rol")
+	private int usuRol;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="usu_fecha_nacimiento")
@@ -686,6 +689,14 @@ public class Usuario extends SuperEntity implements Serializable {
 		usuarioUnidad.setUsuario(null);
 
 		return usuarioUnidad;
+	}
+
+	public int getUsuRol() {
+		return usuRol;
+	}
+
+	public void setUsuRol(int usuRol) {
+		this.usuRol = usuRol;
 	}
 
 	@Override

@@ -41,6 +41,9 @@ public class CedulaMB extends AudigoesController implements Serializable {
 
 	@ManagedProperty(value = "#{recMB}")
 	private RecomendacionMB recMB = new RecomendacionMB();
+	
+	@ManagedProperty(value = "#{evdMB}")
+	private EvidenciaMB evdMB = new EvidenciaMB();
 
 	public CedulaMB() {
 		super(new CedulaNota());
@@ -121,6 +124,9 @@ public class CedulaMB extends AudigoesController implements Serializable {
 		recMB.setAuditoria(auditoria);
 		recMB.setCedula(getRegistro());
 		recMB.fillRecomendaciones();
+		
+		evdMB.setCedula(getRegistro());
+		evdMB.fillByCedula();
 	}
 
 	@Override
@@ -133,6 +139,7 @@ public class CedulaMB extends AudigoesController implements Serializable {
 		getRegistro().setAuditoria(auditoria);
 		getRegistro().setCedFechaElaboro(getToday());
 		getRegistro().setUsuario1(getObjAppsSession().getUsuario());
+		getRegistro().setCedValorizacion(1);
 		return super.beforeSaveNew();
 	}
 
@@ -370,6 +377,14 @@ public class CedulaMB extends AudigoesController implements Serializable {
 
 	public void setRecMB(RecomendacionMB recMB) {
 		this.recMB = recMB;
+	}
+
+	public EvidenciaMB getEvdMB() {
+		return evdMB;
+	}
+
+	public void setEvdMB(EvidenciaMB evdMB) {
+		this.evdMB = evdMB;
 	}
 
 }

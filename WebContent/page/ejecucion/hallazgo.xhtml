@@ -120,11 +120,61 @@
 					</p:dataTable>
 				</p:tab>
 
-				<p:tab title="Comentarios de la Unidad y Auditoría">
+				<p:tab title="Comentarios de la Unidad">
+					<p:panelGrid columns="1" columnClasses="ui-lg-12" layout="grid"
+						styleClass="ui-panelgrid-blank form-group form-elements">
+
+						<p:outputLabel value="Comentarios del auditado: "
+							style="font-weight:bold;" />
+						<p:inputTextarea value="#{ceduMB.registro.cedComentario}"
+							rows="12" style="width:100%;" readonly="true" />
+
+					</p:panelGrid>
+
+					<p:dataTable var="a" value="#{evdMB.listado}" rowIndexVar="index"
+						widgetVar="wvArchivos" reflow="true" id="dtArchivos"
+						style="margin-top:20px;" paginator="true" paginatorPosition="top"
+						rowsPerPageTemplate="1,5,10,15" rows="5"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+						rowKey="#{a.evdId}">
+						<f:facet name="header">Evidencia proporcionada por unidad</f:facet>
+
+						<p:column headerText="Nombre" filterBy="#{a.evdNombre}"
+							filterMatchMode="contains">
+							<h:outputText value="#{a.evdNombre}"></h:outputText>
+						</p:column>
+						
+						<p:column headerText="Extensión" filterBy="#{a.evdExtension}"
+							filterMatchMode="contains">
+							<h:outputText value="#{a.evdExtension}"></h:outputText>
+						</p:column>
+
+					</p:dataTable>
+				</p:tab>
+
+				<p:tab title="Valorización de Auditor">
+
+					<p:panelGrid columns="1" columnClasses="ui-lg-12" layout="grid"
+						styleClass="ui-panelgrid-blank form-group form-elements">
+
+						<p:outputLabel value="Comentarios de auditor: "
+							style="font-weight:bold;" />
+						<p:inputTextarea value="#{ceduMB.registro.cedComentarioAuditor}"
+							rows="12" style="width:100%;" />
+						<p:outputLabel value="Valorización:" style="font-weight:bold;"></p:outputLabel>
+						<p:selectOneRadio value="#{ceduMB.registro.cedValorizacion}">
+							<f:selectItem itemValue="1" itemLabel="Hallazgo"></f:selectItem>
+							<f:selectItem itemValue="0" itemLabel="Asuntos Menores"></f:selectItem>
+							<f:selectItem itemValue="2" itemLabel="Superada"></f:selectItem>
+						</p:selectOneRadio>
+					</p:panelGrid>
 				</p:tab>
 
 				<p:tab title="Observaciones de Coordinación">
-
+					<pe:ckEditor id="obs" width="100%" skin="office2013"
+						customConfig="#{request.contextPath}/resources/js/customck.js"
+						value="#{ceduMB.registro.cedObservacion}" />
 				</p:tab>
 			</p:tabView>
 

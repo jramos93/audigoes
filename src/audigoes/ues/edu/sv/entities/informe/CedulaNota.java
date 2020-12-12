@@ -71,6 +71,7 @@ public class CedulaNota extends SuperEntity implements Serializable {
 	@Column(name="ced_fecha_reviso")
 	private Date cedFechaReviso;
 
+	@Lob
 	@Column(name="ced_observacion")
 	private String cedObservacion;
 
@@ -96,6 +97,15 @@ public class CedulaNota extends SuperEntity implements Serializable {
 
 	@Column(name="usu_modi")
 	private String usuModi;
+	
+	@Column(name="ced_comentario")
+	private String cedComentario;
+	
+	@Column(name="ced_comentario_auditor")
+	private String cedComentarioAuditor;
+	
+	@Column(name="ced_valorizacion")
+	private int cedValorizacion;
 	
 	@ManyToOne
 	@JoinColumn(name="ced_aud_id")
@@ -329,6 +339,30 @@ public class CedulaNota extends SuperEntity implements Serializable {
 
 	public void setAuditoria(Auditoria auditoria) {
 		this.auditoria = auditoria;
+	}
+
+	public String getCedComentario() {
+		return cedComentario;
+	}
+
+	public void setCedComentario(String cedComentario) {
+		this.cedComentario = cedComentario;
+	}
+
+	public String getCedComentarioAuditor() {
+		return cedComentarioAuditor;
+	}
+
+	public void setCedComentarioAuditor(String cedComentarioAuditor) {
+		this.cedComentarioAuditor = cedComentarioAuditor;
+	}
+
+	public int getCedValorizacion() {
+		return cedValorizacion;
+	}
+
+	public void setCedValorizacion(int cedValorizacion) {
+		this.cedValorizacion = cedValorizacion;
 	}
 
 	@Override

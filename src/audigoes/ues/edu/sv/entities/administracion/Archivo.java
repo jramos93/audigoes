@@ -7,6 +7,7 @@ import audigoes.ues.edu.sv.entities.SuperEntity;
 import audigoes.ues.edu.sv.entities.ejecucion.ProcedimientoEjecucion;
 import audigoes.ues.edu.sv.entities.informe.ActaLectura;
 import audigoes.ues.edu.sv.entities.informe.CartaGerencia;
+import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 import audigoes.ues.edu.sv.entities.informe.Convocatoria;
 import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
@@ -92,6 +93,10 @@ public class Archivo extends SuperEntity implements Serializable  {
 	@ManyToOne
 	@JoinColumn(name="arc_acl_id")
 	private ActaLectura actaLectura;
+	
+	@ManyToOne
+	@JoinColumn(name="arc_ced_id")
+	private CedulaNota cedula;
 	
 	public Archivo() {
 	}
@@ -222,6 +227,14 @@ public class Archivo extends SuperEntity implements Serializable  {
 
 	public void setActaLectura(ActaLectura actaLectura) {
 		this.actaLectura = actaLectura;
+	}
+
+	public CedulaNota getCedula() {
+		return cedula;
+	}
+
+	public void setCedula(CedulaNota cedula) {
+		this.cedula = cedula;
 	}
 
 	@Override

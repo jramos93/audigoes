@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 
 import java.util.Date;
 
@@ -56,6 +57,10 @@ public class Evidencia extends SuperEntity implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="evd_com_id")
 	private Comentario comentario;
+	
+	@ManyToOne
+	@JoinColumn(name="evd_ced_id")
+	private CedulaNota cedula;
 
 	public Evidencia() {
 	}
@@ -146,6 +151,14 @@ public class Evidencia extends SuperEntity implements Serializable {
 
 	public void setComentario(Comentario comentario) {
 		this.comentario = comentario;
+	}
+
+	public CedulaNota getCedula() {
+		return cedula;
+	}
+
+	public void setCedula(CedulaNota cedula) {
+		this.cedula = cedula;
 	}
 
 	@Override
