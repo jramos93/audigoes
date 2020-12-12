@@ -41,13 +41,19 @@
 						pattern="dd-MM-yyyy" navigator="true"
 						requiredMessage="Debe ingresar fecha de fin" />
 				</div>
+				<div class="p-field p-col">
+					<p:outputLabel for="lugarfechaemision"
+						value="Lugar y fecha de emisión" />
+					<p:inputText id="lugarfechaemision"
+						value="#{planMB.registro.plaLugarFecha}" maxlength="250"s/>
+				</div>
 				<div class="p-field p-col" style="margin-top: 25px;">
 					<p:tabView id="tvPlanAnual">
 						<p:tab id="tabPortada" title="Portada">
 							<pe:ckEditor id="planportada" width="100%"
 								value="#{planMB.registro.plaPortada}" />
 						</p:tab>
-						<p:tab id="tabIndice" title="Indice">
+						<p:tab id="tabIndice" title="Indice" rendered="false">
 							<pe:ckEditor id="planindice" width="100%"
 								value="#{planMB.registro.plaIndice}" />
 						</p:tab>
@@ -118,7 +124,7 @@
 						<p:tab title="Anexos" rendered="#{planMB.status eq 'EDIT'}">
 							<p:fileUpload listener="#{planMB.handleFileUpload}"
 								mode="advanced" dragDropSupport="false"
-								update="msg dtAnexosPlan" 
+								update="msg dtAnexosPlan"
 								allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
 
 							<p:dataTable id="dtAnexosPlan" value="#{arcMB.listado}"
@@ -136,7 +142,8 @@
 									<h:outputText value="#{arc.arcNombre}" />
 								</p:column>
 								<p:column headerText="Eliminar">
-									<p:commandButton id="btnEliminarArchivo" icon="ui-icon ui-icon-trash"
+									<p:commandButton id="btnEliminarArchivo"
+										icon="ui-icon ui-icon-trash"
 										actionListener="#{arcMB.onBorrar(arc)}" update="dtAnexosPlan">
 									</p:commandButton>
 								</p:column>
