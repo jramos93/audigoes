@@ -123,7 +123,12 @@
 					<p:row style="text-align:center;">
 						<p:column>
 							<p:commandButton id="btnNotificarSeguimiento"
+								oncomplete="PF('wvCorreo').show();"
+								actionListener="#{segMB.prepararCorreo}"
 								value="Notificar Seguimiento"
+								title="Clic para enviar la notificacion" process="@form"
+								 icon="pi pi-check-circle"
+								style="float:Righ;" 
 								rendered="#{segMB.registro.segFecInicio != null and segMB.registro.segFecFin == null}" />
 						</p:column>
 						<p:column>

@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -288,6 +289,8 @@ public class InformeMB extends AudigoesController implements Serializable {
 public StreamedContent getInforme() {
 	
 		try {
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			
 			// Para definir los encabezados de pagina y los pie de pagina
@@ -302,8 +305,8 @@ public StreamedContent getInforme() {
 					+ "<br><br><br><br><br><br><br> <br><br><br><br><br><br>";
 			// Concateno el texto a agregar
 			str=str+"<h1 style='text-align:center'> Informe de " +getRegistro().getAuditoria().getAudNombre();
-			str=str+"</h1><h3 style='text-align:center'>PERIODO DEL " +getRegistro().getAuditoria().getAudFechaInicioProgramado();
-			str=str+"   AL "+getRegistro().getAuditoria().getAudFechaFinProgramado();
+			str=str+"</h1><h3 style='text-align:center'>PERIODO DEL " +formatter.format(getRegistro().getAuditoria().getAudFechaInicioProgramado());
+			str=str+"   AL "+formatter.format(getRegistro().getAuditoria().getAudFechaFinProgramado());
 			str=str+ "</h3><br>";
 		
 			str=str+"<div style= 'page-break-after:always'></div>";

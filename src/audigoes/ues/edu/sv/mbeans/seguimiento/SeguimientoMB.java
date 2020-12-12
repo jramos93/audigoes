@@ -10,12 +10,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.mail.Address;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.seguimiento.Comentario;
 import audigoes.ues.edu.sv.entities.seguimiento.Seguimiento;
+import audigoes.ues.edu.sv.util.SendMailAttach;
 
 @ManagedBean(name = "segMB")
 @ViewScoped
@@ -27,6 +29,7 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 
 	private Usuario coordinador;
 	private Auditoria auditoria;
+	private String textoCorreo="";
 	
 	@ManagedProperty(value = "#{recMB}")
 	private RecomendacionMB recMB = new RecomendacionMB();
@@ -186,5 +189,54 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 	public void setRecMB(RecomendacionMB recMB) {
 		this.recMB = recMB;
 	}
+	public void prepararCorreo() {
+		textoCorreo="<p><strong>AUDIGOES LE INFORMA:</strong></p>" + 
+				"<p>Se le notifica que la fase de seguimiento a iniciado"
+				+ "correspondiente a la auditor&iacute;a <strong>"
+				+getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo()+"-"+getRegistro().getAuditoria().getAudAnio()+
+				"-"+getRegistro().getAuditoria().getAudCorrelativo()
+				+"</strong> por lo que se le pide ingresar al sistema para revisarlo.</p>\r\n"
+				+"<p>Atte.-</p>";
+	}
 
+	public void onEnviarRevision() {
+		correoRevision(textoCorreo);
+	}
+
+	public void correoRevision(String texto) {
+		String from;
+		String cc;
+		String to;
+		String subject;
+		String text;
+		String attach;
+		String logo;
+		String body;
+		Address[] toList;
+		Address[] toCc;
+		
+		try {
+			from = "audigoes.ues@gmail.com";
+			cc = "wilmer.grijalva@gmail.com";
+			to = "wilmer.grijalva@gmail.com";
+			subject = "Correo de Prueba";
+			
+			body = texto;
+			logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/images/logo-azul.png");
+			
+			SendMailAttach mail = new SendMailAttach(from, cc, to, subject, body, null, logo);
+			mail.send();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
+	public String getTextoCorreo() {
+		return textoCorreo;
+	}
+
+	public void setTextoCorreo(String textoCorreo) {
+		this.textoCorreo = textoCorreo;
+	}
+	
 }

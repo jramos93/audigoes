@@ -4,82 +4,91 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
-	
-		<h:form id="frmCarta">
-			<p:panel rendered="#{informeMB.status eq 'CARTA_GERENCIA'}">
-				<p:commandButton id="btnCancel" action="#{informeMB.onCancel}"
-					value="Cancelar" update=":frmCarta :frm" process="@form">
-				</p:commandButton>
-				<p:commandButton id="btnGuardarTop" action="#{cartaGerenciaMB.onSave}"
-					value="Guardar" update=":frmCarta :frm" process="@form">
-				</p:commandButton>
-				<p:commandButton id="btnEditarCarta" action="#{cartaGerenciaMB.onSave}"
-					 value="Editar Carta"
-					icon="pi pi-plus" pdate=":frmCarta :frm" process="@form">
-				</p:commandButton>
-				<p:commandButton id="btnCarta"
-					title="Clic para generar la carta a la gerencia"
-					process="@this" value="Generar Carta a la Gerencia" icon="pi pi-check-circle"
-					style="float:Righ;" styleClass="blue-btn raised-btn" ajax="false">
-					<p:fileDownload value="#{cartaGerenciaMB.carta}"></p:fileDownload>
-				</p:commandButton>
-				<div class="ui-fluid p-formgrid p-grid">
-					<div class="p-field p-col" style="margin-top: 25px;">
-						<p:tabView id="tvCarta">
-							<p:tab title="Encabezado">
-								<pe:ckEditor id="ctgEncabezado" width="100%"
-											value="#{cartaGerenciaMB.registro.ctgEncabezado}" />
-							</p:tab>
-							<p:tab title="Destinatario">
-								<pe:ckEditor id="ctgDestinatario" width="100%"
-											value="#{cartaGerenciaMB.registro.ctgDestinatario}" />
-							</p:tab>
-							<p:tab title="Cuerpo">
-									<pe:ckEditor id="ctgCuerpo" width="100%"
-											value="#{cartaGerenciaMB.registro.ctgCuerpo}" />
-							</p:tab>
-							<p:tab title="Cartas Firmadas">
-										<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
-											styleClass="ui-panelgrid-blank form-group form-elements">
-											<h:outputText value="Subida de archivos:"></h:outputText>
-											<p:fileUpload listener="#{cartaGerenciaMB.handleFileUpload}" multiple="true"
-												mode="advanced" dragDropSupport="false" cancelLabel="Cancelar"
-												uploadLabel="Subir" label="Elegir" 
-												update="dtArchivos"
-												allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
-										</p:panelGrid>
-										<p:dataTable var="a" value="#{arcMB.listado}" rowIndexVar="index"
-											widgetVar="wvArchivos" reflow="true" id="dtArchivos"
-											style="margin-top:20px;" paginator="true" paginatorPosition="top"
-											rowsPerPageTemplate="1,5,10,15" rows="5"
-											paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-											currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
-											rowKey="#{a.arcId}">
-				
-											<p:column headerText="No.">
-												<h:outputText value="#{index+1}"></h:outputText>
-											</p:column>
-				
-											<p:column headerText="Nombre" filterBy="#{a.arcNombre}"
-												filterMatchMode="contains">
-												<h:outputText value="#{a.arcNombre}"></h:outputText>
-											</p:column>
-				
-											<p:column headerText="Eliminar" style="width:60px;">
-												<p:commandButton actionListener="#{arcMB.onBorrar(a)}"
-													update="dtArchivos" icon="pi pi-trash"
-													title="Clic para eliminar el archivo">
-													<p:confirm header="Confirmación" message="¿Eliminar?" icon="pi pi-info-circle"></p:confirm>
-												</p:commandButton>
-											</p:column>
-										</p:dataTable>
-									</p:tab>
-						</p:tabView>
-					</div>
-					<p:commandButton id="btnGuardarBottom" action="#{cartaGerenciaMB.onSave}"
-						value="Guardar" update=":frmCarta :frm" process="@form" />
+
+	<h:form id="frmCarta">
+		<p:panel rendered="#{informeMB.status eq 'CARTA_GERENCIA'}">
+		<br /> <br /> <span class="app-name"></span>
+				<h3>Carta a la Gerencia de  Auditoría:
+					#{informeMB.auditoria.audCodigo}-#{informeMB.auditoria.audNombre}</h3>
+			<p:commandButton id="btnCancel" action="#{informeMB.onCancel}"
+				value="Cancelar" update=":frmCarta :frm" process="@form">
+			</p:commandButton>
+			<p:commandButton id="btnGuardarTop"
+				action="#{cartaGerenciaMB.onSave}" value="Guardar"
+				update=":frmCarta :frm" process="@form">
+			</p:commandButton>
+			<p:commandButton id="btnEditarCarta"
+				action="#{cartaGerenciaMB.onSave}" value="Editar Carta"
+				icon="pi pi-plus" pdate=":frmCarta :frm" process="@form">
+			</p:commandButton>
+			<p:commandButton id="btnCarta"
+				title="Clic para generar la carta a la gerencia" process="@this"
+				value="Generar Carta a la Gerencia" icon="pi pi-check-circle"
+				style="float:Righ;" styleClass="blue-btn raised-btn" ajax="false">
+				<p:fileDownload value="#{cartaGerenciaMB.carta}"></p:fileDownload>
+			</p:commandButton>
+			<div class="ui-fluid p-formgrid p-grid">
+				<div class="p-field p-col" style="margin-top: 25px;">
+					<p:tabView id="tvCarta">
+						<p:tab title="Encabezado">
+							<pe:ckEditor id="ctgEncabezado" width="100%" skin="office2013"
+								customConfig="#{request.contextPath}/resources/js/customck.js"
+								value="#{cartaGerenciaMB.registro.ctgEncabezado}" />
+						</p:tab>
+						<p:tab title="Destinatario">
+							<pe:ckEditor id="ctgDestinatario" width="100%" skin="office2013"
+								customConfig="#{request.contextPath}/resources/js/customck.js"
+								value="#{cartaGerenciaMB.registro.ctgDestinatario}" />
+						</p:tab>
+						<p:tab title="Cuerpo">
+							<pe:ckEditor id="ctgCuerpo" width="100%" skin="office2013"
+								customConfig="#{request.contextPath}/resources/js/customck.js"
+								value="#{cartaGerenciaMB.registro.ctgCuerpo}" />
+						</p:tab>
+						<p:tab title="Cartas Firmadas">
+							<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+								styleClass="ui-panelgrid-blank form-group form-elements">
+								<h:outputText value="Subida de archivos:"></h:outputText>
+								<p:fileUpload listener="#{cartaGerenciaMB.handleFileUpload}"
+									multiple="true" mode="advanced" dragDropSupport="false"
+									cancelLabel="Cancelar" uploadLabel="Subir" label="Elegir"
+									update="dtArchivos"
+									allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
+							</p:panelGrid>
+							<p:dataTable var="a" value="#{arcMB.listado}" rowIndexVar="index"
+								widgetVar="wvArchivos" reflow="true" id="dtArchivos"
+								style="margin-top:20px;" paginator="true"
+								paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+								rowKey="#{a.arcId}">
+
+								<p:column headerText="No.">
+									<h:outputText value="#{index+1}"></h:outputText>
+								</p:column>
+
+								<p:column headerText="Nombre" filterBy="#{a.arcNombre}"
+									filterMatchMode="contains">
+									<h:outputText value="#{a.arcNombre}"></h:outputText>
+								</p:column>
+
+								<p:column headerText="Eliminar" style="width:60px;">
+									<p:commandButton actionListener="#{arcMB.onBorrar(a)}"
+										update="dtArchivos" icon="pi pi-trash"
+										title="Clic para eliminar el archivo">
+										<p:confirm header="Confirmación" message="¿Eliminar?"
+											icon="pi pi-info-circle"></p:confirm>
+									</p:commandButton>
+								</p:column>
+							</p:dataTable>
+						</p:tab>
+					</p:tabView>
 				</div>
-			</p:panel>
-		</h:form>
+				<p:commandButton id="btnGuardarBottom"
+					action="#{cartaGerenciaMB.onSave}" value="Guardar"
+					update=":frmCarta :frm" process="@form" />
+			</div>
+		</p:panel>
+	</h:form>
 
 </ui:composition>
