@@ -48,10 +48,12 @@
 								rendered="#{planMB.registro.selected}" value="Ver Informe Plan"
 								icon="pi pi-note" update="@form">
 							</p:commandButton>
-							<p:commandButton value="GenerarReporte"
-								styleClass="blue-btn raised-btn" target="_blank"
-								rendered="#{planMB.registro.selected}"
-								actionListener="#{planMB.viewReporte()}" />
+							<p:commandButton id="btnPlan"
+								title="Clic para generar el Plan"
+								process="@this" value="Generar Reporte" icon="pi pi-check-circle"
+								style="float:Righ;" styleClass="blue-btn raised-btn" ajax="false">
+								<p:fileDownload value="#{planMB.plan}"></p:fileDownload>
+							</p:commandButton>
 						</p:toolbarGroup>
 					</p:toolbar>
 				</f:facet>

@@ -1,5 +1,7 @@
 package audigoes.ues.edu.sv.mbeans.planeacion;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
@@ -12,8 +14,16 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import org.omg.CORBA.Environment;
 import org.primefaces.component.tabview.TabView;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+
+import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.io.source.ByteArrayOutputStream;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.sun.jndi.toolkit.url.Uri;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
@@ -30,6 +40,7 @@ public class PlaneacionMB extends AudigoesController implements Serializable {
 
 	private List<PlanAnual> filteredPlanAnuales;
 	private List<Auditoria> auditoriasPlanList;
+	private StreamedContent plan;
 
 	@ManagedProperty(value = "#{audMB}")
 	private AuditoriaMB audMB = new AuditoriaMB();
@@ -254,5 +265,98 @@ public class PlaneacionMB extends AudigoesController implements Serializable {
 	public void setArcMB(ArchivoMB arcMB) {
 		this.arcMB = arcMB;
 	}
-	
+
+	@SuppressWarnings("deprecation")
+	public StreamedContent getPlan() {
+		
+			try {
+				ByteArrayOutputStream os = new ByteArrayOutputStream();
+				
+				// Para definir los encabezados de pagina y los pie de pagina
+				String str = "<html><head>"
+						+ "<style>#header{position: running(header);} @page {margin: 70px 70px 100px;@bottom-right @top-center {content: element(header);} }</style>"
+						+ "</head><body style='width:500px; font-size:smaller;'>";
+				
+				// Defino el texto del encabezado de pagina con el id header que es que se pone arriba running(header)
+				str=str+"<div style='margin-top:20px;'> "
+						+ "<strong><br><strong><h2 style='text-align:center'>" +getRegistro().getInstitucion().getInsNombre();
+				str=str + "</strong></div></h2>"
+						+ "<br><br><br><br><br><br><br>";
+				
+				str=str+"<div style='margin-top:20px;'> "
+								+ "<strong><br><strong><h2 style='text-align:center'>";
+				str=str + "</strong></div></h2>"
+								+ "<br><br><br><br><br><br><br>";
+				// Concateno el texto a agregar
+				str=str+"<h1 style='text-align:center'>" +getRegistro().getPlaNombre();
+				str=str+"</h1><h3 style='text-align:center'>" +getRegistro().getPlaAnio();
+				str=str+ "</h3><br>"
+						+ "<br><br><br><br><br><br><br>";
+				str=str+"</h1><h3 style='text-align:center'>" +getRegistro().getPlaLugarFecha();
+			
+				str=str+"<div style= 'page-break-after:always'></div>";
+				
+				str=str+"<div style='margin-top:20px;'> "
+						+ "<h3>INDICE</h3>";
+				str=str+"<h5 style='text-align:justify'> I. Introduccion </h5>";
+				str=str+"<h5 style='text-align:justify'> II. Vision </h5>";
+				str=str+"<h5 style='text-align:justify'> III. Mision </h5>";
+				str=str+"<h5 style='text-align:justify'> IV. Principios y Valores </h5>";
+				str=str+"<h5 style='text-align:justify'> V. Objetivos generales y especificos </h5>";
+				str=str+"<h5 style='text-align:justify'> VI. Riesgos </h5>";
+				str=str+"<h5 style='text-align:justify'> VII. Programacion de Auditorias </h5>";
+				str=str+"<h5 style='text-align:justify'> VIII. Anexos </h5>";
+				
+				str=str+"<div style= 'page-break-after:always'></div>";
+						
+				str=str+"<h3 style='text-align:justify'> I. I. Introduccion  </h3>";
+				str=str+"<div>"+getRegistro().getPlaIntroduccion();
+				str=str + "</div>";
+				
+				str=str+"<h3 style='text-align:justify'> II. Vision </h3>";
+				str=str+"<div>"+getRegistro().getPlaVision();
+				str=str + "</div>";
+				
+				str=str+"<h3 style='text-align:justify'> III. Mision  </h3>";
+				str=str+"<div>"+getRegistro().getPlaMision();
+				str=str + "</div>";
+				
+				str=str+"<h3 style='text-align:justify'> IV. Principios y Valores</h3>";
+				str=str+"<div>"+getRegistro().getPlaPrincipiosValores();
+				str=str + "</div>";
+				
+				str=str+"<h3 style='text-align:justify'>V. Objetivos generales y especificos</h3>";
+				str=str+"<div>"+getRegistro().getPlaObjetivos();
+				str=str + "</div>";
+				
+				str=str+"<h3 style='text-align:justify'> VI. Riesgos  </h3>";
+				str=str+"<div>"+getRegistro().getPlaRiesgosConsiderados();
+				str=str + "</div>";
+				
+				str=str+"<h3 style='text-align:justify'> VII. Programacion de Auditorias </h3>";
+				str=str+"<div><table>"+getAuditoriasPlanList();
+				str=str + "</table></div>";
+				
+				str=str+"<h3 style='text-align:justify'> VIII. Anexos</h3>";
+				str=str+"<div>";
+				str=str + "</div>";
+				
+				str=str+"<div style= 'page-break-after:always'></div>";
+				
+				HtmlConverter.convertToPdf(str, os);
+				
+				InputStream is = new ByteArrayInputStream(os.toByteArray());
+				return new DefaultStreamedContent(is, "application/pdf", "planAnual.pdf");
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				addWarn(new FacesMessage("Advertencia", "Hubo un error al generar el documento de la narrativa"));
+			}
+			return plan;
+		}
+
+		public void setPlan(StreamedContent plan) {
+			this.plan = plan;
+		}
+			
 }
