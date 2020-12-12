@@ -13,6 +13,7 @@
 		<mapping-file>META-INF/orm-informe.xml</mapping-file>
 		<mapping-file>META-INF/orm-seguimiento.xml</mapping-file>
 		<mapping-file>META-INF/orm-ejecucion.xml</mapping-file>
+		<mapping-file>META-INF/orm-consultas.xml</mapping-file>
 		<class>audigoes.ues.edu.sv.entities.SuperEntity</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Bitacora</class>
 		<class>audigoes.ues.edu.sv.entities.informe.ActaLectura</class>
@@ -61,5 +62,6 @@
 		<class>audigoes.ues.edu.sv.entities.informe.Convocatoria</class>
 		<class>audigoes.ues.edu.sv.entities.informe.CartaGerencia</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Archivo</class>
+		<class>audigoes.ues.edu.sv.entities.vistas.StatsAuditoriaEstado</class>
 	</persistence-unit>
 </persistence>

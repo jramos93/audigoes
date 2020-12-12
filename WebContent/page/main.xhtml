@@ -15,7 +15,17 @@
 					<h:form id="frmConsultas">
 						<p:tabView>
 							<p:tab title="Consulta Auditorías">
-								<p:panelGrid columns="4"
+								<p:panelGrid columns="5" styleClass="ui-panelgrid-blank">
+									<p:outputLabel value="Fecha inicio" />
+									<p:calendar id="consfechainicio" value="#{consMB.fechaInicio}" pattern="dd/MM/yyyy" />
+									
+									<p:outputLabel value="Fecha fin" />
+									<p:calendar id="consfechafin" value="#{consMB.fechaFin}" pattern="dd/MM/yyyy" />
+									
+									<p:commandButton id="btnFechaAuditorias" value="Buscar" icon="ui-icon ui-icon-check"
+									actionListener="#{consMB.fillAuditoriasList}" update="dtAuditorias" process="@this consfechainicio consfechafin"/>
+								</p:panelGrid>
+								<p:panelGrid columns="4" rendered="false"
 									style="width:90%; margin: auto; text-align:center"
 									styleClass="ui-panelgrid-blank">
 									<p:panel>
@@ -104,11 +114,9 @@
 
 								<p:dataTable id="dtAuditorias" widgetVar="wvAuditorias"
 									reflow="true" var="aud" style="margin-top:20px;"
-									paginator="true" rowKey="#{aud.audId}"
-									filteredValue="#{audMB.filteredAuditorias}"
-									selectionMode="single" selection="#{audMB.regSelected}"
-									globalFilterFunction="#{audMB.globalFilterFunction}"
-									rowsPerPageLabel="5,10,15,20,25" rows="10" sortMode="multiple"
+									paginator="true"  value="#{consMB.auditoriasList}"
+									filteredValue="#{consMB.filteredAuditorias}"
+									rowsPerPageLabel="5,10,15,20,25" rows="25" 
 									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 									currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
 
@@ -117,20 +125,20 @@
 									</f:facet>
 
 									<p:column headerText="N°" sortBy="#{aud.audCorrelativo}"
-										width="">
+										filterBy="#{aud.audCorrelativo}" filterMatchMode="contains">
 										<h:outputText value="#{aud.audCorrelativo}" />
 									</p:column>
-									<p:column headerText="Año" sortBy="#{aud.audAnio}">
+									<p:column headerText="Año" sortBy="#{aud.audAnio}" filterBy="#{aud.audAnio}" filterMatchMode="contains">
 										<h:outputText value="#{aud.audAnio}" />
 									</p:column>
-									<p:column headerText="Auditoría" sortBy="#{aud.audNombre}">
+									<p:column headerText="Auditoría" sortBy="#{aud.audNombre}" filterBy="#{aud.audNombre}" filterMatchMode="contains">
 										<h:outputText value="#{aud.audNombre}" />
 									</p:column>
-									<p:column headerText="Plan" sortBy="#{aud.planAnual.plaNombre}">
+									<p:column headerText="Plan" sortBy="#{aud.planAnual.plaNombre}" filterBy="#{aud.planAnual.plaNombre}" filterMatchMode="contains">
 										<h:outputText value="#{aud.planAnual.plaNombre}" />
 									</p:column>
 									<p:column headerText="Tipo Auditoría"
-										sortBy="#{aud.tipoAuditoria.tpaNombre}">
+										sortBy="#{aud.tipoAuditoria.tpaNombre}" filterBy="#{aud.tipoAuditoria.tpaNombre}" filterMatchMode="contains">
 										<h:outputText value="#{aud.tipoAuditoria.tpaNombre}" />
 									</p:column>
 									<p:column headerText="Fecha Inicio"
@@ -163,7 +171,15 @@
 							<p:tab title="Consulta Hallazgos">
 								
 									Hallazgos
-								
+								<p:panelGrid columns="5" styleClass="ui-panelgrid-blank">
+									<p:outputLabel value="Fecha inicio" />
+									<p:calendar value="#{consMB.fechaInicio}" />
+									
+									<p:outputLabel value="Fecha fin" />
+									<p:calendar value="#{consMB.fechaFin}" />
+									
+									<p:commandButton id="btnFechaHallazgos" value="Buscar" icon="ui-icon ui-icon-check"  process="@this"/>
+								</p:panelGrid>
 								<p:panelGrid columns="4"
 									style="width:90%; margin: auto; text-align:center"
 									styleClass="ui-panelgrid-blank">
@@ -251,7 +267,7 @@
 
 								<p:separator />
 
-								<p:dataTable id="dtHallazgos" widgetVar="wvAuditorias"
+								<p:dataTable id="dtHallazgos" widgetVar="wvHallazgos"
 									reflow="true" var="aud" style="margin-top:20px;"
 									paginator="true" rowKey="#{aud.audId}"
 									filteredValue="#{audMB.filteredAuditorias}"

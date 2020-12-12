@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd">
+
+	<named-query name="consulta.auditorias.institucion">
+		<query>select o from Auditoria o where o.planAnual.institucion.insId = ?1 and o.audFechaInicioProgramado between ?2 and ?3 and o.regActivo = 1</query>
+	</named-query>
+	<named-native-query
+		name="consulta.stat.auditoria.estado"
+		result-class="audigoes.ues.edu.sv.entities.vistas.StatsAuditoriaEstado">
+		<query>
+				select TOTAL,
+				sum(case when fase = "PROGRAMADA" then sub else 0 end) as "PROGRAMADA",
+				sum(case when fase = "PLANIFICACION" then sub else 0 end) as "PLANIFICACION",
+				sum(case when fase = "EJECUCION" then sub else 0 end) as "EJECUCION",
+				sum(case when fase = "INFORME" then sub else 0 end) as  "INFORME",
+				sum(case when fase = "SEGUIMIENTO" then sub else 0 end) as "SEGUIMIENTO",
+				sum(case when fase = "FINALIZADA" then sub else 0 end) as "FINALIZADA"
+				from (
+				select "TOTAL", case when aud_fase = 0 then "PROGRAMADA"
+				when aud_fase = 1 then "PLANIFICACION"
+				when aud_fase = 2 then "EJECUCION" 
+				when aud_fase = 3 then "INFORME"
+				when aud_fase = 4 then "SEGUIMIENTO"
+				when aud_fase = 5 then "FINALIZADA"
+				end as fase, count(aud_id) sub
+				from audigoes.auditoria  a 
+				inner join audigoes.plan_anual b on a.aud_pla_id = b.pla_id
+				where reg_activo = 1 and b.pla_ins_id = ?1 and aud_ and aud_fecha_inicio_programado between ?2 and ?3
+				group by aud_fase )as r
+		</query>
+	</named-native-query>
+</entity-mappings>
