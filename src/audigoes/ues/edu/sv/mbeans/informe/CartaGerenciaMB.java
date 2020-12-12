@@ -193,7 +193,7 @@ public StreamedContent getCarta() {
 			HtmlConverter.convertToPdf(str, os);
 			
 			InputStream is = new ByteArrayInputStream(os.toByteArray());
-			return new DefaultStreamedContent(is, "application/pdf", "convocatoria.pdf");
+			return new DefaultStreamedContent(is, "application/pdf", "cartaGerencia.pdf");
 		} catch (Exception e) {
 			e.printStackTrace();
 			addWarn(new FacesMessage("Advertencia", "Hubo un error al generar el documento de la convocatoria"));
