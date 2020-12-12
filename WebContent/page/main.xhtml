@@ -8,7 +8,311 @@
 	<ui:define name="content">
 		<div class="ui-g">
 			<div class="ui-g-12">
-				<div class="card"></div>
+				<div class="card">
+					<div class="name" align="center">
+						<span class="app-name"> Datos Generales</span>
+					</div>
+					<h:form id="frmConsultas">
+						<p:tabView>
+							<p:tab title="Consulta Auditorías">
+								<p:panelGrid columns="4"
+									style="width:90%; margin: auto; text-align:center"
+									styleClass="ui-panelgrid-blank">
+									<p:panel>
+										<p:panelGrid>
+											<p:row>
+												<p:column>
+													<h:outputLabel value="Estado A"
+														style="font-weight:bold !important; font-size:20px !important; vertical-align: bottom;"></h:outputLabel>
+												</p:column>
+												<p:column rowspan="2" style="text-align:right">
+													<p:graphicImage url="/resources/images/icons/icon.png"
+														style="vertical-align: middle; align:right" height="80"></p:graphicImage>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column>
+													<h:outputLabel value="##"
+														style="font-weight:bold !important; font-size:26px !important; vertical-align: top;"></h:outputLabel>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:panel>
+									<p:panel>
+										<p:panelGrid>
+											<p:row>
+												<p:column>
+													<h:outputLabel value="Estado A"
+														style="font-weight:bold !important; font-size:20px !important; vertical-align: bottom;"></h:outputLabel>
+												</p:column>
+												<p:column rowspan="2" style="text-align:right">
+													<p:graphicImage url="/resources/images/icons/icon.png"
+														style="vertical-align: middle; align:right" height="80"></p:graphicImage>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column>
+													<h:outputLabel value="##"
+														style="font-weight:bold !important; font-size:26px !important; vertical-align: top;"></h:outputLabel>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:panel>
+									<p:panel>
+										<p:panelGrid>
+											<p:row>
+												<p:column>
+													<h:outputLabel value="Estado A"
+														style="font-weight:bold !important; font-size:20px !important; vertical-align: bottom;"></h:outputLabel>
+												</p:column>
+												<p:column rowspan="2" style="text-align:right">
+													<p:graphicImage url="/resources/images/icons/icon.png"
+														style="vertical-align: middle; align:right" height="80"></p:graphicImage>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column>
+													<h:outputLabel value="##"
+														style="font-weight:bold !important; font-size:26px !important; vertical-align: top;"></h:outputLabel>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:panel>
+									<p:panel>
+										<p:panelGrid>
+											<p:row>
+												<p:column>
+													<h:outputLabel value="Estado A"
+														style="font-weight:bold !important; font-size:20px !important; vertical-align: bottom;"></h:outputLabel>
+												</p:column>
+												<p:column rowspan="2" style="text-align:right">
+													<p:graphicImage url="/resources/images/icons/icon.png"
+														style="vertical-align: middle; align:right" height="80"></p:graphicImage>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column>
+													<h:outputLabel value="##"
+														style="font-weight:bold !important; font-size:26px !important; vertical-align: top;"></h:outputLabel>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:panel>
+								</p:panelGrid>
+
+								<p:separator />
+
+								<p:dataTable id="dtAuditorias" widgetVar="wvAuditorias"
+									reflow="true" var="aud" style="margin-top:20px;"
+									paginator="true" rowKey="#{aud.audId}"
+									filteredValue="#{audMB.filteredAuditorias}"
+									selectionMode="single" selection="#{audMB.regSelected}"
+									globalFilterFunction="#{audMB.globalFilterFunction}"
+									rowsPerPageLabel="5,10,15,20,25" rows="10" sortMode="multiple"
+									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+
+									<f:facet name="header">
+										Listado de Auditorías
+									</f:facet>
+
+									<p:column headerText="N°" sortBy="#{aud.audCorrelativo}"
+										width="">
+										<h:outputText value="#{aud.audCorrelativo}" />
+									</p:column>
+									<p:column headerText="Año" sortBy="#{aud.audAnio}">
+										<h:outputText value="#{aud.audAnio}" />
+									</p:column>
+									<p:column headerText="Auditoría" sortBy="#{aud.audNombre}">
+										<h:outputText value="#{aud.audNombre}" />
+									</p:column>
+									<p:column headerText="Plan" sortBy="#{aud.planAnual.plaNombre}">
+										<h:outputText value="#{aud.planAnual.plaNombre}" />
+									</p:column>
+									<p:column headerText="Tipo Auditoría"
+										sortBy="#{aud.tipoAuditoria.tpaNombre}">
+										<h:outputText value="#{aud.tipoAuditoria.tpaNombre}" />
+									</p:column>
+									<p:column headerText="Fecha Inicio"
+										sortBy="#{aud.audFechaInicioProgramado}">
+										<h:outputText value="#{aud.audFechaInicioProgramado}">
+											<f:convertDateTime pattern="dd-MM-yyyy" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Fecha Inicio"
+										sortBy="#{aud.audFechaFinProgramado}">
+										<h:outputText value="#{aud.audFechaInicioProgramado}">
+											<f:convertDateTime pattern="dd-MM-yyyy" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Fase" filterBy="#{aud.audFase}"
+										filterMatchMode="exact" style="text-align:center; width:15%">
+										<f:facet name="filter">
+											<p:selectOneMenu onchange="PF('wvAuditorias').filter();">
+												<f:selectItem itemLabel="-- Seleccione --"
+													itemValue="#{null}" noSelectionOption="true" />
+												<f:selectItems value="#{audMB.faseAuditoriaList}" />
+											</p:selectOneMenu>
+										</f:facet>
+										<h:outputText value="#{aud.audFase}"
+											converter="faseAuditoriaConverter" />
+									</p:column>
+								</p:dataTable>
+
+							</p:tab>
+							<p:tab title="Consulta Hallazgos">
+								
+									Hallazgos
+								
+								<p:panelGrid columns="4"
+									style="width:90%; margin: auto; text-align:center"
+									styleClass="ui-panelgrid-blank">
+									<p:panel>
+										<p:panelGrid>
+											<p:row>
+												<p:column>
+													<h:outputLabel value="Estado A"
+														style="font-weight:bold !important; font-size:20px !important; vertical-align: bottom;"></h:outputLabel>
+												</p:column>
+												<p:column rowspan="2" style="text-align:right">
+													<p:graphicImage url="/resources/images/icons/icon.png"
+														style="vertical-align: middle; align:right" height="80"></p:graphicImage>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column>
+													<h:outputLabel value="##"
+														style="font-weight:bold !important; font-size:26px !important; vertical-align: top;"></h:outputLabel>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:panel>
+									<p:panel>
+										<p:panelGrid>
+											<p:row>
+												<p:column>
+													<h:outputLabel value="Estado A"
+														style="font-weight:bold !important; font-size:20px !important; vertical-align: bottom;"></h:outputLabel>
+												</p:column>
+												<p:column rowspan="2" style="text-align:right">
+													<p:graphicImage url="/resources/images/icons/icon.png"
+														style="vertical-align: middle; align:right" height="80"></p:graphicImage>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column>
+													<h:outputLabel value="##"
+														style="font-weight:bold !important; font-size:26px !important; vertical-align: top;"></h:outputLabel>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:panel>
+									<p:panel>
+										<p:panelGrid>
+											<p:row>
+												<p:column>
+													<h:outputLabel value="Estado A"
+														style="font-weight:bold !important; font-size:20px !important; vertical-align: bottom;"></h:outputLabel>
+												</p:column>
+												<p:column rowspan="2" style="text-align:right">
+													<p:graphicImage url="/resources/images/icons/icon.png"
+														style="vertical-align: middle; align:right" height="80"></p:graphicImage>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column>
+													<h:outputLabel value="##"
+														style="font-weight:bold !important; font-size:26px !important; vertical-align: top;"></h:outputLabel>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:panel>
+									<p:panel>
+										<p:panelGrid>
+											<p:row>
+												<p:column>
+													<h:outputLabel value="Estado A"
+														style="font-weight:bold !important; font-size:20px !important; vertical-align: bottom;"></h:outputLabel>
+												</p:column>
+												<p:column rowspan="2" style="text-align:right">
+													<p:graphicImage url="/resources/images/icons/icon.png"
+														style="vertical-align: middle; align:right" height="80"></p:graphicImage>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column>
+													<h:outputLabel value="##"
+														style="font-weight:bold !important; font-size:26px !important; vertical-align: top;"></h:outputLabel>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:panel>
+								</p:panelGrid>
+
+								<p:separator />
+
+								<p:dataTable id="dtHallazgos" widgetVar="wvAuditorias"
+									reflow="true" var="aud" style="margin-top:20px;"
+									paginator="true" rowKey="#{aud.audId}"
+									filteredValue="#{audMB.filteredAuditorias}"
+									selectionMode="single" selection="#{audMB.regSelected}"
+									globalFilterFunction="#{audMB.globalFilterFunction}"
+									rowsPerPageLabel="5,10,15,20,25" rows="10" sortMode="multiple"
+									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+
+									<f:facet name="header">
+										Listado de Hallazgos
+									</f:facet>
+
+									<p:column headerText="N°" sortBy="#{aud.audCorrelativo}"
+										width="">
+										<h:outputText value="#{aud.audCorrelativo}" />
+									</p:column>
+									<p:column headerText="Año" sortBy="#{aud.audAnio}">
+										<h:outputText value="#{aud.audAnio}" />
+									</p:column>
+									<p:column headerText="Auditoría" sortBy="#{aud.audNombre}">
+										<h:outputText value="#{aud.audNombre}" />
+									</p:column>
+									<p:column headerText="Plan" sortBy="#{aud.planAnual.plaNombre}">
+										<h:outputText value="#{aud.planAnual.plaNombre}" />
+									</p:column>
+									<p:column headerText="Tipo Auditoría"
+										sortBy="#{aud.tipoAuditoria.tpaNombre}">
+										<h:outputText value="#{aud.tipoAuditoria.tpaNombre}" />
+									</p:column>
+									<p:column headerText="Fecha Inicio"
+										sortBy="#{aud.audFechaInicioProgramado}">
+										<h:outputText value="#{aud.audFechaInicioProgramado}">
+											<f:convertDateTime pattern="dd-MM-yyyy" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Fecha Inicio"
+										sortBy="#{aud.audFechaFinProgramado}">
+										<h:outputText value="#{aud.audFechaInicioProgramado}">
+											<f:convertDateTime pattern="dd-MM-yyyy" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Fase" filterBy="#{aud.audFase}"
+										filterMatchMode="exact" style="text-align:center; width:15%">
+										<f:facet name="filter">
+											<p:selectOneMenu onchange="PF('wvAuditorias').filter();">
+												<f:selectItem itemLabel="-- Seleccione --"
+													itemValue="#{null}" noSelectionOption="true" />
+												<f:selectItems value="#{audMB.faseAuditoriaList}" />
+											</p:selectOneMenu>
+										</f:facet>
+										<h:outputText value="#{aud.audFase}"
+											converter="faseAuditoriaConverter" />
+									</p:column>
+								</p:dataTable>
+
+							</p:tab>
+						</p:tabView>
+
+					</h:form>
+				</div>
 			</div>
 		</div>
 	</ui:define>

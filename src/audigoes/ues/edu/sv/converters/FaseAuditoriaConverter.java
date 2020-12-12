@@ -27,6 +27,8 @@ public class FaseAuditoriaConverter implements Converter {
 				valor = "FASE INFORME";
 			} else if (valor.equals("4")) {
 				valor = "FASE SEGUIMIENTO";
+			} else if (valor.equals("5")) {
+				valor = "FINALIZADA";
 			} else {
 				valor = "---";
 			}
