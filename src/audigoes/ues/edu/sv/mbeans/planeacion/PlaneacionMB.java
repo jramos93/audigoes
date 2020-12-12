@@ -309,36 +309,43 @@ public class PlaneacionMB extends AudigoesController implements Serializable {
 				
 				str=str+"<div style= 'page-break-after:always'></div>";
 						
-				str=str+"<h3 style='text-align:justify'> I. I. Introduccion  </h3>";
-				str=str+"<div>"+getRegistro().getPlaIntroduccion();
+				str=str+"<h3 style='text-align:justify'> I. Introduccion  </h3>";
+				str=str+"<div style='text-align:justify'>"+getRegistro().getPlaIntroduccion();
 				str=str + "</div>";
 				
 				str=str+"<h3 style='text-align:justify'> II. Vision </h3>";
-				str=str+"<div>"+getRegistro().getPlaVision();
+				str=str+"<div style='text-align:justify'>"+getRegistro().getPlaVision();
 				str=str + "</div>";
 				
 				str=str+"<h3 style='text-align:justify'> III. Mision  </h3>";
-				str=str+"<div>"+getRegistro().getPlaMision();
+				str=str+"<div style='text-align:justify'>"+getRegistro().getPlaMision();
 				str=str + "</div>";
 				
 				str=str+"<h3 style='text-align:justify'> IV. Principios y Valores</h3>";
-				str=str+"<div>"+getRegistro().getPlaPrincipiosValores();
+				str=str+"<div style='text-align:justify'>"+getRegistro().getPlaPrincipiosValores();
 				str=str + "</div>";
 				
 				str=str+"<h3 style='text-align:justify'>V. Objetivos generales y especificos</h3>";
-				str=str+"<div>"+getRegistro().getPlaObjetivos();
+				str=str+"<div style='text-align:justify'>"+getRegistro().getPlaObjetivos();
 				str=str + "</div>";
 				
 				str=str+"<h3 style='text-align:justify'> VI. Riesgos  </h3>";
-				str=str+"<div>"+getRegistro().getPlaRiesgosConsiderados();
+				str=str+"<div style='text-align:justify'>"+getRegistro().getPlaRiesgosConsiderados();
 				str=str + "</div>";
 				
 				str=str+"<h3 style='text-align:justify'> VII. Programacion de Auditorias </h3>";
-				str=str+"<div><table>"+getAuditoriasPlanList();
-				str=str + "</table></div>";
+				if (getAudMB().getListado() != null) {
+					for(Auditoria item:getAudMB().getListado()) {
+						str=str+"<div style='text-align:justify'>"+item.getAudNombre();
+						str=str + "</div>";
+					}
+				} else {
+					str=str+"<div>";
+					str=str + "</div>";
+				}
 				
 				str=str+"<h3 style='text-align:justify'> VIII. Anexos</h3>";
-				str=str+"<div>";
+				str=str+"<div style='text-align:justify'>";
 				str=str + "</div>";
 				
 				str=str+"<div style= 'page-break-after:always'></div>";

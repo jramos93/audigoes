@@ -1,6 +1,9 @@
 package audigoes.ues.edu.sv.mbean.planificacion;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -12,6 +15,12 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.mail.Address;
+
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+
+import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.io.source.ByteArrayOutputStream;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
@@ -35,7 +44,7 @@ public class MemoPlanificacionMB extends AudigoesController implements Serializa
 	private String textoCorreo = "";
 	private String textoCorreoObs = "";
 	private String textoCorreoFin = "";
-
+	private StreamedContent memorando;
 	public MemoPlanificacionMB() {
 		super(new Memorando());
 	}
@@ -73,6 +82,7 @@ public class MemoPlanificacionMB extends AudigoesController implements Serializa
 				getRegistro().setRegActivo(1);
 				getRegistro().setUsuario1(getObjAppsSession().getUsuario());
 				getRegistro().setMemFechaElaboro(getToday());
+				getRegistro().setMemEstado(1);
 				audigoesLocal.insert(getRegistro());
 			}
 		} catch (Exception e) {
@@ -345,5 +355,63 @@ public class MemoPlanificacionMB extends AudigoesController implements Serializa
 
 	public void setTextoCorreoFin(String textoCorreoFin) {
 		this.textoCorreoFin = textoCorreoFin;
+	}
+	
+	
+	
+	@SuppressWarnings("deprecation")
+	public StreamedContent getMemorando() {
+		
+			try {
+				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+						
+				ByteArrayOutputStream os = new ByteArrayOutputStream();
+				
+				// Para definir los encabezados de pagina y los pie de pagina
+				String str = "<html><head>"
+						+ "<style>#header{position: running(header);} @page {margin: 70px 70px 100px;@bottom-right @top-center {content: element(header);} }</style>"
+						+ "</head><body style='width:500px; font-size:smaller;'>";
+				
+				// Defino el texto del encabezado de pagina con el id header que es que se pone arriba running(header)
+				str=str+"<div style='margin-top:20px;'> "
+						+ "<strong><br><strong><h2 style='text-align:center'>" +getRegistro().getAuditoria().getPlanAnual().getInstitucion().getInsNombre();
+				str=str + "</strong></div></h2>"
+						+ "<br><br><br><br><br><br><br> <br><br><br><br><br><br>";
+				// Concateno el texto a agregar
+				str=str+"<h1 style='text-align:center'> Memorando de Planificacion ";
+				str=str+"<h1 style='text-align:center'> " +getRegistro().getAuditoria().getAudNombre();
+				str=str+"</h1><h3 style='text-align:center'>PERIODO DEL " +formatter.format(getRegistro().getAuditoria().getAudFechaInicioProgramado());
+				str=str+"   AL "+formatter.format(getRegistro().getAuditoria().getAudFechaFinProgramado());
+				str=str+ "</h3><br>";
+			
+				str=str+"<div style= 'page-break-after:always'></div>";
+				
+				str=str+"<div style='margin-top:20px;'> "
+						+ "<h3>CONTENIDO</h3>";
+				str=str+"<h3 style='text-align:justify'>"+getRegistro().getMemIndice();
+				str=str+"</h3>";
+				
+				str=str+"<div style= 'page-break-after:always'></div>";
+				
+				str=str+"<div style='text-align:justify'>" +getRegistro().getMemContenido();
+				str=str + "</strong></div>"
+						+ "<br>";
+				
+				str=str+"<div style= 'page-break-after:always'></div>";
+				
+				HtmlConverter.convertToPdf(str, os);
+				
+				InputStream is = new ByteArrayInputStream(os.toByteArray());
+				return new DefaultStreamedContent(is, "application/pdf", "memorando.pdf");
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				addWarn(new FacesMessage("Advertencia", "Hubo un error al generar el memorando"));
+			}
+			return memorando;
+		}
+	
+	public void setMemorando(StreamedContent memorando) {
+		this.memorando = memorando;
 	}
 }
