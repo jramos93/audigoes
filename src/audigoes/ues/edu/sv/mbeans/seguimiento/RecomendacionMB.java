@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
+import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.seguimiento.Recomendacion;
 
@@ -24,7 +26,8 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 	private List<Recomendacion> filteredRecomendaciones;
 
 	private Auditoria auditoria;
-	
+	private CedulaNota cedula;
+
 	@ManagedProperty(value = "#{comMB}")
 	private ComentarioMB comMB = new ComentarioMB();
 
@@ -50,7 +53,19 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 			e.printStackTrace();
 		}
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	public void fillRecomendaciones() {
+		try {
+
+			setListado((List<Recomendacion>) audigoesLocal.findByNamedQuery(Recomendacion.class,
+					"recomedaciones.by.nota", new Object[] { cedula.getCedId(), auditoria.getAudId() }));
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage("Advertencia", "No se pudo obtener las auditorias"));
+		}
+	}
+
 	public void mostrarComentarios() {
 		comMB.setRecomendacion(getRegistro());
 		comMB.obtenerComentario();
@@ -61,12 +76,10 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 		if (filterText == null || filterText.equals("")) {
 			return true;
 		}
-		int filterInt = getInteger(filterText);
 
-		Auditoria auditoria = (Auditoria) value;
-		return auditoria.getAudNombre().toLowerCase().contains(filterText)
-				|| auditoria.getAudDescripcion().toLowerCase().contains(filterText)
-				|| auditoria.getAudId() == filterInt;
+		Recomendacion rec = (Recomendacion) value;
+		return rec.getRecRecomendacion().toLowerCase().contains(filterText)
+				|| rec.getRecTitulo().toLowerCase().contains(filterText);
 	}
 
 	private int getInteger(String string) {
@@ -86,6 +99,14 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 	public void afterSaveNew() {
 		getListado().add(getRegistro());
 		super.afterSaveNew();
+	}
+	
+	@Override
+	public boolean beforeSaveNew() {
+		getRegistro().setAuditoria(auditoria);
+		getRegistro().setCedulaNota(cedula);
+		getRegistro().setRecEstado(1);
+		return super.beforeSaveNew();
 	}
 
 	/* GETS y SETS */
@@ -123,6 +144,14 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 
 	public void setComMB(ComentarioMB comMB) {
 		this.comMB = comMB;
+	}
+
+	public CedulaNota getCedula() {
+		return cedula;
+	}
+
+	public void setCedula(CedulaNota cedula) {
+		this.cedula = cedula;
 	}
 
 }

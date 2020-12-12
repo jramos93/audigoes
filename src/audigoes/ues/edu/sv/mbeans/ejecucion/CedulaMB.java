@@ -19,7 +19,7 @@ import audigoes.ues.edu.sv.entities.ejecucion.ProgramaEjecucion;
 import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planeacion.AuditoriaResponsable;
-import audigoes.ues.edu.sv.mbean.planificacion.ProcedimientosEjeMB;
+import audigoes.ues.edu.sv.mbeans.seguimiento.RecomendacionMB;
 import audigoes.ues.edu.sv.util.SendMailAttach;
 
 @ManagedBean(name = "ceduMB")
@@ -37,9 +37,10 @@ public class CedulaMB extends AudigoesController implements Serializable {
 	private String textoCorreoFin = "";
 
 	private List<ProgramaEjecucion> programasList;
+	
 
-	@ManagedProperty(value = "#{proejeMB}")
-	private ProcedimientosEjeMB proejeMB = new ProcedimientosEjeMB();
+	@ManagedProperty(value = "#{recMB}")
+	private RecomendacionMB recMB = new RecomendacionMB();
 
 	public CedulaMB() {
 		super(new CedulaNota());
@@ -111,6 +112,15 @@ public class CedulaMB extends AudigoesController implements Serializable {
 				|| ced.getCedCondicion().toLowerCase().contains(filterText)
 				|| ced.getCedCriterio().toLowerCase().contains(filterText)
 				|| ced.getCedCausa().toLowerCase().contains(filterText);
+	}
+	
+	@Override
+	public void onEditSelected() {
+		// TODO Auto-generated method stub
+		super.onEditSelected();
+		recMB.setAuditoria(auditoria);
+		recMB.setCedula(getRegistro());
+		recMB.fillRecomendaciones();
 	}
 
 	@Override
@@ -322,14 +332,6 @@ public class CedulaMB extends AudigoesController implements Serializable {
 		this.auditoria = auditoria;
 	}
 
-	public ProcedimientosEjeMB getProejeMB() {
-		return proejeMB;
-	}
-
-	public void setProejeMB(ProcedimientosEjeMB proejeMB) {
-		this.proejeMB = proejeMB;
-	}
-
 	public String getTextoCorreo() {
 		return textoCorreo;
 	}
@@ -360,6 +362,14 @@ public class CedulaMB extends AudigoesController implements Serializable {
 
 	public void setProgramasList(List<ProgramaEjecucion> programasList) {
 		this.programasList = programasList;
+	}
+
+	public RecomendacionMB getRecMB() {
+		return recMB;
+	}
+
+	public void setRecMB(RecomendacionMB recMB) {
+		this.recMB = recMB;
 	}
 
 }

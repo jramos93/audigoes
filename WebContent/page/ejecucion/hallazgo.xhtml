@@ -25,54 +25,145 @@
 			<div class="name" align="center" style="margin-top: 100px;">
 				<span class="app-name">Desarrollo de Hallazgo </span>
 			</div>
-			<div class="ui-fluid p-formgrid p-grid">
-				<p:tabView id="tview">
-					<p:tab title="Detalle del Hallazzgo">
-						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
-							styleClass="ui-panelgrid-blank form-group form-elements">
+			<p:tabView id="tview">
+				<p:tab title="Detalle del Hallazgo">
+					<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+						styleClass="ui-panelgrid-blank form-group form-elements">
 
-							<p:outputLabel value="Título: " style="font-weight:bold;" />
-							<p:inputTextarea value="#{ceduMB.registro.cedTitulo}" rows="2" />
+						<p:outputLabel value="Título: " style="font-weight:bold;" />
+						<p:inputTextarea value="#{ceduMB.registro.cedTitulo}" rows="2" />
 
-							<p:outputLabel value="Condición " style="font-weight:bold;" />
-							<p:inputTextarea value="#{ceduMB.registro.cedCondicion}" rows="4" />
+						<p:outputLabel value="Condición " style="font-weight:bold;" />
+						<p:inputTextarea value="#{ceduMB.registro.cedCondicion}" rows="4" />
 
-							<p:outputLabel value="Criterio: " style="font-weight:bold;" />
-							<p:inputTextarea value="#{ceduMB.registro.cedCriterio}" rows="10" />
+						<p:outputLabel value="Criterio: " style="font-weight:bold;" />
+						<p:inputTextarea value="#{ceduMB.registro.cedCriterio}" rows="10" />
 
-							<p:outputLabel value="Causa: " style="font-weight:bold;" />
-							<p:inputTextarea value="#{ceduMB.registro.cedCausa}" rows="4" />
+						<p:outputLabel value="Causa: " style="font-weight:bold;" />
+						<p:inputTextarea value="#{ceduMB.registro.cedCausa}" rows="4" />
 
-							<p:outputLabel value="Efecto: " style="font-weight:bold;" />
-							<p:inputTextarea value="#{ceduMB.registro.cedEfecto}" rows="4" />
+						<p:outputLabel value="Efecto: " style="font-weight:bold;" />
+						<p:inputTextarea value="#{ceduMB.registro.cedEfecto}" rows="4" />
 
-						</p:panelGrid>
+					</p:panelGrid>
 
-					</p:tab>
-					<p:tab title="Recomendaciones">
+				</p:tab>
+				<p:tab title="Recomendaciones">
+					<p:dataTable var="r" value="#{recMB.listado}" rowIndexVar="index"
+						widgetVar="wvReco" reflow="true" id="dtReco"
+						style="margin-top:20px;" paginator="true"
+						filteredValue="#{recMB.filteredRecomendaciones}"
+						globalFilterFunction="#{recMB.globalFilterFunction}"
+						selection="#{recMB.regSelected}" selectionMode="single"
+						paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+						rowKey="#{r.recId}">
 
-					</p:tab>
+						<p:ajax event="rowSelect" listener="#{recMB.onRowSelect}"
+							update=":frmHallazgo:tview:dtReco:tMenu" />
 
-					<p:tab title="Comentarios de la Unidad y Auditoría">
-					</p:tab>
+						<f:facet name="header">
+							<p:toolbar id="tMenu">
+								<p:toolbarGroup>
+									<p:commandButton value="Agregar" icon="pi pi-plus"
+										oncomplete="PF('wvRecomendacion').show();"
+										rendered="#{ceduMB.status eq 'EDIT'}"
+										update=":frmRecomendacion" actionListener="#{recMB.onNew}">
+									</p:commandButton>
 
-					<p:tab title="Observaciones de Coordinación">
+									<p:commandButton value="Editar" icon="pi pi-pencil"
+										rendered="#{recMB.registro.selected}"
+										update=":frmRecomendacion"
+										oncomplete="PF('wvRecomendacion').show();"
+										actionListener="#{recMB.onEditSelected}">
+									</p:commandButton>
+								</p:toolbarGroup>
+							</p:toolbar>
+						</f:facet>
+						<f:facet name="paginatorTopRight">
+							<p:outputPanel>
+								<h:outputText value="Búsqueda global: " />
+								<p:inputText id="globalFilter" onkeyup="PF('wvReco').filter();"
+									style="width:150px" placeholder="Ingresa una palabra" />
+							</p:outputPanel>
+						</f:facet>
 
-					</p:tab>
-				</p:tabView>
+						<p:column headerText="No." style="text-align:center;">
+							<h:outputText value="#{index+1}"></h:outputText>
+						</p:column>
 
-				<p:panelGrid columns="2"
-					columnClasses="ui-g-9 ui-lg-10,ui-g-3 ui-md-4 ui-lg-2"
-					layout="grid"
-					styleClass="ui-panelgrid-blank form-group form-elements">
-					<p:column></p:column>
-					<p:commandButton value="Guardar" icon="fa fa-check"
-						actionListener="#{ceduMB.onSave}" update=":frmHallazgo" />
-				</p:panelGrid>
-			</div>
+						<p:column headerText="Título">
+							<h:outputText value="#{r.recTitulo}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Situación Encontrada">
+							<h:outputText value="#{r.recSituacion}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Recomendación">
+							<h:outputText value="#{r.recRecomendacion}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Estado" style="text-align:center;">
+							<h:outputText value="#{r.recEstado}"
+								converter="estadoRecomendacion">
+							</h:outputText>
+						</p:column>
+
+					</p:dataTable>
+				</p:tab>
+
+				<p:tab title="Comentarios de la Unidad y Auditoría">
+				</p:tab>
+
+				<p:tab title="Observaciones de Coordinación">
+
+				</p:tab>
+			</p:tabView>
+
+			<p:panelGrid columns="2"
+				columnClasses="ui-g-9 ui-lg-10,ui-g-3 ui-md-4 ui-lg-2" layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+				<p:column></p:column>
+				<p:commandButton value="Guardar" icon="fa fa-check"
+					actionListener="#{ceduMB.onSave}" update=":frmHallazgo" />
+			</p:panelGrid>
 
 		</p:panel>
 
 	</h:form>
+
+
+	<p:dialog widgetVar="wvRecomendacion" modal="true" showEffect="fade"
+		header="Gestión Recomendaciones" width="480" closable="true"
+		closeOnEscape="true" responsive="true">
+		<h:form id="frmRecomendacion">
+			<p:panelGrid columns="1" columnClasses="ui-lg-12" layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+
+				<p:outputLabel value="Título: " style="font-weight:bold;" />
+				<p:inputTextarea value="#{recMB.registro.recTitulo}" rows="2"
+					style="width:100%;" />
+
+				<p:outputLabel value="Situación encontrada: "
+					style="font-weight:bold;" />
+				<p:inputTextarea value="#{recMB.registro.recSituacion}" rows="4"
+					style="width:100%;" />
+
+				<p:outputLabel value="Recomendación " style="font-weight:bold;" />
+				<p:inputTextarea value="#{recMB.registro.recRecomendacion}" rows="4"
+					style="width:100%;" />
+
+				<p:commandButton value="Guardar" icon="fa fa-check"
+					oncomplete="PF('wvRecomendacion').hide();"
+					actionListener="#{recMB.onSave}"
+					update=":frmRecomendacion, :frmHallazgo">
+					<p:confirm header="Confirmación" message="¿Guardar?"
+						icon="pi pi-info"></p:confirm>
+				</p:commandButton>
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
 
 </ui:composition>
