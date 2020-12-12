@@ -12,7 +12,8 @@
 					<h:form id="menuform">
 						<pv:menu id="pvMenu">
 							<p:menuitem value="Inicio" url="/audigoes/page/main.xhtml" />
-							<p:submenu label="Administración" icon="pi pi-file">
+							<p:submenu label="Administración" icon="pi pi-file"
+								rendered="#{loginMB.objAppsSession.usuario.usuRol!=4}">
 								<p:menuitem value="Gestion de Roles"
 									url="/audigoes/page/administracion/roles.xhtml" />
 								<p:separator />
@@ -46,15 +47,24 @@
 								</p:submenu>
 							</p:submenu>
 							<p:menuitem value="Planeación" icon="pi pi-calendar-plus"
-								url="/audigoes/page/planeacion/plan.xhtml" />
+								url="/audigoes/page/planeacion/plan.xhtml"
+								rendered="#{loginMB.objAppsSession.usuario.usuRol!=4}" />
 							<p:menuitem value="Auditorías" icon="pi pi-list"
+								rendered="#{loginMB.objAppsSession.usuario.usuRol!=4}"
 								url="/audigoes/page/planeacion/auditoria.xhtml">
 							</p:menuitem>
 
 
 							<p:menuitem label="Consultas" value="Consultas"
 								icon="pi pi-chart-line"
+								rendered="#{loginMB.objAppsSession.usuario.usuRol!=4}"
 								url="/audigoes/page/consultas/consultas.xhtml">
+							</p:menuitem>
+
+							<p:menuitem value="Dar Respuesta a Hallazgos"
+								icon="pi pi-comments"
+								rendered="#{loginMB.objAppsSession.usuario.usuRol==4}"
+								url="/audigoes/page/usuario/lista-hallazgos.xhtml">
 							</p:menuitem>
 
 						</pv:menu>

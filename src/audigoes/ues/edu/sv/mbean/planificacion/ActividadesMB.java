@@ -234,6 +234,7 @@ public class ActividadesMB extends AudigoesController implements Serializable {
 	@Override
 	public boolean beforeSaveNew() {
 		getRegistro().setAuditoria(auditoria);
+		getRegistro().setActTipo(1);
 		return super.beforeSaveNew();
 	}
 

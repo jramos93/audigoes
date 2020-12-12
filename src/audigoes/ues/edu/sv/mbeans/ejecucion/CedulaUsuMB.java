@@ -23,9 +23,9 @@ import audigoes.ues.edu.sv.mbeans.administracion.ArchivoMB;
 import audigoes.ues.edu.sv.mbeans.seguimiento.RecomendacionMB;
 import audigoes.ues.edu.sv.util.SendMailAttach;
 
-@ManagedBean(name = "ceduMB")
+@ManagedBean(name = "ceduUsuMB")
 @ViewScoped
-public class CedulaMB extends AudigoesController implements Serializable {
+public class CedulaUsuMB extends AudigoesController implements Serializable {
 	/**
 	 * 
 	 */
@@ -49,7 +49,7 @@ public class CedulaMB extends AudigoesController implements Serializable {
 	@ManagedProperty(value = "#{arcMB}")
 	private ArchivoMB arcMB = new ArchivoMB();
 
-	public CedulaMB() {
+	public CedulaUsuMB() {
 		super(new CedulaNota());
 	}
 
@@ -57,6 +57,7 @@ public class CedulaMB extends AudigoesController implements Serializable {
 	public void init() {
 		try {
 			super.init();
+			fillNotas();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -99,8 +100,8 @@ public class CedulaMB extends AudigoesController implements Serializable {
 			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 			setAuditoria(((Auditoria) sessionMap.get("auditoria")));
 
-			setListado((List<CedulaNota>) audigoesLocal.findByNamedQuery(CedulaNota.class, "notas.by.auditoria",
-					new Object[] { auditoria.getAudId() }));
+			setListado((List<CedulaNota>) audigoesLocal.findByNamedQuery(CedulaNota.class, "notas.by.usuario",
+					new Object[] {}));
 		} catch (Exception e) {
 			e.printStackTrace();
 			addWarn(new FacesMessage("Advertencia", "No se pudo obtener las auditorias"));

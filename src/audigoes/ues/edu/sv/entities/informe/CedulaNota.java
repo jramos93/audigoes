@@ -91,6 +91,14 @@ public class CedulaNota extends SuperEntity implements Serializable {
 
 	@Column(name="reg_activo")
 	private int regActivo;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="ced_fecha_plazo")
+	private Date cedFechaPlazo;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="ced_fecha_comunicacion")
+	private Date cedFechaComunicacion;
 
 	@Column(name="usu_crea")
 	private String usuCrea;
@@ -363,6 +371,22 @@ public class CedulaNota extends SuperEntity implements Serializable {
 
 	public void setCedValorizacion(int cedValorizacion) {
 		this.cedValorizacion = cedValorizacion;
+	}
+
+	public Date getCedFechaPlazo() {
+		return cedFechaPlazo;
+	}
+
+	public void setCedFechaPlazo(Date cedFechaPlazo) {
+		this.cedFechaPlazo = cedFechaPlazo;
+	}
+
+	public Date getCedFechaComunicacion() {
+		return cedFechaComunicacion;
+	}
+
+	public void setCedFechaComunicacion(Date cedFechaComunicacion) {
+		this.cedFechaComunicacion = cedFechaComunicacion;
 	}
 
 	@Override

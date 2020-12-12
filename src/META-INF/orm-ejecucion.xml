@@ -8,6 +8,10 @@
 		<query>select o from CedulaNota o where o.auditoria.audId=?1 and o.regActivo=1</query>
 	</named-query>
 	
+	<named-query name="notas.by.usuario">
+		<query>select o from CedulaNota o where o.regActivo=1</query>
+	</named-query>
+	
 	<named-query name="recomedaciones.by.nota">
 		<query>select o from Recomendacion o where o.cedulaNota.cedId=?1 and o.auditoria.audId=?2 and o.regActivo=1</query>
 	</named-query>
