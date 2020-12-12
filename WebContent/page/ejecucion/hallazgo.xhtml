@@ -27,23 +27,28 @@
 			</div>
 			<p:tabView id="tview">
 				<p:tab title="Detalle del Hallazgo">
-					<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+					<p:panelGrid columns="1" columnClasses="ui-lg-12" layout="grid"
 						styleClass="ui-panelgrid-blank form-group form-elements">
 
 						<p:outputLabel value="Título: " style="font-weight:bold;" />
-						<p:inputTextarea value="#{ceduMB.registro.cedTitulo}" rows="2" />
+						<p:inputTextarea value="#{ceduMB.registro.cedTitulo}" rows="2"
+							style="width:100%;" />
 
 						<p:outputLabel value="Condición " style="font-weight:bold;" />
-						<p:inputTextarea value="#{ceduMB.registro.cedCondicion}" rows="4" />
+						<p:inputTextarea value="#{ceduMB.registro.cedCondicion}" rows="4"
+							style="width:100%;" />
 
 						<p:outputLabel value="Criterio: " style="font-weight:bold;" />
-						<p:inputTextarea value="#{ceduMB.registro.cedCriterio}" rows="10" />
+						<p:inputTextarea value="#{ceduMB.registro.cedCriterio}" rows="10"
+							style="width:100%;" />
 
 						<p:outputLabel value="Causa: " style="font-weight:bold;" />
-						<p:inputTextarea value="#{ceduMB.registro.cedCausa}" rows="4" />
+						<p:inputTextarea value="#{ceduMB.registro.cedCausa}" rows="4"
+							style="width:100%;" />
 
 						<p:outputLabel value="Efecto: " style="font-weight:bold;" />
-						<p:inputTextarea value="#{ceduMB.registro.cedEfecto}" rows="4" />
+						<p:inputTextarea value="#{ceduMB.registro.cedEfecto}" rows="4"
+							style="width:100%;" />
 
 					</p:panelGrid>
 
@@ -80,6 +85,7 @@
 									</p:commandButton>
 								</p:toolbarGroup>
 							</p:toolbar>
+							Listado de recomendaciones de auditoría
 						</f:facet>
 						<f:facet name="paginatorTopRight">
 							<p:outputPanel>

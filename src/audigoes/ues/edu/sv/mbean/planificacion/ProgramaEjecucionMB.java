@@ -284,6 +284,7 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 			getRegistro().setRegActivo(1);
 			getRegistro().setUsuario1(getObjAppsSession().getUsuario());
 			getRegistro().setPreFechaElaboro(getToday());
+			getRegistro().setPreEstado(1);
 			audigoesLocal.insert(getRegistro());
 
 			proejeMB.setPrograma(getRegistro());

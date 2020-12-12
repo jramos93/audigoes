@@ -73,6 +73,7 @@ public class ProgramaPlanificacionMB extends AudigoesController implements Seria
 				getRegistro().setRegActivo(1);
 				getRegistro().setUsuario1(getObjAppsSession().getUsuario());
 				getRegistro().setPrpFechaElaboro(getToday());
+				getRegistro().setPrpEstado(1);
 				audigoesLocal.insert(getRegistro());
 
 				proplaMB.setPrograma(getRegistro());
