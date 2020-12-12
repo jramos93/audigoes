@@ -37,7 +37,7 @@
 	</named-query>
 	
 	<named-query name="usuarios.auditoria">
-		<query>select o from Usuario o where o.regActivo=1 and o.institucion.insId=1 and o.usuId not in (select b.usuario.usuId from AuditoriaResponsable b where b.auditoria.audId=1)</query>
+		<query>select o from Usuario o where o.regActivo=1 and o.institucion.insId=?1 and o.usuId not in (select b.usuario.usuId from AuditoriaResponsable b where b.auditoria.audId=?2)</query>
 	</named-query>
 	
 	<named-query name="find.coordinador.by.auditoria">

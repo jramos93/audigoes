@@ -59,7 +59,8 @@ public class AuditoriaResponsableMB extends AudigoesController implements Serial
 				setListado((List<AuditoriaResponsable>) audigoesLocal.findByNamedQuery(AuditoriaResponsable.class,
 						"responsables.auditoria", new Object[] { auditoria.getAudId() }));
 				setUsuariosList((List<Usuario>) audigoesLocal.findByNamedQuery(Usuario.class, "usuarios.auditoria",
-						new Object[] {}));
+						new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId(),
+								auditoria.getAudId() }));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -73,9 +74,9 @@ public class AuditoriaResponsableMB extends AudigoesController implements Serial
 		getRegistro().setFecCrea(getToday());
 		getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
 		getRegistro().setRegActivo(1);
-		
+
 		onSave();
-		
+
 		getListado().add(getRegistro());
 		fillListado();
 	}
@@ -154,7 +155,7 @@ public class AuditoriaResponsableMB extends AudigoesController implements Serial
 
 	@Override
 	public void afterSaveNew() {
-		//getListado().add(getRegistro());
+		// getListado().add(getRegistro());
 		super.afterSaveNew();
 	}
 
