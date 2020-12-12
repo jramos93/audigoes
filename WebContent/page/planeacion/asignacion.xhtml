@@ -13,18 +13,24 @@
 	</h:head>
 
 	<ui:define name="content">
-
-		<div class="name" align="center">
-			<span class="app-name">Asignación de Personal a la Auditoría</span>
-		</div>
-
 		<h:form id="frmAsignación">
-			<p:panel>
-				<p:commandButton id="btnCancel" ajax="false" icon="pi pi-arrow-left"
+			<div align="left" style="margin-top: 50px;">
+				<p:commandButton id="btnCancel" ajax="false" update="@form :frm"
+					process="@this" styleClass="pink-btn raised-btn"
+					actionListener="#{actMB.onCancel}"
 					action="/page/planeacion/auditoria.xhtml?faces-redirect=true"
-					value="Regresar" update="@form :frm" process="@this">
+					value="Regresar" icon="pi pi-arrow-left" style="float:left;">
 				</p:commandButton>
-				<p:separator />
+			</div>
+
+			<div class="name" align="center">
+				<span class="app-name">Asignación de Personal a la Auditoría</span>
+				<h3>Auditoría:
+					#{respMB.auditoria.audCodigo}-#{respMB.auditoria.audNombre}</h3>
+			</div>
+
+
+			<p:panel>
 				<div class="ui-fluid p-formgrid p-grid">
 					<div class="p-field p-col">
 						<p:outputLabel for="codigo" value="Código auditoría:" />
@@ -87,7 +93,7 @@
 
 					<f:facet name="header">Lista de Personal Asignado a la Auditoría</f:facet>
 
-					<p:column headerText="No.">
+					<p:column headerText="No." style="text-align:center; width:50px;">
 						<h:outputText value="#{index+1}"></h:outputText>
 					</p:column>
 

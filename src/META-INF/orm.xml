@@ -82,4 +82,7 @@
 	<named-query name="archivos.plan">
 		<query>select o from Archivo o where o.planAnual.plaId=?1 and o.regActivo=1</query>
 	</named-query>
+	<named-query name="archivos.cedula">
+		<query>select o from Archivo o where o.cedula.cedId=?1 and o.regActivo=1</query>
+	</named-query>
 </entity-mappings>

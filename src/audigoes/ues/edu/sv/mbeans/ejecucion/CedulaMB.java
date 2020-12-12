@@ -19,6 +19,7 @@ import audigoes.ues.edu.sv.entities.ejecucion.ProgramaEjecucion;
 import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planeacion.AuditoriaResponsable;
+import audigoes.ues.edu.sv.mbeans.administracion.ArchivoMB;
 import audigoes.ues.edu.sv.mbeans.seguimiento.RecomendacionMB;
 import audigoes.ues.edu.sv.util.SendMailAttach;
 
@@ -44,6 +45,9 @@ public class CedulaMB extends AudigoesController implements Serializable {
 	
 	@ManagedProperty(value = "#{evdMB}")
 	private EvidenciaMB evdMB = new EvidenciaMB();
+	
+	@ManagedProperty(value = "#{arcMB}")
+	private ArchivoMB arcMB = new ArchivoMB();
 
 	public CedulaMB() {
 		super(new CedulaNota());
@@ -127,6 +131,9 @@ public class CedulaMB extends AudigoesController implements Serializable {
 		
 		evdMB.setCedula(getRegistro());
 		evdMB.fillByCedula();
+		
+		arcMB.setCedula(getRegistro());
+		arcMB.fillByCedula(getRegistro());
 	}
 
 	@Override
@@ -385,6 +392,14 @@ public class CedulaMB extends AudigoesController implements Serializable {
 
 	public void setEvdMB(EvidenciaMB evdMB) {
 		this.evdMB = evdMB;
+	}
+
+	public ArchivoMB getArcMB() {
+		return arcMB;
+	}
+
+	public void setArcMB(ArchivoMB arcMB) {
+		this.arcMB = arcMB;
 	}
 
 }

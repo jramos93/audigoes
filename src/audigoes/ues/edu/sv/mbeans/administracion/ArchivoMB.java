@@ -5,14 +5,18 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+
+import org.primefaces.event.FileUploadEvent;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Archivo;
 import audigoes.ues.edu.sv.entities.ejecucion.ProcedimientoEjecucion;
 import audigoes.ues.edu.sv.entities.informe.ActaLectura;
 import audigoes.ues.edu.sv.entities.informe.CartaGerencia;
+import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 import audigoes.ues.edu.sv.entities.informe.Convocatoria;
 import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
@@ -29,6 +33,8 @@ public class ArchivoMB extends AudigoesController implements Serializable {
 	private List<Archivo> filteredArchivos;
 	
 	private PlanAnual planAnual;
+	
+	private CedulaNota cedula;
 
 	public ArchivoMB() {
 		super(new Archivo());
@@ -113,6 +119,16 @@ public class ArchivoMB extends AudigoesController implements Serializable {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
+	public void fillByCedula(CedulaNota c) {
+		try {
+			setListado((List<Archivo>) audigoesLocal.findByNamedQuery(Archivo.class, "archivos.cedula",
+					new Object[] {  c.getCedId()}));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
 		String filterText = (filter == null) ? null : filter.toString().trim().toLowerCase();
 		if (filterText == null || filterText.equals("")) {
@@ -153,6 +169,30 @@ public class ArchivoMB extends AudigoesController implements Serializable {
 		super.afterDelete();
 	}
 	
+	public void handleFileUpload(FileUploadEvent event) {
+		try {
+			this.onNew();
+			//this.getRegistro().setProcedimientoEjecucion(getRegistro());
+			this.getRegistro().setArcArchivo(event.getFile().getContent());
+			this.getRegistro().setCedula(cedula);
+			this.getRegistro().setArcNombre(event.getFile().getFileName());
+			this.getRegistro().setArcExt(event.getFile().getContentType());
+			this.getRegistro().setFecCrea(getToday());
+			this.getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+			this.getRegistro().setRegActivo(1);
+			audigoesLocal.insert(this.getRegistro());
+			// this.arcMB.afterSaveNew();
+			this.getListado().add(this.getRegistro());
+			if (!getStatus().equals("NEW")) {
+				addWarn(new FacesMessage(SYSTEM_NAME, "Archivo Guardado con Éxito"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage(SYSTEM_NAME, "Problemas al guardar archivo."));
+		}
+
+	}
+	
 
 	/* GETS y SETS */
 
@@ -187,6 +227,14 @@ public class ArchivoMB extends AudigoesController implements Serializable {
 
 	public void setPlanAnual(PlanAnual planAnual) {
 		this.planAnual = planAnual;
+	}
+
+	public CedulaNota getCedula() {
+		return cedula;
+	}
+
+	public void setCedula(CedulaNota cedula) {
+		this.cedula = cedula;
 	}
 
 }

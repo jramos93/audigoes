@@ -21,15 +21,17 @@
 
 				<div class="name" align="center" style="margin-top: 100px;">
 					<span class="app-name">Actividades</span>
+					<h3>Auditoría:
+						#{actMB.auditoria.audCodigo}-#{actMB.auditoria.audNombre}</h3>
 				</div>
 
 				<p:dataTable var="a" value="#{actMB.listado}" rowIndexVar="index"
 					widgetVar="wvActividades" reflow="true" id="dtActividades"
-					style="margin-top:20px;" paginator="true"
+					style="margin-top:20px;" paginator="true" 
 					filteredValue="#{actMB.filteredProcedimiento}"
 					globalFilterFunction="#{actMB.globalFilterFunction}"
 					selection="#{actMB.regSelected}" selectionMode="single"
-					paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+					paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="15"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
 					rowKey="#{a.actId}">
@@ -49,6 +51,13 @@
 									rendered="#{actMB.registro.selected}"
 									actionListener="#{actMB.onEditSelected}">
 								</p:commandButton>
+								<p:commandButton value="Eliminar" icon="pi pi-trash"
+									styleClass="raised-btn" update=":frmActividad, :frmActividades"
+									rendered="#{actMB.registro.selected and a.actTipo==2}"
+									actionListener="#{actMB.onDelete}">
+									<p:confirm header="Confirmación" icon="pi pi-info"
+										message="¿Eliminar?"></p:confirm>
+								</p:commandButton>
 							</p:toolbarGroup>
 						</p:toolbar>
 					</f:facet>
@@ -62,25 +71,25 @@
 						</p:outputPanel>
 					</f:facet>
 
-					<p:column headerText="No.">
+					<p:column headerText="No." style="text-align:center; width:50px;">
 						<h:outputText value="#{index+1}"></h:outputText>
 					</p:column>
 
 					<p:column headerText="Nombre">
 						<h:outputText value="#{a.actNombre}"></h:outputText>
 					</p:column>
-					
+
 					<p:column headerText="Descripcion">
 						<h:outputText value="#{a.actDescripcion}"></h:outputText>
 					</p:column>
 
-					<p:column headerText="Fecha Inicio">
+					<p:column headerText="Fecha Inicio" style="text-align:center; width:100px;">
 						<h:outputText value="#{a.actFecIni}">
 							<f:convertDateTime pattern="dd-MM-yyyy" />
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="Fecha Fin">
+					<p:column headerText="Fecha Fin" style="text-align:center; width:100px;">
 						<h:outputText value="#{a.actFecFin}">
 							<f:convertDateTime pattern="dd-MM-yyyy" />
 						</h:outputText>
@@ -99,6 +108,10 @@
 						styleClass="pink-btn raised-btn"
 						update=":frmActividades, :frmActividad" process="@this">
 					</p:commandButton>
+
+					<p:commandButton value="Guardar" icon="fa fa-check"
+						styleClass="raised-btn" actionListener="#{actMB.onSave}"
+						update=":frmActividades, :frmActividad" />
 				</div>
 
 				<div class="name" align="center" style="margin-top: 100px;">
@@ -111,12 +124,14 @@
 						<p:outputLabel for="nombre" value="Nombre:"
 							style="font-weight:bold;" />
 						<p:inputTextarea id="nombre" value="#{actMB.registro.actNombre}"
-							rows="2" required="true" maxlength="250" />
+							readonly="#{actMB.registro.actTipo==2}" rows="2" required="true"
+							maxlength="250" />
 
 						<p:outputLabel for="ref" value="Descripcion:"
 							style="font-weight:bold;" />
 						<p:inputTextarea id="ref" value="#{actMB.registro.actDescripcion}"
-							rows="4" required="true" maxlength="1000" />
+							readonly="#{actMB.registro.actTipo==2}" rows="4" required="true"
+							maxlength="1000" />
 					</p:panelGrid>
 					<p:panelGrid columns="4"
 						columnClasses="ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4, ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4"
@@ -140,7 +155,8 @@
 						styleClass="ui-panelgrid-blank form-group form-elements">
 						<p:column></p:column>
 						<p:commandButton value="Guardar" icon="fa fa-check"
-							actionListener="#{actMB.onSave}" update=":frmActividades, :frmActividad" />
+							actionListener="#{actMB.onSave}" styleClass="raised-btn"
+							update=":frmActividades, :frmActividad" />
 					</p:panelGrid>
 				</div>
 

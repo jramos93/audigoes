@@ -100,33 +100,33 @@
 						</p:outputPanel>
 					</f:facet>
 
-					<p:column headerText="N°" sortBy="#{aud.audCorrelativo}" width="">
+					<p:column headerText="N°" sortBy="#{aud.audCorrelativo}" style="text-align:center; width:50px;">
 						<h:outputText value="#{aud.audCorrelativo}" />
 					</p:column>
-					<p:column headerText="Año" sortBy="#{aud.audAnio}">
+					<p:column headerText="Año" sortBy="#{aud.audAnio}" style="text-align:center; width:50px;"> 
 						<h:outputText value="#{aud.audAnio}" />
 					</p:column>
 					<p:column headerText="Auditoría" sortBy="#{aud.audNombre}">
 						<h:outputText value="#{aud.audNombre}" />
 					</p:column>
-					<p:column headerText="Tipo Auditoría"
+					<p:column headerText="Tipo Auditoría" style="text-align:center; width:150px;"
 						sortBy="#{aud.tipoAuditoria.tpaNombre}">
 						<h:outputText value="#{aud.tipoAuditoria.tpaNombre}" />
 					</p:column>
-					<p:column headerText="Fecha Inicio"
+					<p:column headerText="Fecha Inicio" style="text-align:center; width:80px;"
 						sortBy="#{aud.audFechaInicioProgramado}">
 						<h:outputText value="#{aud.audFechaInicioProgramado}">
 							<f:convertDateTime pattern="dd-MM-yyyy" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Fecha Inicio"
+					<p:column headerText="Fecha Fin" style="text-align:center; width:80px;"
 						sortBy="#{aud.audFechaFinProgramado}">
 						<h:outputText value="#{aud.audFechaInicioProgramado}">
 							<f:convertDateTime pattern="dd-MM-yyyy" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Fase" filterBy="#{aud.audFase}"
-						filterMatchMode="exact" style="text-align:center; width:15%">
+					<p:column headerText="Fase" filterBy="#{aud.audFase}" filterStyle="width:80px;"
+						filterMatchMode="exact" style="text-align:center; width:150px;">
 						<f:facet name="filter">
 							<p:selectOneMenu onchange="PF('wvAuditorias').filter();">
 								<f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}"

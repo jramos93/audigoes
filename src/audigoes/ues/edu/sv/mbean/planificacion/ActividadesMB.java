@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -34,10 +35,23 @@ public class ActividadesMB extends AudigoesController implements Serializable {
 	public void init() {
 		try {
 			super.init();
+
 			fillActividades();
+			if (getListado() != null) {
+				if (getListado().size() == 0) {
+					inicializarActividades();
+					fillActividades();
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void onDelete() {
+		// TODO Auto-generated method stub
+		super.onDelete();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -48,10 +62,132 @@ public class ActividadesMB extends AudigoesController implements Serializable {
 			if (auditoria != null) {
 				setListado((List<Actividad>) audigoesLocal.findByNamedQuery(Actividad.class, "actividades.by.auditoria",
 						new Object[] { auditoria.getAudId() }));
-				System.out.println("listado: " + getListado().size());
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	public void inicializarActividades() {
+		try {
+			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+			setAuditoria(((Auditoria) sessionMap.get("auditoria")));
+			Actividad a;
+
+			a = new Actividad();
+			a.setActNombre("Elaboración Programa de Planificación");
+			a.setActDescripcion("Elaboración, revisión y aprobación del programa de planificación de auditoría");
+			a.setFecCrea(getToday());
+			a.setActFecIni(getToday());
+			a.setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+			a.setActTipo(2);
+			a.setAuditoria(auditoria);
+			a.setRegActivo(1);
+
+			audigoesLocal.insert(a);
+
+			a = new Actividad();
+			a.setActNombre("Elaboración Memorando de Planificación");
+			a.setActDescripcion("Elaboración, revisión y aprobación del memorando de planificación de auditoría");
+			a.setFecCrea(getToday());
+			a.setActFecIni(getToday());
+			a.setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+			a.setActTipo(2);
+			a.setAuditoria(auditoria);
+			a.setRegActivo(1);
+
+			audigoesLocal.insert(a);
+
+			a = new Actividad();
+			a.setActNombre("Elaboración Programa de Auditoría");
+			a.setActDescripcion(
+					"Elaboración, revisión y aprobación del programa de auditoria de auditoría (programa de ejecución)");
+			a.setFecCrea(getToday());
+			a.setActFecIni(getToday());
+			a.setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+			a.setActTipo(2);
+			a.setAuditoria(auditoria);
+			a.setRegActivo(1);
+
+			audigoesLocal.insert(a);
+
+			a = new Actividad();
+			a.setActNombre("Desarrollo de procedimientos de ejecución");
+			a.setActDescripcion(
+					"Análisis, recolección de evidencia, redacción de narrativas para el desarrollo de los procedimientos de auditoría");
+			a.setFecCrea(getToday());
+			a.setActFecIni(getToday());
+			a.setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+			a.setActTipo(2);
+			a.setAuditoria(auditoria);
+			a.setRegActivo(1);
+
+			audigoesLocal.insert(a);
+
+			a = new Actividad();
+			a.setActNombre("Comunicación de hallazgos preliminares");
+			a.setActDescripcion(
+					"Elaboración, revisión y aprobación de lista de hallazgos para posterior comunicación a la unidad auditada");
+			a.setFecCrea(getToday());
+			a.setActFecIni(getToday());
+			a.setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+			a.setActTipo(2);
+			a.setAuditoria(auditoria);
+			a.setRegActivo(1);
+
+			audigoesLocal.insert(a);
+
+			a = new Actividad();
+			a.setActNombre("Análisis de comentarios de unidad");
+			a.setActDescripcion("Análisis y valorización de los comentarios brindados por la unidad auditada");
+			a.setFecCrea(getToday());
+			a.setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+			a.setActTipo(2);
+			a.setActFecIni(getToday());
+			a.setAuditoria(auditoria);
+			a.setRegActivo(1);
+
+			audigoesLocal.insert(a);
+
+			a = new Actividad();
+			a.setActNombre("Elaboración de borrador de informe");
+			a.setActDescripcion("Elaboración, revisión y aprobación de borrador de informe de auditoría");
+			a.setFecCrea(getToday());
+			a.setActFecIni(getToday());
+			a.setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+			a.setActTipo(2);
+			a.setAuditoria(auditoria);
+			a.setRegActivo(1);
+
+			audigoesLocal.insert(a);
+
+			a = new Actividad();
+			a.setActNombre("Convocatoria a lectura de borrador de informe");
+			a.setActDescripcion("Convocatoria para lectura del borrador de informe y levantamiento de acta de lectura");
+			a.setFecCrea(getToday());
+			a.setActFecIni(getToday());
+			a.setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+			a.setActTipo(2);
+			a.setAuditoria(auditoria);
+			a.setRegActivo(1);
+
+			audigoesLocal.insert(a);
+
+			a = new Actividad();
+			a.setActNombre("Elaboración de infome");
+			a.setActDescripcion("Elaboración, revisión y aprobación del informe de auditoría");
+			a.setFecCrea(getToday());
+			a.setActFecIni(getToday());
+			a.setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+			a.setActTipo(2);
+			a.setAuditoria(auditoria);
+			a.setRegActivo(1);
+
+			audigoesLocal.insert(a);
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage("Error al incializar lista de actividades"));
 		}
 	}
 

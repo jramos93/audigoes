@@ -140,11 +140,14 @@
 						rowKey="#{a.evdId}">
 						<f:facet name="header">Evidencia proporcionada por unidad</f:facet>
 
+						<p:column headerText="No.">
+							<h:outputText value="#{index+1}"></h:outputText>
+						</p:column>
 						<p:column headerText="Nombre" filterBy="#{a.evdNombre}"
 							filterMatchMode="contains">
 							<h:outputText value="#{a.evdNombre}"></h:outputText>
 						</p:column>
-						
+
 						<p:column headerText="Extensión" filterBy="#{a.evdExtension}"
 							filterMatchMode="contains">
 							<h:outputText value="#{a.evdExtension}"></h:outputText>
@@ -169,6 +172,51 @@
 							<f:selectItem itemValue="2" itemLabel="Superada"></f:selectItem>
 						</p:selectOneRadio>
 					</p:panelGrid>
+				</p:tab>
+
+				<p:tab title="Papeles de Trabajo">
+					<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+						styleClass="ui-panelgrid-blank form-group form-elements">
+						<h:outputText value="Subida de archivos:"></h:outputText>
+						<p:fileUpload listener="#{arcMB.handleFileUpload}"
+							disabled="#{ceduMB.status eq 'NEW'}" multiple="true"
+							mode="advanced" dragDropSupport="false" cancelLabel="Cancelar"
+							uploadLabel="Subir" label="Elegir"
+							update=":frmHallazgo:tview:dtArchivosPt"
+							allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
+					</p:panelGrid>
+					<p:dataTable var="a" value="#{arcMB.listado}" rowIndexVar="index"
+						widgetVar="wvArchivosPt" reflow="true" id="dtArchivosPt"
+						style="margin-top:20px;" paginator="true" paginatorPosition="top"
+						rowsPerPageTemplate="1,5,10,15" rows="5"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+						rowKey="#{a.arcId}">
+
+						<p:column headerText="No.">
+							<h:outputText value="#{index+1}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Nombre" filterBy="#{a.arcNombre}"
+							filterMatchMode="contains">
+							<h:outputText value="#{a.arcNombre}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Extensión" filterBy="#{a.arcExt}"
+							filterMatchMode="contains">
+							<h:outputText value="#{a.arcExt}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Eliminar" style="width:60px;">
+							<p:commandButton actionListener="#{arcMB.onBorrar(a)}"
+								update=":frmHallazgo:tview:dtArchivosPt" icon="pi pi-trash"
+								title="Clic para eliminar el archivo">
+								<p:confirm header="Confirmación" message="¿Eliminar?"
+									icon="pi pi-info-circle"></p:confirm>
+							</p:commandButton>
+						</p:column>
+
+					</p:dataTable>
 				</p:tab>
 
 				<p:tab title="Observaciones de Coordinación">

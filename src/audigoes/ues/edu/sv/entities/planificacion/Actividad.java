@@ -62,6 +62,9 @@ public class Actividad extends SuperEntity implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="act_aud_id")
 	private Auditoria auditoria;
+	
+	@Column(name = "act_tipo")
+	private int actTipo;
 
 	//bi-directional many-to-one association to Informe
 	@OneToMany(mappedBy="actividad", fetch=FetchType.EAGER)
@@ -282,6 +285,14 @@ public class Actividad extends SuperEntity implements Serializable {
 		usuarioActividad.setActividad(null);
 
 		return usuarioActividad;
+	}
+
+	public int getActTipo() {
+		return actTipo;
+	}
+
+	public void setActTipo(int actTipo) {
+		this.actTipo = actTipo;
 	}
 
 	@Override
