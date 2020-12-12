@@ -7,7 +7,7 @@
 	<ui:define name="content">
 		<h:form id="frmEjecucion">
 			<p:panel
-				rendered="#{audMB.status eq 'SEARCH' and (pejeMB.status eq 'SEARCH')}">
+				rendered="#{audMB.status eq 'SEARCH' and (pejeMB.status eq 'SEARCH' and ceduMB.status eq 'SEARCH')}">
 				<div align="left" style="margin-top: 50px;">
 					<p:commandButton id="btnCancel" ajax="false"
 						styleClass="pink-btn raised-btn"
@@ -21,15 +21,17 @@
 					styleClass="ui-panelgrid-blank form-group form-elements"
 					style="margin-top:100px; text-align:center;">
 
-					<p:commandLink value="" actionListener="#{audMB.onProgramaEje}" title="Procedimientos a ejecutar en auditoría"
+					<p:commandLink value="" actionListener="#{audMB.onProgramaEje}"
+						title="Procedimientos a ejecutar en auditoría"
 						update=":frmEjecucion, :frmProgramaEje">
 						<p:graphicImage
 							value="/resources/images/procedimientos-ejecucion.png"
 							style="height:200px;" />
 					</p:commandLink>
 
-					<p:commandLink value="" actionListener="#{audMB.onProgramaEje}" title="Hallazgos preliminares de auditoría"
-						update=":frmEjecucion">
+					<p:commandLink value="" actionListener="#{audMB.onHallazgos}"
+						title="Hallazgos preliminares de auditoría"
+						update=":frmEjecucion, :frmListaHallazgos">
 						<p:graphicImage value="/resources/images/hallazgos.png"
 							style="height:200px;" />
 					</p:commandLink>
@@ -39,6 +41,7 @@
 
 
 		<ui:include src="programa-ejecucion.xhtml"></ui:include>
+		<ui:include src="lista-hallazgos.xhtml"></ui:include>
 	</ui:define>
 
 </ui:composition>

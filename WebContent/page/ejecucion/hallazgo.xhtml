@@ -1,0 +1,78 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<h:form id="frmHallazgo">
+		<p:panel
+			rendered="#{ceduMB.status ne 'SEARCH' and ceduMB.status ne 'VIEW'}">
+
+			<div align="left" style="margin-top: 50px; float: left;">
+				<p:commandButton id="btnCancel" action="#{ceduMB.onCancelHallazgo}"
+					value="Regresar" icon="pi pi-arrow-left" style="float:left;"
+					styleClass="pink-btn raised-btn"
+					update=":frmListaHallazgos, :frmHallazgo" process="@this">
+				</p:commandButton>
+
+				<p:commandButton value="Guardar" icon="fa fa-check"
+					styleClass="raised-btn" actionListener="#{ceduMB.onSave}"
+					update=":frmHallazgo" />
+			</div>
+
+			<div class="name" align="center" style="margin-top: 100px;">
+				<span class="app-name">Desarrollo de Hallazgo </span>
+			</div>
+			<div class="ui-fluid p-formgrid p-grid">
+				<p:tabView id="tview">
+					<p:tab title="Detalle del Hallazzgo">
+						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+							styleClass="ui-panelgrid-blank form-group form-elements">
+
+							<p:outputLabel value="Título: " style="font-weight:bold;" />
+							<p:inputTextarea value="#{ceduMB.registro.cedTitulo}" rows="2" />
+
+							<p:outputLabel value="Condición " style="font-weight:bold;" />
+							<p:inputTextarea value="#{ceduMB.registro.cedCondicion}" rows="4" />
+
+							<p:outputLabel value="Criterio: " style="font-weight:bold;" />
+							<p:inputTextarea value="#{ceduMB.registro.cedCriterio}" rows="10" />
+
+							<p:outputLabel value="Causa: " style="font-weight:bold;" />
+							<p:inputTextarea value="#{ceduMB.registro.cedCausa}" rows="4" />
+
+							<p:outputLabel value="Efecto: " style="font-weight:bold;" />
+							<p:inputTextarea value="#{ceduMB.registro.cedEfecto}" rows="4" />
+
+						</p:panelGrid>
+
+					</p:tab>
+					<p:tab title="Recomendaciones">
+
+					</p:tab>
+
+					<p:tab title="Comentarios de la Unidad y Auditoría">
+					</p:tab>
+
+					<p:tab title="Observaciones de Coordinación">
+
+					</p:tab>
+				</p:tabView>
+
+				<p:panelGrid columns="2"
+					columnClasses="ui-g-9 ui-lg-10,ui-g-3 ui-md-4 ui-lg-2"
+					layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+					<p:column></p:column>
+					<p:commandButton value="Guardar" icon="fa fa-check"
+						actionListener="#{ceduMB.onSave}" update=":frmHallazgo" />
+				</p:panelGrid>
+			</div>
+
+		</p:panel>
+
+	</h:form>
+
+</ui:composition>

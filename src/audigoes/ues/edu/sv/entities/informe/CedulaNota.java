@@ -1,16 +1,31 @@
 package audigoes.ues.edu.sv.entities.informe;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import java.util.Date;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.ejecucion.ProcedimientoEjecucion;
+import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planificacion.ProcedimientoPlanificacion;
 import audigoes.ues.edu.sv.entities.seguimiento.Recomendacion;
-
-import java.util.Date;
-import java.util.Set;
 
 
 /**
@@ -81,6 +96,10 @@ public class CedulaNota extends SuperEntity implements Serializable {
 
 	@Column(name="usu_modi")
 	private String usuModi;
+	
+	@ManyToOne
+	@JoinColumn(name="ced_aud_id")
+	private Auditoria auditoria;
 
 	//bi-directional many-to-one association to Informe
 	@ManyToOne
@@ -302,6 +321,14 @@ public class CedulaNota extends SuperEntity implements Serializable {
 		recomendacion.setCedulaNota(null);
 
 		return recomendacion;
+	}
+
+	public Auditoria getAuditoria() {
+		return auditoria;
+	}
+
+	public void setAuditoria(Auditoria auditoria) {
+		this.auditoria = auditoria;
 	}
 
 	@Override

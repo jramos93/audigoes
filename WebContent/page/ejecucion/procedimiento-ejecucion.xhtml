@@ -107,6 +107,18 @@
 
 						</p:dataTable>
 					</p:tab>
+
+					<p:tab title="Observaciones de Coordinación">
+						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+							styleClass="ui-panelgrid-blank form-group form-elements">
+
+							<p:outputLabel for="obs" value="Observaciones"
+								style="font-weight:bold;" />
+							<pe:ckEditor id="obs" width="100%" skin="office2013"
+								customConfig="#{request.contextPath}/resources/js/customck.js"
+								value="#{proejeMB.registro.pejObservaciones}" />
+						</p:panelGrid>
+					</p:tab>
 				</p:tabView>
 
 				<p:panelGrid columns="2"

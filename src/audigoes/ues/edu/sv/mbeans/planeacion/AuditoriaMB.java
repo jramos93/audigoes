@@ -14,8 +14,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import org.primefaces.PrimeFaces;
-
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Unidad;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
@@ -25,12 +23,12 @@ import audigoes.ues.edu.sv.entities.planeacion.AuditoriaResponsable;
 import audigoes.ues.edu.sv.entities.planeacion.AuditoriaUnidad;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
 import audigoes.ues.edu.sv.entities.planeacion.TipoAuditoria;
-import audigoes.ues.edu.sv.mbean.planificacion.AuditoriaUnidadMB;
 import audigoes.ues.edu.sv.mbean.planificacion.ActividadesMB;
+import audigoes.ues.edu.sv.mbean.planificacion.AuditoriaUnidadMB;
 import audigoes.ues.edu.sv.mbean.planificacion.MemoPlanificacionMB;
 import audigoes.ues.edu.sv.mbean.planificacion.ProgramaEjecucionMB;
 import audigoes.ues.edu.sv.mbean.planificacion.ProgramaPlanificacionMB;
-import audigoes.ues.edu.sv.mbeans.seguimiento.RecomendacionMB;
+import audigoes.ues.edu.sv.mbeans.ejecucion.CedulaMB;
 import audigoes.ues.edu.sv.mbeans.seguimiento.SeguimientoMB;
 
 @ManagedBean(name = "audMB")
@@ -73,13 +71,12 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	@ManagedProperty(value = "#{segMB}")
 	private SeguimientoMB segMB = new SeguimientoMB();
-	
-	
 
 	@ManagedProperty(value = "#{actMB}")
 	private ActividadesMB actMB = new ActividadesMB();
-	
-	
+
+	@ManagedProperty(value = "#{ceduMB}")
+	private CedulaMB ceduMB = new CedulaMB(); 
 
 	public AuditoriaMB() {
 		super(new Auditoria());
@@ -135,6 +132,11 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	public void onProgramaEje() {
 		pejeMB.fillPrograma();
 		// pejeMB.onEdit();
+	}
+
+	public void onHallazgos() {
+		ceduMB.fillNotas();
+		ceduMB.setStatus("VIEW");
 	}
 
 	public void onMemo() {
@@ -254,7 +256,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	public void agregarUnidadAuditada() {
 		try {
-			if(getStatus().equals("NEW")) {
+			if (getStatus().equals("NEW")) {
 				if (getUnidadesSelectedList() == null) {
 					setUnidadesSelectedList(new ArrayList<Unidad>());
 				}
@@ -268,7 +270,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 				getRegistro().getAuditoriaUnidad().add(this.audUniMB.getRegistro());
 				getUnidadList().remove(getUnidadSelected());
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			addWarn(new FacesMessage(SYSTEM_NAME, "Problema al agregar unidad"));
@@ -276,21 +278,21 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	}
 
 	public void eliminarUnidadAuditada(Unidad unidad) {
-		if(getStatus().equals("NEW")) {
+		if (getStatus().equals("NEW")) {
 			getUnidadesSelectedList().remove(unidad);
 			getUnidadList().add(unidad);
 		}
 	}
-	
+
 	public void eliminarUnidadAuditadaEdit(AuditoriaUnidad auditoriaunidad) {
-		if(getStatus().equals("EDIT")) {
+		if (getStatus().equals("EDIT")) {
 			try {
 				this.audUniMB.setRegistro(auditoriaunidad);
 				this.audUniMB.onDelete();
 				getRegistro().getAuditoriaUnidad().remove(auditoriaunidad);
 			} catch (Exception e) {
 				e.printStackTrace();
-				addWarn(new FacesMessage(SYSTEM_NAME,"Problema al eliminar unidad seleccionada"));
+				addWarn(new FacesMessage(SYSTEM_NAME, "Problema al eliminar unidad seleccionada"));
 			}
 		}
 	}
@@ -314,7 +316,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		setPlanSelected(getRegistro().getPlanAnual());
 		return super.beforeEdit();
 	}
-	
+
 	@Override
 	protected void afterEdit() {
 		getRegistro().getAuditoriaUnidad();
@@ -378,13 +380,13 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 			if (cor.getAurRol() == 0) {
 				if (cor.getUsuario().getUsuId() != getCoordinador().getUsuId()) {
 					try {
-						//inactivar coordinador actual
+						// inactivar coordinador actual
 						this.respMB.setRegSelected(cor);
 						this.respMB.onEditSelected();
 						this.respMB.getRegistro().setRegActivo(0);
 						this.respMB.onSaveEdit();
-						
-						//ingresar nuevo coordinador
+
+						// ingresar nuevo coordinador
 						guardarCoordinador();
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -395,14 +397,14 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 				break;
 			}
 		}
-		if(!valido) {
+		if (!valido) {
 			try {
 				guardarCoordinador();
 			} catch (Exception e) {
 				e.printStackTrace();
 				addWarn(new FacesMessage(SYSTEM_NAME, "Problema al ingresar nuevo coordinador"));
 			}
-			
+
 		}
 	}
 
@@ -428,10 +430,10 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	public void afterSaveNew() {
 		try {
 			getListado().add(getRegistro());
-			
+
 			guardarCoordinador();
 			guardarUnidadesAuditadas();
-			
+
 			onNew();
 			super.afterSaveNew();
 		} catch (Exception e) {
@@ -440,7 +442,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		}
 
 	}
-	
+
 	public void guardarCoordinador() {
 		this.respMB.onNew();
 		this.respMB.getRegistro().setUsuario(getCoordinador());
@@ -576,7 +578,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	public void setActMB(ActividadesMB actMB) {
 		this.actMB = actMB;
 	}
-	
+
 	public Usuario getCoordinador() {
 		return coordinador;
 	}
@@ -624,5 +626,14 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	public void setSegMB(SeguimientoMB segMB) {
 		this.segMB = segMB;
 	}
+
+	public CedulaMB getCeduMB() {
+		return ceduMB;
+	}
+
+	public void setCeduMB(CedulaMB ceduMB) {
+		this.ceduMB = ceduMB;
+	}
+	
 
 }
