@@ -35,7 +35,7 @@
 							<p:toolbarGroup>
 								<p:commandButton value="Responder" icon="pi pi-pencil"
 									update=":frmListaHallazgos, :frmHallazgo"
-									rendered="#{ceduUsuMB.registro.selected and c.cedEstado eq 4}"
+									rendered="#{ceduUsuMB.registro.selected and ceduUsuMB.registro.cedEstado eq 4}"
 									actionListener="#{ceduUsuMB.onEditSelected}">
 								</p:commandButton>
 							</p:toolbarGroup>
@@ -49,8 +49,10 @@
 						</p:outputPanel>
 					</f:facet>
 
-					<p:column headerText="Auditoría" groupRow="true" style="width:300px;">
-						<h:outputText value="#{c.auditoria.audCodigo}: #{c.auditoria.audNombre}"></h:outputText>
+					<p:column headerText="Auditoría" groupRow="true"
+						style="width:300px;">
+						<h:outputText
+							value="#{c.auditoria.audCodigo}: #{c.auditoria.audNombre}"></h:outputText>
 					</p:column>
 
 					<p:column headerText="Fecha Plazo">

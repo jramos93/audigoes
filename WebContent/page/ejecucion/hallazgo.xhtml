@@ -51,7 +51,7 @@
 					styleClass="blue-btn raised-btn" update=":frmCorreo3">
 				</p:commandButton>
 
-				<p:commandButton action="#{ceduMB.prepararCorreoUnidad}" 
+				<p:commandButton action="#{ceduMB.prepararCorreoUnidad}"
 					oncomplete="PF('wvCorreo4').show();"
 					rendered="#{ceduMB.status eq 'EDIT' and ceduMB.registro.cedEstado eq 3}"
 					title="Clic para comunicar el hallazgo a la unidad" process="@this"
@@ -200,6 +200,15 @@
 							<h:outputText value="#{a.evdExtension}"></h:outputText>
 						</p:column>
 
+						<p:column headerText="Descargar"
+							style="width:60px; text-align:center;">
+							<p:commandButton actionListener="#{evdMB.downloadFile}"
+								ajax="false" icon="ui-icon-arrowthick-1-s"
+								title="Clic para descargar el archivo">
+								<f:attribute name="pt" value="#{a}"></f:attribute>
+								<p:fileDownload value="#{evdMB.pt}"></p:fileDownload>
+							</p:commandButton>
+						</p:column>
 					</p:dataTable>
 				</p:tab>
 
@@ -252,6 +261,16 @@
 						<p:column headerText="Extensión" filterBy="#{a.arcExt}"
 							filterMatchMode="contains">
 							<h:outputText value="#{a.arcExt}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Descargar"
+							style="width:60px; text-align:center;">
+							<p:commandButton actionListener="#{arcMB.downloadFile}"
+								ajax="false" icon="ui-icon-arrowthick-1-s"
+								title="Clic para descargar el archivo">
+								<f:attribute name="pt" value="#{a}"></f:attribute>
+								<p:fileDownload value="#{arcMB.pt}"></p:fileDownload>
+							</p:commandButton>
 						</p:column>
 
 						<p:column headerText="Eliminar" style="width:60px;">
@@ -384,8 +403,8 @@
 			</p:panelGrid>
 		</h:form>
 	</p:dialog>
-	
-		<p:dialog widgetVar="wvCorreo4" modal="true" showEffect="fade"
+
+	<p:dialog widgetVar="wvCorreo4" modal="true" showEffect="fade"
 		dynamic="true" closable="true" closeOnEscape="true" responsive="true">
 		<h:form id="frmCorreo4">
 			<p:commandButton id="btnEnviar" action="#{ceduMB.onEnviarUnidad}"
@@ -398,6 +417,10 @@
 			</p:commandButton>
 			<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
 				styleClass="ui-panelgrid-blank form-group form-elements">
+				<p:outputLabel value="Fecha plazo para brindar comentarios:"
+					style="font-weight:bold;" />
+				<p:calendar value="#{ceduMB.registro.cedFechaPlazo}"
+					pattern="dd/MM/yyyy"></p:calendar>
 				<p:outputLabel for="narra4" value="Digite el texto del correo:"
 					style="font-weight:bold;" />
 				<pe:ckEditor id="narra4" width="100%"

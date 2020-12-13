@@ -11,53 +11,26 @@
 
 			<div align="left" style="margin-top: 50px; float: left;">
 				<p:commandButton id="btnCancel"
-					action="#{ceduUsuMB.onCancelHallazgo}" value="Regresar"
+					action="#{ceduUsuMB.onCancel}" value="Regresar"
 					icon="pi pi-arrow-left" style="float:left;"
 					styleClass="pink-btn raised-btn"
 					update=":frmListaHallazgos, :frmHallazgo" process="@this">
 				</p:commandButton>
 
 				<p:commandButton value="Guardar" icon="fa fa-check"
-					styleClass="raised-btn" actionListener="#{ceduUsuMB.onSave}"
-					update=":frmHallazgo" />
+					rendered="#{ceduUsuMB.registro.cedEstado eq 4}" styleClass="raised-btn"
+					actionListener="#{ceduUsuMB.onSave}" update=":frmHallazgo" />
 			</div>
 
 			<div align="right" style="margin-top: 50px; float: right;">
 
 				<p:commandButton action="#{ceduUsuMB.prepararCorreo}"
 					oncomplete="PF('wvCorreo').show();"
-					rendered="#{ceduUsuMB.status eq 'EDIT' and ceduUsuMB.registro.cedEstado eq 1}"
-					title="Clic para enviar a revisión de la coordinación el programa de ejecución"
-					process="@this" value="Enviar a Revisión" icon="pi pi-check-circle"
+					rendered="#{ceduUsuMB.status eq 'EDIT' and ceduUsuMB.registro.cedEstado eq 4}"
+					title="Clic para enviar comentarios al auditor" process="@this"
+					value="Enviar Comentarios" icon="pi pi-check-circle"
 					style="float:left;" styleClass="blue-btn raised-btn"
 					update=":frmCorreo">
-				</p:commandButton>
-
-				<p:commandButton action="#{ceduUsuMB.prepararCorreoObs}"
-					oncomplete="PF('wvCorreo2').show();"
-					rendered="#{ceduUsuMB.status eq 'EDIT' and ceduUsuMB.registro.cedEstado eq 2}"
-					title="Clic para enviar a revisión de la coordinación los hallazgos"
-					process="@this" value="Enviar a Revisión" icon="pi pi-comments"
-					style="float:left;" styleClass="blue-btn raised-btn"
-					update=":frmCorreo2">
-				</p:commandButton>
-
-				<p:commandButton action="#{ceduUsuMB.prepararCorreoFin}"
-					oncomplete="PF('wvCorreo3').show();"
-					rendered="#{ceduUsuMB.status eq 'EDIT' and ceduUsuMB.registro.cedEstado eq 2}"
-					title="Clic para finalizar la revisión de los hallazgos"
-					process="@this" value="Finalizar Revisión"
-					icon="pi pi-check-circle" style="float:left;"
-					styleClass="blue-btn raised-btn" update=":frmCorreo3">
-				</p:commandButton>
-
-				<p:commandButton action="#{ceduUsuMB.prepararCorreoUnidad}"
-					oncomplete="PF('wvCorreo4').show();"
-					rendered="#{ceduUsuMB.status eq 'EDIT' and ceduUsuMB.registro.cedEstado eq 3}"
-					title="Clic para comunicar el hallazgo a la unidad" process="@this"
-					value="Comunicar a Unidad" icon="pi pi-envelope"
-					style="float:left;" styleClass="blue-btn raised-btn"
-					update=":frmCorreo4">
 				</p:commandButton>
 
 			</div>
@@ -112,9 +85,6 @@
 						currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
 						rowKey="#{r.recId}">
 
-						<p:ajax event="rowSelect" listener="#{recMB.onRowSelect}"
-							update=":frmHallazgo:tview:dtReco:tMenu" />
-
 						<f:facet name="header">
 							Listado de recomendaciones de auditoría
 						</f:facet>
@@ -155,11 +125,22 @@
 					<p:panelGrid columns="1" columnClasses="ui-lg-12" layout="grid"
 						styleClass="ui-panelgrid-blank form-group form-elements">
 
-						<p:outputLabel value="Comentarios del auditado: "
+						<p:outputLabel value="Ingrese sus comentarios: "
 							style="font-weight:bold;" />
 						<p:inputTextarea value="#{ceduUsuMB.registro.cedComentario}"
-							rows="12" style="width:100%;" readonly="true" />
+							rows="12" style="width:100%;" />
 
+					</p:panelGrid>
+
+					<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+						styleClass="ui-panelgrid-blank form-group form-elements">
+						<h:outputText value="Subida de archivos:"></h:outputText>
+						<p:fileUpload listener="#{evdMB.handleFileUpload}"
+							disabled="#{ceduUsuMB.status eq 'NEW' or ceduUsuMB.registro.cedEstado ne 4}"
+							multiple="true" mode="advanced" dragDropSupport="false"
+							cancelLabel="Cancelar" uploadLabel="Subir" label="Elegir"
+							update=":frmHallazgo:tview:dtArchivos"
+							allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
 					</p:panelGrid>
 
 					<p:dataTable var="a" value="#{evdMB.listado}" rowIndexVar="index"
@@ -182,6 +163,27 @@
 						<p:column headerText="Extensión" filterBy="#{a.evdExtension}"
 							filterMatchMode="contains">
 							<h:outputText value="#{a.evdExtension}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Descargar"
+							style="width:60px; text-align:center;">
+							<p:commandButton actionListener="#{evdMB.downloadFile}"
+								ajax="false" icon="ui-icon-arrowthick-1-s"
+								title="Clic para descargar el archivo">
+								<f:attribute name="pt" value="#{a}"></f:attribute>
+								<p:fileDownload value="#{evdMB.pt}"></p:fileDownload>
+							</p:commandButton>
+						</p:column>
+
+						<p:column headerText="Eliminar"
+							style="width:60px; text-align:center;">
+							<p:commandButton actionListener="#{evdMB.onBorrar(a)}"
+								disabled="#{ceduUsuMB.registro.cedEstado ne 4}"
+								update=":frmHallazgo:tview:dtArchivos" icon="pi pi-trash"
+								title="Clic para eliminar el archivo">
+								<p:confirm header="Confirmación" message="¿Eliminar?"
+									icon="pi pi-info-circle"></p:confirm>
+							</p:commandButton>
 						</p:column>
 
 					</p:dataTable>
@@ -214,6 +216,7 @@
 				styleClass="ui-panelgrid-blank form-group form-elements">
 				<p:column></p:column>
 				<p:commandButton value="Guardar" icon="fa fa-check"
+					rendered="#{ceduUsuMB.registro.cedEstado eq 4}"
 					actionListener="#{ceduUsuMB.onSave}" update=":frmHallazgo" />
 			</p:panelGrid>
 
@@ -225,7 +228,7 @@
 		dynamic="true" closable="true" closeOnEscape="true" responsive="true">
 		<h:form id="frmCorreo">
 			<p:commandButton id="btnEnviar"
-				action="#{ceduUsuMB.onEnviarRevision}"
+				action="#{ceduUsuMB.onEnviarComentarios}"
 				title="Clic para enviar a revisión de la coordinación el hallazgo encontrado"
 				process=":frmCorreo" value="Enviar a Revisión"
 				icon="pi pi-check-circle" style="float:left;"
@@ -239,74 +242,6 @@
 					style="font-weight:bold;" />
 				<pe:ckEditor id="narra" width="100%"
 					value="#{ceduUsuMB.textoCorreo}" skin="office2013"
-					customConfig="#{request.contextPath}/resources/js/customck.js" />
-			</p:panelGrid>
-		</h:form>
-	</p:dialog>
-
-	<p:dialog widgetVar="wvCorreo2" modal="true" showEffect="fade"
-		dynamic="true" closable="true" closeOnEscape="true" responsive="true">
-		<h:form id="frmCorreo2">
-			<p:commandButton id="btnEnviar"
-				action="#{ceduUsuMB.onEnviarObservacion}"
-				title="Clic para enviar comunicar las observaciones al auditor"
-				process=":frmCorreo2" value="Enviar Observaciones"
-				icon="pi pi-check-circle" style="float:left;"
-				styleClass="blue-btn raised-btn"
-				oncomplete="PF('wvCorreo2').hide();"
-				update=":frmHallazgo :frmListaHallazgos">
-				<p:confirm header="Confirmación" message="¿Enviar a revisión?"></p:confirm>
-			</p:commandButton>
-			<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
-				styleClass="ui-panelgrid-blank form-group form-elements">
-				<p:outputLabel for="narra2" value="Digite el texto del correo:"
-					style="font-weight:bold;" />
-				<pe:ckEditor id="narra2" width="100%"
-					value="#{ceduUsuMB.textoCorreoObs}" skin="office2013"
-					customConfig="#{request.contextPath}/resources/js/customck.js" />
-			</p:panelGrid>
-		</h:form>
-	</p:dialog>
-
-	<p:dialog widgetVar="wvCorreo3" modal="true" showEffect="fade"
-		dynamic="true" closable="true" closeOnEscape="true" responsive="true">
-		<h:form id="frmCorreo3">
-			<p:commandButton id="btnEnviar" action="#{ceduUsuMB.onFinalizar}"
-				title="Clic para finalizar la revisión" process=":frmCorreo3"
-				value="Finalizar Revisión" icon="pi pi-check-circle"
-				style="float:left;" styleClass="blue-btn raised-btn"
-				oncomplete="PF('wvCorreo3').hide();"
-				update=":frmHallazgo :frmListaHallazgos">
-				<p:confirm header="Confirmación" message="¿Finalizar la revisión?"></p:confirm>
-			</p:commandButton>
-			<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
-				styleClass="ui-panelgrid-blank form-group form-elements">
-				<p:outputLabel for="narra3" value="Digite el texto del correo:"
-					style="font-weight:bold;" />
-				<pe:ckEditor id="narra3" width="100%"
-					value="#{ceduUsuMB.textoCorreoFin}" skin="office2013"
-					customConfig="#{request.contextPath}/resources/js/customck.js" />
-			</p:panelGrid>
-		</h:form>
-	</p:dialog>
-
-	<p:dialog widgetVar="wvCorreo4" modal="true" showEffect="fade"
-		dynamic="true" closable="true" closeOnEscape="true" responsive="true">
-		<h:form id="frmCorreo4">
-			<p:commandButton id="btnEnviar" action="#{ceduUsuMB.onEnviarUnidad}"
-				title="Clic para comunicar a la unidad" process=":frmCorreo4"
-				value="Finalizar Revisión" icon="pi pi-check-circle"
-				style="float:left;" styleClass="blue-btn raised-btn"
-				oncomplete="PF('wvCorreo4').hide();"
-				update=":frmHallazgo :frmListaHallazgos">
-				<p:confirm header="Confirmación" message="¿Comunicar a Unidad?"></p:confirm>
-			</p:commandButton>
-			<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
-				styleClass="ui-panelgrid-blank form-group form-elements">
-				<p:outputLabel for="narra4" value="Digite el texto del correo:"
-					style="font-weight:bold;" />
-				<pe:ckEditor id="narra4" width="100%"
-					value="#{ceduUsuMB.textoCorreoUnidad}" skin="office2013"
 					customConfig="#{request.contextPath}/resources/js/customck.js" />
 			</p:panelGrid>
 		</h:form>

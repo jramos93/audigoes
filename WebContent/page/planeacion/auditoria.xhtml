@@ -32,19 +32,22 @@
 						<p:toolbar id="tMenu">
 							<p:toolbarGroup>
 								<p:commandButton value="Agregar"
+									rendered="#{loginMB.objAppsSession.usuario.usuRol==2}"
 									update="@form :frmNewEditAuditoria" icon="pi pi-plus"
 									actionListener="#{audMB.onNew()}" styleClass="raised-btn"
 									process="@this">
 								</p:commandButton>
 								<p:commandButton id="btnEditarAuditoria"
 									action="#{audMB.onEdit}" styleClass="raised-btn"
-									rendered="#{audMB.registro.selected}" value="Editar"
-									icon="pi pi-pencil" update="@form :frmNewEditAuditoria">
+									rendered="#{audMB.registro.selected and loginMB.objAppsSession.usuario.usuRol==2}"
+									value="Editar" icon="pi pi-pencil"
+									update="@form :frmNewEditAuditoria">
 								</p:commandButton>
 								<p:commandButton update=":frm" value="Eliminar"
 									styleClass="raised-btn" icon="pi pi-trash"
 									actionListener="#{audMB.onDelete}"
-									rendered="#{audMB.registro.selected}" process="@this">
+									rendered="#{audMB.registro.selected and loginMB.objAppsSession.usuario.usuRol==2}"
+									process="@this">
 									<p:confirm header="Confirmación"
 										message="Seguro(a) que desea eliminar el registros"
 										icon="pi pi-exclamation-triangle" />
@@ -61,7 +64,7 @@
 									actionListener="#{audMB.asignarPersonal}" ajax="false"
 									icon="pi pi-users"
 									action="/page/planeacion/asignacion.xhtml?faces-redirect=true"
-									rendered="#{audMB.registro.selected}">
+									rendered="#{audMB.registro.selected and loginMB.objAppsSession.usuario.usuRol==2}">
 								</p:commandButton>
 								<p:commandButton id="btnAuditPlanificacion"
 									value="Planificación" styleClass="blue-btn raised-btn"

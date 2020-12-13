@@ -61,6 +61,10 @@ public class Evidencia extends SuperEntity implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="evd_ced_id")
 	private CedulaNota cedula;
+	
+	@Lob
+	@Column(name="evd_archivo")
+	private byte[] evdArchivo;
 
 	public Evidencia() {
 	}
@@ -159,6 +163,14 @@ public class Evidencia extends SuperEntity implements Serializable {
 
 	public void setCedula(CedulaNota cedula) {
 		this.cedula = cedula;
+	}
+
+	public byte[] getEvdArchivo() {
+		return evdArchivo;
+	}
+
+	public void setEvdArchivo(byte[] evdArchivo) {
+		this.evdArchivo = evdArchivo;
 	}
 
 	@Override

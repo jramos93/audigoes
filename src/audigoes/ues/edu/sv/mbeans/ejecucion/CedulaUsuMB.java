@@ -125,7 +125,7 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 	public void onEditSelected() {
 		// TODO Auto-generated method stub
 		super.onEditSelected();
-		recMB.setAuditoria(auditoria);
+		recMB.setAuditoria(getRegistro().getAuditoria());
 		recMB.setCedula(getRegistro());
 		recMB.fillRecomendaciones();
 
@@ -153,7 +153,7 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 
 	public void prepararCorreo() {
 		textoCorreo = "<p><strong>AUDIGOES LE INFORMA:</strong></p>"
-				+ "<p>Se ha enviado para su revisi&oacute;n el hallazgo "
+				+ "<p>Se ha enviado para su revisi&oacute;n los comentarios al hallazgo "
 				+ "correspondiente a la auditor&iacute;a <strong>"
 				+ getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo() + "-"
 				+ getRegistro().getAuditoria().getAudAnio() + "-" + getRegistro().getAuditoria().getAudCorrelativo()
@@ -192,14 +192,13 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 				+ "<p><strong>Criterio:</strong> " + getRegistro().getCedCriterio() + "</p>" + "<br/><p>Atte.-</p>";
 	}
 
-	public void onEnviarRevision() {
-		Usuario usr = buscarCoordinador(getRegistro().getAuditoria());
+	public void onEnviarComentarios() {
+		Usuario usr = getRegistro().getUsuario1();
 		if (usr != null) {
 			try {
-				getRegistro().setCedEstado(2);
+				getRegistro().setCedEstado(5);
 				onSave();
-				correoObservacion(textoCorreo, getRegistro().getUsuario1(), usr);
-				setStatus("VIEW");
+				correoComentarios(textoCorreo, getObjAppsSession().getUsuario(), usr);
 			} catch (Exception e) {
 				e.printStackTrace();
 				addWarn(new FacesMessage("Error al enviar a revisión"));
@@ -215,7 +214,7 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 				getRegistro().setUsuario2(getObjAppsSession().getUsuario());
 				getRegistro().setCedFechaReviso(getToday());
 				onSave();
-				correoRevision(textoCorreoObs, getRegistro().getUsuario1(), usr);
+				//correoRevision(textoCorreoObs, getRegistro().getUsuario1(), usr);
 				setStatus("VIEW");
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -257,7 +256,7 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 		}
 	}
 
-	public void correoRevision(String texto, Usuario auditor, Usuario coordinador) {
+	public void correoComentarios(String texto, Usuario auditado, Usuario auditor) {
 		String from;
 		String cc;
 		String to;
@@ -270,8 +269,8 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 
 		try {
 			from = "audigoes.ues@gmail.com";
-			to = coordinador.getUsuCorreo();
-			subject = "Solicitud de revisión programa de ejecución";
+			to = auditado.getUsuCorreo();
+			subject = "Envio de comentarios a Hallazgo Preliminar";
 			cc = auditor.getUsuCorreo();
 			body = texto;
 			logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/images/logo-azul.png");

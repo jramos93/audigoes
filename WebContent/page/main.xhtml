@@ -9,21 +9,28 @@
 		<div class="ui-g">
 			<div class="ui-g-12">
 				<div class="card">
-					<div class="name" align="center">
-						<span class="app-name"> Datos Generales</span>
-					</div>
-					<h:form id="frmConsultas">
+
+					<h:form id="frmConsultas"
+						rendered="#{loginMB.objAppsSession.usuario.usuRol!=4}">
+						<div class="name" align="center">
+							<span class="app-name"> Datos Generales</span>
+						</div>
 						<p:tabView>
 							<p:tab title="Consulta Auditorías">
 								<p:panelGrid columns="5" styleClass="ui-panelgrid-blank">
 									<p:outputLabel value="Fecha inicio" />
-									<p:calendar id="consfechainicio" value="#{consMB.fechaInicio}" pattern="dd/MM/yyyy" />
-									
+									<p:calendar id="consfechainicio" value="#{consMB.fechaInicio}"
+										pattern="dd/MM/yyyy" />
+
 									<p:outputLabel value="Fecha fin" />
-									<p:calendar id="consfechafin" value="#{consMB.fechaFin}" pattern="dd/MM/yyyy" />
-									
-									<p:commandButton id="btnFechaAuditorias" value="Buscar" icon="ui-icon ui-icon-check"
-									actionListener="#{consMB.fillAuditoriasList}" update="dtAuditorias" process="@this consfechainicio consfechafin"/>
+									<p:calendar id="consfechafin" value="#{consMB.fechaFin}"
+										pattern="dd/MM/yyyy" />
+
+									<p:commandButton id="btnFechaAuditorias" value="Buscar"
+										icon="ui-icon ui-icon-check"
+										actionListener="#{consMB.fillAuditoriasList}"
+										update="dtAuditorias"
+										process="@this consfechainicio consfechafin" />
 								</p:panelGrid>
 								<p:panelGrid columns="4" rendered="false"
 									style="width:90%; margin: auto; text-align:center"
@@ -114,9 +121,9 @@
 
 								<p:dataTable id="dtAuditorias" widgetVar="wvAuditorias"
 									reflow="true" var="aud" style="margin-top:20px;"
-									paginator="true"  value="#{consMB.auditoriasList}"
+									paginator="true" value="#{consMB.auditoriasList}"
 									filteredValue="#{consMB.filteredAuditorias}"
-									rowsPerPageLabel="5,10,15,20,25" rows="25" 
+									rowsPerPageLabel="5,10,15,20,25" rows="25"
 									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 									currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
 
@@ -128,17 +135,23 @@
 										filterBy="#{aud.audCorrelativo}" filterMatchMode="contains">
 										<h:outputText value="#{aud.audCorrelativo}" />
 									</p:column>
-									<p:column headerText="Año" sortBy="#{aud.audAnio}" filterBy="#{aud.audAnio}" filterMatchMode="contains">
+									<p:column headerText="Año" sortBy="#{aud.audAnio}"
+										filterBy="#{aud.audAnio}" filterMatchMode="contains">
 										<h:outputText value="#{aud.audAnio}" />
 									</p:column>
-									<p:column headerText="Auditoría" sortBy="#{aud.audNombre}" filterBy="#{aud.audNombre}" filterMatchMode="contains">
+									<p:column headerText="Auditoría" sortBy="#{aud.audNombre}"
+										filterBy="#{aud.audNombre}" filterMatchMode="contains">
 										<h:outputText value="#{aud.audNombre}" />
 									</p:column>
-									<p:column headerText="Plan" sortBy="#{aud.planAnual.plaNombre}" filterBy="#{aud.planAnual.plaNombre}" filterMatchMode="contains">
+									<p:column headerText="Plan" sortBy="#{aud.planAnual.plaNombre}"
+										filterBy="#{aud.planAnual.plaNombre}"
+										filterMatchMode="contains">
 										<h:outputText value="#{aud.planAnual.plaNombre}" />
 									</p:column>
 									<p:column headerText="Tipo Auditoría"
-										sortBy="#{aud.tipoAuditoria.tpaNombre}" filterBy="#{aud.tipoAuditoria.tpaNombre}" filterMatchMode="contains">
+										sortBy="#{aud.tipoAuditoria.tpaNombre}"
+										filterBy="#{aud.tipoAuditoria.tpaNombre}"
+										filterMatchMode="contains">
 										<h:outputText value="#{aud.tipoAuditoria.tpaNombre}" />
 									</p:column>
 									<p:column headerText="Fecha Inicio"
@@ -168,17 +181,18 @@
 								</p:dataTable>
 
 							</p:tab>
-							<p:tab title="Consulta Hallazgos">
+							<p:tab title="Consulta Hallazgos" rendered="false">
 								
 									Hallazgos
 								<p:panelGrid columns="5" styleClass="ui-panelgrid-blank">
 									<p:outputLabel value="Fecha inicio" />
 									<p:calendar value="#{consMB.fechaInicio}" />
-									
+
 									<p:outputLabel value="Fecha fin" />
 									<p:calendar value="#{consMB.fechaFin}" />
-									
-									<p:commandButton id="btnFechaHallazgos" value="Buscar" icon="ui-icon ui-icon-check"  process="@this"/>
+
+									<p:commandButton id="btnFechaHallazgos" value="Buscar"
+										icon="ui-icon ui-icon-check" process="@this" />
 								</p:panelGrid>
 								<p:panelGrid columns="4"
 									style="width:90%; margin: auto; text-align:center"
