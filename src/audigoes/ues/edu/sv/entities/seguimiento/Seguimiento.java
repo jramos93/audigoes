@@ -7,7 +7,7 @@ import audigoes.ues.edu.sv.entities.SuperEntity;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 
 /**
@@ -54,8 +54,8 @@ public class Seguimiento extends SuperEntity implements Serializable {
 	private String usuModi;
 
 	//bi-directional many-to-one association to Recomendacion
-	@OneToMany(mappedBy="seguimiento", fetch=FetchType.EAGER)
-	private Set<Recomendacion> recomendacion;
+	@OneToMany(mappedBy="seguimiento")
+	private List<Recomendacion> recomendacion;
 
 	//bi-directional many-to-one association to Auditoria
 	@ManyToOne
@@ -137,11 +137,11 @@ public class Seguimiento extends SuperEntity implements Serializable {
 		this.usuModi = usuModi;
 	}
 
-	public Set<Recomendacion> getRecomendacion() {
+	public List<Recomendacion> getRecomendacion() {
 		return this.recomendacion;
 	}
 
-	public void setRecomendacion(Set<Recomendacion> recomendacion) {
+	public void setRecomendacion(List<Recomendacion> recomendacion) {
 		this.recomendacion = recomendacion;
 	}
 

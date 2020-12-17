@@ -8,7 +8,7 @@ import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 /**
  * The persistent class for the recomendacion database table.
@@ -55,8 +55,8 @@ public class Recomendacion extends SuperEntity implements Serializable {
 	private String usuModi;
 
 	// bi-directional many-to-one association to Comentario
-	@OneToMany(mappedBy = "recomendacion", fetch = FetchType.EAGER)
-	private Set<Comentario> comentario;
+	@OneToMany(mappedBy = "recomendacion")
+	private List<Comentario> comentario;
 
 	// bi-directional many-to-one association to CedulaNota
 	@ManyToOne
@@ -156,11 +156,11 @@ public class Recomendacion extends SuperEntity implements Serializable {
 		this.usuModi = usuModi;
 	}
 
-	public Set<Comentario> getComentario() {
+	public List<Comentario> getComentario() {
 		return this.comentario;
 	}
 
-	public void setComentario(Set<Comentario> comentario) {
+	public void setComentario(List<Comentario> comentario) {
 		this.comentario = comentario;
 	}
 

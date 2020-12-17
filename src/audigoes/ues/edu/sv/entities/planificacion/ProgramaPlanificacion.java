@@ -8,7 +8,7 @@ import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 /**
  * The persistent class for the programa_planificacion database table.
@@ -71,8 +71,8 @@ public class ProgramaPlanificacion extends SuperEntity implements Serializable {
 	private String usuModi;
 
 	// bi-directional many-to-one association to ProcedimientoPlanificacion
-	@OneToMany(mappedBy = "programaPlanificacion", fetch = FetchType.EAGER)
-	private Set<ProcedimientoPlanificacion> procedimientoPlanificacion;
+	@OneToMany(mappedBy = "programaPlanificacion")
+	private List<ProcedimientoPlanificacion> procedimientoPlanificacion;
 
 	// bi-directional many-to-one association to Actividad
 	@ManyToOne
@@ -216,11 +216,11 @@ public class ProgramaPlanificacion extends SuperEntity implements Serializable {
 		this.usuModi = usuModi;
 	}
 
-	public Set<ProcedimientoPlanificacion> getProcedimientoPlanificacion() {
+	public List<ProcedimientoPlanificacion> getProcedimientoPlanificacion() {
 		return this.procedimientoPlanificacion;
 	}
 
-	public void setProcedimientoPlanificacion(Set<ProcedimientoPlanificacion> procedimientoPlanificacion) {
+	public void setProcedimientoPlanificacion(List<ProcedimientoPlanificacion> procedimientoPlanificacion) {
 		this.procedimientoPlanificacion = procedimientoPlanificacion;
 	}
 

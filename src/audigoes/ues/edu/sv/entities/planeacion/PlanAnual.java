@@ -8,7 +8,7 @@ import audigoes.ues.edu.sv.entities.administracion.Archivo;
 import audigoes.ues.edu.sv.entities.administracion.Institucion;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 /**
  * The persistent class for the plan_anual database table.
@@ -96,12 +96,8 @@ public class PlanAnual extends SuperEntity implements Serializable {
 	private String usuModi;
 
 	// bi-directional many-to-one association to Auditoria
-	@OneToMany(mappedBy = "planAnual", fetch = FetchType.EAGER)
-	private Set<Auditoria> auditoria;
-
-	// bi-directional many-to-one association to DocumentoPlan
-	@OneToMany(mappedBy = "planAnual", fetch = FetchType.EAGER)
-	private Set<DocumentoPlan> documentoPlan;
+	@OneToMany(mappedBy = "planAnual")
+	private List<Auditoria> auditoria;
 
 	// bi-directional many-to-one association to Institucion
 	@ManyToOne
@@ -109,8 +105,8 @@ public class PlanAnual extends SuperEntity implements Serializable {
 	private Institucion institucion;
 
 	// bi-directional many-to-one association to Archivo
-	@OneToMany(mappedBy = "planAnual", fetch = FetchType.EAGER)
-	private Set<Archivo> archivo;
+	@OneToMany(mappedBy = "planAnual")
+	private List<Archivo> archivo;
 
 	public PlanAnual() {
 	}
@@ -275,11 +271,11 @@ public class PlanAnual extends SuperEntity implements Serializable {
 		this.usuModi = usuModi;
 	}
 
-	public Set<Auditoria> getAuditoria() {
+	public List<Auditoria> getAuditoria() {
 		return this.auditoria;
 	}
 
-	public void setAuditoria(Set<Auditoria> auditoria) {
+	public void setAuditoria(List<Auditoria> auditoria) {
 		this.auditoria = auditoria;
 	}
 
@@ -297,28 +293,6 @@ public class PlanAnual extends SuperEntity implements Serializable {
 		return auditoria;
 	}
 
-	public Set<DocumentoPlan> getDocumentoPlan() {
-		return this.documentoPlan;
-	}
-
-	public void setDocumentoPlan(Set<DocumentoPlan> documentoPlan) {
-		this.documentoPlan = documentoPlan;
-	}
-
-	public DocumentoPlan addDocumentoPlan(DocumentoPlan documentoPlan) {
-		getDocumentoPlan().add(documentoPlan);
-		documentoPlan.setPlanAnual(this);
-
-		return documentoPlan;
-	}
-
-	public DocumentoPlan removeDocumentoPlan(DocumentoPlan documentoPlan) {
-		getDocumentoPlan().remove(documentoPlan);
-		documentoPlan.setPlanAnual(null);
-
-		return documentoPlan;
-	}
-
 	public Institucion getInstitucion() {
 		return this.institucion;
 	}
@@ -327,11 +301,11 @@ public class PlanAnual extends SuperEntity implements Serializable {
 		this.institucion = institucion;
 	}
 	
-	public Set<Archivo> getArchivo() {
+	public List<Archivo> getArchivo() {
 		return this.archivo;
 	}
 
-	public void setArchivo(Set<Archivo> archivo) {
+	public void setArchivo(List<Archivo> archivo) {
 		this.archivo = archivo;
 	}
 
@@ -380,7 +354,7 @@ public class PlanAnual extends SuperEntity implements Serializable {
 				+ ", plaObjetivos=" + plaObjetivos + ", plaPrincipiosValores=" + plaPrincipiosValores
 				+ ", plaRiesgosConsiderados=" + plaRiesgosConsiderados + ", plaVision=" + plaVision + ", plaPortada="
 				+ plaPortada + ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi
-				+ ", auditoria=" + auditoria + ", documentoPlan=" + documentoPlan + ", institucion=" + institucion
+				+ ", auditoria=" + auditoria + ", institucion=" + institucion
 				+ ", archivo=" + archivo + "]";
 	}
 }

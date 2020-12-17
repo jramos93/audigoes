@@ -46,7 +46,7 @@ public class LoginMB extends SecurityController implements Serializable{
 		        if (session != null) {
 		            session.invalidate(); //Cierre de sesion
 		        }
-		        return "/inicio.xhtml";// indicas a donde quieres direccionar después de cerrar sesión 
+		        return "/inicio.xhtml?faces-redirect=true";// indicas a donde quieres direccionar después de cerrar sesión 
 		    }
 	
 	public void onVerificarLogin(ComponentSystemEvent event) {

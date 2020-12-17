@@ -6,7 +6,7 @@ import javax.persistence.*;
 import audigoes.ues.edu.sv.entities.SuperEntity;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 
 /**
@@ -48,12 +48,12 @@ public class Permiso extends SuperEntity implements Serializable {
 	private String usuModi;
 
 	//bi-directional many-to-one association to RolPermiso
-	@OneToMany(mappedBy="permiso", fetch=FetchType.EAGER)
-	private Set<RolPermiso> rolPermiso;
+	@OneToMany(mappedBy="permiso")
+	private List<RolPermiso> rolPermiso;
 
 	//bi-directional many-to-one association to UsuarioPermiso
-	@OneToMany(mappedBy="permiso", fetch=FetchType.EAGER)
-	private Set<UsuarioPermiso> usuarioPermiso;
+	@OneToMany(mappedBy="permiso")
+	private List<UsuarioPermiso> usuarioPermiso;
 
 	public Permiso() {
 	}
@@ -122,11 +122,11 @@ public class Permiso extends SuperEntity implements Serializable {
 		this.usuModi = usuModi;
 	}
 
-	public Set<RolPermiso> getRolPermiso() {
+	public List<RolPermiso> getRolPermiso() {
 		return this.rolPermiso;
 	}
 
-	public void setRolPermiso(Set<RolPermiso> rolPermiso) {
+	public void setRolPermiso(List<RolPermiso> rolPermiso) {
 		this.rolPermiso = rolPermiso;
 	}
 
@@ -144,11 +144,11 @@ public class Permiso extends SuperEntity implements Serializable {
 		return rolPermiso;
 	}
 
-	public Set<UsuarioPermiso> getUsuarioPermiso() {
+	public List<UsuarioPermiso> getUsuarioPermiso() {
 		return this.usuarioPermiso;
 	}
 
-	public void setUsuarioPermiso(Set<UsuarioPermiso> usuarioPermiso) {
+	public void setUsuarioPermiso(List<UsuarioPermiso> usuarioPermiso) {
 		this.usuarioPermiso = usuarioPermiso;
 	}
 

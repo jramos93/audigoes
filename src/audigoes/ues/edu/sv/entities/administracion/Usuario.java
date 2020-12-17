@@ -14,7 +14,7 @@ import audigoes.ues.edu.sv.entities.planificacion.UsuarioActividad;
 import audigoes.ues.edu.sv.entities.seguimiento.ResponsableRecomendacion;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 
 /**
@@ -95,52 +95,52 @@ public class Usuario extends SuperEntity implements Serializable {
 	private String usuUsuario;
 
 	//bi-directional many-to-one association to AuditoriaResponsable
-	@OneToMany(mappedBy="usuario", fetch=FetchType.EAGER)
-	private Set<AuditoriaResponsable> auditoriaResponsable;
+	@OneToMany(mappedBy="usuario")
+	private List<AuditoriaResponsable> auditoriaResponsable;
 
 	//bi-directional many-to-one association to CedulaNota
-	@OneToMany(mappedBy="usuario1", fetch=FetchType.EAGER)
-	private Set<CedulaNota> cedulaNotas1;
+	@OneToMany(mappedBy="usuario1")
+	private List<CedulaNota> cedulaNotas1;
 
 	//bi-directional many-to-one association to CedulaNota
-	@OneToMany(mappedBy="usuario2", fetch=FetchType.EAGER)
-	private Set<CedulaNota> cedulaNotas2;
+	@OneToMany(mappedBy="usuario2")
+	private List<CedulaNota> cedulaNotas2;
 
 	//bi-directional many-to-one association to ProcedimientoEjecucion
-	@OneToMany(mappedBy="usuario1", fetch=FetchType.EAGER)
-	private Set<ProcedimientoEjecucion> procedimientoEjecucion1;
+	@OneToMany(mappedBy="usuario1")
+	private List<ProcedimientoEjecucion> procedimientoEjecucion1;
 
 	//bi-directional many-to-one association to ProcedimientoEjecucion
-	@OneToMany(mappedBy="usuario2", fetch=FetchType.EAGER)
-	private Set<ProcedimientoEjecucion> procedimientoEjecucion2;
+	@OneToMany(mappedBy="usuario2")
+	private List<ProcedimientoEjecucion> procedimientoEjecucion2;
 
 	//bi-directional many-to-one association to ProcedimientoPlanificacion
-	@OneToMany(mappedBy="usuario1", fetch=FetchType.EAGER)
-	private Set<ProcedimientoPlanificacion> procedimientoPlanificacion1;
+	@OneToMany(mappedBy="usuario1")
+	private List<ProcedimientoPlanificacion> procedimientoPlanificacion1;
 
 	//bi-directional many-to-one association to ProcedimientoPlanificacion
-	@OneToMany(mappedBy="usuario2", fetch=FetchType.EAGER)
-	private Set<ProcedimientoPlanificacion> procedimientoPlanificacion2;
+	@OneToMany(mappedBy="usuario2")
+	private List<ProcedimientoPlanificacion> procedimientoPlanificacion2;
 
 	//bi-directional many-to-one association to ProgramaEjecucion
-	@OneToMany(mappedBy="usuario1", fetch=FetchType.EAGER)
-	private Set<ProgramaEjecucion> programaEjecucion1;
+	@OneToMany(mappedBy="usuario1")
+	private List<ProgramaEjecucion> programaEjecucion1;
 
 	//bi-directional many-to-one association to ProgramaEjecucion
-	@OneToMany(mappedBy="usuario2", fetch=FetchType.EAGER)
-	private Set<ProgramaEjecucion> programaEjecucion2;
+	@OneToMany(mappedBy="usuario2")
+	private List<ProgramaEjecucion> programaEjecucion2;
 
 	//bi-directional many-to-one association to ProgramaPlanificacion
-	@OneToMany(mappedBy="usuario1", fetch=FetchType.EAGER)
-	private Set<ProgramaPlanificacion> programaPlanificacion1;
+	@OneToMany(mappedBy="usuario1")
+	private List<ProgramaPlanificacion> programaPlanificacion1;
 
 	//bi-directional many-to-one association to ProgramaPlanificacion
-	@OneToMany(mappedBy="usuario2", fetch=FetchType.EAGER)
-	private Set<ProgramaPlanificacion> programaPlanificacion2;
+	@OneToMany(mappedBy="usuario2")
+	private List<ProgramaPlanificacion> programaPlanificacion2;
 
 	//bi-directional many-to-one association to ResponsableRecomendacion
-	@OneToMany(mappedBy="usuario", fetch=FetchType.EAGER)
-	private Set<ResponsableRecomendacion> responsableRecomendacion;
+	@OneToMany(mappedBy="usuario")
+	private List<ResponsableRecomendacion> responsableRecomendacion;
 
 	//bi-directional many-to-one association to Institucion
 	@ManyToOne
@@ -153,20 +153,20 @@ public class Usuario extends SuperEntity implements Serializable {
 	private Usuario usuario;
 
 	//bi-directional many-to-one association to Usuario
-	@OneToMany(mappedBy="usuario", fetch=FetchType.EAGER)
-	private Set<Usuario> usuarios;
+	@OneToMany(mappedBy="usuario")
+	private List<Usuario> usuarios;
 
 	//bi-directional many-to-one association to UsuarioActividad
-	@OneToMany(mappedBy="usuario", fetch=FetchType.EAGER)
-	private Set<UsuarioActividad> usuarioActividad;
+	@OneToMany(mappedBy="usuario")
+	private List<UsuarioActividad> usuarioActividad;
 
 	//bi-directional many-to-one association to UsuarioPermiso
-	@OneToMany(mappedBy="usuario", fetch=FetchType.EAGER)
-	private Set<UsuarioPermiso> usuarioPermiso;
+	@OneToMany(mappedBy="usuario")
+	private List<UsuarioPermiso> usuarioPermiso;
 
 	//bi-directional many-to-one association to UsuarioUnidad
-	@OneToMany(mappedBy="usuario", fetch=FetchType.EAGER)
-	private Set<UsuarioUnidad> usuarioUnidad;
+	@OneToMany(mappedBy="usuario")
+	private List<UsuarioUnidad> usuarioUnidad;
 
 	public Usuario() {
 	}
@@ -323,11 +323,11 @@ public class Usuario extends SuperEntity implements Serializable {
 		this.usuUsuario = usuUsuario;
 	}
 
-	public Set<AuditoriaResponsable> getAuditoriaResponsable() {
+	public List<AuditoriaResponsable> getAuditoriaResponsable() {
 		return this.auditoriaResponsable;
 	}
 
-	public void setAuditoriaResponsable(Set<AuditoriaResponsable> auditoriaResponsable) {
+	public void setAuditoriaResponsable(List<AuditoriaResponsable> auditoriaResponsable) {
 		this.auditoriaResponsable = auditoriaResponsable;
 	}
 
@@ -345,11 +345,11 @@ public class Usuario extends SuperEntity implements Serializable {
 		return auditoriaResponsable;
 	}
 
-	public Set<CedulaNota> getCedulaNotas1() {
+	public List<CedulaNota> getCedulaNotas1() {
 		return this.cedulaNotas1;
 	}
 
-	public void setCedulaNotas1(Set<CedulaNota> cedulaNotas1) {
+	public void setCedulaNotas1(List<CedulaNota> cedulaNotas1) {
 		this.cedulaNotas1 = cedulaNotas1;
 	}
 
@@ -367,11 +367,11 @@ public class Usuario extends SuperEntity implements Serializable {
 		return cedulaNotas1;
 	}
 
-	public Set<CedulaNota> getCedulaNotas2() {
+	public List<CedulaNota> getCedulaNotas2() {
 		return this.cedulaNotas2;
 	}
 
-	public void setCedulaNotas2(Set<CedulaNota> cedulaNotas2) {
+	public void setCedulaNotas2(List<CedulaNota> cedulaNotas2) {
 		this.cedulaNotas2 = cedulaNotas2;
 	}
 
@@ -389,11 +389,11 @@ public class Usuario extends SuperEntity implements Serializable {
 		return cedulaNotas2;
 	}
 
-	public Set<ProcedimientoEjecucion> getProcedimientoEjecucion1() {
+	public List<ProcedimientoEjecucion> getProcedimientoEjecucion1() {
 		return this.procedimientoEjecucion1;
 	}
 
-	public void setProcedimientoEjecucion1(Set<ProcedimientoEjecucion> procedimientoEjecucion1) {
+	public void setProcedimientoEjecucion1(List<ProcedimientoEjecucion> procedimientoEjecucion1) {
 		this.procedimientoEjecucion1 = procedimientoEjecucion1;
 	}
 
@@ -411,11 +411,11 @@ public class Usuario extends SuperEntity implements Serializable {
 		return procedimientoEjecucion1;
 	}
 
-	public Set<ProcedimientoEjecucion> getProcedimientoEjecucion2() {
+	public List<ProcedimientoEjecucion> getProcedimientoEjecucion2() {
 		return this.procedimientoEjecucion2;
 	}
 
-	public void setProcedimientoEjecucion2(Set<ProcedimientoEjecucion> procedimientoEjecucion2) {
+	public void setProcedimientoEjecucion2(List<ProcedimientoEjecucion> procedimientoEjecucion2) {
 		this.procedimientoEjecucion2 = procedimientoEjecucion2;
 	}
 
@@ -433,11 +433,11 @@ public class Usuario extends SuperEntity implements Serializable {
 		return procedimientoEjecucion2;
 	}
 
-	public Set<ProcedimientoPlanificacion> getProcedimientoPlanificacion1() {
+	public List<ProcedimientoPlanificacion> getProcedimientoPlanificacion1() {
 		return this.procedimientoPlanificacion1;
 	}
 
-	public void setProcedimientoPlanificacion1(Set<ProcedimientoPlanificacion> procedimientoPlanificacion1) {
+	public void setProcedimientoPlanificacion1(List<ProcedimientoPlanificacion> procedimientoPlanificacion1) {
 		this.procedimientoPlanificacion1 = procedimientoPlanificacion1;
 	}
 
@@ -455,11 +455,11 @@ public class Usuario extends SuperEntity implements Serializable {
 		return procedimientoPlanificacion1;
 	}
 
-	public Set<ProcedimientoPlanificacion> getProcedimientoPlanificacion2() {
+	public List<ProcedimientoPlanificacion> getProcedimientoPlanificacion2() {
 		return this.procedimientoPlanificacion2;
 	}
 
-	public void setProcedimientoPlanificacion2(Set<ProcedimientoPlanificacion> procedimientoPlanificacion2) {
+	public void setProcedimientoPlanificacion2(List<ProcedimientoPlanificacion> procedimientoPlanificacion2) {
 		this.procedimientoPlanificacion2 = procedimientoPlanificacion2;
 	}
 
@@ -477,11 +477,11 @@ public class Usuario extends SuperEntity implements Serializable {
 		return procedimientoPlanificacion2;
 	}
 
-	public Set<ProgramaEjecucion> getProgramaEjecucion1() {
+	public List<ProgramaEjecucion> getProgramaEjecucion1() {
 		return this.programaEjecucion1;
 	}
 
-	public void setProgramaEjecucion1(Set<ProgramaEjecucion> programaEjecucion1) {
+	public void setProgramaEjecucion1(List<ProgramaEjecucion> programaEjecucion1) {
 		this.programaEjecucion1 = programaEjecucion1;
 	}
 
@@ -499,11 +499,11 @@ public class Usuario extends SuperEntity implements Serializable {
 		return programaEjecucion1;
 	}
 
-	public Set<ProgramaEjecucion> getProgramaEjecucion2() {
+	public List<ProgramaEjecucion> getProgramaEjecucion2() {
 		return this.programaEjecucion2;
 	}
 
-	public void setProgramaEjecucion2(Set<ProgramaEjecucion> programaEjecucion2) {
+	public void setProgramaEjecucion2(List<ProgramaEjecucion> programaEjecucion2) {
 		this.programaEjecucion2 = programaEjecucion2;
 	}
 
@@ -521,11 +521,11 @@ public class Usuario extends SuperEntity implements Serializable {
 		return programaEjecucion2;
 	}
 
-	public Set<ProgramaPlanificacion> getProgramaPlanificacion1() {
+	public List<ProgramaPlanificacion> getProgramaPlanificacion1() {
 		return this.programaPlanificacion1;
 	}
 
-	public void setProgramaPlanificacion1(Set<ProgramaPlanificacion> programaPlanificacion1) {
+	public void setProgramaPlanificacion1(List<ProgramaPlanificacion> programaPlanificacion1) {
 		this.programaPlanificacion1 = programaPlanificacion1;
 	}
 
@@ -543,11 +543,11 @@ public class Usuario extends SuperEntity implements Serializable {
 		return programaPlanificacion1;
 	}
 
-	public Set<ProgramaPlanificacion> getProgramaPlanificacion2() {
+	public List<ProgramaPlanificacion> getProgramaPlanificacion2() {
 		return this.programaPlanificacion2;
 	}
 
-	public void setProgramaPlanificacion2(Set<ProgramaPlanificacion> programaPlanificacion2) {
+	public void setProgramaPlanificacion2(List<ProgramaPlanificacion> programaPlanificacion2) {
 		this.programaPlanificacion2 = programaPlanificacion2;
 	}
 
@@ -565,11 +565,11 @@ public class Usuario extends SuperEntity implements Serializable {
 		return programaPlanificacion2;
 	}
 
-	public Set<ResponsableRecomendacion> getResponsableRecomendacion() {
+	public List<ResponsableRecomendacion> getResponsableRecomendacion() {
 		return this.responsableRecomendacion;
 	}
 
-	public void setResponsableRecomendacion(Set<ResponsableRecomendacion> responsableRecomendacion) {
+	public void setResponsableRecomendacion(List<ResponsableRecomendacion> responsableRecomendacion) {
 		this.responsableRecomendacion = responsableRecomendacion;
 	}
 
@@ -603,11 +603,11 @@ public class Usuario extends SuperEntity implements Serializable {
 		this.usuario = usuario;
 	}
 
-	public Set<Usuario> getUsuarios() {
+	public List<Usuario> getUsuarios() {
 		return this.usuarios;
 	}
 
-	public void setUsuarios(Set<Usuario> usuarios) {
+	public void setUsuarios(List<Usuario> usuarios) {
 		this.usuarios = usuarios;
 	}
 
@@ -625,11 +625,11 @@ public class Usuario extends SuperEntity implements Serializable {
 		return usuario;
 	}
 
-	public Set<UsuarioActividad> getUsuarioActividad() {
+	public List<UsuarioActividad> getUsuarioActividad() {
 		return this.usuarioActividad;
 	}
 
-	public void setUsuarioActividad(Set<UsuarioActividad> usuarioActividad) {
+	public void setUsuarioActividad(List<UsuarioActividad> usuarioActividad) {
 		this.usuarioActividad = usuarioActividad;
 	}
 
@@ -647,11 +647,11 @@ public class Usuario extends SuperEntity implements Serializable {
 		return usuarioActividad;
 	}
 
-	public Set<UsuarioPermiso> getUsuarioPermiso() {
+	public List<UsuarioPermiso> getUsuarioPermiso() {
 		return this.usuarioPermiso;
 	}
 
-	public void setUsuarioPermiso(Set<UsuarioPermiso> usuarioPermiso) {
+	public void setUsuarioPermiso(List<UsuarioPermiso> usuarioPermiso) {
 		this.usuarioPermiso = usuarioPermiso;
 	}
 
@@ -669,11 +669,11 @@ public class Usuario extends SuperEntity implements Serializable {
 		return usuarioPermiso;
 	}
 
-	public Set<UsuarioUnidad> getUsuarioUnidad() {
+	public List<UsuarioUnidad> getUsuarioUnidad() {
 		return this.usuarioUnidad;
 	}
 
-	public void setUsuarioUnidad(Set<UsuarioUnidad> usuarioUnidad) {
+	public void setUsuarioUnidad(List<UsuarioUnidad> usuarioUnidad) {
 		this.usuarioUnidad = usuarioUnidad;
 	}
 

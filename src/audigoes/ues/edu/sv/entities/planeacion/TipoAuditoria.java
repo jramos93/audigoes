@@ -7,7 +7,7 @@ import audigoes.ues.edu.sv.entities.SuperEntity;
 import audigoes.ues.edu.sv.entities.administracion.Institucion;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 /**
  * The persistent class for the tipo_auditoria database table.
@@ -52,8 +52,8 @@ public class TipoAuditoria extends SuperEntity implements Serializable {
 	private String usuModi;
 
 	// bi-directional many-to-one association to Auditoria
-	@OneToMany(mappedBy = "tipoAuditoria", fetch = FetchType.EAGER)
-	private Set<Auditoria> auditoria;
+	@OneToMany(mappedBy = "tipoAuditoria")
+	private List<Auditoria> auditoria;
 
 	// bi-directional many-to-one association to Institucion
 	@ManyToOne
@@ -135,11 +135,11 @@ public class TipoAuditoria extends SuperEntity implements Serializable {
 		this.usuModi = usuModi;
 	}
 
-	public Set<Auditoria> getAuditoria() {
+	public List<Auditoria> getAuditoria() {
 		return this.auditoria;
 	}
 
-	public void setAuditoria(Set<Auditoria> auditoria) {
+	public void setAuditoria(List<Auditoria> auditoria) {
 		this.auditoria = auditoria;
 	}
 

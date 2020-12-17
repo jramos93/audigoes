@@ -9,7 +9,7 @@ import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 /**
  * The persistent class for the procedimiento_planificacion database table.
@@ -75,12 +75,8 @@ public class ProcedimientoPlanificacion extends SuperEntity implements Serializa
 	private String usuModi;
 
 	// bi-directional many-to-one association to CedulaNota
-	@OneToMany(mappedBy = "procedimientoPlanificacion", fetch = FetchType.EAGER)
-	private Set<CedulaNota> cedulaNotas;
-
-	// bi-directional many-to-one association to DocumentosPlanificacion
-	@OneToMany(mappedBy = "procedimientoPlanificacion", fetch = FetchType.EAGER)
-	private Set<DocumentosPlanificacion> documentosPlanificacion;
+	@OneToMany(mappedBy = "procedimientoPlanificacion")
+	private List<CedulaNota> cedulaNotas;
 
 	// bi-directional many-to-one association to ProgramaPlanificacion
 	@ManyToOne
@@ -98,8 +94,8 @@ public class ProcedimientoPlanificacion extends SuperEntity implements Serializa
 	private Usuario usuario2;
 
 	// bi-directional many-to-one association to Archivo
-	@OneToMany(mappedBy = "procedimientoPlanificacion", fetch = FetchType.EAGER)
-	private Set<Archivo> archivo;
+	@OneToMany(mappedBy = "procedimientoPlanificacion")
+	private List<Archivo> archivo;
 
 	public ProcedimientoPlanificacion() {
 	}
@@ -192,11 +188,11 @@ public class ProcedimientoPlanificacion extends SuperEntity implements Serializa
 		this.usuModi = usuModi;
 	}
 
-	public Set<CedulaNota> getCedulaNotas() {
+	public List<CedulaNota> getCedulaNotas() {
 		return this.cedulaNotas;
 	}
 
-	public void setCedulaNotas(Set<CedulaNota> cedulaNotas) {
+	public void setCedulaNotas(List<CedulaNota> cedulaNotas) {
 		this.cedulaNotas = cedulaNotas;
 	}
 
@@ -212,28 +208,6 @@ public class ProcedimientoPlanificacion extends SuperEntity implements Serializa
 		cedulaNota.setProcedimientoPlanificacion(null);
 
 		return cedulaNota;
-	}
-
-	public Set<DocumentosPlanificacion> getDocumentosPlanificacion() {
-		return this.documentosPlanificacion;
-	}
-
-	public void setDocumentosPlanificacion(Set<DocumentosPlanificacion> documentosPlanificacion) {
-		this.documentosPlanificacion = documentosPlanificacion;
-	}
-
-	public DocumentosPlanificacion addDocumentosPlanificacion(DocumentosPlanificacion documentosPlanificacion) {
-		getDocumentosPlanificacion().add(documentosPlanificacion);
-		documentosPlanificacion.setProcedimientoPlanificacion(this);
-
-		return documentosPlanificacion;
-	}
-
-	public DocumentosPlanificacion removeDocumentosPlanificacion(DocumentosPlanificacion documentosPlanificacion) {
-		getDocumentosPlanificacion().remove(documentosPlanificacion);
-		documentosPlanificacion.setProcedimientoPlanificacion(null);
-
-		return documentosPlanificacion;
 	}
 
 	public ProgramaPlanificacion getProgramaPlanificacion() {
@@ -284,11 +258,11 @@ public class ProcedimientoPlanificacion extends SuperEntity implements Serializa
 		this.proObservaciones = proObservaciones;
 	}
 
-	public Set<Archivo> getArchivo() {
+	public List<Archivo> getArchivo() {
 		return this.archivo;
 	}
 
-	public void setArchivo(Set<Archivo> archivo) {
+	public void setArchivo(List<Archivo> archivo) {
 		this.archivo = archivo;
 	}
 
@@ -335,7 +309,7 @@ public class ProcedimientoPlanificacion extends SuperEntity implements Serializa
 				+ proFechaElaboro + ", proFechaReviso=" + proFechaReviso + ", proNarrativa=" + proNarrativa
 				+ ", proNombre=" + proNombre + ", proReferencia=" + proReferencia + ", regActivo=" + regActivo
 				+ ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", cedulaNotas=" + cedulaNotas
-				+ ", documentosPlanificacion=" + documentosPlanificacion + ", programaPlanificacion="
+				+ ", documentosPlanificacion=" + ", programaPlanificacion="
 				+ programaPlanificacion + ", usuario1=" + usuario1 + ", usuario2=" + usuario2 + ", archivo=" + archivo
 				+ "]";
 	}

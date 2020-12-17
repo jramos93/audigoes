@@ -6,7 +6,7 @@ import javax.persistence.*;
 import audigoes.ues.edu.sv.entities.SuperEntity;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 
 /**
@@ -65,7 +65,7 @@ public class NormativaCedula extends SuperEntity implements Serializable {
 
 	//bi-directional many-to-one association to Criterio
 	@OneToMany(mappedBy="normativaCedula", fetch=FetchType.EAGER)
-	private Set<Criterio> criterio;
+	private List<Criterio> criterio;
 
 	//bi-directional many-to-one association to Institucion
 	@ManyToOne
@@ -179,11 +179,11 @@ public class NormativaCedula extends SuperEntity implements Serializable {
 		this.usuModi = usuModi;
 	}
 
-	public Set<Criterio> getCriterio() {
+	public List<Criterio> getCriterio() {
 		return this.criterio;
 	}
 
-	public void setCriterio(Set<Criterio> criterio) {
+	public void setCriterio(List<Criterio> criterio) {
 		this.criterio = criterio;
 	}
 

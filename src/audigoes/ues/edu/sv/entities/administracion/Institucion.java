@@ -3,11 +3,9 @@ package audigoes.ues.edu.sv.entities.administracion;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -77,28 +75,28 @@ public class Institucion extends SuperEntity implements Serializable {
 	private String usuModi;
 
 	// bi-directional many-to-one association to Configuracion
-	@OneToMany(mappedBy = "institucion", fetch = FetchType.EAGER)
-	private Set<Configuracion> configuracion;
+	@OneToMany(mappedBy = "institucion")
+	private List<Configuracion> configuracion;
 
 	// bi-directional many-to-one association to Marca
-	@OneToMany(mappedBy = "institucion", fetch = FetchType.EAGER)
-	private Set<Marca> marca;
+	@OneToMany(mappedBy = "institucion")
+	private List<Marca> marca;
 
 	// bi-directional many-to-one association to NormativaCedula
-	@OneToMany(mappedBy = "institucion", fetch = FetchType.EAGER)
-	private Set<NormativaCedula> normativaCedula;
+	@OneToMany(mappedBy = "institucion")
+	private List<NormativaCedula> normativaCedula;
 
 	// bi-directional many-to-one association to Unidad
-	@OneToMany(mappedBy = "institucion", fetch = FetchType.EAGER)
-	private Set<Unidad> unidad;
+	@OneToMany(mappedBy = "institucion")
+	private List<Unidad> unidad;
 
 	// bi-directional many-to-one association to Usuario
-	@OneToMany(mappedBy = "institucion", fetch = FetchType.EAGER)
-	private Set<Usuario> usuario;
+	@OneToMany(mappedBy = "institucion")
+	private List<Usuario> usuario;
 
 	// bi-directional many-to-one association to PlanAnual
-	@OneToMany(mappedBy = "institucion", fetch = FetchType.EAGER)
-	private Set<PlanAnual> planAnual;
+	@OneToMany(mappedBy = "institucion")
+	private List<PlanAnual> planAnual;
 
 	// bi-directional many-to-one association to TipoAuditoria
 	@OneToMany(mappedBy = "institucion")
@@ -106,7 +104,7 @@ public class Institucion extends SuperEntity implements Serializable {
 
 	// bi-directional many-to-one association to Rol
 	@OneToMany(mappedBy = "institucion")
-	private Set<Rol> rol;
+	private List<Rol> rol;
 
 	public Institucion() {
 	}
@@ -215,11 +213,11 @@ public class Institucion extends SuperEntity implements Serializable {
 		this.usuModi = usuModi;
 	}
 
-	public Set<Configuracion> getConfiguracion() {
+	public List<Configuracion> getConfiguracion() {
 		return this.configuracion;
 	}
 
-	public void setConfiguracion(Set<Configuracion> configuracion) {
+	public void setConfiguracion(List<Configuracion> configuracion) {
 		this.configuracion = configuracion;
 	}
 
@@ -237,11 +235,11 @@ public class Institucion extends SuperEntity implements Serializable {
 		return configuracion;
 	}
 
-	public Set<Marca> getMarca() {
+	public List<Marca> getMarca() {
 		return this.marca;
 	}
 
-	public void setMarca(Set<Marca> marca) {
+	public void setMarca(List<Marca> marca) {
 		this.marca = marca;
 	}
 
@@ -259,11 +257,11 @@ public class Institucion extends SuperEntity implements Serializable {
 		return marca;
 	}
 
-	public Set<NormativaCedula> getNormativaCedula() {
+	public List<NormativaCedula> getNormativaCedula() {
 		return this.normativaCedula;
 	}
 
-	public void setNormativaCedula(Set<NormativaCedula> normativaCedula) {
+	public void setNormativaCedula(List<NormativaCedula> normativaCedula) {
 		this.normativaCedula = normativaCedula;
 	}
 
@@ -281,11 +279,11 @@ public class Institucion extends SuperEntity implements Serializable {
 		return normativaCedula;
 	}
 
-	public Set<Unidad> getUnidad() {
+	public List<Unidad> getUnidad() {
 		return this.unidad;
 	}
 
-	public void setUnidad(Set<Unidad> unidad) {
+	public void setUnidad(List<Unidad> unidad) {
 		this.unidad = unidad;
 	}
 
@@ -303,11 +301,11 @@ public class Institucion extends SuperEntity implements Serializable {
 		return unidad;
 	}
 
-	public Set<Usuario> getUsuario() {
+	public List<Usuario> getUsuario() {
 		return this.usuario;
 	}
 
-	public void setUsuario(Set<Usuario> usuario) {
+	public void setUsuario(List<Usuario> usuario) {
 		this.usuario = usuario;
 	}
 
@@ -325,11 +323,11 @@ public class Institucion extends SuperEntity implements Serializable {
 		return usuario;
 	}
 
-	public Set<PlanAnual> getPlanAnual() {
+	public List<PlanAnual> getPlanAnual() {
 		return this.planAnual;
 	}
 
-	public void setPlanAnual(Set<PlanAnual> planAnual) {
+	public void setPlanAnual(List<PlanAnual> planAnual) {
 		this.planAnual = planAnual;
 	}
 
@@ -369,11 +367,11 @@ public class Institucion extends SuperEntity implements Serializable {
 		return tipoAuditoria;
 	}
 	
-	public Set<Rol> getRol() {
+	public List<Rol> getRol() {
 		return this.rol;
 	}
 
-	public void setRol(Set<Rol> rol) {
+	public void setRol(List<Rol> rol) {
 		this.rol = rol;
 	}
 

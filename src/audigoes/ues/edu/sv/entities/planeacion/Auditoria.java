@@ -2,11 +2,10 @@ package audigoes.ues.edu.sv.entities.planeacion;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -102,8 +101,8 @@ public class Auditoria extends SuperEntity implements Serializable {
 	private String usuModi;
 
 	// bi-directional many-to-one association to Actividad
-	@OneToMany(mappedBy = "auditoria", fetch = FetchType.EAGER)
-	private Set<Actividad> actividad;
+	@OneToMany(mappedBy = "auditoria")
+	private List<Actividad> actividad;
 
 	// bi-directional many-to-one association to OrigenAuditoria
 	@ManyToOne
@@ -121,28 +120,28 @@ public class Auditoria extends SuperEntity implements Serializable {
 	private TipoAuditoria tipoAuditoria;
 
 	// bi-directional many-to-one association to AuditoriaResponsable
-	@OneToMany(mappedBy = "auditoria", fetch = FetchType.EAGER)
-	private Set<AuditoriaResponsable> auditoriaResponsable;
+	@OneToMany(mappedBy = "auditoria")
+	private List<AuditoriaResponsable> auditoriaResponsable;
 
 	// bi-directional many-to-one association to AuditoriaUnidad
-	@OneToMany(mappedBy = "auditoria", fetch = FetchType.EAGER)
-	private Set<AuditoriaUnidad> auditoriaUnidad;
+	@OneToMany(mappedBy = "auditoria")
+	private List<AuditoriaUnidad> auditoriaUnidad;
 
 	// bi-directional many-to-one association to Memorando
-	@OneToMany(mappedBy = "auditoria", fetch = FetchType.EAGER)
-	private Set<Memorando> memorando;
+	@OneToMany(mappedBy = "auditoria")
+	private List<Memorando> memorando;
 
 	// bi-directional many-to-one association to Seguimiento
-	@OneToMany(mappedBy = "auditoria", fetch = FetchType.EAGER)
-	private Set<Seguimiento> seguimiento;
+	@OneToMany(mappedBy = "auditoria")
+	private List<Seguimiento> seguimiento;
 
 	// bi-directional many-to-one association to Informe
 	@OneToMany(mappedBy = "auditoria")
-	private Set<Informe> informe;
+	private List<Informe> informe;
 
 	// bi-directional many-to-one association to Recomendacion
 	@OneToMany(mappedBy = "auditoria")
-	private Set<Recomendacion> recomendacion;
+	private List<Recomendacion> recomendacion;
 
 	public Auditoria() {
 	}
@@ -291,11 +290,11 @@ public class Auditoria extends SuperEntity implements Serializable {
 		this.usuModi = usuModi;
 	}
 
-	public Set<Actividad> getActividad() {
+	public List<Actividad> getActividad() {
 		return this.actividad;
 	}
 
-	public void setActividad(Set<Actividad> actividad) {
+	public void setActividad(List<Actividad> actividad) {
 		this.actividad = actividad;
 	}
 
@@ -337,11 +336,11 @@ public class Auditoria extends SuperEntity implements Serializable {
 		this.tipoAuditoria = tipoAuditoria;
 	}
 
-	public Set<AuditoriaResponsable> getAuditoriaResponsable() {
+	public List<AuditoriaResponsable> getAuditoriaResponsable() {
 		return this.auditoriaResponsable;
 	}
 
-	public void setAuditoriaResponsable(Set<AuditoriaResponsable> auditoriaResponsable) {
+	public void setAuditoriaResponsable(List<AuditoriaResponsable> auditoriaResponsable) {
 		this.auditoriaResponsable = auditoriaResponsable;
 	}
 
@@ -359,11 +358,11 @@ public class Auditoria extends SuperEntity implements Serializable {
 		return auditoriaResponsable;
 	}
 
-	public Set<AuditoriaUnidad> getAuditoriaUnidad() {
+	public List<AuditoriaUnidad> getAuditoriaUnidad() {
 		return this.auditoriaUnidad;
 	}
 
-	public void setAuditoriaUnidad(Set<AuditoriaUnidad> auditoriaUnidad) {
+	public void setAuditoriaUnidad(List<AuditoriaUnidad> auditoriaUnidad) {
 		this.auditoriaUnidad = auditoriaUnidad;
 	}
 
@@ -381,11 +380,11 @@ public class Auditoria extends SuperEntity implements Serializable {
 		return auditoriaUnidad;
 	}
 
-	public Set<Memorando> getMemorando() {
+	public List<Memorando> getMemorando() {
 		return this.memorando;
 	}
 
-	public void setMemorando(Set<Memorando> memorando) {
+	public void setMemorando(List<Memorando> memorando) {
 		this.memorando = memorando;
 	}
 
@@ -403,11 +402,11 @@ public class Auditoria extends SuperEntity implements Serializable {
 		return memorando;
 	}
 
-	public Set<Seguimiento> getSeguimiento() {
+	public List<Seguimiento> getSeguimiento() {
 		return this.seguimiento;
 	}
 
-	public void setSeguimiento(Set<Seguimiento> seguimiento) {
+	public void setSeguimiento(List<Seguimiento> seguimiento) {
 		this.seguimiento = seguimiento;
 	}
 
@@ -425,11 +424,11 @@ public class Auditoria extends SuperEntity implements Serializable {
 		return seguimiento;
 	}
 
-	public Set<Informe> getInforme() {
+	public List<Informe> getInforme() {
 		return this.informe;
 	}
 
-	public void setInforme(Set<Informe> informe) {
+	public void setInforme(List<Informe> informe) {
 		this.informe = informe;
 	}
 
@@ -447,11 +446,11 @@ public class Auditoria extends SuperEntity implements Serializable {
 		return informe;
 	}
 	
-	public Set<Recomendacion> getRecomendacion() {
+	public List<Recomendacion> getRecomendacion() {
 		return this.recomendacion;
 	}
 
-	public void setRecomendacion(Set<Recomendacion> recomendacion) {
+	public void setRecomendacion(List<Recomendacion> recomendacion) {
 		this.recomendacion = recomendacion;
 	}
 

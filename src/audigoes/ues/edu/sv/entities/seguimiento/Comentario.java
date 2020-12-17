@@ -6,7 +6,7 @@ import javax.persistence.*;
 import audigoes.ues.edu.sv.entities.SuperEntity;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 
 /**
@@ -64,12 +64,12 @@ public class Comentario extends SuperEntity implements Serializable {
 	private Recomendacion recomendacion;
 
 	//bi-directional many-to-one association to Evidencia
-	@OneToMany(mappedBy="comentario", fetch=FetchType.EAGER)
-	private Set<Evidencia> evidencia;
+	@OneToMany(mappedBy="comentario")
+	private List<Evidencia> evidencia;
 
 	//bi-directional many-to-one association to ResponsableRecomendacion
-	@OneToMany(mappedBy="comentario", fetch=FetchType.EAGER)
-	private Set<ResponsableRecomendacion> responsableRecomendacion;
+	@OneToMany(mappedBy="comentario")
+	private List<ResponsableRecomendacion> responsableRecomendacion;
 
 	public Comentario() {
 	}
@@ -170,11 +170,11 @@ public class Comentario extends SuperEntity implements Serializable {
 		this.recomendacion = recomendacion;
 	}
 
-	public Set<Evidencia> getEvidencia() {
+	public List<Evidencia> getEvidencia() {
 		return this.evidencia;
 	}
 
-	public void setEvidencia(Set<Evidencia> evidencia) {
+	public void setEvidencia(List<Evidencia> evidencia) {
 		this.evidencia = evidencia;
 	}
 
@@ -192,11 +192,11 @@ public class Comentario extends SuperEntity implements Serializable {
 		return evidencia;
 	}
 
-	public Set<ResponsableRecomendacion> getResponsableRecomendacion() {
+	public List<ResponsableRecomendacion> getResponsableRecomendacion() {
 		return this.responsableRecomendacion;
 	}
 
-	public void setResponsableRecomendacion(Set<ResponsableRecomendacion> responsableRecomendacion) {
+	public void setResponsableRecomendacion(List<ResponsableRecomendacion> responsableRecomendacion) {
 		this.responsableRecomendacion = responsableRecomendacion;
 	}
 

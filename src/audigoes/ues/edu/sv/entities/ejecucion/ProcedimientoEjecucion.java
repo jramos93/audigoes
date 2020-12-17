@@ -2,11 +2,10 @@ package audigoes.ues.edu.sv.entities.ejecucion;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -89,12 +88,8 @@ public class ProcedimientoEjecucion extends SuperEntity implements Serializable 
 	private int pejEstado;
 
 	// bi-directional many-to-one association to CedulaNota
-	@OneToMany(mappedBy = "procedimientoEjecucion", fetch = FetchType.EAGER)
-	private Set<CedulaNota> cedulaNotas;
-
-	// bi-directional many-to-one association to DocumentosEjecucion
-	@OneToMany(mappedBy = "procedimientoEjecucion", fetch = FetchType.EAGER)
-	private Set<DocumentosEjecucion> documentosEjecucion;
+	@OneToMany(mappedBy = "procedimientoEjecucion")
+	private List<CedulaNota> cedulaNotas;
 
 	// bi-directional many-to-one association to ProgramaEjecucion
 	@ManyToOne
@@ -112,8 +107,8 @@ public class ProcedimientoEjecucion extends SuperEntity implements Serializable 
 	private Usuario usuario2;
 
 	// bi-directional many-to-one association to Archivo
-	@OneToMany(mappedBy = "procedimientoEjecucion", fetch = FetchType.EAGER)
-	private Set<Archivo> archivo;
+	@OneToMany(mappedBy = "procedimientoEjecucion")
+	private List<Archivo> archivo;
 
 	public ProcedimientoEjecucion() {
 	}
@@ -198,11 +193,11 @@ public class ProcedimientoEjecucion extends SuperEntity implements Serializable 
 		this.pejEstado = pejEstado;
 	}
 
-	public Set<CedulaNota> getCedulaNotas() {
+	public List<CedulaNota> getCedulaNotas() {
 		return this.cedulaNotas;
 	}
 
-	public void setCedulaNotas(Set<CedulaNota> cedulaNotas) {
+	public void setCedulaNotas(List<CedulaNota> cedulaNotas) {
 		this.cedulaNotas = cedulaNotas;
 	}
 
@@ -219,29 +214,7 @@ public class ProcedimientoEjecucion extends SuperEntity implements Serializable 
 
 		return cedulaNota;
 	}
-
-	public Set<DocumentosEjecucion> getDocumentosEjecucion() {
-		return this.documentosEjecucion;
-	}
-
-	public void setDocumentosEjecucion(Set<DocumentosEjecucion> documentosEjecucion) {
-		this.documentosEjecucion = documentosEjecucion;
-	}
-
-	public DocumentosEjecucion addDocumentosEjecucion(DocumentosEjecucion documentosEjecucion) {
-		getDocumentosEjecucion().add(documentosEjecucion);
-		documentosEjecucion.setProcedimientoEjecucion(this);
-
-		return documentosEjecucion;
-	}
-
-	public DocumentosEjecucion removeDocumentosEjecucion(DocumentosEjecucion documentosEjecucion) {
-		getDocumentosEjecucion().remove(documentosEjecucion);
-		documentosEjecucion.setProcedimientoEjecucion(null);
-
-		return documentosEjecucion;
-	}
-
+	
 	public ProgramaEjecucion getProgramaEjecucion() {
 		return this.programaEjecucion;
 	}
@@ -298,11 +271,11 @@ public class ProcedimientoEjecucion extends SuperEntity implements Serializable 
 		this.pejFechaReviso = pejFechaReviso;
 	}
 
-	public Set<Archivo> getArchivo() {
+	public List<Archivo> getArchivo() {
 		return this.archivo;
 	}
 
-	public void setArchivo(Set<Archivo> archivo) {
+	public void setArchivo(List<Archivo> archivo) {
 		this.archivo = archivo;
 	}
 
@@ -347,7 +320,7 @@ public class ProcedimientoEjecucion extends SuperEntity implements Serializable 
 		return "ProcedimientoEjecucion [pejId=" + pejId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi
 				+ ", pejDescripcion=" + pejDescripcion + ", pejNombre=" + pejNombre + ", regActivo=" + regActivo
 				+ ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", cedulaNotas=" + cedulaNotas
-				+ ", documentosEjecucion=" + documentosEjecucion + ", programaEjecucion=" + programaEjecucion
+				+ ", programaEjecucion=" + programaEjecucion
 				+ ", usuario1=" + usuario1 + ", usuario2=" + usuario2 + ", archivo=" + archivo + "]";
 	}
 }

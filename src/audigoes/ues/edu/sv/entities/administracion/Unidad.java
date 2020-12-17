@@ -7,7 +7,7 @@ import audigoes.ues.edu.sv.entities.SuperEntity;
 import audigoes.ues.edu.sv.entities.planeacion.AuditoriaUnidad;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 
 /**
@@ -55,8 +55,8 @@ public class Unidad extends SuperEntity implements Serializable {
 	private String usuModi;
 
 	//bi-directional many-to-one association to AuditoriaUnidad
-	@OneToMany(mappedBy="unidad", fetch=FetchType.EAGER)
-	private Set<AuditoriaUnidad> auditoriaUnidad;
+	@OneToMany(mappedBy="unidad")
+	private List<AuditoriaUnidad> auditoriaUnidad;
 
 	//bi-directional many-to-one association to Institucion
 	@ManyToOne
@@ -64,8 +64,8 @@ public class Unidad extends SuperEntity implements Serializable {
 	private Institucion institucion;
 
 	//bi-directional many-to-one association to UsuarioUnidad
-	@OneToMany(mappedBy="unidad", fetch=FetchType.EAGER)
-	private Set<UsuarioUnidad> usuarioUnidad;
+	@OneToMany(mappedBy="unidad")
+	private List<UsuarioUnidad> usuarioUnidad;
 
 	public Unidad() {
 	}
@@ -150,11 +150,11 @@ public class Unidad extends SuperEntity implements Serializable {
 		this.usuModi = usuModi;
 	}
 
-	public Set<AuditoriaUnidad> getAuditoriaUnidad() {
+	public List<AuditoriaUnidad> getAuditoriaUnidad() {
 		return this.auditoriaUnidad;
 	}
 
-	public void setAuditoriaUnidad(Set<AuditoriaUnidad> auditoriaUnidad) {
+	public void setAuditoriaUnidad(List<AuditoriaUnidad> auditoriaUnidad) {
 		this.auditoriaUnidad = auditoriaUnidad;
 	}
 
@@ -180,11 +180,11 @@ public class Unidad extends SuperEntity implements Serializable {
 		this.institucion = institucion;
 	}
 
-	public Set<UsuarioUnidad> getUsuarioUnidad() {
+	public List<UsuarioUnidad> getUsuarioUnidad() {
 		return this.usuarioUnidad;
 	}
 
-	public void setUsuarioUnidad(Set<UsuarioUnidad> usuarioUnidad) {
+	public void setUsuarioUnidad(List<UsuarioUnidad> usuarioUnidad) {
 		this.usuarioUnidad = usuarioUnidad;
 	}
 

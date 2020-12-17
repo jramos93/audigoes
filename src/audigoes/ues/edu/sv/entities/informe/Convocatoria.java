@@ -7,7 +7,7 @@ import audigoes.ues.edu.sv.entities.SuperEntity;
 import audigoes.ues.edu.sv.entities.administracion.Archivo;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 
 /**
@@ -62,12 +62,12 @@ public class Convocatoria extends SuperEntity implements Serializable {
 	private Informe informe;
 
 	//bi-directional many-to-one association to Destinatario
-	@OneToMany(mappedBy="actaLectura", fetch=FetchType.EAGER)
-	private Set<Destinatario> destinatario;
+	@OneToMany(mappedBy="actaLectura")
+	private List<Destinatario> destinatario;
 	
 	// bi-directional many-to-one association to Archivo
-	@OneToMany(mappedBy = "convocatoria", fetch = FetchType.EAGER)
-	private Set<Archivo> archivo;
+	@OneToMany(mappedBy = "convocatoria")
+	private List<Archivo> archivo;
 
 	public Convocatoria() {
 	}
@@ -160,11 +160,11 @@ public class Convocatoria extends SuperEntity implements Serializable {
 		this.informe = informe;
 	}
 
-	public Set<Destinatario> getDestinatario() {
+	public List<Destinatario> getDestinatario() {
 		return this.destinatario;
 	}
 
-	public void setDestinatario(Set<Destinatario> destinatario) {
+	public void setDestinatario(List<Destinatario> destinatario) {
 		this.destinatario = destinatario;
 	}
 
@@ -182,11 +182,11 @@ public class Convocatoria extends SuperEntity implements Serializable {
 		return destinatario;
 	}
 	
-	public Set<Archivo> getArchivo() {
+	public List<Archivo> getArchivo() {
 		return this.archivo;
 	}
 
-	public void setArchivo(Set<Archivo> archivo) {
+	public void setArchivo(List<Archivo> archivo) {
 		this.archivo = archivo;
 	}
 

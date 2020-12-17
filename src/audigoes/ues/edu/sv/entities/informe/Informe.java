@@ -9,7 +9,7 @@ import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planificacion.Actividad;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 
 /**
@@ -106,21 +106,21 @@ public class Informe extends SuperEntity implements Serializable {
 	private String usuModi;
 
 	//bi-directional many-to-one association to ActaLectura
-	@OneToMany(mappedBy="informe", fetch=FetchType.EAGER)
-	private Set<ActaLectura> actaLectura;
+	@OneToMany(mappedBy="informe")
+	private List<ActaLectura> actaLectura;
 	
 	//bi-directional many-to-one association to ActaLectura
-	@OneToMany(mappedBy="informe", fetch=FetchType.EAGER)
-	private Set<CartaGerencia> cartaGerencia;
+	@OneToMany(mappedBy="informe")
+	private List<CartaGerencia> cartaGerencia;
 		
 	//bi-directional many-to-one association to ActaLectura
-	@OneToMany(mappedBy="informe", fetch=FetchType.EAGER)
-	private Set<Convocatoria> convocatoria;
+	@OneToMany(mappedBy="informe")
+	private List<Convocatoria> convocatoria;
 	
 
 	//bi-directional many-to-one association to CedulaNota
-	@OneToMany(mappedBy="informe", fetch=FetchType.EAGER)
-	private Set<CedulaNota> cedulaNotas;
+	@OneToMany(mappedBy="informe")
+	private List<CedulaNota> cedulaNotas;
 
 	//bi-directional many-to-one association to Actividad
 	@ManyToOne
@@ -133,8 +133,8 @@ public class Informe extends SuperEntity implements Serializable {
 	private Auditoria auditoria;
 	
 	// bi-directional many-to-one association to Archivo
-	@OneToMany(mappedBy = "procedimientoPlanificacion", fetch = FetchType.EAGER)
-	private Set<Archivo> archivo;
+	@OneToMany(mappedBy = "procedimientoPlanificacion")
+	private List<Archivo> archivo;
 
 	public Informe() {
 	}
@@ -315,11 +315,11 @@ public class Informe extends SuperEntity implements Serializable {
 		this.usuModi = usuModi;
 	}
 
-	public Set<ActaLectura> getActaLectura() {
+	public List<ActaLectura> getActaLectura() {
 		return this.actaLectura;
 	}
 
-	public void setActaLectura(Set<ActaLectura> actaLectura) {
+	public void setActaLectura(List<ActaLectura> actaLectura) {
 		this.actaLectura = actaLectura;
 	}
 
@@ -337,11 +337,11 @@ public class Informe extends SuperEntity implements Serializable {
 		return actaLectura;
 	}
 
-	public Set<CedulaNota> getCedulaNotas() {
+	public List<CedulaNota> getCedulaNotas() {
 		return this.cedulaNotas;
 	}
 
-	public void setCedulaNotas(Set<CedulaNota> cedulaNotas) {
+	public void setCedulaNotas(List<CedulaNota> cedulaNotas) {
 		this.cedulaNotas = cedulaNotas;
 	}
 
@@ -359,11 +359,11 @@ public class Informe extends SuperEntity implements Serializable {
 		return cedulaNota;
 	}
 
-	public Set<CartaGerencia> getCartaGerencia() {
+	public List<CartaGerencia> getCartaGerencia() {
 		return cartaGerencia;
 	}
 
-	public void setCartaGerencia(Set<CartaGerencia> cartaGerencia) {
+	public void setCartaGerencia(List<CartaGerencia> cartaGerencia) {
 		this.cartaGerencia = cartaGerencia;
 	}
 	
@@ -381,11 +381,11 @@ public class Informe extends SuperEntity implements Serializable {
 		return cartaGerencia;
 	}
 
-	public Set<Convocatoria> getConvocatoria() {
+	public List<Convocatoria> getConvocatoria() {
 		return convocatoria;
 	}
 
-	public void setConvocatoria(Set<Convocatoria> convocatoria) {
+	public void setConvocatoria(List<Convocatoria> convocatoria) {
 		this.convocatoria = convocatoria;
 	}
 	
@@ -419,11 +419,11 @@ public class Informe extends SuperEntity implements Serializable {
 		this.auditoria = auditoria;
 	}
 	
-	public Set<Archivo> getArchivo() {
+	public List<Archivo> getArchivo() {
 		return this.archivo;
 	}
 
-	public void setArchivo(Set<Archivo> archivo) {
+	public void setArchivo(List<Archivo> archivo) {
 		this.archivo = archivo;
 	}
 

@@ -2,11 +2,10 @@ package audigoes.ues.edu.sv.entities.informe;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -145,8 +144,8 @@ public class CedulaNota extends SuperEntity implements Serializable {
 	private Usuario usuario2;
 
 	//bi-directional many-to-one association to Recomendacion
-	@OneToMany(mappedBy="cedulaNota", fetch=FetchType.EAGER)
-	private Set<Recomendacion> recomendacion;
+	@OneToMany(mappedBy="cedulaNota")
+	private List<Recomendacion> recomendacion;
 
 	public CedulaNota() {
 	}
@@ -319,11 +318,11 @@ public class CedulaNota extends SuperEntity implements Serializable {
 		this.usuario2 = usuario2;
 	}
 
-	public Set<Recomendacion> getRecomendacion() {
+	public List<Recomendacion> getRecomendacion() {
 		return this.recomendacion;
 	}
 
-	public void setRecomendacion(Set<Recomendacion> recomendacion) {
+	public void setRecomendacion(List<Recomendacion> recomendacion) {
 		this.recomendacion = recomendacion;
 	}
 
