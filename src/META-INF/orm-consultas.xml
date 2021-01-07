@@ -7,6 +7,42 @@
 	<named-query name="consulta.auditorias.institucion">
 		<query>select o from Auditoria o where o.planAnual.institucion.insId = ?1 and o.audFechaInicioProgramado between ?2 and ?3 and o.regActivo = 1</query>
 	</named-query>
+	<named-query name="consulta.auditoria.no.finalizada">
+		<query>select o from Auditoria o where o.regActivo = 1 and o.audFase not in (5) and o.planAnual.institucion.insId = ?1</query>
+	</named-query>
+	<named-query name="consulta.actividades.list.auditoria">
+		<query>select o from Actividad o where o.auditoria.audId=?1 and o.regActivo=1</query>
+	</named-query>
+	<named-query name="consulta.responsables.auditoria">
+		<query>select o from AuditoriaResponsable o where o.auditoria.audId=?1 and o.regActivo=1</query>
+	</named-query>
+	<named-query name="consulta.programa.by.auditoria">
+		<query>select o from ProgramaPlanificacion o where o.auditoria.audId=?1 and o.regActivo=1</query>
+	</named-query>
+	<named-query
+		name="consulta.procedimientos.planificacion.by.programa">
+		<query>select o from ProcedimientoPlanificacion o where o.programaPlanificacion.prpId=?1 and o.regActivo=1</query>
+	</named-query>
+	<named-query
+		name="consulta.programa.ejecucion.by.auditoria">
+		<query>select o from ProgramaEjecucion o where o.auditoria.audId=?1 and o.regActivo=1</query>
+	</named-query>
+	<named-query
+		name="consulta.procedimientos.ejecucion.by.programa">
+		<query>select o from ProcedimientoEjecucion o where o.programaEjecucion.preId=?1 and o.regActivo=1</query>
+	</named-query>
+	<named-query name="consulta.notas.by.auditoria">
+		<query>select o from CedulaNota o where o.auditoria.audId=?1 and o.regActivo=1</query>
+	</named-query>
+	<named-query name="consulta.seguimiento.by.auditoria">
+		<query>select o from Seguimiento o where o.auditoria.audId=?1 and o.regActivo=1</query>
+	</named-query>
+	<named-query name="consulta.recomendacioens.by.cedula.nota">
+		<query>select o from Recomendacion o where o.cedulaNota.cedId=?1 and o.regActivo=1</query>
+	</named-query>
+	<named-query name="consulta.hallazgos.no.finalizados">
+		<query>select o from CedulaNota o where o.auditoria.planAnual.institucion.insId = ?1 and o.regActivo = 1 and o.cedEstado in (1,2,3,4,5,6)</query>
+	</named-query>
 	<named-native-query
 		name="consulta.stat.auditoria.estado"
 		result-class="audigoes.ues.edu.sv.entities.vistas.StatsAuditoriaEstado">

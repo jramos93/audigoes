@@ -1,0 +1,123 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<p:panel rendered="#{consMB.status eq 'RECOMENDACIONES_HALLAZGO'}">
+
+		<div align="left" style="margin-top: 50px; float: left;">
+			<p:commandButton id="btnCancel"
+				action="#{consMB.onCancelRecomendaciones}" value="Regresar"
+				icon="pi pi-arrow-left" style="float:left;"
+				styleClass="pink-btn raised-btn" update="@form :frmDetalleAuditoria"
+				process="@this">
+			</p:commandButton>
+
+		</div>
+
+		<div class="name" align="center" style="margin-top: 100px;">
+			<span class="app-name">Recomendaciones Auditoria</span>
+		</div>
+		<div class="ui-fluid p-formgrid p-grid">
+			<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+
+				<p:outputLabel for="hallazgoTitulo" value="Hallazgo:"
+					style="font-weight:bold;" />
+				<p:inputTextarea id="hallazgoTitulo"
+					value="#{consMB.cedulaNota.cedTitulo}" readonly="true" rows="3" />
+
+				<p:outputLabel for="hallazgoCondicion" value="Condición:"
+					style="font-weight:bold;" />
+				<p:inputTextarea id="hallazgoCondicion"
+					value="#{consMB.cedulaNota.cedCondicion}" readonly="true" rows="3" />
+
+				<p:outputLabel for="hallazgoCriterio" value="Criterio:"
+					style="font-weight:bold;" />
+				<p:inputTextarea id="hallazgoCriterio"
+					value="#{consMB.cedulaNota.cedCriterio}" readonly="true" rows="3" />
+
+				<p:outputLabel for="hallazgoCausa" value="Causa:"
+					style="font-weight:bold;" />
+				<p:inputTextarea id="hallazgoCausa"
+					value="#{consMB.cedulaNota.cedCausa}" readonly="true" rows="3" />
+
+				<p:outputLabel for="hallazgoEfecto" value="Efecto:"
+					style="font-weight:bold;" />
+				<p:inputTextarea id="hallazgoEfecto"
+					value="#{consMB.cedulaNota.cedEfecto}" readonly="true" rows="3" />
+			</p:panelGrid>
+			<p:panelGrid columns="4"
+				columnClasses="ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4, ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4"
+				layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+
+				<p:outputLabel value="Fecha Elaborado:" style="font-weight:bold;" />
+				<p:inputText value="#{consMB.cedulaNota.cedFechaElaboro}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</p:inputText>
+
+				<p:outputLabel value="Fecha Revisado:" style="font-weight:bold;" />
+				<p:inputText value="#{consMB.cedulaNota.cedFechaReviso}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</p:inputText>
+			</p:panelGrid>
+			<p:separator />
+
+			<p:dataTable var="rec" value="#{consMB.recomendacionesList}"
+				rowIndexVar="indexrec" widgetVar="wvRecomendaciones" reflow="true"
+				id="dtRecomendaciones" style="margin-top:20px;" paginator="true"
+				paginatorPosition="bottom" rowsPerPageTemplate="10,15,20,25"
+				rows="15"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+				rowKey="#{rec.recId}">
+				<f:facet name="header">Listado de Recomendaciones</f:facet>
+				<p:column style="width:16px">
+					<p:rowToggler />
+				</p:column>
+
+				<p:column headerText="No." style="text-align:center; width:50px;">
+					<h:outputText value="#{indexrec+1}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Titulo">
+					<h:outputText value="#{rec.recTitulo}"></h:outputText>
+				</p:column>
+				<p:rowExpansion>
+					<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+						styleClass="ui-panelgrid-blank form-group form-elements">
+
+						<p:outputLabel value="Situación Encontrada"
+							style="font-weight:bold;" />
+						<p:inputTextarea id="recSituacion" value="#{rec.recSituacion}"
+							readonly="true" />
+
+						<p:outputLabel value="Recomendación"
+							style="font-weight:bold;" />
+						<p:inputTextarea id="recRecomendacion" value="#{rec.recRecomendacion}"
+							readonly="true" />
+
+					</p:panelGrid>
+				</p:rowExpansion>
+
+			</p:dataTable>
+
+			<p:panelGrid columns="2"
+				columnClasses="ui-g-9 ui-lg-10,ui-g-3 ui-md-4 ui-lg-2" layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+				<p:column></p:column>
+				<p:commandButton id="btnCancelBottom"
+				action="#{consMB.onCancelRecomendaciones}" value="Regresar"
+				icon="pi pi-arrow-left" style="float:left;"
+				styleClass="pink-btn raised-btn" update="@form :frmDetalleAuditoria"
+				process="@this">
+			</p:commandButton>
+			</p:panelGrid>
+		</div>
+
+	</p:panel>
+
+</ui:composition>

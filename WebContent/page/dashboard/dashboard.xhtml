@@ -1,0 +1,38 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<div class="card">
+					<h:form id="frmConsultas">
+						<p:panel rendered="#{consMB.status eq 'SEARCH'}">
+							<div class="name" align="center">
+								<span class="app-name"> Consultas</span>
+							</div>
+							<p:tabView>
+								<p:tab title="Consulta Auditorías">
+									<ui:include src="/page/consultas/consultaauditoria.xhtml"></ui:include>
+								</p:tab>
+								<p:tab title="Consulta Hallazgos">
+									<ui:include src="/page/consultas/consultahallazgo.xhtml"></ui:include>
+								</p:tab>
+							</p:tabView>
+						</p:panel>
+					</h:form>
+					<h:form id="frmDetalleAuditoria">
+						<ui:include src="/page/consultas/consultaauditoriadetalle.xhtml"></ui:include>
+					</h:form>
+					<h:form id="frmRecomendacionesHallazgo">
+						<ui:include src="/page/consultas/consultarecomendacioneshallazgo.xhtml"></ui:include>
+					</h:form>
+				</div>
+			</div>
+		</div>
+
+	</ui:define>
+
+</ui:composition>

@@ -8,12 +8,23 @@
 	<h:form id="frmNewEdit">
 		<p:panel
 			rendered="#{planMB.status eq 'NEW' or planMB.status eq 'EDIT'}">
-			<p:commandButton id="btnCancel" action="#{planMB.onCancel}"
-				value="Cancelar" update="@form :frm" process="@this">
-			</p:commandButton>
-			<p:commandButton id="btnGuardarTop" action="#{planMB.onSave}"
-				value="Guardar" update="@form :frm" process="@this @form">
-			</p:commandButton>
+			<div align="left" style="margin-top: 50px;">
+				<p:commandButton id="btnCancel" process="@this"
+					styleClass="pink-btn raised-btn" actionListener="#{planMB.onCancel}"
+					action="/page/planeacion/plan.xhtml?faces-redirect=true"
+					value="Regresar" icon="pi pi-arrow-left" style="float:left;">
+				</p:commandButton>
+			</div>
+			<div class="name" align="center" style="margin-top: 100px;">
+				<span class="app-name"><h:outputLabel
+						value="#{planMB.status eq 'NEW' ? 'Nuevo Plan' : 'Editar Plan'}" /></span>
+			</div>
+			<div align="left" style="margin-top: 50px;">
+				<p:commandButton id="btnGuardarTop" action="#{planMB.onSave}"
+					value="Guardar" update="@form :frm" process="@this @form">
+				</p:commandButton>
+			</div>
+
 			<div class="ui-fluid p-formgrid p-grid">
 				<div class="p-field p-col">
 					<p:outputLabel for="nombre" value="Nombre del plan" />
@@ -45,7 +56,7 @@
 					<p:outputLabel for="lugarfechaemision"
 						value="Lugar y fecha de emisión" />
 					<p:inputText id="lugarfechaemision"
-						value="#{planMB.registro.plaLugarFecha}" maxlength="250"/>
+						value="#{planMB.registro.plaLugarFecha}" maxlength="250" />
 				</div>
 				<div class="p-field p-col" style="margin-top: 25px;">
 					<p:tabView id="tvPlanAnual">

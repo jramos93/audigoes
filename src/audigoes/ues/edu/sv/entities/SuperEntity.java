@@ -8,7 +8,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
 @MappedSuperclass
-public abstract class SuperEntity implements Serializable{
+public abstract class SuperEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	

@@ -59,6 +59,7 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 	
 	public void obtenerRecomendaciones() {
 		if(getAuditoria() != null) {
+			System.out.println("obtenerRecomendaciones");
 			getRecMB().setAuditoria(getAuditoria());
 			getRecMB().fillRecomendacionesAuditoria();
 		}

@@ -75,6 +75,7 @@ public class PlaneacionMB extends AudigoesController implements Serializable {
 	
 	@Override
 	protected void afterRowSelect() {
+		getAudMB().setPlanSelected(getRegistro());
 		getAudMB().fillAuditoriasPlan();
 		getArcMB().setPlanAnual(getRegistro());
 		getArcMB().fillAnexosPlanAnual();

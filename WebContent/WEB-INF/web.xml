@@ -48,7 +48,15 @@
 
 	<session-config>
 		<session-timeout>720</session-timeout>
-	</session-config> 
+	</session-config>
+	<error-page>
+		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
+		<location>/</location>
+	</error-page> 
+	<error-page>
+		<error-code>400</error-code>
+		<location>/404.xhtml</location>
+	</error-page>
 	<context-param>
 	    <param-name>primefaces.UPLOADER</param-name>
 	  	<param-value>commons</param-value>
@@ -62,8 +70,9 @@
 	<filter-mapping>
  		<filter-name>PrimeFaces FileUpload Filter</filter-name>
  		<servlet-name>Faces Servlet</servlet-name>
+ 		<url-pattern>/*</url-pattern>
+ 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
-	
 	
 	<mime-mapping>
 		<extension>ttf</extension>

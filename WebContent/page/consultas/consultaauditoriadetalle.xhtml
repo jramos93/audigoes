@@ -1,0 +1,338 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<p:panel rendered="#{consMB.status eq 'DETALLE_AUDITORIA'}">
+
+		<div align="left" style="margin-top: 50px; float: left;">
+			<p:commandButton id="btnCancel" action="#{consMB.onCancel}"
+				value="Regresar" icon="pi pi-arrow-left" style="float:left;"
+				styleClass="pink-btn raised-btn" update="@form :frmConsultas"
+				process="@this">
+			</p:commandButton>
+
+		</div>
+
+		<div class="name" align="center" style="margin-top: 100px;">
+			<span class="app-name">Detalle Auditoria</span>
+		</div>
+		<div class="ui-fluid p-formgrid p-grid">
+			<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+
+				<p:outputLabel for="auditoria" value="Auditoria:"
+					style="font-weight:bold;" />
+				<p:inputTextarea id="auditoria"
+					value="#{consMB.auditoria.audNombre}" readonly="true" rows="3" />
+
+				<p:outputLabel for="ref" value="Descripcion:"
+					style="font-weight:bold;" />
+				<p:inputTextarea id="ref" value="#{consMB.auditoria.audDescripcion}"
+					readonly="true" rows="4" />
+			</p:panelGrid>
+			<p:panelGrid columns="4"
+				columnClasses="ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4, ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4"
+				layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+
+				<p:outputLabel value="Fecha de inicio:" style="font-weight:bold;" />
+				<p:inputText value="#{consMB.auditoria.audFechaInicioProgramado}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</p:inputText>
+
+				<p:outputLabel value="Fecha de fin:" style="font-weight:bold;" />
+				<p:inputText value="#{consMB.auditoria.audFechaInicioProgramado}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</p:inputText>
+			</p:panelGrid>
+			<p:separator />
+			<p:tabView id="tvDetalleAuditoria">
+				<p:tab title="Personal Asignado">
+					<p:dataTable var="r" value="#{consMB.auditoriaResponsablesList}"
+						rowIndexVar="index" widgetVar="wvResponsables" reflow="true"
+						id="dtResponsables" style="margin-top:20px;" paginator="true"
+						paginatorPosition="bottom" rowsPerPageTemplate="10,15,20,25"
+						rows="5"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+						rowKey="#{r.aurId}">
+
+						<f:facet name="header">Lista de Personal Asignado a la Auditoría</f:facet>
+
+						<p:column headerText="No." style="text-align:center; width:50px;">
+							<h:outputText value="#{index+1}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Empleado" filterBy="#{r.usuario.usuNombre}"
+							filterMatchMode="contains">
+							<h:outputText
+								value="#{r.usuario.usuNombre} #{r.usuario.usuApellido}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Rol">
+							<h:outputText value="Auditor" rendered="#{r.aurRol==1}"></h:outputText>
+							<h:outputText value="Coordinador" rendered="#{r.aurRol==0}"></h:outputText>
+						</p:column>
+					</p:dataTable>
+				</p:tab>
+				<p:tab title="Actividades">
+					<p:dataTable var="a" value="#{consMB.actividadesList}"
+						rowIndexVar="index" widgetVar="wvActividades" reflow="true"
+						id="dtActividades" style="margin-top:20px;" paginator="true"
+						paginatorPosition="bottom" rowsPerPageTemplate="10,15,20,25"
+						rows="15"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+						rowKey="#{a.actId}">
+
+						<p:column headerText="No." style="text-align:center; width:50px;">
+							<h:outputText value="#{index+1}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Nombre">
+							<h:outputText value="#{a.actNombre}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Descripcion">
+							<h:outputText value="#{a.actDescripcion}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Fecha Inicio"
+							style="text-align:center; width:100px;">
+							<h:outputText value="#{a.actFecIni}">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Fecha Fin"
+							style="text-align:center; width:100px;">
+							<h:outputText value="#{a.actFecFin}">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
+
+					</p:dataTable>
+				</p:tab>
+				<p:tab title="Programa Planificacion">
+					<div class="ui-fluid p-formgrid p-grid">
+						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+							styleClass="ui-panelgrid-blank form-group form-elements">
+
+							<p:outputLabel for="objg" value="Objetivo General:"
+								style="font-weight:bold;" />
+							<p:inputTextarea id="objg"
+								value="#{consMB.programaPlanificacion.prpObjG}" rows="4"
+								required="true" maxlength="250" />
+
+							<p:outputLabel for="obje" value="Objetivos Especificos:"
+								style="font-weight:bold;" />
+							<p:inputTextarea id="obje"
+								value="#{consMB.programaPlanificacion.prpObjE}" rows="4"
+								required="true" maxlength="250" />
+						</p:panelGrid>
+						<p:panelGrid columns="4"
+							columnClasses="ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4, ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4"
+							layout="grid"
+							styleClass="ui-panelgrid-blank form-group form-elements">
+
+							<p:outputLabel for="obje" value="Fecha de inicio:"
+								style="font-weight:bold;" />
+							<p:inputText
+								value="#{consMB.programaPlanificacion.prpFechaInicio}"
+								readonly="true">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</p:inputText>
+
+							<p:outputLabel for="obje" value="Fecha de fin:"
+								style="font-weight:bold;" />
+							<p:inputText value="#{consMB.programaPlanificacion.prpFechaFin}"
+								readonly="true">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</p:inputText>
+						</p:panelGrid>
+						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+							styleClass="ui-panelgrid-blank form-group form-elements">
+
+							<p:outputLabel for="alc" value="Alcance:"
+								style="font-weight:bold;" />
+							<p:inputTextarea id="alc"
+								value="#{consMB.programaPlanificacion.prpAlcance}" rows="4"
+								required="true" maxlength="250" />
+						</p:panelGrid>
+					</div>
+
+					<div class="name" align="center">
+						<span class="app-name">Procedimientos de Planificación</span>
+					</div>
+					<p:dataTable var="p"
+						value="#{consMB.procedimientosPlanificacionList}"
+						rowIndexVar="index" widgetVar="wvProcPlanificacion" reflow="true"
+						id="dtProcPlanificacion" style="margin-top:20px;" paginator="true"
+						paginatorPosition="bottom" rowsPerPageTemplate="10,15,20,25"
+						rows="10"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+						rowKey="#{p.proId}">
+
+						<p:column headerText="No.">
+							<h:outputText value="#{index+1}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Nombre">
+							<h:outputText value="#{p.proNombre}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Referencia">
+							<h:outputText value="#{p.proReferencia}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Fecha Inicio">
+							<h:outputText value="#{p.proFechaInicio}">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Fecha Fin">
+							<h:outputText value="#{p.proFechaFin}">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
+
+					</p:dataTable>
+				</p:tab>
+				<p:tab title="Programa Ejecución">
+					<div class="ui-fluid p-formgrid p-grid">
+						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+							styleClass="ui-panelgrid-blank form-group form-elements">
+							<p:outputLabel for="nombre" value="Nombre del Programa:"
+								style="font-weight:bold;" />
+							<p:inputTextarea id="nombre"
+								value="#{consMB.programaEjecucion.preNombre}" rows="2"
+								required="true" maxlength="250"
+								requiredMessage="El nombre es requerido" />
+
+							<p:outputLabel for="objgEje" value="Objetivo General:"
+								style="font-weight:bold;" />
+							<p:inputTextarea id="objgEje"
+								value="#{consMB.programaEjecucion.preObjG}" rows="2"
+								maxlength="250" />
+
+							<p:outputLabel for="objeEje" value="Objetivos Especificos:"
+								style="font-weight:bold;" />
+							<p:inputTextarea id="objeEje"
+								value="#{consMB.programaEjecucion.preObjE}" rows="4"
+								maxlength="250" />
+						</p:panelGrid>
+						<p:panelGrid columns="4"
+							columnClasses="ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4, ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4"
+							layout="grid"
+							styleClass="ui-panelgrid-blank form-group form-elements">
+
+							<p:outputLabel for="obje" value="Fecha de inicio:"
+								style="font-weight:bold;" />
+							<p:inputText value="#{consMB.programaEjecucion.preFechaInicio}">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</p:inputText>
+
+							<p:outputLabel for="obje" value="Fecha de fin:"
+								style="font-weight:bold;" />
+							<p:inputText value="#{consMB.programaEjecucion.preFechaFin}">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</p:inputText>
+						</p:panelGrid>
+					</div>
+
+					<div class="name" align="center">
+						<span class="app-name">Listado de Procedimientos de
+							Ejecución</span>
+					</div>
+
+					<p:dataTable var="p" value="#{consMB.procedimientosEjecucionList}"
+						rowIndexVar="index" widgetVar="wvProcEjecucion" reflow="true"
+						id="dtProcEjecucion" style="margin-top:20px;" paginator="true"
+						paginatorPosition="bottom" rowsPerPageTemplate="10,15,20,25"
+						rows="10"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+						rowKey="#{p.pejId}">
+						<p:column headerText="No.">
+							<h:outputText value="#{index+1}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Nombre">
+							<h:outputText value="#{p.pejNombre}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Referencia">
+							<h:outputText value="#{p.pejReferencia}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Fecha Elaboración">
+							<h:outputText value="#{p.pejFechaElaboro}">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
+					</p:dataTable>
+				</p:tab>
+				<p:tab title="Hallazgos">
+					<p:dataTable var="hz" value="#{consMB.hallazgoAuditoriaList}"
+						rowIndexVar="indexhz" widgetVar="wvHallazgos" reflow="true"
+						id="dtHallazgos" style="margin-top:20px;" paginator="true"
+						paginatorPosition="bottom" rowsPerPageTemplate="10,15,20,25"
+						rows="15"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+						rowKey="#{hz.cedId}">
+						<f:facet name="header"> Listado de Hallazgos</f:facet>
+						<p:column headerText="No." style="text-align:center; width:50px;">
+							<h:outputText value="#{indexhz+1}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Titulo">
+							<h:outputText value="#{hz.cedTitulo}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Referencia">
+							<h:outputText value="#{hz.cedReferencia}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Fecha Elaboración"
+							style="text-align:center; width:100px;">
+							<h:outputText value="#{hz.cedFechaElaboro}">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Recomendaciones" style="text-align:center;">
+							<p:commandButton id="btnDetAuditoria"
+								update="@form :frmRecomendacionesHallazgo" icon="ui-icon ui-icon-note"
+								action="#{consMB.mostrarRecomendacionesHallazgo}"
+								styleClass="raised-btn" process="@this">
+								<f:setPropertyActionListener value="#{hz}"
+									target="#{consMB.cedulaNota}" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+				</p:tab>
+				<p:tab title="Seguimiento">
+
+				</p:tab>
+			</p:tabView>
+
+			<p:panelGrid columns="2"
+				columnClasses="ui-g-9 ui-lg-10,ui-g-3 ui-md-4 ui-lg-2" layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+				<p:column></p:column>
+				<p:commandButton id="btnCancelBottom" action="#{consMB.onCancel}"
+					value="Regresar" icon="pi pi-arrow-left" style="float:left;"
+					styleClass="pink-btn raised-btn" update="@form :frmConsultas"
+					process="@this">
+				</p:commandButton>
+			</p:panelGrid>
+		</div>
+
+	</p:panel>
+
+</ui:composition>

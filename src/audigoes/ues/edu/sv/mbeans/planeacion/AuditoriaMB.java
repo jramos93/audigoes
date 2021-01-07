@@ -267,7 +267,8 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 				this.audUniMB.getRegistro().setAuditoria(getRegistro());
 				this.audUniMB.getRegistro().setUnidad(getUnidadSelected());
 				this.audUniMB.onSave();
-				getRegistro().getAuditoriaUnidad().add(this.audUniMB.getRegistro());
+				//getRegistro().getAuditoriaUnidad().add(this.audUniMB.getRegistro());
+				this.audUniMB.getListado().add(this.audUniMB.getRegistro());
 				getUnidadList().remove(getUnidadSelected());
 			}
 
@@ -305,6 +306,12 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		fillUsuariosInstitucionList();
 		return super.beforeNew();
 	}
+	
+	@Override
+	public void afterNew() {
+		getRegistro().setAudAnio(Integer.parseInt(getPlanSelected().getPlaAnio()));
+		super.afterNew();
+	}
 
 	@Override
 	public boolean beforeEdit() {
@@ -314,6 +321,8 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		fillUsuariosInstitucionList();
 		setTipoAuditoriaSelected(getRegistro().getTipoAuditoria());
 		setPlanSelected(getRegistro().getPlanAnual());
+		this.audUniMB.setAuditoria(getRegistro());
+		this.audUniMB.fillListado();
 		return super.beforeEdit();
 	}
 

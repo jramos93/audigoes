@@ -8,6 +8,9 @@
 
 	<h:form id="frm">
 		<p:panel rendered="#{planMB.status eq 'SEARCH'}">
+			<div class="name" align="center" style="margin-top:50px;">
+				<span class="app-name"> Planes Unidad de Auditoría Interna</span>
+			</div>
 			<p:dataTable var="plan" value="#{planMB.listado}"
 				widgetVar="wvPlanAnual" reflow="true" id="dtPlanAnual"
 				style="margin-top:20px;" paginator="true"
@@ -42,16 +45,11 @@
 								update="@form :frmAuditoria" styleClass="blue-btn raised-btn"
 								rendered="#{planMB.registro.selected}" icon="pi pi-search">
 							</p:commandButton>
-							<p:commandButton id="btnInformePlan"
-								action="#{planMB.generarInforme}"
-								styleClass="blue-btn raised-btn"
-								rendered="false" value="Ver Informe Plan"
-								icon="pi pi-note" update="@form">
-							</p:commandButton>
-							<p:commandButton id="btnPlan"
-								title="Clic para generar el Plan"
-								process="@this" value="Generar Reporte" icon="pi pi-check-circle"
-								style="float:Righ;" styleClass="blue-btn raised-btn" ajax="false">
+							<p:commandButton id="btnPlan" title="Clic para generar el Plan"
+								process="@this" value="Generar Reporte"
+								icon="pi pi-check-circle" style="float:Righ;"
+								styleClass="blue-btn raised-btn" ajax="false"
+								rendered="#{planMB.registro.selected}">
 								<p:fileDownload value="#{planMB.plan}"></p:fileDownload>
 							</p:commandButton>
 						</p:toolbarGroup>

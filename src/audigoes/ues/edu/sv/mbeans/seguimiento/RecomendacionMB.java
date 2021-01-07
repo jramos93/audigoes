@@ -49,6 +49,7 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 		try {
 			setListado((List<Recomendacion>) audigoesLocal.findByNamedQuery(Recomendacion.class,
 					"recomendacion.get.all.auditoria", new Object[] { getAuditoria().getAudId() }));
+			System.out.println(getListado().size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
