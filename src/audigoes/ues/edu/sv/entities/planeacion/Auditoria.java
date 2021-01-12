@@ -99,6 +99,30 @@ public class Auditoria extends SuperEntity implements Serializable {
 
 	@Column(name = "usu_modi")
 	private String usuModi;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "aud_fecha_programado")
+	private Date audFechaProgramado;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "aud_fecha_planificacion")
+	private Date audFechaPlanificacion;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "aud_fecha_ejecucion")
+	private Date audFechaEjecucion;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "aud_fecha_informe")
+	private Date audFechaInforme;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "aud_fecha_seguimiento")
+	private Date audFechaSeguimiento;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "aud_fecha_finalizada")
+	private Date audFechaFinalizada;
 
 	// bi-directional many-to-one association to Actividad
 	@OneToMany(mappedBy = "auditoria")
@@ -288,6 +312,54 @@ public class Auditoria extends SuperEntity implements Serializable {
 
 	public void setUsuModi(String usuModi) {
 		this.usuModi = usuModi;
+	}
+
+	public Date getAudFechaProgramado() {
+		return audFechaProgramado;
+	}
+
+	public Date getAudFechaPlanificacion() {
+		return audFechaPlanificacion;
+	}
+
+	public Date getAudFechaEjecucion() {
+		return audFechaEjecucion;
+	}
+
+	public Date getAudFechaInforme() {
+		return audFechaInforme;
+	}
+
+	public Date getAudFechaSeguimiento() {
+		return audFechaSeguimiento;
+	}
+
+	public Date getAudFechaFinalizada() {
+		return audFechaFinalizada;
+	}
+
+	public void setAudFechaProgramado(Date audFechaProgramado) {
+		this.audFechaProgramado = audFechaProgramado;
+	}
+
+	public void setAudFechaPlanificacion(Date audFechaPlanificacion) {
+		this.audFechaPlanificacion = audFechaPlanificacion;
+	}
+
+	public void setAudFechaEjecucion(Date audFechaEjecucion) {
+		this.audFechaEjecucion = audFechaEjecucion;
+	}
+
+	public void setAudFechaInforme(Date audFechaInforme) {
+		this.audFechaInforme = audFechaInforme;
+	}
+
+	public void setAudFechaSeguimiento(Date audFechaSeguimiento) {
+		this.audFechaSeguimiento = audFechaSeguimiento;
+	}
+
+	public void setAudFechaFinalizada(Date audFechaFinalizada) {
+		this.audFechaFinalizada = audFechaFinalizada;
 	}
 
 	public List<Actividad> getActividad() {
@@ -498,7 +570,10 @@ public class Auditoria extends SuperEntity implements Serializable {
 				+ audFechaFinProgramado + ", audFechaFinReal=" + audFechaFinReal + ", audFechaInicioProgramado="
 				+ audFechaInicioProgramado + ", audFechaInicioReal=" + audFechaInicioReal + ", audNombre=" + audNombre
 				+ ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo=" + regActivo + ", usuCrea=" + usuCrea
-				+ ", usuModi=" + usuModi + ", actividad=" + actividad + ", origenAuditoria=" + origenAuditoria
+				+ ", usuModi=" + usuModi + ", audFechaProgramado=" + audFechaProgramado + ", audFechaPlanificacion="
+				+ audFechaPlanificacion + ", audFechaEjecucion=" + audFechaEjecucion + ", audFechaInforme="
+				+ audFechaInforme + ", audFechaSeguimiento=" + audFechaSeguimiento + ", audFechaFinalizada="
+				+ audFechaFinalizada + ", actividad=" + actividad + ", origenAuditoria=" + origenAuditoria
 				+ ", planAnual=" + planAnual + ", tipoAuditoria=" + tipoAuditoria + ", auditoriaResponsable="
 				+ auditoriaResponsable + ", auditoriaUnidad=" + auditoriaUnidad + ", memorando=" + memorando
 				+ ", seguimiento=" + seguimiento + ", informe=" + informe + ", recomendacion=" + recomendacion + "]";
