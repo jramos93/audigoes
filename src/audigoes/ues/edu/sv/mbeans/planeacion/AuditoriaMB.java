@@ -76,7 +76,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	private ActividadesMB actMB = new ActividadesMB();
 
 	@ManagedProperty(value = "#{ceduMB}")
-	private CedulaMB ceduMB = new CedulaMB(); 
+	private CedulaMB ceduMB = new CedulaMB();
 
 	public AuditoriaMB() {
 		super(new Auditoria());
@@ -267,7 +267,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 				this.audUniMB.getRegistro().setAuditoria(getRegistro());
 				this.audUniMB.getRegistro().setUnidad(getUnidadSelected());
 				this.audUniMB.onSave();
-				//getRegistro().getAuditoriaUnidad().add(this.audUniMB.getRegistro());
+				// getRegistro().getAuditoriaUnidad().add(this.audUniMB.getRegistro());
 				this.audUniMB.getListado().add(this.audUniMB.getRegistro());
 				getUnidadList().remove(getUnidadSelected());
 			}
@@ -306,7 +306,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		fillUsuariosInstitucionList();
 		return super.beforeNew();
 	}
-	
+
 	@Override
 	public void afterNew() {
 		getRegistro().setAudAnio(Integer.parseInt(getPlanSelected().getPlaAnio()));
@@ -643,6 +643,15 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	public void setCeduMB(CedulaMB ceduMB) {
 		this.ceduMB = ceduMB;
 	}
-	
 
+	@Override
+	protected void configBean() {
+		// TODO Auto-generated method stub
+		super.configBean();
+		if (getObjAppsSession() != null) {
+			if (!isPerRoot()) {
+				setPerEnviar(getObjAppsSession().isPermisoValido("AUDITOR", "ENVIAR"));
+			}
+		}
+	}
 }

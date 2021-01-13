@@ -8,9 +8,11 @@
 	<h:form id="frmNewEdit">
 		<p:panel
 			rendered="#{planMB.status eq 'NEW' or planMB.status eq 'EDIT'}">
+
 			<div align="left" style="margin-top: 50px;">
 				<p:commandButton id="btnCancel" process="@this"
-					styleClass="pink-btn raised-btn" actionListener="#{planMB.onCancel}"
+					styleClass="pink-btn raised-btn"
+					actionListener="#{planMB.onCancel}"
 					action="/page/planeacion/plan.xhtml?faces-redirect=true"
 					value="Regresar" icon="pi pi-arrow-left" style="float:left;">
 				</p:commandButton>
@@ -24,6 +26,7 @@
 					value="Guardar" update="@form :frm" process="@this @form">
 				</p:commandButton>
 			</div>
+
 
 			<div class="ui-fluid p-formgrid p-grid">
 				<div class="p-field p-col">
@@ -143,7 +146,8 @@
 						<p:tab title="Anexos" rendered="#{planMB.status eq 'EDIT'}">
 							<p:fileUpload listener="#{planMB.handleFileUpload}"
 								mode="advanced" dragDropSupport="false"
-								update="msg dtAnexosPlan"
+								update="msg dtAnexosPlan" cancelLabel="Cancelar"
+								uploadLabel="Subir" label="Elegir"
 								allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
 
 							<p:dataTable id="dtAnexosPlan" value="#{arcMB.listado}"
@@ -160,10 +164,13 @@
 								<p:column headerText="Nombre Archivo" sortBy="#{arc.arcNombre}">
 									<h:outputText value="#{arc.arcNombre}" />
 								</p:column>
-								<p:column headerText="Eliminar">
+								<p:column headerText="Eliminar" style="width:50px;">
 									<p:commandButton id="btnEliminarArchivo"
 										icon="ui-icon ui-icon-trash"
+										title="Clic para eliminar el registro"
 										actionListener="#{arcMB.onBorrar(arc)}" update="dtAnexosPlan">
+										<p:confirm header="Confirmación" message="¿Eliminar?"
+											icon="ui-icon-info"></p:confirm>
 									</p:commandButton>
 								</p:column>
 							</p:dataTable>

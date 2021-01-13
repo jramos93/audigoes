@@ -8,6 +8,11 @@
 	<h:form id="frmNewEditAuditoria">
 		<p:panel rendered="#{audMB.status eq 'NEW' or audMB.status eq 'EDIT'}">
 
+			<p:commandButton id="btnCancel" action="#{audMB.onCancel}"
+				styleClass="pink-btn raised-btn" icon="pi pi-arrow-left"
+				value="Cancelar" update="@form :frmAuditoria" process="@this">
+			</p:commandButton>
+
 			<div align="left" style="margin-top: 50px;">
 				<p:commandButton id="btnCancel" action="#{audMB.onCancel}"
 					value="Cancelar" update="@form :frmAuditoria" process="@this">
@@ -16,11 +21,6 @@
 			<div class="name" align="center" style="margin-top: 100px;">
 				<span class="app-name"><h:outputLabel
 						value="#{audMB.status eq 'NEW' ? 'Nueva Auditoría' : 'Editar Auditoría'}" /></span>
-			</div>
-			<div align="left" style="margin-top: 50px;">
-				<p:commandButton id="btnGuardarAud" actionListener="#{audMB.onSave}" value="Guardar"
-					update="@form :frmAuditoria"
-					process="@this audPlan audTipoAuditoria anio nombre coordinador audfechainicio audfechafin tvAuditoriaNewEdit:audObjetivos tvAuditoriaNewEdit:audAlcances" />
 			</div>
 			<p:separator />
 			<div class="ui-fluid p-formgrid p-grid">
@@ -143,8 +143,9 @@
 				</p:dataTable>
 
 				<p:dataTable id="dtAuditoriaUnidadesEdit" var="auditund"
-					value="#{audUniMB.listado}" widgetVar="wvAuditoriaUnidadesEdit"
-					reflow="true" style="margin-top:20px;" paginator="true"
+					value="#{audMB.registro.auditoriaUnidad}"
+					widgetVar="wvAuditoriaUnidadesEdit" reflow="true"
+					style="margin-top:20px;" paginator="true"
 					rowsPerPageTemplate="5,10,15,20,25" rows="10"
 					paginatorPosition="bottom" rendered="#{audMB.status eq 'EDIT'}"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -171,6 +172,11 @@
 				</p:dataTable>
 
 				<p:tabView id="tvAuditoriaNewEdit">
+					<p:tab id="tabDescripcion" title="Descripcion">
+						<pe:ckEditor id="audDescripcion" width="100%" skin="office2013"
+							customConfig="#{request.contextPath}/resources/js/customck.js"
+							value="#{audMB.registro.audDescripcion}" />
+					</p:tab>
 					<p:tab id="tabAudObjetivos" title="Objetivos">
 						<pe:ckEditor id="audObjetivos" width="100%" skin="office2013"
 							customConfig="#{request.contextPath}/resources/js/customck.js"
@@ -182,9 +188,9 @@
 							value="#{audMB.registro.audAlcances}" />
 					</p:tab>
 				</p:tabView>
-				<p:commandButton id="btnGuardarAudBottom" actionListener="#{audMB.onSave}" value="Guardar"
+				<p:commandButton actionListener="#{audMB.onSave}" value="Guardar"
 					update="@form :frmAuditoria"
-					process="@this audPlan audTipoAuditoria anio nombre coordinador audfechainicio audfechafin tvAuditoriaNewEdit:audObjetivos tvAuditoriaNewEdit:audAlcances" />
+					process="@this audPlan audTipoAuditoria anio nombre coordinador audfechainicio audfechafin tvAuditoriaNewEdit:audDescripcion tvAuditoriaNewEdit:audObjetivos tvAuditoriaNewEdit:audAlcances" />
 			</div>
 		</p:panel>
 	</h:form>
