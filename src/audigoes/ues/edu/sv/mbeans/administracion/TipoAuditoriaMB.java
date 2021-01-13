@@ -12,7 +12,6 @@ import javax.faces.bean.ViewScoped;
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.planeacion.TipoAuditoria;
 
-
 @ManagedBean(name = "tpaMB")
 @ViewScoped
 public class TipoAuditoriaMB extends AudigoesController implements Serializable {
@@ -20,13 +19,13 @@ public class TipoAuditoriaMB extends AudigoesController implements Serializable 
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private List<TipoAuditoria> filteredTiposAuditoria;
 
 	public TipoAuditoriaMB() {
 		super(new TipoAuditoria());
 	}
-	
+
 	@PostConstruct
 	public void init() {
 		try {
@@ -41,7 +40,17 @@ public class TipoAuditoriaMB extends AudigoesController implements Serializable 
 	@SuppressWarnings("unchecked")
 	public void fillListado() {
 		try {
-			setListado((List<TipoAuditoria>) audigoesLocal.findByNamedQuery(TipoAuditoria.class, "tipoauditoria.all", new Object[] {}));
+
+			if (getObjAppsSession() != null) {
+				if (getObjAppsSession().getUsuario() != null) {
+					setListado((List<TipoAuditoria>) audigoesLocal.findByNamedQuery(TipoAuditoria.class,
+							"tipoauditoria.by.institucion",
+							new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() }));
+				}
+			} else {
+				setListado((List<TipoAuditoria>) audigoesLocal.findByNamedQuery(TipoAuditoria.class,
+						"tipoauditoria.all", new Object[] {}));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -88,24 +97,26 @@ public class TipoAuditoriaMB extends AudigoesController implements Serializable 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return super.beforeSaveNew();
 	}
-	
+
 	@Override
 	public void afterSaveNew() {
 		getListado().add(getRegistro());
 		super.afterSaveNew();
 	}
+
 	@Override
 	public boolean beforeDelete() {
-		if(getRegistro().getAuditoria().size() > 0) {
-			addWarn(new FacesMessage(SYSTEM_NAME, "Tipo de auditoría seleccinada ya tiene auditorías asignadas. No puede ser elimanada"));
+		if (getRegistro().getAuditoria().size() > 0) {
+			addWarn(new FacesMessage(SYSTEM_NAME,
+					"Tipo de auditoría seleccinada ya tiene auditorías asignadas. No puede ser elimanada"));
 			return false;
 		}
 		return super.beforeDelete();
 	}
-	
+
 	@Override
 	public void afterDelete() {
 		getListado().remove(getRegistro());

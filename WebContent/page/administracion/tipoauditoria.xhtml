@@ -22,25 +22,29 @@
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
 				<p:ajax event="rowSelect" listener="#{tpaMB.onRowSelect}"
-					update="dtTiposAuditorias" />
+					update="dtTiposAuditorias:tMenu" />
 
-				<f:facet name="paginatorTopLeft">
-					<p:commandButton value="Agregar" icon="pi pi-plus"
-						actionListener="#{tpaMB.onNew}"
-						oncomplete="PF('wvTpaNewEdit').show();" update=":frmTpaNewEdit">
-					</p:commandButton>
-					<p:commandButton update=":frmTpaNewEdit" value="Editar"
-						oncomplete="PF('wvTpaNewEdit').show()" icon="pi pi-pencil"
-						actionListener="#{tpaMB.onEdit}"
-						rendered="#{tpaMB.registro.selected}">
-					</p:commandButton>
-					<p:commandButton update=":frm" value="Eliminar" icon="pi pi-delete"
-						actionListener="#{tpaMB.onDelete}"
-						rendered="#{tpaMB.registro.selected}">
-						<p:confirm header="Confirmación"
-							message="Seguro(a) que desea eliminar el tipo de auditoría seleccionado?"
-							icon="pi pi-exclamation-triangle" />
-					</p:commandButton>
+				<f:facet name="header">
+					<p:toolbar id="tMenu">
+						<p:toolbarGroup>
+							<p:commandButton value="Agregar" icon="pi pi-plus"
+								actionListener="#{tpaMB.onNew}"
+								oncomplete="PF('wvTpaNewEdit').show();" update=":frmTpaNewEdit">
+							</p:commandButton>
+							<p:commandButton update=":frmTpaNewEdit" value="Editar"
+								oncomplete="PF('wvTpaNewEdit').show()" icon="pi pi-pencil"
+								actionListener="#{tpaMB.onEdit}"
+								rendered="#{tpaMB.registro.selected}">
+							</p:commandButton>
+							<p:commandButton update=":frm" value="Eliminar"
+								icon="pi pi-delete" actionListener="#{tpaMB.onDelete}"
+								rendered="#{tpaMB.registro.selected}">
+								<p:confirm header="Confirmación"
+									message="Seguro(a) que desea eliminar el tipo de auditoría seleccionado?"
+									icon="pi pi-exclamation-triangle" />
+							</p:commandButton>
+						</p:toolbarGroup>
+					</p:toolbar>
 				</f:facet>
 
 				<f:facet name="paginatorTopRight">
@@ -54,6 +58,10 @@
 
 				<p:column headerText="Id" sortBy="#{tpa.tpaId}">
 					<h:outputText value="#{tpa.tpaId}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Acronimo" sortBy="#{tpa.tpaAcronimo}">
+					<h:outputText value="#{tpa.tpaAcronimo}"></h:outputText>
 				</p:column>
 
 				<p:column headerText="Nombre" sortBy="#{tpa.tpaNombre}">
@@ -83,32 +91,29 @@
 			closeOnEscape="true" header="Gestión de Tipos de Auditoria"
 			modal="true">
 			<h:form id="frmTpaNewEdit">
-				<div class="ui-fluid p-formgrid p-grid">
-					<div class="p-field p-col">
+				<div class="ui-fluid">
+					<p:panelGrid columns="1" layout="grid" columnClasses="ui-g-12"
+						styleClass="ui-panelgrid-blank form-group form-elements">
+
 						<p:outputLabel for="nombre" value="Nombre del tipo de auditoria:" />
 						<p:inputText id="nombre" value="#{tpaMB.registro.tpaNombre}"
 							required="true" maxlength="250" />
-					</div>
-					<div class="p-field p-col">
-						<p:outputLabel for="acronimo"
-							value="Acrónimo tipo de auditoria:" />
-						<p:inputTextarea id="acronimo" rows="4" required="true"
-							value="#{tpaMB.registro.tpaAcronimo}" maxlength="20" />
-					</div>
-					<div class="p-field p-col">
+
+						<p:outputLabel for="acronimo" value="Acrónimo tipo de auditoria:" />
+						<p:inputText id="acronimo" value="#{tpaMB.registro.tpaAcronimo}"
+							required="true" maxlength="20" size="20" />
+
 						<p:outputLabel for="descripcion"
 							value="Descripción del tipo de auditoria:" />
-						<p:inputTextarea id="descripcion" rows="4" required="true"
+						<p:inputTextarea id="descripcion" rows="6" required="true"
 							value="#{tpaMB.registro.tpaDescripcion}" maxlength="1000" />
-					</div>
 
-					<div class="p-field-radiobutton">
 						<p:outputLabel for="estado" value="Estado:" />
 						<p:selectOneRadio id="estado" value="#{tpaMB.registro.regActivo}"
 							required="true" disabled="#{tpaMB.status=='NEW'}">
 							<f:selectItems value="#{tpaMB.regActivoList}"></f:selectItems>
 						</p:selectOneRadio>
-					</div>
+					</p:panelGrid>
 
 					<p:commandButton actionListener="#{tpaMB.onSave}" value="Guardar"
 						oncomplete="PF('wvTpaNewEdit').hide();"

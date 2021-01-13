@@ -1,12 +1,21 @@
 package audigoes.ues.edu.sv.entities.administracion;
 
 import java.io.Serializable;
-import javax.persistence.*;
-
-import audigoes.ues.edu.sv.entities.SuperEntity;
-
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import audigoes.ues.edu.sv.entities.SuperEntity;
 
 
 /**
@@ -46,6 +55,9 @@ public class Permiso extends SuperEntity implements Serializable {
 
 	@Column(name="usu_modi")
 	private String usuModi;
+	
+	@Column(name="per_identificador")
+	private String perIdentificador;
 
 	//bi-directional many-to-one association to RolPermiso
 	@OneToMany(mappedBy="permiso")
@@ -120,6 +132,14 @@ public class Permiso extends SuperEntity implements Serializable {
 
 	public void setUsuModi(String usuModi) {
 		this.usuModi = usuModi;
+	}
+
+	public String getPerIdentificador() {
+		return perIdentificador;
+	}
+
+	public void setPerIdentificador(String perIdentificador) {
+		this.perIdentificador = perIdentificador;
 	}
 
 	public List<RolPermiso> getRolPermiso() {

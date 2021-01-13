@@ -1,3 +1,4 @@
+
 package audigoes.ues.edu.sv.controller;
 
 import java.io.File;
@@ -34,6 +35,25 @@ public class AudigoesController {
 	public static final String SYSTEM_NAME = "AUDIGOES";
 	public static final String REPORT_PATH = "/WEB-INF/reportes/";
 
+	private boolean rolAuditor;
+	private boolean rolCoordinador;
+	private boolean rolJefe;
+	private boolean rolAuditado;
+	private boolean rolAuditorExterno;
+	private boolean rolAdministrador;
+
+	private boolean perNew;
+	private boolean perEdit;
+	private boolean perRead;
+	private boolean perDelete;
+	private boolean perPrint;
+	private boolean perRoot;
+	private boolean perAutorizar;
+	private boolean perAprobar;
+	private boolean perEnviar;
+	private boolean perDescargar;
+	private boolean perSubir;
+
 	@EJB(beanName = "audigoesSBSL")
 	protected audigoesSBSLLocal audigoesLocal;
 
@@ -58,6 +78,7 @@ public class AudigoesController {
 
 	@PostConstruct
 	public void init() {
+		configBean();
 	}
 
 	private boolean error = false;
@@ -560,6 +581,168 @@ public class AudigoesController {
 
 	public void setReportId(String reportId) {
 		this.reportId = reportId;
+	}
+
+	public boolean isRolAuditor() {
+		return rolAuditor;
+	}
+
+	public void setRolAuditor(boolean rolAuditor) {
+		this.rolAuditor = rolAuditor;
+	}
+
+	public boolean isRolCoordinador() {
+		return rolCoordinador;
+	}
+
+	public void setRolCoordinador(boolean rolCoordinador) {
+		this.rolCoordinador = rolCoordinador;
+	}
+
+	public boolean isRolJefe() {
+		return rolJefe;
+	}
+
+	public void setRolJefe(boolean rolJefe) {
+		this.rolJefe = rolJefe;
+	}
+
+	public boolean isRolAuditado() {
+		return rolAuditado;
+	}
+
+	public void setRolAuditado(boolean rolAuditado) {
+		this.rolAuditado = rolAuditado;
+	}
+
+	public boolean isRolAuditorExterno() {
+		return rolAuditorExterno;
+	}
+
+	public void setRolAuditorExterno(boolean rolAuditorExterno) {
+		this.rolAuditorExterno = rolAuditorExterno;
+	}
+
+	public boolean isRolAdministrador() {
+		return rolAdministrador;
+	}
+
+	public void setRolAdministrador(boolean rolAdministrador) {
+		this.rolAdministrador = rolAdministrador;
+	}
+
+	public boolean isPerNew() {
+		return perNew;
+	}
+
+	public void setPerNew(boolean perNew) {
+		this.perNew = perNew;
+	}
+
+	public boolean isPerEdit() {
+		return perEdit;
+	}
+
+	public void setPerEdit(boolean perEdit) {
+		this.perEdit = perEdit;
+	}
+
+	public boolean isPerRead() {
+		return perRead;
+	}
+
+	public void setPerRead(boolean perRead) {
+		this.perRead = perRead;
+	}
+
+	public boolean isPerDelete() {
+		return perDelete;
+	}
+
+	public void setPerDelete(boolean perDelete) {
+		this.perDelete = perDelete;
+	}
+
+	public boolean isPerPrint() {
+		return perPrint;
+	}
+
+	public void setPerPrint(boolean perPrint) {
+		this.perPrint = perPrint;
+	}
+
+	public boolean isPerRoot() {
+		return perRoot;
+	}
+
+	public void setPerRoot(boolean perRoot) {
+		this.perRoot = perRoot;
+	}
+
+	public boolean isPerAutorizar() {
+		return perAutorizar;
+	}
+
+	public void setPerAutorizar(boolean perAutorizar) {
+		this.perAutorizar = perAutorizar;
+	}
+
+	public boolean isPerAprobar() {
+		return perAprobar;
+	}
+
+	public void setPerAprobar(boolean perAprobar) {
+		this.perAprobar = perAprobar;
+	}
+
+	public boolean isPerEnviar() {
+		return perEnviar;
+	}
+
+	public void setPerEnviar(boolean perEnviar) {
+		this.perEnviar = perEnviar;
+	}
+
+	public boolean isPerDescargar() {
+		return perDescargar;
+	}
+
+	public void setPerDescargar(boolean perDescargar) {
+		this.perDescargar = perDescargar;
+	}
+
+	public boolean isPerSubir() {
+		return perSubir;
+	}
+
+	public void setPerSubir(boolean perSubir) {
+		this.perSubir = perSubir;
+	}
+
+	protected void configBean() {
+		if (getObjAppsSession() != null) {
+			setPerRoot(getObjAppsSession().isPermisoValido("ROOT"));
+			setRolAdministrador(getObjAppsSession().isPermisoValido("ROOT"));
+			setRolAuditor(getObjAppsSession().isPermisoValido("AUDITOR"));
+			setRolCoordinador(getObjAppsSession().isPermisoValido("COORDINADOR"));
+			setRolJefe(getObjAppsSession().isPermisoValido("JEFE"));
+			setRolAuditado(getObjAppsSession().isPermisoValido("AUDITADO"));
+			setRolAuditorExterno(getObjAppsSession().isPermisoValido("EXTERNO"));
+		}
+
+		if (isPerRoot()) {
+			System.out.println("Hey! eres root");
+			setPerNew(true);
+			setPerEdit(true);
+			setPerRead(true);
+			setPerDelete(true);
+			setPerAutorizar(true);
+			setPerAprobar(true);
+			setPerEnviar(true);
+			setPerDescargar(true);
+			setPerPrint(true);
+			setPerSubir(true);
+		}
 	}
 
 }

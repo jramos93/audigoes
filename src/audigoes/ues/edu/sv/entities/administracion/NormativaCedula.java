@@ -71,6 +71,13 @@ public class NormativaCedula extends SuperEntity implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="nor_ins_id")
 	private Institucion institucion;
+	
+	@Lob
+	@Column(name="nor_archivo")
+	private byte[] norArchivo;
+
+	@Column(name="nor_extension")
+	private String norExtension;
 
 	public NormativaCedula() {
 	}
@@ -177,6 +184,22 @@ public class NormativaCedula extends SuperEntity implements Serializable {
 
 	public void setUsuModi(String usuModi) {
 		this.usuModi = usuModi;
+	}
+
+	public byte[] getNorArchivo() {
+		return norArchivo;
+	}
+
+	public void setNorArchivo(byte[] norArchivo) {
+		this.norArchivo = norArchivo;
+	}
+
+	public String getNorExtension() {
+		return norExtension;
+	}
+
+	public void setNorExtension(String norExtension) {
+		this.norExtension = norExtension;
 	}
 
 	public List<Criterio> getCriterio() {

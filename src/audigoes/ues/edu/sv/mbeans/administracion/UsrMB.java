@@ -11,6 +11,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
+import audigoes.ues.edu.sv.entities.administracion.Rol;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.util.Utils;
 
@@ -24,11 +25,11 @@ public class UsrMB extends AudigoesController implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private List<Usuario> filteredUsuarios;
-	
+
 	@ManagedProperty(value = "#{uprMB}")
 	private UsuarioPermisoMB uprMB = new UsuarioPermisoMB();
 
-	private boolean auditor=false;
+	private boolean auditor = false;
 	private boolean auditorCreate;
 	private boolean auditorRead;
 	private boolean auditorUpdate;
@@ -53,7 +54,15 @@ public class UsrMB extends AudigoesController implements Serializable {
 	@SuppressWarnings("unchecked")
 	public void fillListado() {
 		try {
-			setListado((List<Usuario>) audigoesLocal.findByNamedQuery(Usuario.class, "usuarios.all", new Object[] {}));
+			if (getObjAppsSession() != null) {
+				if (getObjAppsSession().getUsuario() != null) {
+					setListado((List<Usuario>) audigoesLocal.findByNamedQuery(Usuario.class, "usuarios.by.institucion",
+							new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() }));
+				}
+			} else {
+				setListado(
+						(List<Usuario>) audigoesLocal.findByNamedQuery(Usuario.class, "usuarios.all", new Object[] {}));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -78,7 +87,7 @@ public class UsrMB extends AudigoesController implements Serializable {
 			return 0;
 		}
 	}
-	
+
 	public void onSaveUser() {
 		if (getStatus().equals("NEW")) {
 			onCreateUser();
@@ -98,8 +107,8 @@ public class UsrMB extends AudigoesController implements Serializable {
 			getRegistro().setRegActivo(1);
 			audigoesLocal.insert(getRegistro());
 			if (getRegistro() != null && getRegistro().getUsuId() > 0) {
-				//uprMB.addPermiso(Utils.rolGeneral, Utils.perLogin, getRegistro());
-				//addDelPermisos();
+				// uprMB.addPermiso(Utils.rolGeneral, Utils.perLogin, getRegistro());
+				// addDelPermisos();
 				getListado().add(getRegistro());
 				addInfo(new FacesMessage("Confirmación", "Usuario creado correctamente"));
 			}
@@ -112,7 +121,7 @@ public class UsrMB extends AudigoesController implements Serializable {
 	public void onEditUser() {
 		try {
 			if (getRegistro() != null && getRegistro().getUsuId() > 0) {
-				//addDelPermisos();
+				// addDelPermisos();
 				addInfo(new FacesMessage("Confirmación", "Usuario guardado correctamente"));
 //				uprMB.setUsuario(getRegistro());
 //				uprMB.fillListado();
@@ -122,16 +131,15 @@ public class UsrMB extends AudigoesController implements Serializable {
 			addWarn(new FacesMessage("Error", "Consulte con el administrador"));
 		}
 	}
-	
+
 	public String onGeneratePassword(Usuario u) {
 		try {
-			return Utils.getShaString(u.getUsuUsuario()+Utils.claveEstandar);
+			return Utils.getShaString(u.getUsuUsuario() + Utils.claveEstandar);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "XXX";
 		}
 	}
-	
 
 	public void fillPermisos() {
 //		if (getRegistro() != null) {
@@ -147,7 +155,7 @@ public class UsrMB extends AudigoesController implements Serializable {
 //
 //		}
 	}
-	
+
 	public void addDelPermisos() {
 		try {
 			if (isAuditor()) {
@@ -182,8 +190,8 @@ public class UsrMB extends AudigoesController implements Serializable {
 				uprMB.delPermiso(Utils.rolAuditor, Utils.perUpdate, getRegistro());
 				uprMB.delPermiso(Utils.rolAuditor, Utils.perDelete, getRegistro());
 			}
-			
-			if(isGeneralLogin()) {
+
+			if (isGeneralLogin()) {
 				uprMB.addPermiso(Utils.rolGeneral, Utils.perLogin, getRegistro());
 			} else {
 				uprMB.delPermiso(Utils.rolGeneral, Utils.perLogin, getRegistro());
@@ -192,7 +200,7 @@ public class UsrMB extends AudigoesController implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	protected void afterEdit() {
 		fillPermisos();
@@ -202,7 +210,7 @@ public class UsrMB extends AudigoesController implements Serializable {
 		uprMB.onEdit();
 		super.afterEdit();
 	}
-	
+
 	@Override
 	public void afterNew() {
 		setAuditor(false);
@@ -210,7 +218,7 @@ public class UsrMB extends AudigoesController implements Serializable {
 		setAuditorRead(false);
 		setAuditorUpdate(false);
 		setAuditorDelete(false);
-		
+
 		setGeneralLogin(false);
 
 //		setCoordinador(false);
@@ -237,7 +245,7 @@ public class UsrMB extends AudigoesController implements Serializable {
 //
 //		setExterno(false);
 //		setExternoRead(false);
-		
+
 		uprMB.getRolMB().fillListado();
 		super.afterNew();
 	}

@@ -74,13 +74,13 @@ public class Institucion extends SuperEntity implements Serializable {
 	@Column(name = "usu_modi")
 	private String usuModi;
 
-	// bi-directional many-to-one association to Configuracion
-	@OneToMany(mappedBy = "institucion")
-	private List<Configuracion> configuracion;
-
 	// bi-directional many-to-one association to Marca
 	@OneToMany(mappedBy = "institucion")
 	private List<Marca> marca;
+	
+	// bi-directional many-to-one association to Configuracion
+	@OneToMany(mappedBy = "institucion")
+	private List<Configuracion> configuracion;
 
 	// bi-directional many-to-one association to NormativaCedula
 	@OneToMany(mappedBy = "institucion")

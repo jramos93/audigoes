@@ -7,35 +7,44 @@
 	<ui:define name="title">Audigoes</ui:define>
 
 	<ui:define name="content">
-	<div class="name" align="center">
-		<span class="app-name">Gestion de Origen de Auditoria</span>
-	</div>
+		<div class="name" align="center">
+			<span class="app-name">Gestion de Origen de Auditoria</span>
+		</div>
 		<h:form id="frm">
-			<p:dataTable var="ori" value="#{oriMB.listado}" widgetVar="wvOrigenesAuditorias"
-				reflow="true" id="dtOrigenesAuditorias" style="margin-top:20px;" paginator="true"
-				filteredValue="#{oriMB.filteredOrigenesAuditoria}" selection="#{oriMB.regSelected}"
-				selectionMode="single" rowKey="#{ori.oriId}"
+			<p:dataTable var="ori" value="#{oriMB.listado}"
+				widgetVar="wvOrigenesAuditorias" reflow="true"
+				id="dtOrigenesAuditorias" style="margin-top:20px;" paginator="true"
+				filteredValue="#{oriMB.filteredOrigenesAuditoria}"
+				selection="#{oriMB.regSelected}" selectionMode="single"
+				rowKey="#{ori.oriId}"
 				globalFilterFunction="#{oriMB.globalFilterFunction}"
 				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
-				<p:ajax event="rowSelect" listener="#{oriMB.onRowSelect}" update="dtOrigenesAuditorias" />
+				<p:ajax event="rowSelect" listener="#{oriMB.onRowSelect}"
+					update="dtOrigenesAuditorias:tMenu" />
 
-				<f:facet name="paginatorTopLeft">
-					<p:commandButton value="Agregar" icon="pi pi-plus"
-						actionListener="#{oriMB.onNew}"
-						oncomplete="PF('wvOriNewEdit').show();" update=":frmOriNewEdit">
-					</p:commandButton>
-					<p:commandButton update=":frmOriNewEdit" value="Editar"
-						oncomplete="PF('wvOriNewEdit').show()" icon="pi pi-pencil"
-						actionListener="#{oriMB.onEdit}" rendered="#{oriMB.registro.selected}">
-					</p:commandButton>
+				<f:facet name="header">
+					<p:toolbar id="tMenu">
+						<p:toolbarGroup>
+							<p:commandButton value="Agregar" icon="pi pi-plus"
+								actionListener="#{oriMB.onNew}"
+								oncomplete="PF('wvOriNewEdit').show();" update=":frmOriNewEdit">
+							</p:commandButton>
+							<p:commandButton update=":frmOriNewEdit" value="Editar"
+								oncomplete="PF('wvOriNewEdit').show()" icon="pi pi-pencil"
+								actionListener="#{oriMB.onEdit}"
+								rendered="#{oriMB.registro.selected}">
+							</p:commandButton>
+						</p:toolbarGroup>
+					</p:toolbar>
 				</f:facet>
 
 				<f:facet name="paginatorTopRight">
 					<p:outputPanel>
 						<h:outputText value="Búsqueda global: " />
-						<p:inputText id="globalFilter" onkeyup="PF('wvOrigenesAuditorias').filter();"
+						<p:inputText id="globalFilter"
+							onkeyup="PF('wvOrigenesAuditorias').filter();"
 							style="width:150px" placeholder="Ingresa una palabra" />
 					</p:outputPanel>
 				</f:facet>
@@ -69,31 +78,33 @@
 		</h:form>
 
 		<p:dialog widgetVar="wvOriNewEdit" responsive="true" width="500"
-			closeOnEscape="true" header="Gestión de Origen de Auditoria" modal="true">
+			closeOnEscape="true" header="Gestión de Origen de Auditoria"
+			modal="true">
 			<h:form id="frmOriNewEdit">
-				<div class="ui-fluid p-formgrid p-grid">
-					<div class="p-field p-col">
-						<p:outputLabel for="nombre" value="Nombre del origen de auditoria:" />
+				<div class="ui-fluid">
+					<p:panelGrid columns="1" layout="grid" columnClasses="ui-g-12"
+						styleClass="ui-panelgrid-blank form-group form-elements">
+						<p:outputLabel for="nombre"
+							value="Nombre del origen de auditoria:" />
 						<p:inputText id="nombre" value="#{oriMB.registro.oriNombre}"
 							required="true" maxlength="250" />
-					</div>
-					<div class="p-field p-col">
-						<p:outputLabel for="descripcion" value="Descripción del Origen de Auditoria" />
+
+						<p:outputLabel for="descripcion"
+							value="Descripción del Origen de Auditoria" />
 						<p:inputTextarea id="descripcion" rows="4" required="true"
 							value="#{oriMB.registro.oriDescripcion}" maxlength="1000" />
-					</div>
 
-					<div class="p-field-radiobutton">
 						<p:outputLabel for="estado" value="Estado:" />
 						<p:selectOneRadio id="estado" value="#{oriMB.registro.regActivo}"
 							required="true" disabled="#{oriMB.status=='NEW'}">
 							<f:selectItems value="#{oriMB.regActivoList}"></f:selectItems>
 						</p:selectOneRadio>
-					</div>
 
+					</p:panelGrid>
 
 					<p:commandButton actionListener="#{oriMB.onSave}" value="Guardar"
-						oncomplete="PF('wvOriNewEdit').hide();" update=":frm:dtOrigenesAuditorias"></p:commandButton>
+						oncomplete="PF('wvOriNewEdit').hide();"
+						update=":frm:dtOrigenesAuditorias"></p:commandButton>
 				</div>
 			</h:form>
 		</p:dialog>

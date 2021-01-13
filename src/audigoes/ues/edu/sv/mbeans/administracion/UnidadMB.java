@@ -10,6 +10,7 @@ import javax.faces.bean.ViewScoped;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Unidad;
+import audigoes.ues.edu.sv.entities.planeacion.TipoAuditoria;
 
 @ManagedBean(name = "uniMB")
 @ViewScoped
@@ -39,7 +40,15 @@ public class UnidadMB extends AudigoesController implements Serializable {
 	@SuppressWarnings("unchecked")
 	public void fillListado() {
 		try {
-			setListado((List<Unidad>) audigoesLocal.findByNamedQuery(Unidad.class, "unidad.all", new Object[] {}));
+			if (getObjAppsSession() != null) {
+				if (getObjAppsSession().getUsuario() != null) {
+					setListado((List<Unidad>) audigoesLocal.findByNamedQuery(Unidad.class, "unidad.by.institucion",
+							new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() }));
+				}
+			} else {
+				setListado((List<Unidad>) audigoesLocal.findByNamedQuery(Unidad.class, "unidad.all", new Object[] {}));
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

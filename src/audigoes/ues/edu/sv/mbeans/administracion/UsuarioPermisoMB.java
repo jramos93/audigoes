@@ -50,17 +50,14 @@ public class UsuarioPermisoMB extends AudigoesController implements Serializable
 	@SuppressWarnings("unchecked")
 	public void fillListado() {
 		try {
-			System.out.println("id " + usuario.getUsuId());
 			setListado((List<UsuarioPermiso>) audigoesLocal.findByNamedQuery(UsuarioPermiso.class,
-					"permisos.findByUsuario", new Object[] { usuario.getUsuId() }));
-			System.out.println("tamaño " + getListado().size());
+					"permisos.findByUsuario", new Object[] { usuario.getUsuId() }));			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void onChangeRol() {
-		System.out.println("rol selected: " + rol.getRolId() + " - " + rol.getRolNombre());
 		fillPermisosDualList();
 	}
 
@@ -82,11 +79,9 @@ public class UsuarioPermisoMB extends AudigoesController implements Serializable
 		try {
 			for (Object item : event.getItems()) {
 				if (event.isAdd()) {
-					System.out.println("Agregado");
 					targetPermisosList.add((Permiso) item);
 				}
 				if (event.isRemove()) {
-					System.out.println("Removido");
 					targetPermisosList.remove((Permiso) item);
 				}
 			}
@@ -145,7 +140,7 @@ public class UsuarioPermisoMB extends AudigoesController implements Serializable
 		List<UsuarioPermiso> rolpermisodelete;
 		try {
 			rolpermisodelete = (List<UsuarioPermiso>) audigoesLocal.findByNamedQuery(UsuarioPermiso.class,
-					"usuario.permiso.delete", new Object[] { usuario.getUsuId() });
+					"usuario.permiso.delete", new Object[] { usuario.getUsuId(), getRol().getRolId() });
 			if (rolpermisodelete.size() > 0) {
 				for (UsuarioPermiso p : rolpermisodelete) {
 					setRegistro(p);
@@ -155,9 +150,7 @@ public class UsuarioPermisoMB extends AudigoesController implements Serializable
 				getListado().clear();
 			}
 
-			System.out.println("getTargetPermisosList " + targetPermisosList.size());
 			for (Permiso p : targetPermisosList) {
-				System.out.println("new ");
 				onNew();
 				getRegistro().setPermiso(p);
 				getRegistro().setRol(rol);

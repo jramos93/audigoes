@@ -11,6 +11,7 @@
 			<h:outputText styleClass="tituloDialog"
 				value="#{audMB.planSelected.plaNombre}" />
 			<p:commandButton id="btnCancel" action="#{planMB.onCancel}"
+				styleClass="pink-btn raised-btn" icon="pi pi-arrow-left"
 				value="Regresar" update="@form :frm :frmNewEditAuditoria"
 				process="@this">
 			</p:commandButton>
@@ -29,21 +30,20 @@
 					<p:toolbar id="tMenuAuditoria">
 						<p:toolbarGroup>
 							<p:commandButton value="Agregar"
-								rendered="#{loginMB.objAppsSession.usuario.usuRol==2}"
-								update="@form :frmNewEditAuditoria" icon="pi pi-eye"
+								update="@form :frmNewEditAuditoria" icon="pi pi-plus"
 								actionListener="#{audMB.onNew()}" styleClass="raised-btn"
 								process="@this">
 							</p:commandButton>
 							<p:commandButton id="btnEditarAuditoria" action="#{audMB.onEdit}"
 								styleClass="raised-btn"
-								rendered="#{audMB.registro.selected and loginMB.objAppsSession.usuario.usuRol==2}"
-								value="Editar" icon="pi pi-plus"
+								rendered="#{audMB.registro.selected}"
+								value="Editar" icon="pi pi-pencil"
 								update="@form :frmNewEditAuditoria">
 							</p:commandButton>
 							<p:commandButton update=":frm" value="Eliminar"
 								icon="pi pi-trash" actionListener="#{audMB.onDelete}"
 								styleClass="raised-btn"
-								rendered="#{audMB.registro.selected and loginMB.objAppsSession.usuario.usuRol==2}"
+								rendered="#{audMB.registro.selected}"
 								process="@this">
 								<p:confirm header="Confirmación"
 									message="Seguro(a) que desea eliminar el registros"
@@ -61,7 +61,7 @@
 								actionListener="#{audMB.asignarPersonal}" ajax="false"
 								icon="pi pi-users"
 								action="/page/planeacion/asignacion.xhtml?faces-redirect=true"
-								rendered="#{audMB.registro.selected and loginMB.objAppsSession.usuario.usuRol==2}">
+								rendered="#{audMB.registro.selected}">
 							</p:commandButton>
 							<p:commandButton id="btnAuditPlanificacion" value="Planificación"
 								styleClass="blue-btn raised-btn"

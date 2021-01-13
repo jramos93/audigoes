@@ -21,16 +21,20 @@
 				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
 				rowKey="#{usu.usuId}">
 				<p:ajax event="rowSelect" listener="#{usrMB.onRowSelect}"
-					update="dtUsuario" />
-				<f:facet name="paginatorTopLeft">
-					<p:commandButton value="Agregar" icon="pi pi-plus"
-						actionListener="#{usrMB.onNew}"
-						oncomplete="PF('wvUsuNewEdit').show();" update=":frmUsuNewEdit" />
-					<p:commandButton update=":frmUsuNewEdit" value="Editar"
-						oncomplete="PF('wvUsuNewEdit').show()" icon="pi pi-pencil"
-						action="#{usrMB.onEditSelected}"
-						rendered="#{usrMB.registro.selected}">
-					</p:commandButton>
+					update="dtUsuario:tMenu" />
+				<f:facet name="header">
+					<p:toolbar id="tMenu">
+						<p:toolbarGroup>
+							<p:commandButton value="Agregar" icon="pi pi-plus"
+								actionListener="#{usrMB.onNew}"
+								oncomplete="PF('wvUsuNewEdit').show();" update=":frmUsuNewEdit" />
+							<p:commandButton update=":frmUsuNewEdit" value="Editar"
+								oncomplete="PF('wvUsuNewEdit').show()" icon="pi pi-pencil"
+								action="#{usrMB.onEditSelected}"
+								rendered="#{usrMB.registro.selected}">
+							</p:commandButton>
+						</p:toolbarGroup>
+					</p:toolbar>
 				</f:facet>
 
 				<f:facet name="paginatorTopRight">
@@ -41,27 +45,33 @@
 					</p:outputPanel>
 				</f:facet>
 
-				<p:column headerText="Usuario">
+				<p:column headerText="Usuario" filterBy="#{usu.usuUsuario}"
+					filterMatchMode="contains">
 					<h:outputText value="#{usu.usuUsuario} - #{usu.usuId}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Nombre">
+				<p:column headerText="Nombre" filterBy="#{usu.usuNombre}"
+					filterMatchMode="contains">
 					<h:outputText value="#{usu.usuNombre}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Apellido">
+				<p:column headerText="Apellido" filterBy="#{usu.usuApellido}"
+					filterMatchMode="contains">
 					<h:outputText value="#{usu.usuApellido}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Carnet">
+				<p:column headerText="Carnet" filterBy="#{usu.usuCarnetEmpleado}"
+					filterMatchMode="contains">
 					<h:outputText value="#{usu.usuCarnetEmpleado}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Correo">
+				<p:column headerText="Correo" filterBy="#{usu.usuCorreo}"
+					filterMatchMode="contains">
 					<h:outputText value="#{usu.usuCorreo}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Puesto Funcional">
+				<p:column headerText="Puesto Funcional" filterBy="#{usu.usuCargo}"
+					filterMatchMode="contains">
 					<h:outputText value="#{usu.usuCargo}"></h:outputText>
 				</p:column>
 
@@ -173,7 +183,7 @@
 											paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 											currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
 											<f:facet name="paginatorTopLeft">
-												<p:commandButton value="Modificar Permisos"
+												<p:commandButton value="Gestionar Permisos"
 													icon="pi pi-pencil" actionListener="#{uprMB.onNew}"
 													update=":frmPermisosUsuario"
 													oncomplete="PF('wvPermisosUsuario').show();" />
@@ -188,9 +198,8 @@
 											<p:column headerText="Permiso">
 												<h:outputText value="#{p.permiso.perNombre}" />
 											</p:column>
-											<p:column headerText="Estado">
-												<h:outputText value="#{p.regActivo}"
-													converter="regActivoConverter"></h:outputText>
+											<p:column headerText="Descripción">
+												<h:outputText value="#{p.permiso.perDescripcion}" />
 											</p:column>
 										</p:dataTable>
 									</p:tab>
@@ -207,16 +216,14 @@
 		</p:dialog>
 
 		<p:dialog id="dgPermisosUsuario" widgetVar="wvPermisosUsuario"
-			responsive="true" header="Nuevo Permiso" modal="true"
+			responsive="true" header="Gestión de Permisos" modal="true"
 			closeOnEscape="true">
 
 			<h:form id="frmPermisosUsuario">
 				<p:panelGrid columns="1" layout="grid"
 					styleClass="ui-panelgrid-blank form-group form-elements">
 					<b>Indicaciones:</b>
-					<p>Seleccione los permisos de la izquierda y páselos a la
-						derecha para asignarlos al rol. Puede seleccionar más de un
-						permiso a la vez para asignarlos</p>
+					<p>Seleccione el rol y posteriormente seleccione los permisos que desea brindar al usuario</p>
 
 					<p:outputLabel value="Rol:" />
 					<p:selectOneMenu id="rol" value="#{uprMB.rol}"

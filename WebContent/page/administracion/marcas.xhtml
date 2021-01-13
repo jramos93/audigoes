@@ -7,34 +7,41 @@
 	<ui:define name="title">Audigoes</ui:define>
 
 	<ui:define name="content">
-	<div class="name" align="center">
-		<span class="app-name">Gestion de Marcas </span>
-	</div>
-		<h:form id="frm">				
-		<p:dataTable var="mar" value="#{marMB.listado}"
-				widgetVar="wvMarcas" reflow="true"
-				id="dtMarcas" style="margin-top:20px;" paginator="true"
-				filteredValue="#{marMB.filteredMarcas}" selection="#{marMB.regSelected}"
-				selectionMode="single" rowKey="#{mar.marId}"
+		<div class="name" align="center">
+			<span class="app-name">Gestion de Marcas </span>
+		</div>
+		<h:form id="frm">
+			<p:dataTable var="mar" value="#{marMB.listado}" widgetVar="wvMarcas"
+				reflow="true" id="dtMarcas" style="margin-top:20px;"
+				paginator="true" filteredValue="#{marMB.filteredMarcas}"
+				selection="#{marMB.regSelected}" selectionMode="single"
+				rowKey="#{mar.marId}"
 				globalFilterFunction="#{marMB.globalFilterFunction}"
 				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
-				<p:ajax event="rowSelect" listener="#{marMB.onRowSelect}" update="dtMarcas" />
+				<p:ajax event="rowSelect" listener="#{marMB.onRowSelect}"
+					update="dtMarcas:tMenu" />
 
-				<f:facet name="paginatorTopLeft">
-					<p:commandButton value="Agregar" icon="pi pi-plus"
-						actionListener="#{marMB.onNew}"
-						oncomplete="PF('wvMarNewEdit').show();" update=":frmMarNewEdit">
-					</p:commandButton>
-					<p:commandButton update=":frmMarNewEdit" value="Editar"
-						oncomplete="PF('wvMarNewEdit').show()" icon="pi pi-pencil"
-						actionListener="#{marMB.onEdit}" rendered="#{marMB.registro.selected}">
-					</p:commandButton>
-					<p:commandButton update=":frmMarNewEdit" value="visualizar"
-						oncomplete="PF('wvMarNewEdit').show()" icon="pi pi-eye"
-						actionListener="#{marMB.onShow}" rendered="#{norMB.registro.selected}">
-					</p:commandButton>
+				<f:facet name="header">
+					<p:toolbar id="tMenu">
+						<p:toolbarGroup>
+							<p:commandButton value="Agregar" icon="pi pi-plus"
+								actionListener="#{marMB.onNew}"
+								oncomplete="PF('wvMarNewEdit').show();" update=":frmMarNewEdit">
+							</p:commandButton>
+							<p:commandButton update=":frmMarNewEdit" value="Editar"
+								oncomplete="PF('wvMarNewEdit').show()" icon="pi pi-pencil"
+								actionListener="#{marMB.onEdit}"
+								rendered="#{marMB.registro.selected}">
+							</p:commandButton>
+							<p:commandButton update=":frmMarNewEdit" value="visualizar"
+								oncomplete="PF('wvMarNewEdit').show()" icon="pi pi-eye"
+								actionListener="#{marMB.onShow}"
+								rendered="#{marMB.registro.selected}">
+							</p:commandButton>
+						</p:toolbarGroup>
+					</p:toolbar>
 				</f:facet>
 
 				<f:facet name="paginatorTopRight">
@@ -56,7 +63,7 @@
 				<p:column headerText="Descripcion">
 					<h:outputText value="#{mar.marDescripcion}"></h:outputText>
 				</p:column>
-				
+
 				<p:column headerText="Estado" filterBy="#{mar.regActivo}"
 					filterMatchMode="exact">
 					<f:facet name="filter">
@@ -70,7 +77,7 @@
 						converter="regActivoConverter"></h:outputText>
 				</p:column>
 
-		</p:dataTable>
+			</p:dataTable>
 		</h:form>
 
 		<p:dialog widgetVar="wvMarNewEdit" responsive="true" width="600"
@@ -87,16 +94,29 @@
 						<p:inputTextarea id="descripcion" rows="4" required="true"
 							value="#{marMB.registro.marDescripcion}" maxlength="1000" />
 					</div>
-					
+
 					<div>
 						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
-											styleClass="ui-panelgrid-blank form-group form-elements">
-								<h:outputText value="Subida de archivos:"></h:outputText>
-								<p:fileUpload listener="#{marMB.handleFileUpload}" multiple="true"
-												mode="advanced" dragDropSupport="false" cancelLabel="Cancelar"
-												label="Elegir" uploadLabel="Subir"
-												allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
+							styleClass="ui-panelgrid-blank form-group form-elements">
+							<h:outputText value="Subida de archivos:"
+								rendered="#{marMB.status ne 'SHOW'}"></h:outputText>
+							<p:fileUpload listener="#{marMB.handleFileUpload}" update="btn"
+								rendered="#{marMB.status ne 'SHOW'}" multiple="false"
+								fileLimit="1" mode="advanced" dragDropSupport="false"
+								cancelLabel="Cancelar" label="Elegir" uploadLabel="Subir"
+								allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf)$/" />
 						</p:panelGrid>
+						<h:panelGroup id="btn">
+							<p:commandButton actionListener="#{marMB.downloadFile}"
+								style="width:50%;" value="Descargar"
+								rendered="#{marMB.registro.marArcArchivo!=null}" ajax="false"
+								icon="ui-icon-arrowthick-1-s" process="@this"
+								title="Clic para descargar el archivo">
+								<f:attribute name="marca" value="#{marMB.registro}"></f:attribute>
+								<p:fileDownload value="#{marMB.marca}"></p:fileDownload>
+							</p:commandButton>
+
+						</h:panelGroup>
 					</div>
 
 					<div class="p-field-radiobutton">
@@ -109,7 +129,8 @@
 
 
 					<p:commandButton actionListener="#{marMB.onSave}" value="Guardar"
-						oncomplete="PF('wvMarNewEdit').hide();" update=":frm:dtMarcas" rendered="#{marMB.status=='NEW' or (marMB.status=='EDIT')}"></p:commandButton>			
+						oncomplete="PF('wvMarNewEdit').hide();" update=":frm:dtMarcas"
+						rendered="#{marMB.status=='NEW' or (marMB.status=='EDIT')}"></p:commandButton>
 				</div>
 			</h:form>
 		</p:dialog>

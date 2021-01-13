@@ -7,35 +7,45 @@
 	<ui:define name="title">Audigoes</ui:define>
 
 	<ui:define name="content">
-	<div class="name" align="center">
-		<span class="app-name">Gestion de Unidades Administrativas</span>
-	</div>
+		<div class="name" align="center">
+			<span class="app-name">Gestion de Unidades Administrativas</span>
+		</div>
 		<h:form id="frm">
-			<p:dataTable var="uni" value="#{uniMB.listado}" widgetVar="wvUnidades"
-				reflow="true" id="dtUnidades" style="margin-top:20px;" paginator="true"
-				filteredValue="#{uniMB.filteredUnidades}" selection="#{uniMB.regSelected}"
-				selectionMode="single" rowKey="#{uni.uniId}"
+			<p:dataTable var="uni" value="#{uniMB.listado}"
+				widgetVar="wvUnidades" reflow="true" id="dtUnidades"
+				style="margin-top:20px;" paginator="true"
+				filteredValue="#{uniMB.filteredUnidades}"
+				selection="#{uniMB.regSelected}" selectionMode="single"
+				rowKey="#{uni.uniId}"
 				globalFilterFunction="#{uniMB.globalFilterFunction}"
-				paginatorPosition="top" rowsPerPageTemplate="5,10,15,20,25" rows="10"
+				paginatorPosition="top" rowsPerPageTemplate="5,10,15,20,25"
+				rows="10"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
-				<p:ajax event="rowSelect" listener="#{uniMB.onRowSelect}" update="dtUnidades" />
+				<p:ajax event="rowSelect" listener="#{uniMB.onRowSelect}"
+					update="dtUnidades:tMenu" />
 
-				<f:facet name="paginatorTopLeft">
-					<p:commandButton value="Agregar" icon="pi pi-plus"
-						actionListener="#{uniMB.onNew}"
-						oncomplete="PF('wvUniNewEdit').show();" update=":frmUniNewEdit" />
-					<p:commandButton update=":frmUniNewEdit" value="Editar"
-						oncomplete="PF('wvUniNewEdit').show()" icon="pi pi-pencil"
-						actionListener="#{uniMB.onEdit}" rendered="#{uniMB.registro.selected}">
-					</p:commandButton>
+				<f:facet name="header">
+					<p:toolbar id="tMenu">
+						<p:toolbarGroup>
+							<p:commandButton value="Agregar" icon="pi pi-plus"
+								actionListener="#{uniMB.onNew}"
+								oncomplete="PF('wvUniNewEdit').show();" update=":frmUniNewEdit" />
+							<p:commandButton update=":frmUniNewEdit" value="Editar"
+								oncomplete="PF('wvUniNewEdit').show()" icon="pi pi-pencil"
+								actionListener="#{uniMB.onEdit}"
+								rendered="#{uniMB.registro.selected}">
+							</p:commandButton>
+						</p:toolbarGroup>
+					</p:toolbar>
 				</f:facet>
 
 				<f:facet name="paginatorTopRight">
 					<p:outputPanel>
 						<h:outputText value="Búsqueda global: " />
-						<p:inputText id="globalFilter" onkeyup="PF('wvUnidades').filter();"
-							style="width:150px" placeholder="Ingresa una palabra" />
+						<p:inputText id="globalFilter"
+							onkeyup="PF('wvUnidades').filter();" style="width:150px"
+							placeholder="Ingresa una palabra" />
 					</p:outputPanel>
 				</f:facet>
 
@@ -43,14 +53,15 @@
 					<h:outputText value="#{uni.uniId}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Abreviatura Nombre" sortBy="#{uni.uniIniciales}">
+				<p:column headerText="Abreviatura Nombre"
+					sortBy="#{uni.uniIniciales}">
 					<h:outputText value="#{uni.uniIniciales}"></h:outputText>
 				</p:column>
 
 				<p:column headerText="Nombre" sortBy="#{uni.uniNombre}">
 					<h:outputText value="#{uni.uniNombre}"></h:outputText>
 				</p:column>
-				
+
 				<p:column headerText="Ubicación" sortBy="#{uni.uniUbicacion}">
 					<h:outputText value="#{uni.uniUbicacion}"></h:outputText>
 				</p:column>
@@ -74,36 +85,33 @@
 		<p:dialog widgetVar="wvUniNewEdit" responsive="true" width="500"
 			closeOnEscape="true" header="Gestión de Unidades" modal="true">
 			<h:form id="frmUniNewEdit">
-				<div class="ui-fluid p-formgrid p-grid">
-					<div class="p-field p-col">
+				<div class="ui-fluid">
+					<p:panelGrid columns="1" layout="grid" columnClasses="ui-g-12"
+						styleClass="ui-panelgrid-blank form-group form-elements">
 						<p:outputLabel for="nombre" value="Nombre de la unidad:" />
 						<p:inputText id="nombre" value="#{uniMB.registro.uniNombre}"
 							required="true" maxlength="250" />
-					</div>
-					<div class="p-field p-col">
+
 						<p:outputLabel for="descripcion" value="Descripción:" />
 						<p:inputTextarea id="descripcion" rows="4" required="true"
-							value="#{uniMB.registro.uniDescripcion}" maxlength="1000"/>
-					</div>
-					<div class="p-field p-col">
+							value="#{uniMB.registro.uniDescripcion}" maxlength="1000" />
+
 						<p:outputLabel for="abreviatura" value="Abreviatura nombre:" />
-						<p:inputText id="abreviatura" value="#{uniMB.registro.uniIniciales}"
-							required="true" maxlength="25" />
-					</div>
-					<div class="p-field p-col">
+						<p:inputText id="abreviatura"
+							value="#{uniMB.registro.uniIniciales}" required="true"
+							maxlength="25" />
+
 						<p:outputLabel for="ubicacion" value="Ubicación:" />
 						<p:inputText id="ubicacion" value="#{uniMB.registro.uniUbicacion}"
 							required="true" maxlength="1000" />
-					</div>
-					
-					<div class="p-field-radiobutton">
+
 						<p:outputLabel for="estado" value="Estado:" />
 						<p:selectOneRadio id="estado" value="#{uniMB.registro.regActivo}"
 							required="true" disabled="#{uniMB.status=='NEW'}">
 							<f:selectItems value="#{uniMB.regActivoList}"></f:selectItems>
 						</p:selectOneRadio>
-					</div>
 
+					</p:panelGrid>
 					<p:commandButton actionListener="#{uniMB.onSave}" value="Guardar"
 						oncomplete="PF('wvUniNewEdit').hide();" update=":frm:dtUnidades" />
 				</div>

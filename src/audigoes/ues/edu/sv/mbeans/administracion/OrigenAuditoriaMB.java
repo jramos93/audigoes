@@ -11,7 +11,6 @@ import javax.faces.bean.ViewScoped;
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.planeacion.OrigenAuditoria;
 
-
 @ManagedBean(name = "oriMB")
 @ViewScoped
 public class OrigenAuditoriaMB extends AudigoesController implements Serializable {
@@ -19,13 +18,13 @@ public class OrigenAuditoriaMB extends AudigoesController implements Serializabl
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private List<OrigenAuditoria> filteredOrigenesAuditoria;
 
 	public OrigenAuditoriaMB() {
 		super(new OrigenAuditoria());
 	}
-	
+
 	@PostConstruct
 	public void init() {
 		try {
@@ -40,7 +39,17 @@ public class OrigenAuditoriaMB extends AudigoesController implements Serializabl
 	@SuppressWarnings("unchecked")
 	public void fillListado() {
 		try {
-			setListado((List<OrigenAuditoria>) audigoesLocal.findByNamedQuery(OrigenAuditoria.class, "origenauditoria.all", new Object[] {}));
+			if (getObjAppsSession() != null) {
+				if (getObjAppsSession().getUsuario() != null) {
+					setListado((List<OrigenAuditoria>) audigoesLocal.findByNamedQuery(OrigenAuditoria.class,
+							"origenauditoria.by.institucion",
+							new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() }));
+				}
+			} else {
+				setListado((List<OrigenAuditoria>) audigoesLocal.findByNamedQuery(OrigenAuditoria.class,
+						"origenauditoria.all", new Object[] {}));
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -65,6 +74,12 @@ public class OrigenAuditoriaMB extends AudigoesController implements Serializabl
 		} catch (NumberFormatException ex) {
 			return 0;
 		}
+	}
+
+	@Override
+	public boolean beforeSaveNew() {
+		getRegistro().setInstitucion(getObjAppsSession().getUsuario().getInstitucion());
+		return super.beforeSaveNew();
 	}
 
 	/* GETS y SETS */
@@ -93,6 +108,5 @@ public class OrigenAuditoriaMB extends AudigoesController implements Serializabl
 	public void setFilteredOrigenesAuditoria(List<OrigenAuditoria> filteredOrigenesAuditoria) {
 		this.filteredOrigenesAuditoria = filteredOrigenesAuditoria;
 	}
-
 
 }

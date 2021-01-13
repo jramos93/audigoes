@@ -15,34 +15,40 @@
 				reflow="true" id="dtRoles" style="margin-top:20px;" paginator="true"
 				filteredValue="#{rolMB.filteredRoles}" rowKey="#{rol.rolId}"
 				selection="#{rolMB.regSelected}" selectionMode="single"
+				rowIndexVar="index"
 				globalFilterFunction="#{rolMB.globalFilterFunction}"
 				rowsPerPageTemplate="5,10,15,20,25" rows="10" sortMode="multiple"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
 				<p:ajax event="rowSelect" listener="#{rolMB.onRowSelect}"
-					update="dtRoles" />
-				<f:facet name="paginatorTopLeft">
-					<p:commandButton id="bntNuevoRol" value="Nuevo Rol"
-						actionListener="#{rolMB.onNew}" icon="pi pi-plus"
-						oncomplete="PF('wvNewEditRol').show();" update=":dgNewEditRol">
-					</p:commandButton>
-					<p:commandButton id="bntEditarRol" value="Editar Rol"
-						actionListener="#{rolMB.onEdit}" icon="pi pi-plus"
-						oncomplete="PF('wvNewEditRol').show();" update=":dgNewEditRol"
-						rendered="#{rolMB.registro.selected}">
-					</p:commandButton>
-					<p:commandButton update=":frmRolNewEdit" value="Permisos"
-						oncomplete="PF('wvRolNewEdit').show()" icon="pi pi-eye"
-						actionListener="#{rolMB.fillPermisos}"
-						rendered="#{rolMB.registro.selected}">
-					</p:commandButton>
-					<p:commandButton id="btnEliminar" value="Eliminar"
-						actionListener="#{rolMB.onDelete}" update="@form"
-						rendered="#{rolMB.registro.selected}">
-						<p:confirm header="Confirmación"
-							message="Seguro(a) que desea eliminar el rol seleccionado?"
-							icon="pi pi-exclamation-triangle" />
-					</p:commandButton>
+					update="dtRoles:tMenu" />
+				<f:facet name="header">
+					<p:toolbar id="tMenu">
+						<p:toolbarGroup>
+							<p:commandButton id="bntNuevoRol" value="Nuevo Rol"
+								styleClass="raised-btn" actionListener="#{rolMB.onNew}"
+								icon="pi pi-plus" oncomplete="PF('wvNewEditRol').show();"
+								update=":dgNewEditRol">
+							</p:commandButton>
+							<p:commandButton id="bntEditarRol" value="Editar Rol"
+								styleClass="raised-btn" actionListener="#{rolMB.onEdit}"
+								icon="pi pi-plus" oncomplete="PF('wvNewEditRol').show();"
+								update=":dgNewEditRol" rendered="#{rolMB.registro.selected}">
+							</p:commandButton>
+							<p:commandButton update=":frmRolNewEdit" value="Permisos"
+								styleClass="raised-btn" oncomplete="PF('wvRolNewEdit').show()"
+								icon="pi pi-eye" actionListener="#{rolMB.fillPermisos}"
+								rendered="#{rolMB.registro.selected}">
+							</p:commandButton>
+							<p:commandButton id="btnEliminar" value="Eliminar"
+								styleClass="raised-btn" actionListener="#{rolMB.onDelete}"
+								update="@form" rendered="#{rolMB.registro.selected}">
+								<p:confirm header="Confirmación"
+									message="Seguro(a) que desea eliminar el rol seleccionado?"
+									icon="pi pi-exclamation-triangle" />
+							</p:commandButton>
+						</p:toolbarGroup>
+					</p:toolbar>
 				</f:facet>
 				<f:facet name="paginatorTopRight">
 					<p:outputPanel>
@@ -110,30 +116,33 @@
 		</p:dialog>
 
 		<p:dialog id="dgNewRolPermiso" widgetVar="wvNewRolPermiso"
-			responsive="true" header="Nuevo Permiso" modal="true"
+			responsive="true" header="Gestión de Permisos" modal="true"
 			closeOnEscape="true">
 
 			<h:form id="frmNewRolPermiso">
-				<b>Indicaciones:</b>
-				<p>Seleccione los permisos de la izquierda y páselos a la
-					derecha para asignarlos al rol.</p>
-				<p>Puede seleccionar más de un permiso a la vez para asignarlos</p>
-				<p:pickList id="plpermisos" value="#{perMB.permisosList}"
-					var="permiso" itemValue="#{permiso}" responsive="true"
-					itemLabel="#{permiso.perNombre}" showCheckbox="true"
-					showSourceFilter="true" showTargetFilter="true"
-					filterMatchMode="contains" converter="permisoConverter">
-					<f:facet name="sourceCaption"> Disponibles</f:facet>
-					<f:facet name="targetCaption"> Asignados</f:facet>
-					<p:ajax event="transfer" listener="#{rlpMB.asignarPermiso}"
-						update=":frmRolNewEdit" />
-					<p:column style="text-align:left">
-						<h:outputText value="#{permiso.perNombre}" />
-					</p:column>
-				</p:pickList>
+				<p:panelGrid columns="1" layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+					<b>Indicaciones:</b>
+					<p>Seleccione los permisos de la izquierda y páselos a la
+						derecha para asignarlos al rol.</p>
+					<p>Puede seleccionar más de un permiso a la vez para asignarlos</p>
+					<p:pickList id="plpermisos" value="#{perMB.permisosList}"
+						var="permiso" itemValue="#{permiso}" responsive="true"
+						itemLabel="#{permiso.perNombre}" showCheckbox="true"
+						showSourceFilter="true" showTargetFilter="true"
+						filterMatchMode="contains" converter="permisoConverter">
+						<f:facet name="sourceCaption"> Disponibles</f:facet>
+						<f:facet name="targetCaption"> Asignados</f:facet>
+						<p:ajax event="transfer" listener="#{rlpMB.asignarPermiso}"
+							update=":frmRolNewEdit" />
+						<p:column style="width:100%;">
+							<h:outputText style="margin-left:10px;" value="#{permiso.perNombre}" />
+						</p:column>
+					</p:pickList>
+				</p:panelGrid>
 			</h:form>
 		</p:dialog>
-		
+
 		<p:dialog id="dgNewEditRol" widgetVar="wvNewEditRol" responsive="true"
 			width="600" closeOnEscape="true"
 			header="#{rolMB.status eq 'NEW' ? 'Nuevo Rol' : 'Editar Rol'}"

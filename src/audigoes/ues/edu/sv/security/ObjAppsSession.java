@@ -1,5 +1,6 @@
 package audigoes.ues.edu.sv.security;
 
+import java.util.Iterator;
 import java.util.List;
 
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
@@ -11,8 +12,47 @@ public class ObjAppsSession {
 	private String ip;
 	private String host;
 	private List<UsuarioPermiso> permisos;
-	
-	public ObjAppsSession() {}
+
+	public ObjAppsSession() {
+	}
+
+	public boolean isPermisoValido(String rol) {
+		boolean valido = false;
+
+		if (this.permisos != null) {
+			Iterator var = this.permisos.iterator();
+
+			while (var.hasNext()) {
+				UsuarioPermiso reg = (UsuarioPermiso) var.next();
+				String comparar = rol.trim().toUpperCase();
+				String registro = reg.getRol().getRolIdentificador().trim().toUpperCase();
+
+				if (registro.equals(comparar) && reg.getRegActivo() == 1) {
+					return true;
+				}
+			}
+		}
+		return valido;
+	}
+
+	public boolean isPermisoValido(String rol, String permiso) {
+		boolean valido = false;
+		if (this.permisos != null) {
+			Iterator var = this.permisos.iterator();
+
+			while (var.hasNext()) {
+				UsuarioPermiso reg = (UsuarioPermiso) var.next();
+				String comparar = rol.trim().toUpperCase() + ":" + permiso.trim().toUpperCase();
+				String registro = reg.getRol().getRolIdentificador().trim().toUpperCase() + ":"
+						+ reg.getPermiso().getPerIdentificador().trim().toUpperCase();
+
+				if (registro.equals(comparar) && reg.getRegActivo() == 1) {
+					return true;
+				}
+			}
+		}
+		return valido;
+	}
 
 	public Usuario getUsuario() {
 		return usuario;
@@ -45,6 +85,5 @@ public class ObjAppsSession {
 	public void setPermisos(List<UsuarioPermiso> permisos) {
 		this.permisos = permisos;
 	}
-	
-	
+
 }

@@ -4,53 +4,58 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.administracion.Institucion;
 
 import java.util.Date;
 import java.util.List;
-
 
 /**
  * The persistent class for the origen_auditoria database table.
  * 
  */
 @Entity
-@Table(name="origen_auditoria")
-@NamedQuery(name="OrigenAuditoria.findAll", query="SELECT o FROM OrigenAuditoria o")
+@Table(name = "origen_auditoria")
+@NamedQuery(name = "OrigenAuditoria.findAll", query = "SELECT o FROM OrigenAuditoria o")
 public class OrigenAuditoria extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "ori_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "ori_id", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "ori_id")
-	@Column(name="ori_id")
+	@Column(name = "ori_id")
 	private int oriId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_crea")
+	@Column(name = "fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_modi")
+	@Column(name = "fec_modi")
 	private Date fecModi;
 
-	@Column(name="ori_descripcion")
+	@Column(name = "ori_descripcion")
 	private String oriDescripcion;
 
-	@Column(name="ori_nombre")
+	@Column(name = "ori_nombre")
 	private String oriNombre;
 
-	@Column(name="reg_activo")
+	@Column(name = "reg_activo")
 	private int regActivo;
 
-	@Column(name="usu_crea")
+	@Column(name = "usu_crea")
 	private String usuCrea;
 
-	@Column(name="usu_modi")
+	@Column(name = "usu_modi")
 	private String usuModi;
 
-	//bi-directional many-to-one association to Auditoria
-	@OneToMany(mappedBy="origenAuditoria", fetch=FetchType.EAGER)
+	// bi-directional many-to-one association to Auditoria
+	@OneToMany(mappedBy = "origenAuditoria", fetch = FetchType.EAGER)
 	private List<Auditoria> auditoria;
+
+	// bi-directional many-to-one association to Institucion
+	@ManyToOne
+	@JoinColumn(name = "ins_id")
+	private Institucion institucion;
 
 	public OrigenAuditoria() {
 	}
@@ -117,6 +122,14 @@ public class OrigenAuditoria extends SuperEntity implements Serializable {
 
 	public void setUsuModi(String usuModi) {
 		this.usuModi = usuModi;
+	}
+
+	public Institucion getInstitucion() {
+		return institucion;
+	}
+
+	public void setInstitucion(Institucion institucion) {
+		this.institucion = institucion;
 	}
 
 	public List<Auditoria> getAuditoria() {

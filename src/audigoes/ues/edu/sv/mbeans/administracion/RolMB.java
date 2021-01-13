@@ -20,9 +20,9 @@ public class RolMB extends AudigoesController implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private List<Rol> filteredRoles;
-	
+
 	@ManagedProperty(value = "#{rlpMB}")
 	private RolPermisoMB rlpMB = new RolPermisoMB();
 
@@ -44,7 +44,14 @@ public class RolMB extends AudigoesController implements Serializable {
 	@SuppressWarnings("unchecked")
 	public void fillListado() {
 		try {
-			setListado((List<Rol>) audigoesLocal.findByNamedQuery(Rol.class, "rol.all", new Object[] {}));
+			if (getObjAppsSession() != null) {
+				if (getObjAppsSession().getUsuario() != null) {
+					setListado((List<Rol>) audigoesLocal.findByNamedQuery(Rol.class, "rol.by.institucion",
+							new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() }));
+				}
+			} else {
+				setListado((List<Rol>) audigoesLocal.findByNamedQuery(Rol.class, "rol.all", new Object[] {}));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -59,8 +66,7 @@ public class RolMB extends AudigoesController implements Serializable {
 
 		Rol rol = (Rol) value;
 		return rol.getRolNombre().toLowerCase().contains(filterText)
-				|| rol.getRolDescripcion().toLowerCase().contains(filterText)
-				|| rol.getRolId() == filterInt;
+				|| rol.getRolDescripcion().toLowerCase().contains(filterText) || rol.getRolId() == filterInt;
 	}
 
 	private int getInteger(String string) {
@@ -70,10 +76,16 @@ public class RolMB extends AudigoesController implements Serializable {
 			return 0;
 		}
 	}
-	
+
 	public void fillPermisos() {
 		getRlpMB().setRol(getRegistro());
 		getRlpMB().fillListado();
+	}
+
+	@Override
+	public boolean beforeSaveNew() {
+		getRegistro().setInstitucion(getObjAppsSession().getUsuario().getInstitucion());
+		return super.beforeSaveNew();
 	}
 
 	/* GETS y SETS */
@@ -94,10 +106,10 @@ public class RolMB extends AudigoesController implements Serializable {
 		getListado().add(getRegistro());
 		super.afterSaveNew();
 	}
-	
+
 	@Override
 	public boolean beforeDelete() {
-		if(getRegistro().getRolPermiso().size() > 0 ) {
+		if (getRegistro().getRolPermiso().size() > 0) {
 			addWarn(new FacesMessage(SYSTEM_NAME, "El rol tiene permisos asignados, no puede ser eliminado"));
 			return false;
 		}
