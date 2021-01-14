@@ -10,10 +10,10 @@
 			rendered="#{planMB.status eq 'VIEW_AUDITORIAS' and audMB.status eq 'SEARCH'}">
 			<h:outputText styleClass="tituloDialog"
 				value="#{audMB.planSelected.plaNombre}" />
-			<p:commandButton id="btnCancel" action="#{planMB.onCancel}"
-				styleClass="pink-btn raised-btn" icon="pi pi-arrow-left"
-				value="Regresar" update="@form :frm :frmNewEditAuditoria"
-				process="@this">
+			<p:commandButton id="btnCancel2" action="#{planMB.onCancel}"
+				style="margin-top: 50px;" styleClass="pink-btn raised-btn"
+				icon="pi pi-arrow-left" value="Regresar"
+				update="@form :frm :frmNewEditAuditoria" process="@this">
 			</p:commandButton>
 			<p:dataTable id="dtAuditorias" value="#{audMB.listado}"
 				widgetVar="wvAuditorias" reflow="true" var="aud"
@@ -35,15 +35,13 @@
 								process="@this">
 							</p:commandButton>
 							<p:commandButton id="btnEditarAuditoria" action="#{audMB.onEdit}"
-								styleClass="raised-btn"
-								rendered="#{audMB.registro.selected}"
+								styleClass="raised-btn" rendered="#{audMB.registro.selected}"
 								value="Editar" icon="pi pi-pencil"
 								update="@form :frmNewEditAuditoria">
 							</p:commandButton>
 							<p:commandButton update=":frm" value="Eliminar"
 								icon="pi pi-trash" actionListener="#{audMB.onDelete}"
-								styleClass="raised-btn"
-								rendered="#{audMB.registro.selected}"
+								styleClass="raised-btn" rendered="#{audMB.registro.selected}"
 								process="@this">
 								<p:confirm header="Confirmación"
 									message="Seguro(a) que desea eliminar el registros"

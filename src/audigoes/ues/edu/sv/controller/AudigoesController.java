@@ -731,7 +731,6 @@ public class AudigoesController {
 		}
 
 		if (isPerRoot()) {
-			System.out.println("Hey! eres root");
 			setPerNew(true);
 			setPerEdit(true);
 			setPerRead(true);
