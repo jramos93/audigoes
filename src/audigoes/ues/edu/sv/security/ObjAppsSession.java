@@ -9,6 +9,7 @@ import audigoes.ues.edu.sv.entities.administracion.UsuarioPermiso;
 public class ObjAppsSession {
 
 	private Usuario usuario;
+	private String rol;
 	private String ip;
 	private String host;
 	private List<UsuarioPermiso> permisos;
@@ -84,6 +85,14 @@ public class ObjAppsSession {
 
 	public void setPermisos(List<UsuarioPermiso> permisos) {
 		this.permisos = permisos;
+	}
+
+	public String getRol() {
+		return rol;
+	}
+
+	public void setRol(String rol) {
+		this.rol = rol;
 	}
 
 }

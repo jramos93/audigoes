@@ -2,10 +2,8 @@ package audigoes.ues.edu.sv.security;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
@@ -18,12 +16,11 @@ import org.primefaces.model.menu.MenuModel;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Institucion;
+import audigoes.ues.edu.sv.entities.administracion.Rol;
 import audigoes.ues.edu.sv.entities.administracion.Sesiones;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.administracion.UsuarioPermiso;
 import audigoes.ues.edu.sv.session.ValidacionSBSLLocal;
-import audigoes.ues.edu.sv.util.Test;
-import audigoes.ues.edu.sv.util.Utils;
 
 public class SecurityController extends AudigoesController {
 
@@ -50,6 +47,7 @@ public class SecurityController extends AudigoesController {
 
 	@PostConstruct
 	public void init() {
+		super.init();
 	}
 
 	private List<Institucion> institucionList;
@@ -87,6 +85,9 @@ public class SecurityController extends AudigoesController {
 							return null;
 						} else {
 							objAppsSession.setPermisos(permisos);
+							if (permisos != null && !permisos.isEmpty()) {
+								objAppsSession.setRol(permisos.get(0).getRol().getRolNombre());
+							}
 							objAppsSession.setHost(sesion.getSesHostname());
 							objAppsSession.setIp(sesion.getSesIp());
 							ctx.getExternalContext().getSessionMap().put("audigoes.user.name", this.usuario);
@@ -266,6 +267,12 @@ public class SecurityController extends AudigoesController {
 
 	public void setInstitucionSelected(Institucion institucionSelected) {
 		this.institucionSelected = institucionSelected;
+	}
+
+	@Override
+	protected void configBean() {
+		// TODO Auto-generated method stub
+		super.configBean();
 	}
 
 }

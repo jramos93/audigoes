@@ -56,12 +56,14 @@
 		<query>select o from Unidad o where o.institucion.insId=?1</query>
 	</named-query>
 
+	<!-- Rol -->
 	<named-query name="rol.all">
 		<query>select distinct o from Rol o left join fetch o.rolPermiso </query>
 	</named-query>
 	<named-query name="rol.by.institucion">
 		<query>select o from Rol o Where o.institucion.insId=?1</query>
 	</named-query>
+
 	<named-query name="configuracion.all">
 		<query>select o from Configuracion o Where o.institucion.insId = ?1</query>
 	</named-query>

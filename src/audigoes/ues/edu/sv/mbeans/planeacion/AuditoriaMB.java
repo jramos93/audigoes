@@ -650,7 +650,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		super.configBean();
 		if (getObjAppsSession() != null) {
 			if (!isPerRoot()) {
-				setPerEnviar(getObjAppsSession().isPermisoValido("AUDITOR", "ENVIAR"));
+				//setPerEnviar(getObjAppsSession().isPermisoValido("AUDITOR", "ENVIAR"));
 			}
 		}
 	}

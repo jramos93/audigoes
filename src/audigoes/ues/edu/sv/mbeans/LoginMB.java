@@ -32,11 +32,18 @@ public class LoginMB extends SecurityController implements Serializable{
 	public void init() {
 		fillInstitucionList();
 		//Test.main(null);
+		super.init();
 	}
 
 	protected boolean beforeLogin() {
 		this.setOutcome("/page/main.xhtml");
 		return true;
+	}
+	
+	@Override
+	protected void afterLogin() {
+		configBean();
+		super.afterLogin();
 	}
 	
 	//Método para cerrar sesión
@@ -82,5 +89,11 @@ public class LoginMB extends SecurityController implements Serializable{
 
 	public void setInstitucionList(List<Institucion> institucionList) {
 		this.institucionList = institucionList;
+	}
+	
+	@Override
+	protected void configBean() {
+		// TODO Auto-generated method stub
+		super.configBean();
 	}
 }

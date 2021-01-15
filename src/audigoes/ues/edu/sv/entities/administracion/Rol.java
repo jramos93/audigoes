@@ -48,6 +48,9 @@ public class Rol extends SuperEntity implements Serializable {
 	
 	@Column(name="rol_identificador")
 	private String rolIdentificador;
+	
+	@Column(name = "rol_jerarquia")
+	private int rolJerarquia;
 
 	// bi-directional many-to-one association to RolMenu
 	@OneToMany(mappedBy = "rol")
@@ -213,6 +216,14 @@ public class Rol extends SuperEntity implements Serializable {
 
 	public void setRolIdentificador(String rolIdentificador) {
 		this.rolIdentificador = rolIdentificador;
+	}
+
+	public int getRolJerarquia() {
+		return rolJerarquia;
+	}
+
+	public void setRolJerarquia(int rolJerarquia) {
+		this.rolJerarquia = rolJerarquia;
 	}
 
 	@Override
