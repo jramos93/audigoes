@@ -15,6 +15,11 @@
 				icon="pi pi-arrow-left" value="Regresar"
 				update="@form :frm :frmNewEditAuditoria" process="@this">
 			</p:commandButton>
+			<div class="name" align="center" style="margin-top: 50px;">
+				<span class="app-name">Listado de Auditorias </span>
+				<h3>Plan #{planMB.registro.plaAnio} -
+					#{planMB.registro.plaNombre}</h3>
+			</div>
 			<p:dataTable id="dtAuditorias" value="#{audMB.listado}"
 				widgetVar="wvAuditorias" reflow="true" var="aud"
 				style="margin-top:20px;" paginator="true" rowKey="#{aud.audId}"

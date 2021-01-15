@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -99,27 +100,27 @@ public class Auditoria extends SuperEntity implements Serializable {
 
 	@Column(name = "usu_modi")
 	private String usuModi;
-	
+
 	@Temporal(TemporalType.DATE)
 	@Column(name = "aud_fecha_programado")
 	private Date audFechaProgramado;
-	
+
 	@Temporal(TemporalType.DATE)
 	@Column(name = "aud_fecha_planificacion")
 	private Date audFechaPlanificacion;
-	
+
 	@Temporal(TemporalType.DATE)
 	@Column(name = "aud_fecha_ejecucion")
 	private Date audFechaEjecucion;
-	
+
 	@Temporal(TemporalType.DATE)
 	@Column(name = "aud_fecha_informe")
 	private Date audFechaInforme;
-	
+
 	@Temporal(TemporalType.DATE)
 	@Column(name = "aud_fecha_seguimiento")
 	private Date audFechaSeguimiento;
-	
+
 	@Temporal(TemporalType.DATE)
 	@Column(name = "aud_fecha_finalizada")
 	private Date audFechaFinalizada;
@@ -517,7 +518,7 @@ public class Auditoria extends SuperEntity implements Serializable {
 
 		return informe;
 	}
-	
+
 	public List<Recomendacion> getRecomendacion() {
 		return this.recomendacion;
 	}

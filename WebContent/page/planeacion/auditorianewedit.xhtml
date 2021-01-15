@@ -8,17 +8,13 @@
 	<h:form id="frmNewEditAuditoria">
 		<p:panel rendered="#{audMB.status eq 'NEW' or audMB.status eq 'EDIT'}">
 
-			<p:commandButton id="btnCancel3" action="#{audMB.onCancel}"
-				styleClass="pink-btn raised-btn" icon="pi pi-arrow-left"
-				value="Cancelar" update="@form :frmAuditoria" process="@this">
-			</p:commandButton>
-
 			<div align="left" style="margin-top: 50px;">
-				<p:commandButton id="btnCancel" action="#{audMB.onCancel}"
-					value="Cancelar" update="@form :frmAuditoria" process="@this">
-				</p:commandButton>
+				<p:commandButton id="btnCancel3" action="#{audMB.onCancel}"
+				styleClass="pink-btn raised-btn" icon="pi pi-arrow-left"
+				value="Regresar" update="@form :frmAuditoria" process="@this">
+			</p:commandButton>
 			</div>
-			<div class="name" align="center" style="margin-top: 100px;">
+			<div class="name" align="center" style="margin-top: 50px;">
 				<span class="app-name"><h:outputLabel
 						value="#{audMB.status eq 'NEW' ? 'Nueva Auditoría' : 'Editar Auditoría'}" /></span>
 			</div>
