@@ -54,8 +54,8 @@
 								</p:commandButton>
 								<p:separator></p:separator>
 								<p:commandButton id="btnActividades" value="Actividades"
-									styleClass="blue-btn raised-btn" icon="pi pi-list" ajax="false"
-									actionListener="#{audMB.actividades}"
+									styleClass="blue-btn raised-btn" icon="pi pi-calendar"
+									ajax="false" actionListener="#{audMB.actividades}"
 									action="/page/planificacion/actividades.xhtml?faces-redirect=true"
 									rendered="#{audMB.registro.selected}">
 								</p:commandButton>
@@ -64,7 +64,7 @@
 									actionListener="#{audMB.asignarPersonal}" ajax="false"
 									icon="pi pi-users"
 									action="/page/planeacion/asignacion.xhtml?faces-redirect=true"
-									rendered="#{audMB.registro.selected and loginMB.objAppsSession.usuario.usuRol==2}">
+									rendered="#{audMB.registro.selected and audMB.registro.audFase==0 and (audMB.rolCoordinador or audMB.perRoot)}">
 								</p:commandButton>
 								<p:commandButton id="btnAuditPlanificacion"
 									value="Planificación" styleClass="blue-btn raised-btn"
@@ -90,6 +90,14 @@
 									styleClass="blue-btn raised-btn"
 									action="/page/seguimiento/seguimiento.xhtml">
 								</p:commandButton>
+								<p:separator></p:separator>
+								<p:commandButton id="btnBitacora"
+									value="Bitacora de Actividades" icon="pi pi-list"
+									actionListener="#{audMB.bitacora}" update=":frmBitacora"
+									oncomplete="PF('wvBitacora').show();"
+									rendered="#{audMB.registro.selected}"
+									styleClass="purple-btn raised-btn">
+								</p:commandButton>
 							</p:toolbarGroup>
 						</p:toolbar>
 					</f:facet>
@@ -98,39 +106,45 @@
 						<p:outputPanel>
 							<h:outputText value="Búsqueda global: " />
 							<p:inputText id="globalFilter"
-								onkeyup="PF('wvAuditorias').filter();" style="width:150px"
+								title="Búsqueda por nombre, código, descrcipción"
+								onkeyup="PF('wvAuditorias').filter();" style="width:350px"
 								placeholder="Ingresa una palabra" />
 						</p:outputPanel>
 					</f:facet>
 
 					<p:column headerText="N°" sortBy="#{aud.audCorrelativo}"
-						style="text-align:center;">
+						style="text-align:center; width:50px;">
 						<h:outputText value="#{aud.audCorrelativo}" />
 					</p:column>
-					<p:column headerText="Codigo" sortBy="#{aud.audCodigo}"
-						style="text-align:center;">
+					<p:column headerText="Código" sortBy="#{aud.audCodigo}"
+						style="text-align:center; width:70px;">
 						<h:outputText value="#{aud.audCodigo}" />
+					</p:column>
+					<p:column headerText="Tipo Auditoría"
+						style="text-align:center; width:150px;"
+						sortBy="#{aud.tipoAuditoria.tpaNombre}">
+						<h:outputText value="#{aud.tipoAuditoria.tpaNombre}" />
 					</p:column>
 					<p:column headerText="Auditoría" sortBy="#{aud.audNombre}">
 						<h:outputText value="#{aud.audNombre}" />
 					</p:column>
-					<p:column headerText="Plan" sortBy="#{aud.planAnual.plaNombre}">
-						<h:outputText value="#{aud.planAnual.plaNombre}" />
-					</p:column>
-					<p:column headerText="Tipo Auditoría"
-						style="text-align:center;"
-						sortBy="#{aud.tipoAuditoria.tpaNombre}">
-						<h:outputText value="#{aud.tipoAuditoria.tpaNombre}" />
+
+
+					<p:column headerText="Auditores Asignados" style="width:150px;">
+						<ui:repeat var="u" value="#{aud.auditoriaResponsable}">
+							<h:outputText value="#{u.usuario.usuNombre}." />
+							<br />
+						</ui:repeat>
 					</p:column>
 					<p:column headerText="Fecha Inicio"
-						style="text-align:center; "
+						style="text-align:center; width:80px;"
 						sortBy="#{aud.audFechaInicioProgramado}">
 						<h:outputText value="#{aud.audFechaInicioProgramado}">
 							<f:convertDateTime pattern="dd-MM-yyyy" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="Fecha Fin"
-						style="text-align:center;"
+						style="text-align:center; width:80px;"
 						sortBy="#{aud.audFechaFinProgramado}">
 						<h:outputText value="#{aud.audFechaInicioProgramado}">
 							<f:convertDateTime pattern="dd-MM-yyyy" />
@@ -138,7 +152,7 @@
 					</p:column>
 					<p:column headerText="Fase" filterBy="#{aud.audFase}"
 						filterStyle="width:80px;" filterMatchMode="exact"
-						style="text-align:center; width:15%;">
+						style="text-align:center; width:150px;">
 						<f:facet name="filter">
 							<p:selectOneMenu onchange="PF('wvAuditorias').filter();">
 								<f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}"
@@ -291,7 +305,8 @@
 						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 						currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
 						<f:facet name="header">Unidades Auditadas</f:facet>
-						<p:column headerText="ID Unidad" sortBy="#{auditund.unidad.uniId}" width="100">
+						<p:column headerText="ID Unidad" sortBy="#{auditund.unidad.uniId}"
+							width="100">
 							<h:outputText value="#{auditund.unidad.uniId}" />
 						</p:column>
 						<p:column headerText="Unidad Administrativa"
@@ -333,6 +348,57 @@
 				</div>
 			</p:panel>
 		</h:form>
+
+		<p:dialog widgetVar="wvBitacora" modal="true" showEffect="fade"
+			maximizable="true" closable="true" closeOnEscape="true"
+			responsive="true" style="max-width:75%;">
+			<h:form id="frmBitacora">
+				<p:dataTable id="dtBitacoras" value="#{bitaMB.listado}"
+					widgetVar="wvBitacoras" reflow="true" var="b" rowIndexVar="index"
+					style="margin-top:20px;" paginator="true" rowKey="#{b.bitaId}"
+					rowsPerPageLabel="5,10,15,20,25" rows="10" sortMode="multiple"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+
+					<f:facet name="header">
+						Bitacora de Actividades de la Auditoría #{bitaMB.auditoria.audCodigo}
+					</f:facet>
+
+					<p:column headerText="No." style="text-align:center; width:50px;">
+						<h:outputText value="#{index+1}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Accion" filterBy="#{b.bitaAccion}"
+						filterMatchMode="contains">
+						<h:outputText value="#{b.bitaAccion}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Fecha Inicio" filterBy="#{b.bitaFechaInicio}"
+						filterMatchMode="contains">
+						<h:outputText value="#{b.bitaFechaInicio}">
+							<f:convertDateTime pattern="dd-MM-yyyy hh:mm:ss a" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Usuario Inicio"
+						filterBy="#{b.usuarioInicio.usuNombre}" filterMatchMode="contains">
+						<h:outputText value="#{b.usuarioInicio.usuNombre}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Fecha Fin" filterBy="#{b.bitaFechaFin}"
+						filterMatchMode="contains">
+						<h:outputText value="#{b.bitaFechaFin}">
+							<f:convertDateTime pattern="dd-MM-yyyy hh:mm:ss a" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Usuario Fin"
+						filterBy="#{b.usuarioFin.usuNombre}" filterMatchMode="contains">
+						<h:outputText value="#{b.usuarioFin.usuNombre}"></h:outputText>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</p:dialog>
 
 	</ui:define>
 

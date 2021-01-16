@@ -16,6 +16,7 @@
 		<mapping-file>META-INF/orm-consultas.xml</mapping-file>
 		<class>audigoes.ues.edu.sv.entities.SuperEntity</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Bitacora</class>
+		<class>audigoes.ues.edu.sv.entities.administracion.BitacoraActividades</class>
 		<class>audigoes.ues.edu.sv.entities.informe.ActaLectura</class>
 		<class>audigoes.ues.edu.sv.entities.planificacion.Actividad</class>
 		<class>audigoes.ues.edu.sv.entities.planeacion.Auditoria</class>

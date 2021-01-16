@@ -7,11 +7,14 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.mail.Address;
+import javax.mail.internet.InternetAddress;
 
-import org.primefaces.PrimeFaces;
 import org.primefaces.component.tabview.TabView;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
@@ -19,6 +22,8 @@ import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planeacion.AuditoriaResponsable;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
+import audigoes.ues.edu.sv.mbean.planificacion.BitacoraActividadMB;
+import audigoes.ues.edu.sv.util.SendMailAttach;
 
 @ManagedBean(name = "respMB")
 @ViewScoped
@@ -33,6 +38,10 @@ public class AuditoriaResponsableMB extends AudigoesController implements Serial
 	private List<Usuario> usuariosList;
 	private List<Usuario> usuariosSelectedList = new ArrayList<Usuario>();;
 	private Usuario selectedUsuario;
+	private String textoCorreo = "";
+
+	@ManagedProperty(value = "#{bitaMB}")
+	private BitacoraActividadMB bitaMB = new BitacoraActividadMB();
 
 	public AuditoriaResponsableMB() {
 		super(new AuditoriaResponsable());
@@ -74,6 +83,7 @@ public class AuditoriaResponsableMB extends AudigoesController implements Serial
 		getRegistro().setFecCrea(getToday());
 		getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
 		getRegistro().setRegActivo(1);
+		getRegistro().setAurRol(1);
 
 		onSave();
 
@@ -134,6 +144,71 @@ public class AuditoriaResponsableMB extends AudigoesController implements Serial
 	public void afterDelete() {
 		getListado().remove(getRegistro());
 		super.afterDelete();
+	}
+
+	public void prepararCorreo() {
+		textoCorreo = "<p><strong>AUDIGOES LE INFORMA</strong></p>\r\n" + "\r\n"
+				+ "<p>Ha sido asignado como auditor de la siguiente auditor&iacute;a:</p>\r\n" + "\r\n" + "<ul>\r\n"
+				+ "	<li><strong>C&oacute;digo:</strong> " + auditoria.getAudCodigo() + "</li>\r\n"
+				+ "	<li><strong>Tipo de Auditor&iacute;a:</strong> " + auditoria.getTipoAuditoria().getTpaNombre()
+				+ "</li>\r\n" + "	<li><strong>Nombre:</strong> " + auditoria.getAudNombre() + "</li>\r\n"
+				+ "</ul>\r\n" + "\r\n" + "<p><strong>Descripci&oacute;n:</strong></p>\r\n" + "\r\n" + "<p>"
+				+ auditoria.getAudDescripcion() + "</p>\r\n" + "\r\n" + "<p><strong>Objetivos:</strong></p>\r\n"
+				+ "\r\n" + "<p>" + auditoria.getAudObjetivos() + "</p>\r\n" + "\r\n"
+				+ "<p><strong>Alcance:</strong></p>" + "<p>" + auditoria.getAudAlcances() + "</p>\r\n"
+				+ "<p>Atte.-</p>";
+		;
+	}
+
+	public void onEnviar() {
+		try {
+			if (enviarCorreo(textoCorreo, getObjAppsSession().getUsuario())) {
+				if (bitaMB.registrarActividad(1, "Asignación de Actividad de Auditoria", auditoria,
+						getObjAppsSession().getUsuario())) {
+					auditoria.setAudFase(1);
+					audigoesLocal.update(auditoria);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage("Error al enviar de comunicación"));
+		}
+	}
+
+	public boolean enviarCorreo(String texto, Usuario coordinador) {
+		String from;
+		String cc;
+		String to;
+		String subject;
+		String attach;
+		String logo;
+		String body;
+		Address[] toList;
+		Address[] toCc;
+
+		try {
+			from = "audigoes.ues@gmail.com";
+			String tos = "";
+
+			for (AuditoriaResponsable r : getListado()) {
+				tos = tos + r.getUsuario().getUsuCorreo() + ",";
+			}
+			System.out.println(" " + tos);
+
+			toList = InternetAddress.parse(tos);
+
+			subject = "Asignación de Auditoría";
+			cc = coordinador.getUsuCorreo();
+			body = texto;
+			logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/images/logo-azul.png");
+
+			SendMailAttach mail = new SendMailAttach(from, toList, cc, subject, body, null, logo);
+			mail.sendManyTo();
+			return true;
+		} catch (Exception e) {
+			addWarn(new FacesMessage("Error en el envio del correo"));
+			return false;
+		}
 	}
 
 	/*
@@ -197,5 +272,21 @@ public class AuditoriaResponsableMB extends AudigoesController implements Serial
 
 	public void setSelectedUsuario(Usuario selectedUsuario) {
 		this.selectedUsuario = selectedUsuario;
+	}
+
+	public String getTextoCorreo() {
+		return textoCorreo;
+	}
+
+	public void setTextoCorreo(String textoCorreo) {
+		this.textoCorreo = textoCorreo;
+	}
+
+	public BitacoraActividadMB getBitaMB() {
+		return bitaMB;
+	}
+
+	public void setBitaMB(BitacoraActividadMB bitaMB) {
+		this.bitaMB = bitaMB;
 	}
 }

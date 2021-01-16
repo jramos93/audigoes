@@ -117,4 +117,10 @@
 	<named-query name="archivos.cedula">
 		<query>select o from Archivo o where o.cedula.cedId=?1 and o.regActivo=1</query>
 	</named-query>
+
+	<!-- BitacoraActividades -->
+
+	<named-query name="bitacora.by.auditoria">
+		<query>select o from BitacoraActividades o where o.auditoria.audId=?1 and o.regActivo=1 order by o.bitaCorrelativo</query>
+	</named-query>
 </entity-mappings>

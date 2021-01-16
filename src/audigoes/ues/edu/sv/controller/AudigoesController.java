@@ -506,10 +506,11 @@ public class AudigoesController {
 		if (this.faseAuditoriaList == null) {
 			this.faseAuditoriaList = new ArrayList<>();
 			this.faseAuditoriaList.add(new SelectItem(0, "PROGRAMADA"));
-			this.faseAuditoriaList.add(new SelectItem(1, "FASE PLANIFICACIÓN"));
-			this.faseAuditoriaList.add(new SelectItem(2, "FASE EJECUCIÓN"));
-			this.faseAuditoriaList.add(new SelectItem(3, "FASE INFORME"));
-			this.faseAuditoriaList.add(new SelectItem(4, "FASE SEGUIMIENTO"));
+			this.faseAuditoriaList.add(new SelectItem(1, "ASIGNADA"));
+			this.faseAuditoriaList.add(new SelectItem(2, "FASE PLANIFICACIÓN"));
+			this.faseAuditoriaList.add(new SelectItem(3, "FASE EJECUCIÓN"));
+			this.faseAuditoriaList.add(new SelectItem(4, "FASE INFORME"));
+			this.faseAuditoriaList.add(new SelectItem(5, "FASE SEGUIMIENTO"));
 		}
 		return faseAuditoriaList;
 	}

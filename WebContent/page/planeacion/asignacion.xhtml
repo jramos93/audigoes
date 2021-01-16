@@ -14,23 +14,36 @@
 
 	<ui:define name="content">
 		<h:form id="frmAsignación">
-			<div align="left" style="margin-top: 50px;">
-				<p:commandButton id="btnCancel" ajax="false" update="@form :frm"
-					process="@this" styleClass="pink-btn raised-btn"
-					actionListener="#{actMB.onCancel}"
-					action="/page/planeacion/auditoria.xhtml?faces-redirect=true"
-					value="Regresar" icon="pi pi-arrow-left" style="float:left;">
-				</p:commandButton>
-			</div>
-
-			<div class="name" align="center">
-				<span class="app-name">Asignación de Personal a la Auditoría</span>
-				<h3>Auditoría:
-					#{respMB.auditoria.audCodigo}-#{respMB.auditoria.audNombre}</h3>
-			</div>
-
-
 			<p:panel>
+				<div align="left" style="margin-top: 50px; float: left;">
+					<p:commandButton id="btnCancel" ajax="false" update="@form :frm"
+						process="@this" styleClass="pink-btn raised-btn"
+						actionListener="#{actMB.onCancel}"
+						action="/page/planeacion/auditoria.xhtml?faces-redirect=true"
+						value="Regresar" icon="pi pi-arrow-left" style="float:left;">
+					</p:commandButton>
+				</div>
+				<div align="right" style="margin-top: 50px; float: right;">
+					<p:commandButton id="btnEnviar" oncomplete="PF('wvCorreo').show();"
+						actionListener="#{respMB.prepararCorreo}"
+						rendered="#{respMB.auditoria.audFase==0}"
+						title="Clic para comunicar a los auditores involucrados"
+						process="@this" value="Asignar Auditores"
+						icon="pi pi-check-circle" style="float:left;"
+						styleClass="blue-btn raised-btn" update=":frmCorreo">
+					</p:commandButton>
+
+				</div>
+
+				<div class="name" align="center" style="margin-top: 100px;">
+					<span class="app-name">Asignación de Personal a la Auditoría</span>
+					<h3>Auditoría:
+						#{respMB.auditoria.audCodigo}-#{respMB.auditoria.audNombre}</h3>
+				</div>
+
+
+
+
 				<div class="ui-fluid p-formgrid p-grid">
 					<div class="p-field p-col">
 						<p:outputLabel for="codigo" value="Código auditoría:" />
@@ -77,6 +90,7 @@
 						</p:selectOneMenu>
 						<p:commandButton value="Agregar" icon="pi pi-plus"
 							title="Clic para agregar a la lista"
+							rendered="#{respMB.auditoria.audFase==0}"
 							actionListener="#{respMB.addResponsable}" update=":frmAsignación"></p:commandButton>
 					</p:panelGrid>
 				</div>
@@ -103,6 +117,11 @@
 							value="#{r.usuario.usuNombre} #{r.usuario.usuApellido}"></h:outputText>
 					</p:column>
 
+					<p:column headerText="Correo" filterBy="#{r.usuario.usuCorreo}"
+						filterMatchMode="contains">
+						<h:outputText value="#{r.usuario.usuCorreo}"></h:outputText>
+					</p:column>
+
 					<p:column headerText="Rol">
 						<h:outputText value="Auditor" rendered="#{r.aurRol==1}"></h:outputText>
 						<h:outputText value="Coordinador" rendered="#{r.aurRol==0}"></h:outputText>
@@ -110,7 +129,8 @@
 
 					<p:column headerText="Eliminar" style="width:60px;">
 						<p:commandButton actionListener="#{respMB.onBorrar(r)}"
-							update=":frmAsignación" icon="pi pi-trash"
+							disabled="#{r.aurRol==0}" update=":frmAsignación"
+							rendered="#{respMB.auditoria.audFase==0}" icon="pi pi-trash"
 							title="Clic para eliminar el usuario">
 							<p:confirm header="Confirmación" message="¿Eliminar?"
 								icon="pi pi-info-circle"></p:confirm>
@@ -120,6 +140,30 @@
 				</p:dataTable>
 			</p:panel>
 		</h:form>
+
+		<p:dialog widgetVar="wvCorreo" modal="true" showEffect="fade"
+			maximizable="true" closable="true" closeOnEscape="true"
+			responsive="true">
+			<h:form id="frmCorreo">
+				<p:commandButton id="btnEnviar" actionListener="#{respMB.onEnviar}"
+					title="Clic para comunicar a los auditores involucrados en la auditoria"
+					process=":frmCorreo" value="Comunicar Auditores"
+					icon="pi pi-check-circle" style="float:left;"
+					styleClass="blue-btn raised-btn" update=":frmAsignación"
+					oncomplete="PF('wvCorreo').hide();">
+					<p:confirm header="Confirmación"
+						message="¿Comunicar a los auditores?"></p:confirm>
+				</p:commandButton>
+				<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+					<p:outputLabel for="narra" value="Digite el texto del correo:"
+						style="font-weight:bold;" />
+					<pe:ckEditor id="narra" width="100%" value="#{respMB.textoCorreo}"
+						skin="office2013"
+						customConfig="#{request.contextPath}/resources/js/customck.js" />
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
 
 	</ui:define>
 

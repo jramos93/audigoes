@@ -25,6 +25,7 @@ import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
 import audigoes.ues.edu.sv.entities.planeacion.TipoAuditoria;
 import audigoes.ues.edu.sv.mbean.planificacion.ActividadesMB;
 import audigoes.ues.edu.sv.mbean.planificacion.AuditoriaUnidadMB;
+import audigoes.ues.edu.sv.mbean.planificacion.BitacoraActividadMB;
 import audigoes.ues.edu.sv.mbean.planificacion.MemoPlanificacionMB;
 import audigoes.ues.edu.sv.mbean.planificacion.ProgramaEjecucionMB;
 import audigoes.ues.edu.sv.mbean.planificacion.ProgramaPlanificacionMB;
@@ -78,6 +79,9 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	@ManagedProperty(value = "#{ceduMB}")
 	private CedulaMB ceduMB = new CedulaMB();
+	
+	@ManagedProperty(value = "#{bitaMB}")
+	private BitacoraActividadMB bitaMB = new BitacoraActividadMB();
 
 	public AuditoriaMB() {
 		super(new Auditoria());
@@ -228,7 +232,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		Auditoria auditoria = (Auditoria) value;
 		return auditoria.getAudNombre().toLowerCase().contains(filterText)
 				|| auditoria.getAudDescripcion().toLowerCase().contains(filterText)
-				|| auditoria.getAudId() == filterInt;
+				|| auditoria.getAudId() == filterInt || auditoria.getAudCodigo().toLowerCase().contains(filterText);
 	}
 
 	private int getInteger(String string) {
@@ -446,6 +450,11 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void bitacora() {
+		bitaMB.setAuditoria(getRegistro());
+		bitaMB.fillListado();
 	}
 
 	@Override
@@ -665,13 +674,21 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		this.ceduMB = ceduMB;
 	}
 
+	public BitacoraActividadMB getBitaMB() {
+		return bitaMB;
+	}
+
+	public void setBitaMB(BitacoraActividadMB bitaMB) {
+		this.bitaMB = bitaMB;
+	}
+
 	@Override
 	protected void configBean() {
 		// TODO Auto-generated method stub
 		super.configBean();
 		if (getObjAppsSession() != null) {
 			if (!isPerRoot()) {
-				// setPerEnviar(getObjAppsSession().isPermisoValido("AUDITOR", "ENVIAR"));
+				//setPerEnviar(getObjAppsSession().isPermisoValido("AUDITOR", "ENVIAR"));
 			}
 		}
 	}

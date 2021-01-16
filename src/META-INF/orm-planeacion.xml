@@ -11,12 +11,13 @@
 		<query>select o from PlanAnual o where o.institucion.insId = ?1 </query>
 	</named-query>
 	<named-query name="auditoria.get.all.institucion">
-		<query>select o from Auditoria o where o.planAnual.institucion.insId = ?1 and o.regActivo = 1</query>
+		<query>select distinct o from Auditoria o join fetch o.auditoriaResponsable where o.planAnual.institucion.insId = ?1 and o.regActivo = 1</query>
 	</named-query>
 	<named-query name="auditoria.get.all.institucion.plan">
 		<query>select o from Auditoria o where o.planAnual.institucion.insId = ?1 and o.planAnual.plaId = ?2 and o.regActivo = 1</query>
 	</named-query>
-	<named-query name="tipoauditoria.get.all.active.institucion">
+	<named-query
+		name="tipoauditoria.get.all.active.institucion">
 		<query>select o from TipoAuditoria o where o.institucion.insId = ?1 and o.regActivo = 1</query>
 	</named-query>
 	<named-query name="auditoria.get.max.id">
@@ -40,5 +41,10 @@
 	<named-query name="auditoriaunidad.get.all.unidades">
 		<query>select o from AuditoriaUnidad o where o.auditoria.audId = ?1 and o.regActivo = 1</query>
 	</named-query>
-	
+
+	<!-- BitacoraActividad -->
+
+	<named-query name="actividad.by.correlativo">
+		<query>select o from BitacoraActividades o where o.bitaCorrelativo=?1 and o.auditoria.audId = ?2</query>
+	</named-query>
 </entity-mappings>

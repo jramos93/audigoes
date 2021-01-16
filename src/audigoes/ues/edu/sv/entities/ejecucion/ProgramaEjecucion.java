@@ -80,7 +80,7 @@ public class ProgramaEjecucion extends SuperEntity implements Serializable {
 	private String preReferencia;
 
 	//bi-directional many-to-one association to ProcedimientoEjecucion
-	@OneToMany(mappedBy="programaEjecucion", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="programaEjecucion")
 	private List<ProcedimientoEjecucion> procedimientoEjecucion;
 
 	//bi-directional many-to-one association to Actividad

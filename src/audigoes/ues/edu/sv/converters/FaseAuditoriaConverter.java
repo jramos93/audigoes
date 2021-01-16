@@ -20,14 +20,16 @@ public class FaseAuditoriaConverter implements Converter {
 			if (valor.equals("0")) {
 				valor = "PROGRAMADA";
 			} else if (valor.equals("1")) {
-				valor = "FASE PLANIFICACIÓN";
+				valor = "ASIGNADA";
 			} else if (valor.equals("2")) {
-				valor = "FASE EJECUCIÓN";
+				valor = "FASE PLANIFICACIÓN";
 			} else if (valor.equals("3")) {
-				valor = "FASE INFORME";
+				valor = "FASE EJECUCIÓN";
 			} else if (valor.equals("4")) {
-				valor = "FASE SEGUIMIENTO";
+				valor = "FASE INFORME";
 			} else if (valor.equals("5")) {
+				valor = "FASE SEGUIMIENTO";
+			} else if (valor.equals("6")) {
 				valor = "FINALIZADA";
 			} else {
 				valor = "---";
