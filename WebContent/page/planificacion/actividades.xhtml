@@ -10,7 +10,7 @@
 		<h:form id="frmActividades">
 			<p:panel rendered="#{actMB.status eq 'SEARCH'}">
 
-				<div align="left" style="margin-top: 50px;">
+				<div align="left" style="margin-top: 50px; float: left;">
 					<p:commandButton id="btnCancel" ajax="false"
 						styleClass="pink-btn raised-btn"
 						actionListener="#{actMB.onCancel}"
@@ -19,15 +19,29 @@
 					</p:commandButton>
 				</div>
 
+				<div align="right" style="margin-top: 50px; float: right;">
+					<p:commandButton id="btnEnviar"
+						actionListener="#{actMB.iniciarPlanificacion}"
+						rendered="#{actMB.auditoria.audFechaPlanificacion==null and actMB.auditoria.audFase==1}"
+						title="Clic para iniciar la fase de planificación y terminar elaboración de cronograma"
+						process="@this" value="Iniciar Fase de  Planificación"
+						icon="pi pi-check-circle" style="float:left;"
+						styleClass="blue-btn raised-btn" update=":frmActividades">
+						<p:confirm header="Confirmación"
+							message="¿Esta seguro de iniciar la fase de planificación y concluir la elaboración del cronograma de actividades?"></p:confirm>
+					</p:commandButton>
+
+				</div>
+
 				<div class="name" align="center" style="margin-top: 100px;">
-					<span class="app-name">Actividades</span>
+					<span class="app-name">Cronograma de Actividades</span>
 					<h3>Auditoría:
 						#{actMB.auditoria.audCodigo}-#{actMB.auditoria.audNombre}</h3>
 				</div>
 
 				<p:dataTable var="a" value="#{actMB.listado}" rowIndexVar="index"
 					widgetVar="wvActividades" reflow="true" id="dtActividades"
-					style="margin-top:20px;" paginator="true" 
+					style="margin-top:20px;" paginator="true"
 					filteredValue="#{actMB.filteredProcedimiento}"
 					globalFilterFunction="#{actMB.globalFilterFunction}"
 					selection="#{actMB.regSelected}" selectionMode="single"
@@ -43,17 +57,18 @@
 						<p:toolbar id="tMenu">
 							<p:toolbarGroup>
 								<p:commandButton value="Agregar" icon="pi pi-plus"
+									rendered="#{actMB.auditoria.audFase==1}"
 									styleClass="raised-btn" update=":frmActividad, :frmActividades"
 									actionListener="#{actMB.onNew}">
 								</p:commandButton>
 								<p:commandButton value="Editar" icon="pi pi-pencil"
 									styleClass="raised-btn" update=":frmActividad, :frmActividades"
-									rendered="#{actMB.registro.selected}"
+									rendered="#{actMB.registro.selected and actMB.auditoria.audFase==1}"
 									actionListener="#{actMB.onEditSelected}">
 								</p:commandButton>
 								<p:commandButton value="Eliminar" icon="pi pi-trash"
 									styleClass="raised-btn" update=":frmActividad, :frmActividades"
-									rendered="#{actMB.registro.selected and a.actTipo==2}"
+									rendered="#{actMB.registro.selected and a.actTipo==2 and actMB.auditoria.audFase==1}"
 									actionListener="#{actMB.onDelete}">
 									<p:confirm header="Confirmación" icon="pi pi-info"
 										message="¿Eliminar?"></p:confirm>
@@ -83,13 +98,15 @@
 						<h:outputText value="#{a.actDescripcion}"></h:outputText>
 					</p:column>
 
-					<p:column headerText="Fecha Inicio" style="text-align:center; width:100px;">
+					<p:column headerText="Fecha Inicio"
+						style="text-align:center; width:100px;">
 						<h:outputText value="#{a.actFecIni}">
 							<f:convertDateTime pattern="dd-MM-yyyy" />
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="Fecha Fin" style="text-align:center; width:100px;">
+					<p:column headerText="Fecha Fin"
+						style="text-align:center; width:100px;">
 						<h:outputText value="#{a.actFecFin}">
 							<f:convertDateTime pattern="dd-MM-yyyy" />
 						</h:outputText>
@@ -139,12 +156,12 @@
 						styleClass="ui-panelgrid-blank form-group form-elements">
 
 						<p:outputLabel value="Fecha de inicio:" style="font-weight:bold;" />
-						<p:calendar mode="inline" pattern="dd-MM-yyyy"
+						<p:calendar mode="inline" pattern="dd-MM-yyyy" locale="es" navigator="true"
 							value="#{actMB.registro.actFecIni}"></p:calendar>
 
 						<p:outputLabel value="Fecha de fin:" style="font-weight:bold;" />
-						<p:calendar mode="inline" value="#{actMB.registro.actFecFin}"
-							pattern="dd-MM-yyyy"></p:calendar>
+						<p:calendar mode="inline" value="#{actMB.registro.actFecFin}" navigator="true"
+							pattern="dd-MM-yyyy" locale="es"></p:calendar>
 					</p:panelGrid>
 
 

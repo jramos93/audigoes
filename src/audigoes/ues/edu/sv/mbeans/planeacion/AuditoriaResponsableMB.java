@@ -166,6 +166,7 @@ public class AuditoriaResponsableMB extends AudigoesController implements Serial
 				if (bitaMB.registrarActividad(1, "Asignación de Actividad de Auditoria", auditoria,
 						getObjAppsSession().getUsuario())) {
 					auditoria.setAudFase(1);
+					auditoria.setAudFechaAsignada(getToday());
 					audigoesLocal.update(auditoria);
 				}
 			}
@@ -193,7 +194,7 @@ public class AuditoriaResponsableMB extends AudigoesController implements Serial
 			for (AuditoriaResponsable r : getListado()) {
 				tos = tos + r.getUsuario().getUsuCorreo() + ",";
 			}
-			System.out.println(" " + tos);
+			//System.out.println(" " + tos);
 
 			toList = InternetAddress.parse(tos);
 

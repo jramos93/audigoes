@@ -15,6 +15,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
+import audigoes.ues.edu.sv.entities.administracion.BitacoraActividades;
 import audigoes.ues.edu.sv.entities.administracion.Unidad;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.informe.Informe;
@@ -79,7 +80,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	@ManagedProperty(value = "#{ceduMB}")
 	private CedulaMB ceduMB = new CedulaMB();
-	
+
 	@ManagedProperty(value = "#{bitaMB}")
 	private BitacoraActividadMB bitaMB = new BitacoraActividadMB();
 
@@ -179,6 +180,12 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	public void actividades() {
 		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 		sessionMap.put("auditoria", getRegistro());
+
+		BitacoraActividades a = bitaMB.buscarActividad(2, getRegistro());
+		if (a == null) {
+			bitaMB.iniciarActividad(2, "Elaboración de cronograma de actividades", getRegistro(),
+					getObjAppsSession().getUsuario());
+		}
 		actMB.fillActividades();
 
 	}
@@ -231,8 +238,8 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 		Auditoria auditoria = (Auditoria) value;
 		return auditoria.getAudNombre().toLowerCase().contains(filterText)
-				|| auditoria.getAudDescripcion().toLowerCase().contains(filterText)
-				|| auditoria.getAudId() == filterInt || auditoria.getAudCodigo().toLowerCase().contains(filterText);
+				|| auditoria.getAudDescripcion().toLowerCase().contains(filterText) || auditoria.getAudId() == filterInt
+				|| auditoria.getAudCodigo().toLowerCase().contains(filterText);
 	}
 
 	private int getInteger(String string) {
@@ -451,7 +458,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void bitacora() {
 		bitaMB.setAuditoria(getRegistro());
 		bitaMB.fillListado();
@@ -688,7 +695,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		super.configBean();
 		if (getObjAppsSession() != null) {
 			if (!isPerRoot()) {
-				//setPerEnviar(getObjAppsSession().isPermisoValido("AUDITOR", "ENVIAR"));
+				// setPerEnviar(getObjAppsSession().isPermisoValido("AUDITOR", "ENVIAR"));
 			}
 		}
 	}

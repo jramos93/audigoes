@@ -47,6 +47,24 @@ public class BitacoraActividadMB extends AudigoesController implements Serializa
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	public BitacoraActividades buscarActividad(int correlativo, Auditoria auditoria) {
+		BitacoraActividades actividad = null;
+
+		try {
+
+			List<BitacoraActividades> acts = (List<BitacoraActividades>) ((List<BitacoraActividades>) audigoesLocal
+					.findByNamedQuery(BitacoraActividades.class, "actividad.bitacora.by.auditoria",
+							new Object[] { correlativo, auditoria.getAudId() }));
+			if (acts != null && !acts.isEmpty()) {
+				return acts.get(0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return actividad;
+	}
+
 	public void iniciarActividad(int correlativo, String accion, Auditoria auditoria, Usuario usuarioInicio) {
 		try {
 			onNew();
@@ -56,6 +74,9 @@ public class BitacoraActividadMB extends AudigoesController implements Serializa
 			getRegistro().setBitaAccion(accion);
 			getRegistro().setUsuarioInicio(usuarioInicio);
 			getRegistro().setBitaFechaInicio(getToday());
+			getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+			getRegistro().setFecCrea(getToday());
+			getRegistro().setRegActivo(1);
 
 			audigoesLocal.insert(getRegistro());
 		} catch (Exception e) {
@@ -67,12 +88,14 @@ public class BitacoraActividadMB extends AudigoesController implements Serializa
 	@SuppressWarnings("unchecked")
 	public void finalizarActividad(int correlativo, Auditoria auditoria, Usuario usuarioFin) {
 		try {
-			onEdit();
+			
 
 			setListado((List<BitacoraActividades>) audigoesLocal.findByNamedQuery(BitacoraActividades.class,
 					"actividad.by.correlativo", new Object[] { correlativo, auditoria.getAudId() }));
 
 			if (getListado() != null && !getListado().isEmpty()) {
+				setRegistro(getListado().get(0));
+				onEdit();
 				getRegistro().setUsuarioFin(usuarioFin);
 				getRegistro().setBitaFechaFin(getToday());
 				getRegistro().setUsuModi(getObjAppsSession().getUsuario().getUsuUsuario());

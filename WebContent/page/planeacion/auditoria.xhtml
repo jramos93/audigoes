@@ -57,7 +57,7 @@
 									styleClass="blue-btn raised-btn" icon="pi pi-calendar"
 									ajax="false" actionListener="#{audMB.actividades}"
 									action="/page/planificacion/actividades.xhtml?faces-redirect=true"
-									rendered="#{audMB.registro.selected}">
+									rendered="#{audMB.registro.selected and audMB.registro.audFase>=1}">
 								</p:commandButton>
 								<p:commandButton id="btnAuditAsignacion"
 									value="Asignar Personal" styleClass="blue-btn raised-btn"
@@ -71,22 +71,23 @@
 									actionListener="#{audMB.planificacion}" ajax="false"
 									icon="pi pi-folder"
 									action="/page/planificacion/planificacion.xhtml"
-									rendered="#{audMB.registro.selected}">
+									rendered="#{audMB.registro.selected and audMB.registro.audFase>=2}">
 								</p:commandButton>
 								<p:commandButton id="btnAuditEjecucion" value="Ejecución"
 									styleClass="blue-btn raised-btn" icon="pi pi-folder"
 									actionListener="#{audMB.ejecucion}" ajax="false"
 									action="/page/ejecucion/ejecucion.xhtml"
-									rendered="#{audMB.registro.selected}">
+									rendered="#{audMB.registro.selected and audMB.registro.audFase>3}">
 								</p:commandButton>
 								<p:commandButton id="btnAuditInforme" value="Informe"
 									styleClass="blue-btn raised-btn" icon="pi pi-folder"
 									actionListener="#{audMB.informeAud()}"
-									rendered="#{audMB.registro.selected}" ajax="false">
+									rendered="#{audMB.registro.selected and audMB.registro.audFase>4}"
+									ajax="false">
 								</p:commandButton>
 								<p:commandButton id="btnAuditSeguimiento" value="Seguimiento"
 									actionListener="#{audMB.seguimiento}" ajax="false"
-									rendered="#{audMB.registro.selected}"
+									rendered="#{audMB.registro.selected and audMB.registro.audFase>=5}"
 									styleClass="blue-btn raised-btn"
 									action="/page/seguimiento/seguimiento.xhtml">
 								</p:commandButton>
@@ -95,7 +96,7 @@
 									value="Bitacora de Actividades" icon="pi pi-list"
 									actionListener="#{audMB.bitacora}" update=":frmBitacora"
 									oncomplete="PF('wvBitacora').show();"
-									rendered="#{audMB.registro.selected}"
+									rendered="#{audMB.registro.selected and audMB.registro.audFase>=1}"
 									styleClass="purple-btn raised-btn">
 								</p:commandButton>
 							</p:toolbarGroup>

@@ -64,19 +64,19 @@ public class Auditoria extends SuperEntity implements Serializable {
 	@Column(name = "aud_fase")
 	private int audFase;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "aud_fecha_fin_programado")
 	private Date audFechaFinProgramado;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "aud_fecha_fin_real")
 	private Date audFechaFinReal;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "aud_fecha_inicio_programado")
 	private Date audFechaInicioProgramado;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "aud_fecha_inicio_real")
 	private Date audFechaInicioReal;
 
@@ -100,27 +100,31 @@ public class Auditoria extends SuperEntity implements Serializable {
 	@Column(name = "usu_modi")
 	private String usuModi;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "aud_fecha_programado")
 	private Date audFechaProgramado;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "aud_fecha_asignada")
+	private Date audFechaAsignada;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "aud_fecha_planificacion")
 	private Date audFechaPlanificacion;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "aud_fecha_ejecucion")
 	private Date audFechaEjecucion;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "aud_fecha_informe")
 	private Date audFechaInforme;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "aud_fecha_seguimiento")
 	private Date audFechaSeguimiento;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "aud_fecha_finalizada")
 	private Date audFechaFinalizada;
 
@@ -538,6 +542,14 @@ public class Auditoria extends SuperEntity implements Serializable {
 		recomendacion.setAuditoria(null);
 
 		return recomendacion;
+	}
+
+	public Date getAudFechaAsignada() {
+		return audFechaAsignada;
+	}
+
+	public void setAudFechaAsignada(Date audFechaAsignada) {
+		this.audFechaAsignada = audFechaAsignada;
 	}
 
 	@Override

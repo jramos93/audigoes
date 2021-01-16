@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
@@ -26,6 +27,9 @@ public class ActividadesMB extends AudigoesController implements Serializable {
 
 	private List<ProcedimientoPlanificacion> filteredProcedimiento;
 	private Auditoria auditoria;
+
+	@ManagedProperty(value = "#{bitaMB}")
+	private BitacoraActividadMB bitaMB = new BitacoraActividadMB();
 
 	public ActividadesMB() {
 		super(new Actividad());
@@ -191,6 +195,19 @@ public class ActividadesMB extends AudigoesController implements Serializable {
 		}
 	}
 
+	public void iniciarPlanificacion() {
+		try {
+			auditoria.setAudFechaPlanificacion(getToday());
+			auditoria.setAudFase(2);
+			if (audigoesLocal.update(auditoria) != null) {
+				bitaMB.finalizarActividad(2, auditoria, getObjAppsSession().getUsuario());
+			}
+			addInfo(new FacesMessage("Fase de planificación iniciada correctamente"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void showAuditorias() {
 		try {
 
@@ -271,6 +288,14 @@ public class ActividadesMB extends AudigoesController implements Serializable {
 
 	public void setAuditoria(Auditoria auditoria) {
 		this.auditoria = auditoria;
+	}
+
+	public BitacoraActividadMB getBitaMB() {
+		return bitaMB;
+	}
+
+	public void setBitaMB(BitacoraActividadMB bitaMB) {
+		this.bitaMB = bitaMB;
 	}
 
 }
