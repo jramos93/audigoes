@@ -62,10 +62,59 @@
 				when aud_fase = 4 then "SEGUIMIENTO"
 				when aud_fase = 5 then "FINALIZADA"
 				end as fase, count(aud_id) sub
-				from audigoes.auditoria  a 
-				inner join audigoes.plan_anual b on a.aud_pla_id = b.pla_id
-				where reg_activo = 1 and b.pla_ins_id = ?1 and aud_ and aud_fecha_inicio_programado between ?2 and ?3
-				group by aud_fase )as r
+				from auditoria  a 
+				inner join plan_anual b on a.aud_pla_id = b.pla_id
+				where a.reg_activo = 1 and b.pla_ins_id = ?1 and aud_fecha_inicio_programado between ?2 and ?3
+				group by aud_fase ) as r
+		</query>
+	</named-native-query>
+	<named-native-query
+		name="consulta.cantidad.hallazgos.estado"
+		result-class="audigoes.ues.edu.sv.entities.vistas.StatsHallazgoEstado">
+		<query>
+			select TOTAL,
+				sum(case when estado = "REDACCION" then sub else 0 end) as "REDACCION",
+				sum(case when estado = "REVISION" then sub else 0 end) as "REVISION",
+				sum(case when estado = "COMUNICAR" then sub else 0 end) as "COMUNICAR",
+				sum(case when estado = "COMUNICADO" then sub else 0 end) as  "COMUNICADO",
+				sum(case when estado = "ANALISIS" then sub else 0 end) as "ANALISIS",
+				sum(case when estado = "FINALIZADO" then sub else 0 end) as "FINALIZADO"
+				from (
+				SELECT "TOTAL",
+        			(CASE
+            			WHEN (a.ced_estado = 1) THEN 'REDACCION'
+			            WHEN (a.ced_estado = 2) THEN 'REVISION'
+			            WHEN (a.ced_estado = 3) THEN 'COMUNICAR'
+			            WHEN (a.ced_estado = 4) THEN 'COMUNICADO'
+			            WHEN (a.ced_estado = 5) THEN 'ANALISIS'
+			            WHEN (a.ced_estado = 6) THEN 'FINALIZADO'
+			        END) AS estado,
+			        COUNT(a.ced_id) AS sub
+			    FROM
+			        cedula_notas a 
+			        inner join auditoria b on a.ced_aud_id = b.aud_id
+			        inner join plan_anual c on b.aud_pla_id = c.pla_id
+				where a.reg_activo = 1 and c.pla_ins_id = ?1 and aud_fecha_inicio_programado 
+			                between ?2 and ?3
+			    GROUP BY a.ced_estado
+			    order by a.ced_estado ASC) as r
+		</query>
+	</named-native-query>
+	<named-native-query
+		name="consulta.tiempo.fases.auditoria"
+		result-class="audigoes.ues.edu.sv.entities.vistas.TiempoPorFaseAuditorias">
+		<query>
+			 select aud_id, ins_id, ins_nombre, aud_codigo, aud_nombre, 
+			 if(isnull(timestampdiff(day, aud_fecha_programado, aud_fecha_planificacion)) = 1 , 0 , timestampdiff(day, aud_fecha_programado, aud_fecha_asignada)) tiempo_programado,
+ 			 if(isnull(timestampdiff(day, aud_fecha_programado, aud_fecha_planificacion)) = 1 , 0 , timestampdiff(day, aud_fecha_asignada, aud_fecha_planificacion)) tiempo_asignado,
+			 if(isnull(timestampdiff(day, aud_fecha_planificacion, aud_fecha_ejecucion)) = 1 , 0 , timestampdiff(day, aud_fecha_planificacion, aud_fecha_ejecucion)) tiempo_planificacion,
+			 if(isnull(timestampdiff(day, aud_fecha_ejecucion, aud_fecha_informe)) = 1 , 0 , timestampdiff(day, aud_fecha_ejecucion, aud_fecha_informe)) tiempo_ejecucion,
+			 if(isnull(timestampdiff(day, aud_fecha_informe, aud_fecha_seguimiento)) = 1 , 0 , timestampdiff(day, aud_fecha_informe, aud_fecha_seguimiento)) tiempo_informe,
+			 if(isnull(timestampdiff(day, aud_fecha_seguimiento, aud_fecha_finalizada)) = 1 , 0 , timestampdiff(day, aud_fecha_seguimiento, aud_fecha_finalizada)) tiempo_seguimiento
+			 from auditoria a 
+			 inner join plan_anual b on a.aud_pla_id = b.pla_id
+			 inner join institucion c on b.pla_ins_id = ins_id
+			 where ins_id = ?1
 		</query>
 	</named-native-query>
 </entity-mappings>

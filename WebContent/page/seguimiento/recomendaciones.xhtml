@@ -26,64 +26,74 @@
 					<p:inputTextarea id="audSeg" value="#{segMB.auditoria.audNombre}"
 						rows="2" readonly="true" />
 
-					<p:outputLabel for="fechainicio" value="Fecha inicio seguimiento:"
-						style="font-weight:bold;"  />
-					<p:calendar id="fechainicio" value="#{segMB.registro.segFecInicio}"
-						readonly="true" disabled="true">
-						<f:convertDateTime pattern="dd/MM/yyyy" />
-					</p:calendar>
-
-					<p:outputLabel for="fechafin" value="Fecha fin:"
-						style="font-weight:bold;" />
-					<p:calendar id="fechafin" value="#{segMB.registro.segFecFin}"
-						readonly="true" disabled="true">
-						<f:convertDateTime pattern="dd/MM/yyyy" />
-					</p:calendar>
 				</p:panelGrid>
 			</div>
-
 			<div class="ui-fluid p-formgrid p-grid">
-				<p:dataTable var="recomendacion" value="#{recMB.listado}"
-					rowIndexVar="indexRecomendacion" widgetVar="wvRecomendaciones"
-					reflow="true" id="dtRecomendacion" style="margin-top:20px;"
-					paginator="true" filteredValue="#{recMB.filteredRecomendaciones}"
-					globalFilterFunction="#{recMB.globalFilterFunction}"
-					selection="#{recMB.regSelected}" selectionMode="single"
-					paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+				<p:dataTable var="seg" value="#{segMB.listado}"
+					rowIndexVar="indexSeguimiento" widgetVar="wvSeguimientos"
+					reflow="true" id="dtSeguimientos" style="margin-top:20px;"
+					paginator="true" filteredValue="#{segMB.filteredSeguimientos}"
+					selection="#{segMB.regSelected}" selectionMode="single"
+					paginatorPosition="bottom" rowsPerPageTemplate="1,5,10,15" rows="5"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
-					rowKey="#{recomendacion.recId}">
-
-					<p:ajax event="rowSelect" listener="#{recMB.onRowSelect}"
-						update="dtRecomendacion:tMenuRecomendaciones" />
-					<f:facet name="header"> Recomendaciones
-						<p:toolbar id="tMenuRecomendaciones">
-							<p:toolbarGroup>
-								<p:commandButton id="btnComentarios" value="Comentarios"
-									icon="pi pi-plus" rendered="#{recMB.registro.selected}"
-									action="#{recMB.mostrarComentarios}" update="@form :frmComentarios"
-									styleClass="raised-btn" actionListener="#{segMB.mostrarComentarios}" 
-									process="@this">
-								</p:commandButton>
-							</p:toolbarGroup>
-						</p:toolbar>
-					</f:facet>
-
-					<p:column headerText="No." width="30">
-						<h:outputText value="#{indexRecomendacion+1}"></h:outputText>
+					rowKey="#{seg.segId}">
+					<p:column headerText="N°">
+						<h:outputText value="#{indexSeguimiento+1}" />
 					</p:column>
-
-					<p:column headerText="Titulo Recomendación">
-						<h:outputText value="#{recomendacion.recTitulo}"></h:outputText>
+					<p:column headerText="Fecha Inicio">
+						<h:outputText value="#{seg.segFecInicio}">
+							<f:convertDateTime pattern="dd-MM-yyyy" />
+						</h:outputText>
 					</p:column>
-					<p:column headerText="Titulo Recomendación">
-						<h:outputText value="#{recomendacion.recSituacion}"></h:outputText>
+					<p:column headerText="Fecha Fin">
+						<h:outputText value="#{seg.segFecFin}" >
+							<f:convertDateTime pattern="dd-MM-yyyy" />
+						</h:outputText>
 					</p:column>
 				</p:dataTable>
 			</div>
 
 			<div class="ui-fluid p-formgrid p-grid">
-			<p:separator />
+				<p:dataTable var="recm" value="#{recMB.listado}"
+					expandableRowGroups="true" sortBy="#{recm.cedulaNota.cedTitulo}"
+					widgetVar="wvRecomendaciones"  id="dtRecomendacion"
+					style="margin-top:20px;" paginator="true"
+					rowKey="#{recm.recId}" selection="#{recMB.regSelected}"
+					selectionMode="single" paginatorPosition="top"
+					rowsPerPageTemplate="5,10,15" rows="5"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+					<p:ajax event="rowSelect" listener="#{recMB.onRowSelect}"
+						update="dtRecomendacion:tMenuRecomendaciones" />
+					<f:facet name="header"> Recomendaciones
+						<p:toolbar id="tMenuRecomendaciones">
+							<p:toolbarGroup>
+								<p:commandButton id="btnComentarios2" value="Comentarios"
+									icon="pi pi-plus" rendered="#{recMB.registro.selected}"
+									action="#{recMB.mostrarComentarios}"
+									update="@form :frmComentarios" styleClass="raised-btn"
+									actionListener="#{segMB.mostrarComentarios}" process="@this">
+								</p:commandButton>
+							</p:toolbarGroup>
+						</p:toolbar>
+					</f:facet>
+					<p:headerRow>
+						<p:column colspan="2">
+							<h:outputText value="Hallazgo: #{recm.cedulaNota.cedTitulo}"></h:outputText>
+						</p:column>
+					</p:headerRow>
+					<p:column headerText="Titulo Recomendación">
+						<h:outputText value="#{recm.recTitulo}"></h:outputText>
+					</p:column>
+					<p:column headerText="Situación Encontrada">
+						<h:outputText value="#{recm.recSituacion}"></h:outputText>
+					</p:column>
+				</p:dataTable>
+			</div>
+
+			<div class="ui-fluid p-formgrid p-grid">
+				<p:separator />
 				<div class="name" align="center">
 					<span class="app-name">Auditor Asignado</span>
 				</div>
@@ -100,7 +110,7 @@
 							<p:outputLabel style="font-size:2em;"
 								value="#{segMB.coordinador.usuNombre} #{segMB.coordinador.usuApellido}" />
 						</p:column>
-						<p:column>
+						<p:column rendered="false">
 							<p:commandButton value="Cambiar Auditor Asignado"
 								icon="pi pi-pencil" update="@form">
 							</p:commandButton>
@@ -127,8 +137,7 @@
 								actionListener="#{segMB.prepararCorreo}"
 								value="Notificar Seguimiento"
 								title="Clic para enviar la notificacion" process="@form"
-								 icon="pi pi-check-circle"
-								style="float:Righ;" 
+								icon="pi pi-check-circle" style="float:Righ;"
 								rendered="#{segMB.registro.segFecInicio != null and segMB.registro.segFecFin == null}" />
 						</p:column>
 						<p:column>

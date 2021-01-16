@@ -9,25 +9,62 @@
 			<div class="ui-g-12">
 				<div class="card">
 					<h:form id="frmConsultas">
-						<p:panel rendered="#{consMB.status eq 'SEARCH'}">
+						<p:panel rendered="#{dashMB.status eq 'SEARCH'}">
 							<div class="name" align="center">
-								<span class="app-name"> Consultas</span>
+								<span class="app-name"> Dashboard</span>
 							</div>
-							<p:tabView>
-								<p:tab title="Consulta Auditorías">
-									<ui:include src="/page/consultas/consultaauditoria.xhtml"></ui:include>
-								</p:tab>
-								<p:tab title="Consulta Hallazgos">
-									<ui:include src="/page/consultas/consultahallazgo.xhtml"></ui:include>
-								</p:tab>
-							</p:tabView>
 						</p:panel>
-					</h:form>
-					<h:form id="frmDetalleAuditoria">
-						<ui:include src="/page/consultas/consultaauditoriadetalle.xhtml"></ui:include>
-					</h:form>
-					<h:form id="frmRecomendacionesHallazgo">
-						<ui:include src="/page/consultas/consultarecomendacioneshallazgo.xhtml"></ui:include>
+						<p:panelGrid columns="2"
+							style="width:90%; margin: auto; text-align:center"
+							styleClass="ui-panelgrid-blank">
+							<p:chart type="donut"
+								model="#{dashMB.donutChartAuditoriasPorEstado}" />
+							<p:chart type="donut"
+								model="#{dashMB.donulChartHallazgosPoeEstado}" />
+						</p:panelGrid>
+						<p:dataTable id="dtTiempoPorFaseAuditorias"
+							widgetVar="wvTiempoPorFaseAuditorias" reflow="true" var="tfase"
+							style="margin-top:20px;" paginator="true"
+							value="#{dashMB.tiempoPorFaseAuditoriasList}"
+							paginatorPosition="bottom" rowsPerPageLabel="5,10,15,20,25"
+							rows="15"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+							<f:facet name="header">Duración en cada fase de auditoría</f:facet>
+							<p:column headerText="Cod. Auditoría" sortBy="#{tfase.audCodigo}" width="125"
+								filterBy="#{tfase.audCodigo}" filterMatchMode="contains" style="text-align:center;">
+								<h:outputText value="#{tfase.audCodigo}" />
+							</p:column>
+							<p:column headerText="Auditoría" sortBy="#{tfase.audNombre}"
+								filterBy="#{tfase.audNombre}" filterMatchMode="contains">
+								<h:outputText value="#{tfase.audNombre}" />
+							</p:column>
+							<p:column headerText="T. Programado (Días)" width="95"
+								sortBy="#{tfase.tiempoProgramado}" style="text-align:center;">
+								<h:outputText value="#{tfase.tiempoProgramado}" />
+							</p:column>
+							<p:column headerText="T. Asignado (Días)" width="95"
+								sortBy="#{tfase.tiempoAsignado}" style="text-align:center;">
+								<h:outputText value="#{tfase.tiempoAsignado}" />
+							</p:column>
+							<p:column headerText="T. Planificación (Días)" width="95"
+								sortBy="#{tfase.tiempoPlanificacion}" style="text-align:center;">
+								<h:outputText value="#{tfase.tiempoPlanificacion}" />
+							</p:column>
+							<p:column headerText="T. Ejecución (Días)" width="95"
+								sortBy="#{tfase.tiempoEjecucion}" style="text-align:center;">
+								<h:outputText value="#{tfase.tiempoEjecucion}" />
+							</p:column>
+							<p:column headerText="T. Informe (Días)" width="95"
+								sortBy="#{tfase.tiempoInforme}" style="text-align:center;">
+								<h:outputText value="#{tfase.tiempoInforme}" />
+							</p:column>
+							<p:column headerText="T. Seguimiento (Días)" width="95"
+								sortBy="#{tfase.tiempoSeguimiento}" style="text-align:center;">
+								<h:outputText value="#{tfase.tiempoSeguimiento}" />
+							</p:column>
+
+						</p:dataTable>
 					</h:form>
 				</div>
 			</div>

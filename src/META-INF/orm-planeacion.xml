@@ -40,4 +40,5 @@
 	<named-query name="auditoriaunidad.get.all.unidades">
 		<query>select o from AuditoriaUnidad o where o.auditoria.audId = ?1 and o.regActivo = 1</query>
 	</named-query>
+	
 </entity-mappings>

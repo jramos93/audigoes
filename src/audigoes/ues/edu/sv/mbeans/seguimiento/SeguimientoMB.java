@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -15,7 +16,6 @@ import javax.mail.Address;
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
-import audigoes.ues.edu.sv.entities.seguimiento.Comentario;
 import audigoes.ues.edu.sv.entities.seguimiento.Seguimiento;
 import audigoes.ues.edu.sv.util.SendMailAttach;
 
@@ -29,12 +29,13 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 
 	private Usuario coordinador;
 	private Auditoria auditoria;
-	private String textoCorreo="";
+	private String textoCorreo = "";
+
+	private List<Seguimiento> filteredSeguimientos;
 	
+
 	@ManagedProperty(value = "#{recMB}")
 	private RecomendacionMB recMB = new RecomendacionMB();
-	
-	
 
 	public SeguimientoMB() {
 		super(new Seguimiento());
@@ -49,6 +50,7 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 			obtenerRecomendaciones();
 			obtenerCoordinador();
 			obtenerSeguimiento();
+			
 
 			super.init();
 		} catch (Exception e) {
@@ -56,10 +58,9 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 		}
 
 	}
-	
+
 	public void obtenerRecomendaciones() {
-		if(getAuditoria() != null) {
-			System.out.println("obtenerRecomendaciones");
+		if (getAuditoria() != null) {
 			getRecMB().setAuditoria(getAuditoria());
 			getRecMB().fillRecomendacionesAuditoria();
 		}
@@ -77,7 +78,7 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 					setCoordinador(new Usuario());
 				}
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -87,11 +88,14 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 	public void obtenerSeguimiento() {
 		try {
 			if (getAuditoria() != null) {
-				List<Seguimiento> seg = (List<Seguimiento>) audigoesLocal.findByNamedQuery(Seguimiento.class,
-						"seguimiento.get.by.auditoria", new Object[] { getAuditoria().getAudId() });
-				if (!seg.isEmpty()) {
-					setRegistro(seg.get(0));
+				setListado((List<Seguimiento>) audigoesLocal.findByNamedQuery(Seguimiento.class,
+						"seguimiento.get.by.auditoria", new Object[] { getAuditoria().getAudId() }));
+				if (!getListado().isEmpty()) {
+					setRegistro(getListado().get(getListado().size() - 1));
 					onEdit();
+					if (getRegistro().getSegFecFin() != null) {
+						onNew();
+					}
 				} else {
 					onNew();
 				}
@@ -100,9 +104,9 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void mostrarComentarios() {
-		
+
 	}
 
 	public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
@@ -128,29 +132,32 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 
 	public void iniciarSeguimiento() {
 		try {
-			if(getStatus().equals("NEW")) {
+			if (getStatus().equals("NEW")) {
 				getRegistro().setAuditoria(getAuditoria());
 				getRegistro().setSegFecInicio(getToday());
 				onSaveNew();
+				getListado().add(getRegistro());
 				onEdit();
-			} else 	if(getStatus().equals("EDIT")) {
+			} else if (getStatus().equals("EDIT")) {
 				getRegistro().setSegFecInicio(getToday());
 				onSaveEdit();
 				onEdit();
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void finalizarSeguimiento() {
 		try {
 			getRegistro().setSegFecFin(getToday());
+			getListado().get(getListado().size() - 1).setSegFecFin(getToday());
 			onSaveEdit();
-			onEdit();
+			onNew();
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
+			addWarn(new FacesMessage(SYSTEM_NAME, "Problemas al finalizar seguimiento"));
 		}
 	}
 
@@ -190,14 +197,14 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 	public void setRecMB(RecomendacionMB recMB) {
 		this.recMB = recMB;
 	}
+
 	public void prepararCorreo() {
-		textoCorreo="<p><strong>AUDIGOES LE INFORMA:</strong></p>" + 
-				"<p>Se le notifica que la fase de seguimiento a iniciado"
+		textoCorreo = "<p><strong>AUDIGOES LE INFORMA:</strong></p>"
+				+ "<p>Se le notifica que la fase de seguimiento a iniciado"
 				+ "correspondiente a la auditor&iacute;a <strong>"
-				+getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo()+"-"+getRegistro().getAuditoria().getAudAnio()+
-				"-"+getRegistro().getAuditoria().getAudCorrelativo()
-				+"</strong> por lo que se le pide ingresar al sistema para revisarlo.</p>\r\n"
-				+"<p>Atte.-</p>";
+				+ getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo() + "-"
+				+ getRegistro().getAuditoria().getAudAnio() + "-" + getRegistro().getAuditoria().getAudCorrelativo()
+				+ "</strong> por lo que se le pide ingresar al sistema para revisarlo.</p>\r\n" + "<p>Atte.-</p>";
 	}
 
 	public void onEnviarRevision() {
@@ -215,16 +222,16 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 		String body;
 		Address[] toList;
 		Address[] toCc;
-		
+
 		try {
 			from = "audigoes.ues@gmail.com";
 			cc = "wilmer.grijalva@gmail.com";
 			to = "wilmer.grijalva@gmail.com";
 			subject = "Correo de Prueba";
-			
+
 			body = texto;
 			logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/images/logo-azul.png");
-			
+
 			SendMailAttach mail = new SendMailAttach(from, cc, to, subject, body, null, logo);
 			mail.send();
 		} catch (Exception e) {
@@ -239,5 +246,13 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 	public void setTextoCorreo(String textoCorreo) {
 		this.textoCorreo = textoCorreo;
 	}
-	
+
+	public List<Seguimiento> getFilteredSeguimientos() {
+		return filteredSeguimientos;
+	}
+
+	public void setFilteredSeguimientos(List<Seguimiento> filteredSeguimientos) {
+		this.filteredSeguimientos = filteredSeguimientos;
+	}
+
 }

@@ -60,6 +60,11 @@
 								rendered="#{loginMB.objAppsSession.usuario.usuRol!=4}"
 								url="/audigoes/page/consultas/consultas.xhtml">
 							</p:menuitem>
+							<p:menuitem label="Dashboard" value="Dashboard"
+								icon="pi pi-chart-line"
+								rendered="#{loginMB.objAppsSession.usuario.usuRol!=4}"
+								url="/audigoes/page/dashboard/dashboard.xhtml">
+							</p:menuitem>
 
 							<p:menuitem value="Dar Respuesta a Hallazgos"
 								icon="pi pi-comments"

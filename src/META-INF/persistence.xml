@@ -60,5 +60,7 @@
 		<class>audigoes.ues.edu.sv.entities.informe.CartaGerencia</class>
 		<class>audigoes.ues.edu.sv.entities.administracion.Archivo</class>
 		<class>audigoes.ues.edu.sv.entities.vistas.StatsAuditoriaEstado</class>
+		<class>audigoes.ues.edu.sv.entities.vistas.StatsHallazgoEstado</class>
+		<class>audigoes.ues.edu.sv.entities.vistas.TiempoPorFaseAuditorias</class>
 	</persistence-unit>
 </persistence>

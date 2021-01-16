@@ -139,7 +139,7 @@
 				</p:dataTable>
 
 				<p:dataTable id="dtAuditoriaUnidadesEdit" var="auditund"
-					value="#{audMB.registro.auditoriaUnidad}"
+					value="#{audMB.unidadesAuditadasList}"
 					widgetVar="wvAuditoriaUnidadesEdit" reflow="true"
 					style="margin-top:20px;" paginator="true"
 					rowsPerPageTemplate="5,10,15,20,25" rows="10"
@@ -147,14 +147,14 @@
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
 					<f:facet name="header">Unidades Auditadas</f:facet>
-					<p:column headerText="ID Unidad" sortBy="#{auditund.unidad.uniId}">
+					<p:column headerText="ID Unidad" sortBy="#{auditund.unidad.uniId}" width="100">
 						<h:outputText value="#{auditund.unidad.uniId}" />
 					</p:column>
 					<p:column headerText="Unidad Administrativa"
 						sortBy="#{auditund.unidad.uniNombre}">
 						<h:outputText value="#{auditund.unidad.uniNombre}" />
 					</p:column>
-					<p:column headerText="Eliminar">
+					<p:column headerText="Eliminar" width="150">
 						<p:commandButton
 							actionListener="#{audMB.eliminarUnidadAuditadaEdit(auditund)}"
 							update=":frmNewEditAuditoria:dtAuditoriaUnidadesEdit"

@@ -48,6 +48,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	private List<Unidad> unidadList;
 	private List<Unidad> unidadesSelectedList;
+	private List<AuditoriaUnidad> unidadesAuditadasList;
 	private Unidad unidadSelected;
 
 	private Usuario coordinador;
@@ -122,6 +123,17 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 			e.printStackTrace();
 		}
 
+	}
+
+	@SuppressWarnings("unchecked")
+	public void fillInidadesAuditadasList() {
+		try {
+			setUnidadesAuditadasList((List<AuditoriaUnidad>) audigoesLocal.findByNamedQuery(AuditoriaUnidad.class,
+					"auditoriaunidad.get.all.unidades", new Object[] { getRegistro().getAudId() }));
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage(SYSTEM_NAME, "Problemas al obtener unidades auditadas"));
+		}
 	}
 
 	public void onPrograma() {
@@ -321,6 +333,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		fillUsuariosInstitucionList();
 		setTipoAuditoriaSelected(getRegistro().getTipoAuditoria());
 		setPlanSelected(getRegistro().getPlanAnual());
+		fillInidadesAuditadasList();
 		this.audUniMB.setAuditoria(getRegistro());
 		this.audUniMB.fillListado();
 		return super.beforeEdit();
@@ -628,6 +641,14 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		this.unidadSelected = unidadSelected;
 	}
 
+	public List<AuditoriaUnidad> getUnidadesAuditadasList() {
+		return unidadesAuditadasList;
+	}
+
+	public void setUnidadesAuditadasList(List<AuditoriaUnidad> unidadesAuditadasList) {
+		this.unidadesAuditadasList = unidadesAuditadasList;
+	}
+
 	public SeguimientoMB getSegMB() {
 		return segMB;
 	}
@@ -650,7 +671,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		super.configBean();
 		if (getObjAppsSession() != null) {
 			if (!isPerRoot()) {
-				//setPerEnviar(getObjAppsSession().isPermisoValido("AUDITOR", "ENVIAR"));
+				// setPerEnviar(getObjAppsSession().isPermisoValido("AUDITOR", "ENVIAR"));
 			}
 		}
 	}

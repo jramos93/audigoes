@@ -104,30 +104,33 @@
 					</f:facet>
 
 					<p:column headerText="N°" sortBy="#{aud.audCorrelativo}"
-						style="text-align:center; width:50px;">
+						style="text-align:center;">
 						<h:outputText value="#{aud.audCorrelativo}" />
 					</p:column>
-					<p:column headerText="Año" sortBy="#{aud.audAnio}"
-						style="text-align:center; width:50px;">
-						<h:outputText value="#{aud.audAnio}" />
+					<p:column headerText="Codigo" sortBy="#{aud.audCodigo}"
+						style="text-align:center;">
+						<h:outputText value="#{aud.audCodigo}" />
 					</p:column>
 					<p:column headerText="Auditoría" sortBy="#{aud.audNombre}">
 						<h:outputText value="#{aud.audNombre}" />
 					</p:column>
+					<p:column headerText="Plan" sortBy="#{aud.planAnual.plaNombre}">
+						<h:outputText value="#{aud.planAnual.plaNombre}" />
+					</p:column>
 					<p:column headerText="Tipo Auditoría"
-						style="text-align:center; width:150px;"
+						style="text-align:center;"
 						sortBy="#{aud.tipoAuditoria.tpaNombre}">
 						<h:outputText value="#{aud.tipoAuditoria.tpaNombre}" />
 					</p:column>
 					<p:column headerText="Fecha Inicio"
-						style="text-align:center; width:80px;"
+						style="text-align:center; "
 						sortBy="#{aud.audFechaInicioProgramado}">
 						<h:outputText value="#{aud.audFechaInicioProgramado}">
 							<f:convertDateTime pattern="dd-MM-yyyy" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="Fecha Fin"
-						style="text-align:center; width:80px;"
+						style="text-align:center;"
 						sortBy="#{aud.audFechaFinProgramado}">
 						<h:outputText value="#{aud.audFechaInicioProgramado}">
 							<f:convertDateTime pattern="dd-MM-yyyy" />
@@ -135,7 +138,7 @@
 					</p:column>
 					<p:column headerText="Fase" filterBy="#{aud.audFase}"
 						filterStyle="width:80px;" filterMatchMode="exact"
-						style="text-align:center; width:150px;">
+						style="text-align:center; width:15%;">
 						<f:facet name="filter">
 							<p:selectOneMenu onchange="PF('wvAuditorias').filter();">
 								<f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}"
@@ -280,7 +283,7 @@
 					</p:dataTable>
 
 					<p:dataTable id="dtAuditoriaUnidadesEdit" var="auditund"
-						value="#{audMB.registro.auditoriaUnidad}"
+						value="#{audMB.unidadesAuditadasList}"
 						widgetVar="wvAuditoriaUnidadesEdit" reflow="true"
 						style="margin-top:20px;" paginator="true"
 						rowsPerPageTemplate="5,10,15,20,25" rows="10"
@@ -288,14 +291,14 @@
 						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 						currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
 						<f:facet name="header">Unidades Auditadas</f:facet>
-						<p:column headerText="ID Unidad" sortBy="#{auditund.unidad.uniId}">
+						<p:column headerText="ID Unidad" sortBy="#{auditund.unidad.uniId}" width="100">
 							<h:outputText value="#{auditund.unidad.uniId}" />
 						</p:column>
 						<p:column headerText="Unidad Administrativa"
 							sortBy="#{auditund.unidad.uniNombre}">
 							<h:outputText value="#{auditund.unidad.uniNombre}" />
 						</p:column>
-						<p:column headerText="Eliminar">
+						<p:column headerText="Eliminar" width="150">
 							<p:commandButton
 								actionListener="#{audMB.eliminarUnidadAuditadaEdit(auditund)}"
 								update=":frmNewEditAuditoria:dtAuditoriaUnidadesEdit"
