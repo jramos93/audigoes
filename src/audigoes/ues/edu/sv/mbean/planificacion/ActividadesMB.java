@@ -38,7 +38,7 @@ public class ActividadesMB extends AudigoesController implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
-			super.init();
+			//super.init();
 
 			fillActividades();
 			if (getListado() != null) {

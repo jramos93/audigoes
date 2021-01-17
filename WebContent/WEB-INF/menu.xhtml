@@ -13,17 +13,17 @@
 						<pv:menu id="pvMenu">
 							<p:menuitem value="Inicio" url="/audigoes/page/main.xhtml" />
 							<p:submenu label="Administración" icon="pi pi-file"
-								rendered="#{loginMB.objAppsSession.usuario.usuRol!=4}">
-								<p:menuitem value="Gestion de Roles"
+								rendered="#{loginMB.rolCoordinador or loginMB.rolJefe or loginMB.rolAdministrador}">
+								<p:menuitem value="Gestion de Roles" rendered="#{loginMB.rolJefe or loginMB.rolAdministrador}"
 									url="/audigoes/page/administracion/roles.xhtml" />
 								<p:separator />
-								<p:menuitem value="Datos de Institución"
+								<p:menuitem value="Datos de Institución" rendered="#{loginMB.rolJefe or loginMB.rolAdministrador}"
 									url="/audigoes/page/administracion/datosinstitucion.xhtml" />
 								<p:separator />
-								<p:menuitem value="Gestion de Usuarios"
+								<p:menuitem value="Gestion de Usuarios" rendered="#{loginMB.rolJefe or loginMB.rolAdministrador}"
 									url="/audigoes/page/administracion/usuarios.xhtml" />
 								<p:separator />
-								<p:menuitem value="Gestion de Institución"
+								<p:menuitem value="Gestion de Institución" rendered="#{loginMB.rolAdministrador}"
 									url="/audigoes/page/administracion/institucion.xhtml" />
 								<p:separator />
 								<p:submenu label="Gestion de Catalogos" icon="pi pi-briefcase">
@@ -48,27 +48,26 @@
 							</p:submenu>
 							<p:menuitem value="Planeación" icon="pi pi-calendar-plus"
 								url="/audigoes/page/planeacion/plan.xhtml"
-								rendered="#{loginMB.objAppsSession.usuario.usuRol!=4}" />
+								rendered="#{loginMB.rolCoordinador or loginMB.rolJefe}" />
 							<p:menuitem value="Auditorías" icon="pi pi-list"
-								rendered="#{loginMB.objAppsSession.usuario.usuRol!=4}"
+								rendered="#{loginMB.rolCoordinador or loginMB.rolJefe or loginMB.rolAuditor}"
 								url="/audigoes/page/planeacion/auditoria.xhtml">
 							</p:menuitem>
 
 
 							<p:menuitem label="Consultas" value="Consultas"
 								icon="pi pi-chart-line"
-								rendered="#{loginMB.objAppsSession.usuario.usuRol!=4}"
 								url="/audigoes/page/consultas/consultas.xhtml">
 							</p:menuitem>
 							<p:menuitem label="Dashboard" value="Dashboard"
 								icon="pi pi-chart-line"
-								rendered="#{loginMB.objAppsSession.usuario.usuRol!=4}"
+								rendered="#{loginMB.rolCoordinador or loginMB.rolJefe }"
 								url="/audigoes/page/dashboard/dashboard.xhtml">
 							</p:menuitem>
 
 							<p:menuitem value="Dar Respuesta a Hallazgos"
 								icon="pi pi-comments"
-								rendered="#{loginMB.objAppsSession.usuario.usuRol==4}"
+								rendered="#{loginMB.rolAuditado}"
 								url="/audigoes/page/usuario/lista-hallazgos.xhtml">
 							</p:menuitem>
 

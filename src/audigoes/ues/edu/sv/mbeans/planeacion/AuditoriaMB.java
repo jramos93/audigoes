@@ -142,12 +142,28 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	}
 
 	public void onPrograma() {
+		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+		setRegistro(((Auditoria) sessionMap.get("auditoria")));
+		BitacoraActividades a = bitaMB.buscarActividad(3, getRegistro());
+		if (a == null) {
+			bitaMB.iniciarActividad(3, "Elaboración Programa de Planificación", getRegistro(),
+					getObjAppsSession().getUsuario());
+		}
 		pplaMB.fillPrograma();
 		pplaMB.onEdit();
+		pplaMB.revisarPermisos();
 	}
 
 	public void onProgramaEje() {
+		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+		setRegistro(((Auditoria) sessionMap.get("auditoria")));
+		BitacoraActividades a = bitaMB.buscarActividad(9, getRegistro());
+		if (a == null) {
+			bitaMB.iniciarActividad(9, "Elaboración Programa de Auditoría", getRegistro(),
+					getObjAppsSession().getUsuario());
+		}
 		pejeMB.fillPrograma();
+		pejeMB.revisarPermisos();
 		// pejeMB.onEdit();
 	}
 
@@ -157,8 +173,16 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	}
 
 	public void onMemo() {
+		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+		setRegistro(((Auditoria) sessionMap.get("auditoria")));
+		BitacoraActividades a = bitaMB.buscarActividad(6, getRegistro());
+		if (a == null) {
+			bitaMB.iniciarActividad(6, "Elaboración Memorando de Planificación", getRegistro(),
+					getObjAppsSession().getUsuario());
+		}
 		memoMB.fillMemo();
 		memoMB.onEdit();
+		memoMB.revisarPermisos();
 	}
 
 	public void seguimiento() {
@@ -388,6 +412,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 				getRegistro().setAudCorrelativo(getCorrelativoAuditoria());
 				getRegistro().setPlanAnual(getPlanSelected());
 				getRegistro().setTipoAuditoria(getTipoAuditoriaSelected());
+				getRegistro().setAudFechaProgramado(getToday());
 				createCodAuditoria();
 				return super.beforeSave();
 			} else {

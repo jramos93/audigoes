@@ -5,6 +5,7 @@ import java.util.List;
 
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.administracion.UsuarioPermiso;
+import audigoes.ues.edu.sv.entities.planeacion.AuditoriaResponsable;
 
 public class ObjAppsSession {
 
@@ -17,7 +18,7 @@ public class ObjAppsSession {
 	public ObjAppsSession() {
 	}
 
-	public boolean isPermisoValido(String rol) {
+	public boolean isRolValido(String rol) {
 		boolean valido = false;
 
 		if (this.permisos != null) {
@@ -49,6 +50,43 @@ public class ObjAppsSession {
 
 				if (registro.equals(comparar) && reg.getRegActivo() == 1) {
 					return true;
+				}
+			}
+		}
+		return valido;
+	}
+
+	public boolean isPermisoValido(String permiso) {
+		boolean valido = false;
+
+		if (this.permisos != null) {
+			Iterator var = this.permisos.iterator();
+
+			while (var.hasNext()) {
+				UsuarioPermiso reg = (UsuarioPermiso) var.next();
+				String comparar = permiso.trim().toUpperCase();
+				String registro = reg.getPermiso().getPerIdentificador().trim().toUpperCase();
+
+				if (registro.equals(comparar) && reg.getRegActivo() == 1) {
+					return true;
+				}
+			}
+		}
+		return valido;
+	}
+
+	public boolean isCoordinador(int id, List<AuditoriaResponsable> responsables) {
+		boolean valido = false;
+
+		if (this.permisos != null) {
+			Iterator var = responsables.iterator();
+
+			while (var.hasNext()) {
+				AuditoriaResponsable reg = (AuditoriaResponsable) var.next();
+				if (reg.getAurRol() == 0) {
+					if (reg.getUsuario().getUsuId() == id) {
+						return true;
+					}
 				}
 			}
 		}

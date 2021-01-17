@@ -52,7 +52,7 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 			obtenerSeguimiento();
 			
 
-			super.init();
+			//super.init();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

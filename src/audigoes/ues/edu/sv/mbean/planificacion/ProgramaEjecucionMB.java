@@ -12,8 +12,10 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.mail.Address;
+import javax.mail.internet.InternetAddress;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
+import audigoes.ues.edu.sv.entities.administracion.BitacoraActividades;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.ejecucion.ProcedimientoEjecucion;
 import audigoes.ues.edu.sv.entities.ejecucion.ProgramaEjecucion;
@@ -39,6 +41,9 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 
 	@ManagedProperty(value = "#{proejeMB}")
 	private ProcedimientosEjeMB proejeMB = new ProcedimientosEjeMB();
+	
+	@ManagedProperty(value = "#{bitaMB}")
+	private BitacoraActividadMB bitaMB = new BitacoraActividadMB();
 
 	public ProgramaEjecucionMB() {
 		super(new ProgramaEjecucion());
@@ -86,9 +91,18 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 		if (usr != null) {
 			try {
 				getRegistro().setPreEstado(2);
-				System.out.println("status");
 				onSave();
-				correoObservacion(textoCorreo, getRegistro().getUsuario1(), usr);
+				if (correoRevision(textoCorreo, usr)) {
+
+					BitacoraActividades a = bitaMB.buscarActividad(11, getRegistro().getAuditoria());
+					if (a != null) {
+						bitaMB.finalizarActividad(11, getRegistro().getAuditoria(), getObjAppsSession().getUsuario());
+					}
+
+					bitaMB.iniciarActividad(10, "Revisión del Programa de Auditoria", getRegistro().getAuditoria(),
+							getObjAppsSession().getUsuario());
+				}
+				revisarPermisos();
 			} catch (Exception e) {
 				e.printStackTrace();
 				addWarn(new FacesMessage("Error al enviar a revisión"));
@@ -103,9 +117,14 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 				getRegistro().setPreEstado(1);
 				getRegistro().setUsuario2(getObjAppsSession().getUsuario());
 				getRegistro().setPreFechaReviso(getToday());
-				System.out.println("status");
 				onSave();
-				correoRevision(textoCorreoObs, getRegistro().getUsuario1(), usr);
+				if (correoObservacion(textoCorreoObs, getObjAppsSession().getUsuario())) {
+					bitaMB.finalizarActividad(10, getRegistro().getAuditoria(), getObjAppsSession().getUsuario());
+
+					bitaMB.iniciarActividad(11, "Corrección a observaciones del Programa de Auditoria",
+							getRegistro().getAuditoria(), getObjAppsSession().getUsuario());
+				}
+				revisarPermisos();
 			} catch (Exception e) {
 				e.printStackTrace();
 				addWarn(new FacesMessage("Error al enviar las observaciones"));
@@ -120,9 +139,18 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 				getRegistro().setPreEstado(3);
 				getRegistro().setUsuario2(getObjAppsSession().getUsuario());
 				getRegistro().setPreFechaReviso(getToday());
-				System.out.println("status");
 				onSave();
-				correoFin(textoCorreoFin, getRegistro().getUsuario1(), usr);
+				if(correoFin(textoCorreoFin, getObjAppsSession().getUsuario())) {
+					
+					bitaMB.finalizarActividad(10, getRegistro().getAuditoria(), getObjAppsSession().getUsuario());
+					bitaMB.finalizarActividad(9, getRegistro().getAuditoria(), getObjAppsSession().getUsuario());
+				}
+				
+				auditoria.setAudFechaEjecucion(getToday());
+				auditoria.setAudFase(3);
+				audigoesLocal.update(auditoria);
+				
+				revisarPermisos();
 			} catch (Exception e) {
 				e.printStackTrace();
 				addWarn(new FacesMessage("Error al finalizar las observaciones"));
@@ -130,7 +158,7 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 		}
 	}
 
-	public void correoRevision(String texto, Usuario auditor, Usuario coordinador) {
+	public boolean correoRevision(String texto, Usuario coordinador) {
 		String from;
 		String cc;
 		String to;
@@ -145,18 +173,26 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 			from = "audigoes.ues@gmail.com";
 			to = coordinador.getUsuCorreo();
 			subject = "Solicitud de revisión programa de ejecución";
-			cc = auditor.getUsuCorreo();
+			String toccs = "";
+
+			for (AuditoriaResponsable r : auditoria.getAuditoriaResponsable()) {
+				toccs = toccs + r.getUsuario().getUsuCorreo() + ",";
+			}
+			toCc = InternetAddress.parse(toccs);
+
 			body = texto;
 			logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/images/logo-azul.png");
 
-			SendMailAttach mail = new SendMailAttach(from, cc, to, subject, body, null, logo);
-			mail.send();
+			SendMailAttach mail = new SendMailAttach(from, to, toCc, subject, body, null, logo);
+			mail.sendManyCc();
+			return true;
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
+			return false;
 		}
 	}
 
-	public void correoObservacion(String texto, Usuario auditor, Usuario coordinador) {
+	public boolean correoObservacion(String texto, Usuario coordinador) {
 		String from;
 		String cc;
 		String to;
@@ -171,18 +207,26 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 			from = "audigoes.ues@gmail.com";
 			cc = coordinador.getUsuCorreo();
 			subject = "Observaciones al programa de ejecución";
-			to = auditor.getUsuCorreo();
+			String tolists = "";
+
+			for (AuditoriaResponsable r : auditoria.getAuditoriaResponsable()) {
+				tolists = tolists + r.getUsuario().getUsuCorreo() + ",";
+			}
+			toList = InternetAddress.parse(tolists);
+
 			body = texto;
 			logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/images/logo-azul.png");
 
-			SendMailAttach mail = new SendMailAttach(from, cc, to, subject, body, null, logo);
-			mail.send();
+			SendMailAttach mail = new SendMailAttach(from, toList, cc, subject, body, null, logo);
+			mail.sendManyTo();
+			return true;
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
+			return false;
 		}
 	}
 
-	public void correoFin(String texto, Usuario auditor, Usuario coordinador) {
+	public boolean correoFin(String texto, Usuario coordinador) {
 		String from;
 		String cc;
 		String to;
@@ -197,21 +241,27 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 			from = "audigoes.ues@gmail.com";
 			cc = coordinador.getUsuCorreo();
 			subject = "Finalización de revisión al programa de ejecución";
-			to = auditor.getUsuCorreo();
+			String tolists = "";
+
+			for (AuditoriaResponsable r : auditoria.getAuditoriaResponsable()) {
+				tolists = tolists + r.getUsuario().getUsuCorreo() + ",";
+			}
+			toList = InternetAddress.parse(tolists);
 			body = texto;
 			logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/images/logo-azul.png");
 
-			SendMailAttach mail = new SendMailAttach(from, cc, to, subject, body, null, logo);
-			mail.send();
+			SendMailAttach mail = new SendMailAttach(from, toList, cc, subject, body, null, logo);
+			mail.sendManyTo();
+			return true;
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
+			return false;
 		}
 	}
 
 	@Override
 	public void onRowSelect() {
 		super.onRowSelect();
-		System.out.println("" + getRegistro().getPreNombre());
 
 		proejeMB.setPrograma(getRegistro());
 		proejeMB.fillProcedimientos();
@@ -254,7 +304,6 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 				proejeMB.fillProcedimientos();
 				onEdit();
 			} else {
-				System.out.println("no hay");
 				onNew();
 //				getRegistro().setAuditoria(auditoria);
 //				getRegistro().setFecCrea(getToday());
@@ -286,6 +335,8 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 			getRegistro().setPreFechaElaboro(getToday());
 			getRegistro().setPreEstado(1);
 			audigoesLocal.insert(getRegistro());
+			
+			onEdit();
 
 			proejeMB.setPrograma(getRegistro());
 			proejeMB.fillProcedimientos();
@@ -325,13 +376,13 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 				nuevoProcedimiento.setPejFechaElaboro(getToday());
 				nuevoProcedimiento.setPejEstado(1);
 				nuevoProcedimiento.setRegActivo(1);
-				
+
 				audigoesLocal.insert(nuevoProcedimiento);
 			}
-			
+
 			fillPrograma();
-			
-			addInfo(new FacesMessage("Confirmación","Programa migrado correctamente!"));
+
+			addInfo(new FacesMessage("Confirmación", "Programa migrado correctamente!"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			addWarn(new FacesMessage("Advertencia", "Error en el inicio de un nuevo programa!"));
@@ -456,6 +507,54 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 
 	public void setProgramasList(List<ProgramaEjecucion> programasList) {
 		this.programasList = programasList;
+	}
+
+	public BitacoraActividadMB getBitaMB() {
+		return bitaMB;
+	}
+
+	public void setBitaMB(BitacoraActividadMB bitaMB) {
+		this.bitaMB = bitaMB;
+	}
+
+	public void revisarPermisos() {
+		if (getAuditoria() != null) {
+			setPerEdit(false);
+
+			setRolCoordinadorAuditoria(getObjAppsSession().isCoordinador(getObjAppsSession().getUsuario().getUsuId(),
+					getAuditoria().getAuditoriaResponsable()));
+			switch (getRegistro().getPreEstado()) {
+			case 1:
+				if (isRolAuditor()) {
+					setPerEdit(true);
+				} else {
+					setPerEnviar(false);
+				}
+				setPerAutorizar(false);
+				break;
+			case 2:
+				if (isRolCoordinadorAuditoria()) {
+					setPerEdit(true);
+					if (isPerAutorizar()) {
+						setPerAutorizar(true);
+					}
+				} else {
+					setPerAutorizar(false);
+				}
+				setPerEnviar(false);
+				break;
+			case 3:
+				setPerEnviar(false);
+				setPerEdit(false);
+				setPerAutorizar(false);
+				break;
+			default:
+				if(isRolAuditor()) {
+					setPerEdit(true);
+				}
+				break;
+			}
+		}
 	}
 
 }

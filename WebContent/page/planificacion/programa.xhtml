@@ -18,7 +18,7 @@
 					update=":frmPlanificacion, :frmPrograma">
 				</p:commandButton>
 				<p:commandButton id="btn" value="Guardar" icon="fa fa-check"
-					rendered="#{pplaMB.registro.prpEstado ne 3}"
+					rendered="#{pplaMB.registro.prpEstado ne 3 and pplaMB.perEdit}"
 					styleClass="raised-btn" actionListener="#{pplaMB.onSave}"
 					update=":frmPrograma" />
 			</div>
@@ -26,7 +26,7 @@
 			<div align="right" style="margin-top: 50px; float: right;">
 				<p:commandButton id="btnEnviar" oncomplete="PF('wvCorreo').show();"
 					actionListener="#{pplaMB.prepararCorreo}"
-					rendered="#{pplaMB.registro.prpEstado eq 1}"
+					rendered="#{pplaMB.registro.prpEstado eq 1 and pplaMB.perEnviar}"
 					title="Clic para enviar a revisión de la coordinación el programa de planificación"
 					process="@this" value="Enviar a Revisión" icon="pi pi-check-circle"
 					style="float:left;" styleClass="blue-btn raised-btn"
@@ -36,7 +36,7 @@
 				<p:commandButton id="btnEnviarObs"
 					oncomplete="PF('wvCorreoObs').show();"
 					actionListener="#{pplaMB.prepararCorreoObs}"
-					rendered="#{pplaMB.registro.prpEstado eq 2}"
+					rendered="#{pplaMB.registro.prpEstado eq 2 and pplaMB.perAutorizar}"
 					title="Clic para enviar las observaciones al auditor"
 					process="@this" value="Comunicar Observaciones"
 					icon="pi pi-check-circle" style="float:left;"
@@ -45,7 +45,7 @@
 
 				<p:commandButton id="btnFin" oncomplete="PF('wvCorreoFin').show();"
 					actionListener="#{pplaMB.prepararCorreoFin}"
-					rendered="#{pplaMB.registro.prpEstado eq 2}"
+					rendered="#{pplaMB.registro.prpEstado eq 2 and pplaMB.perAutorizar}"
 					title="Clic para finalizar la revisión" process="@this"
 					value="Finalizar Revisión" icon="pi pi-check-circle"
 					style="float:left;" styleClass="blue-btn raised-btn"
@@ -76,15 +76,15 @@
 						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
 							styleClass="ui-panelgrid-blank form-group form-elements">
 
-							<p:outputLabel for="objg" value="Objetivo General:"
+							<p:outputLabel for="objg" value="Objetivo General: "
 								style="font-weight:bold;" />
 							<p:inputTextarea id="objg" value="#{pplaMB.registro.prpObjG}"
-								rows="4" required="true" maxlength="250" />
+								readonly="#{pplaMB.registro.prpEstado ne 1}" rows="4" />
 
 							<p:outputLabel for="obje" value="Objetivos Especificos:"
 								style="font-weight:bold;" />
 							<p:inputTextarea id="obje" value="#{pplaMB.registro.prpObjE}"
-								rows="4" required="true" maxlength="250" />
+								readonly="#{pplaMB.registro.prpEstado ne 1}" rows="4" />
 						</p:panelGrid>
 						<p:panelGrid columns="4"
 							columnClasses="ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4, ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4"
@@ -93,12 +93,15 @@
 
 							<p:outputLabel for="obje" value="Fecha de inicio:"
 								style="font-weight:bold;" />
-							<p:calendar mode="inline"
+							<p:calendar mode="inline" navigator="true" locale="es"
+								disabled="#{pplaMB.registro.prpEstado ne 1}"
 								value="#{pplaMB.registro.prpFechaInicio}"></p:calendar>
 
 							<p:outputLabel for="obje" value="Fecha de fin:"
 								style="font-weight:bold;" />
-							<p:calendar mode="inline" value="#{pplaMB.registro.prpFechaFin}"></p:calendar>
+							<p:calendar mode="inline" navigator="true" locale="es"
+								disabled="#{pplaMB.registro.prpEstado ne 1}"
+								value="#{pplaMB.registro.prpFechaFin}"></p:calendar>
 						</p:panelGrid>
 						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
 							styleClass="ui-panelgrid-blank form-group form-elements">
@@ -106,7 +109,7 @@
 							<p:outputLabel for="alc" value="Alcance:"
 								style="font-weight:bold;" />
 							<p:inputTextarea id="alc" value="#{pplaMB.registro.prpAlcance}"
-								rows="4" required="true" maxlength="250" />
+								readonly="#{pplaMB.registro.prpEstado ne 1}" rows="4" />
 						</p:panelGrid>
 						<p:panelGrid columns="2"
 							columnClasses="ui-g-9 ui-lg-10,ui-g-3 ui-md-4 ui-lg-2"
@@ -114,7 +117,7 @@
 							styleClass="ui-panelgrid-blank form-group form-elements">
 							<p:column></p:column>
 							<p:commandButton id="btn" value="Guardar" icon="fa fa-check"
-								rendered="#{pplaMB.registro.prpEstado ne 3}"
+								rendered="#{pplaMB.registro.prpEstado ne 3 and pplaMB.perEdit}"
 								actionListener="#{pplaMB.onSave}" update=":frmPrograma" />
 						</p:panelGrid>
 					</div>
@@ -141,16 +144,34 @@
 								<p:toolbarGroup>
 									<p:commandButton value="Agregar" icon="pi pi-plus"
 										styleClass="raised-btn"
-										rendered="#{pplaMB.registro.prpEstado ne 3}"
+										rendered="#{pplaMB.registro.prpEstado eq 1}"
 										update=":frmPrograma, :frmProcedimiento"
 										actionListener="#{proplaMB.onNew}">
 									</p:commandButton>
 									<p:commandButton value="Editar" icon="pi pi-pencil"
 										styleClass="raised-btn"
 										update=":frmPrograma, :frmProcedimiento"
-										rendered="#{proplaMB.registro.selected and pplaMB.registro.prpEstado ne 3}"
+										rendered="#{proplaMB.registro.selected and pplaMB.registro.prpEstado ne 3 and pplaMB.perEdit}"
 										actionListener="#{proplaMB.onEditSelected}">
 									</p:commandButton>
+
+									<p:commandButton value="Visualizar" icon="pi pi-eye"
+										styleClass="raised-btn"
+										update=":frmPrograma, :frmProcedimiento"
+										rendered="#{proplaMB.registro.selected}"
+										actionListener="#{proplaMB.onShowSelected}">
+									</p:commandButton>
+
+									<p:commandButton value="Eliminar" icon="pi pi-trash"
+										styleClass="raised-btn"
+										update=":frmPrograma, :frmProcedimiento"
+										rendered="#{proplaMB.registro.selected and pplaMB.registro.prpEstado eq 1 and pplaMB.perEdit}"
+										actionListener="#{proplaMB.onDelete}">
+										<p:confirm header="Confirmación"
+											message="¿Esta seguro que desea eliminar?" icon="pi pi-info"></p:confirm>
+									</p:commandButton>
+
+
 								</p:toolbarGroup>
 							</p:toolbar>
 						</f:facet>
@@ -178,20 +199,21 @@
 
 						<p:column headerText="Fecha Inicio">
 							<h:outputText value="#{p.proFechaInicio}">
-								<f:convertDateTime pattern="dd-MM-yyyy" />
+								<f:convertDateTime pattern="dd-MM-yyyy" timeZone="GMT-6" />
 							</h:outputText>
 						</p:column>
 
 						<p:column headerText="Fecha Fin">
 							<h:outputText value="#{p.proFechaFin}">
-								<f:convertDateTime pattern="dd-MM-yyyy" />
+								<f:convertDateTime pattern="dd-MM-yyyy" timeZone="GMT-6" />
 							</h:outputText>
 						</p:column>
 
 					</p:dataTable>
 				</p:tab>
-				<p:tab title="Observaciones de la Coordinación">
+				<p:tab title="Observaciones de la Coordinación #{pplaMB.perEdit}">
 					<pe:ckEditor id="obs" width="100%" skin="office2013"
+						readonly="#{pplaMB.registro.prpEstado ne 2 or !pplaMB.perEdit}"
 						customConfig="#{request.contextPath}/resources/js/customck.js"
 						value="#{pplaMB.registro.prpObservaciones}" />
 				</p:tab>

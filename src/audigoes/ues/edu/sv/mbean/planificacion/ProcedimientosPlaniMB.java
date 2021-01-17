@@ -3,6 +3,7 @@ package audigoes.ues.edu.sv.mbean.planificacion;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,7 +37,7 @@ public class ProcedimientosPlaniMB extends AudigoesController implements Seriali
 	private List<ProcedimientoPlanificacion> filteredProcedimiento;
 	private Auditoria auditoria;
 	private ProgramaPlanificacion programa;
-	
+
 	private StreamedContent narrativa;
 
 	@ManagedProperty(value = "#{arcMB}")
@@ -69,25 +70,26 @@ public class ProcedimientosPlaniMB extends AudigoesController implements Seriali
 
 	public void handleFileUpload(FileUploadEvent event) {
 		try {
-			System.out.println(" archivo "+event.getFile().getFileName());
+			System.out.println(" archivo " + event.getFile().getFileName());
 			if (getStatus().equals("NEW")) {
 				onSave();
 				onEdit();
-			} 
-			this.arcMB.onNew();
-			this.arcMB.getRegistro().setProcedimientoPlanificacion(getRegistro());
-			this.arcMB.getRegistro().setArcArchivo(event.getFile().getContent());
-			this.arcMB.getRegistro().setArcNombre(event.getFile().getFileName());
-			this.arcMB.getRegistro().setArcExt(event.getFile().getContentType());
-			this.arcMB.getRegistro().setFecCrea(getToday());
-			this.arcMB.getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
-			this.arcMB.getRegistro().setRegActivo(1);
-			audigoesLocal.insert(this.arcMB.getRegistro());
-			//this.arcMB.afterSaveNew();
-			this.arcMB.getListado().add(this.arcMB.getRegistro());
+			}
+			arcMB.onNew();
+			arcMB.getRegistro().setProcedimientoPlanificacion(getRegistro());
+			arcMB.getRegistro().setArcArchivo(event.getFile().getContent());
+			arcMB.getRegistro().setArcNombre(event.getFile().getFileName());
+			arcMB.getRegistro().setArcExt(event.getFile().getContentType());
+			arcMB.getRegistro().setFecCrea(getToday());
+			arcMB.getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+			arcMB.getRegistro().setRegActivo(1);
+			audigoesLocal.insert(arcMB.getRegistro());
+			// this.arcMB.afterSaveNew();
+			// this.arcMB.getListado().add(this.arcMB.getRegistro());
 			if (!getStatus().equals("NEW")) {
 				addWarn(new FacesMessage(SYSTEM_NAME, "Archivo Guardado con Éxito"));
 			}
+			arcMB.fillByPlanificacion(getRegistro());
 		} catch (Exception e) {
 			e.printStackTrace();
 			addWarn(new FacesMessage(SYSTEM_NAME, "Problemas al guardar archivo."));
@@ -123,13 +125,13 @@ public class ProcedimientosPlaniMB extends AudigoesController implements Seriali
 	public void afterCancel() {
 		super.afterCancel();
 	}
-	
+
 	@Override
 	public void afterNew() {
 		// TODO Auto-generated method stub
 		super.afterNew();
 	}
-	
+
 	@Override
 	protected void afterEdit() {
 		// TODO Auto-generated method stub
@@ -142,7 +144,39 @@ public class ProcedimientosPlaniMB extends AudigoesController implements Seriali
 		getRegistro().setProFechaElaboro(getToday());
 		getRegistro().setUsuario1(getObjAppsSession().getUsuario());
 		getRegistro().setProgramaPlanificacion(programa);
+		if (getRegistro().getProFechaInicio() == null) {
+			getRegistro().setProFechaInicio(getToday());
+		}
 		return super.beforeSaveNew();
+	}
+
+	@Override
+	public void onDelete() {
+		// TODO Auto-generated method stub
+		super.onDelete();
+	}
+
+	@Override
+	public void onShowSelected() {
+		// TODO Auto-generated method stub
+		super.onShowSelected();
+	}
+
+	@Override
+	public boolean beforeDelete() {
+		try {
+			arcMB.fillByPlanificacion(getRegistro());
+			if (arcMB.getListado().size() > 0) {
+				addWarn(new FacesMessage("Error",
+						"El procedimiento posee archivos vinculador, debe eliminarlos primero"));
+				return false;
+			}
+		} catch (Exception e) {
+			addWarn(new FacesMessage("Error", "Hubo un problema al momento de eliminar"));
+			return false;
+		}
+
+		return super.beforeDelete();
 	}
 
 	/* GETS y SETS */
@@ -197,26 +231,41 @@ public class ProcedimientosPlaniMB extends AudigoesController implements Seriali
 	}
 
 	public StreamedContent getNarrativa() {
-		
+
 		try {
+			SimpleDateFormat  formatter = new SimpleDateFormat("dd/MM/yyyy");
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			
+
 			// Para definir los encabezados de pagina y los pie de pagina
 			String str = "<html><head>"
 					+ "<style>#header{position: running(header);} @page {margin: 150px 70px 100px;@bottom-right {content: \"Página \" counter(page) \" de \" counter(pages); } @top-center {content: element(header);} }</style>"
 					+ "</head><body style='width:500px; font-size:smaller;'>";
-			
-			// Defino el texto del encabezado de pagina con el id header que es que se pone arriba running(header)
-			str=str+"<div id='header' style='margin-top:20px;'> "
-					+ "<strong>Unidad de Auditoría Interna</strong><br/><strong>Narrativa de Procedimiento de Planificación</strong></div>";
+
+			// Defino el texto del encabezado de pagina con el id header que es que se pone
+			// arriba running(header)
+			str = str + "<div id='header' style='margin-top:20px;'> "
+					+ "<strong>Unidad de Auditoría Interna</strong><br/><strong>" + getRegistro().getProgramaPlanificacion()
+							.getAuditoria().getPlanAnual().getInstitucion().getInsNombre()
+					+ "</strong><br/><strong>Narrativa de Procedimiento de Planificación</strong></div>";
 			// Concateno el texto a agregar
-			str=str+"<div style='text-align:justify'>"+getRegistro().getProNarrativa();
-			str=str+"</div></body></html>";
-			
+			str = str +"<p><strong>Procedimiento</strong>: "+getRegistro().getProNombre()+"</p>\r\n"
+					+ "\r\n"
+					+ "<p><strong>Referencia: </strong>"+getRegistro().getProReferencia()+"</p>\r\n"
+					+ "\r\n"
+					+ "<p><strong>Elaborado Por: &nbsp;</strong>"+getRegistro().getUsuario1().getUsuNombre()+"</p>\r\n"
+					+ "\r\n"
+					+ "<p><strong>Fecha Elaboraci&oacute;n: &nbsp;</strong>&nbsp;"+formatter.format(getRegistro().getProFechaElaboro())+"</p>\r\n"
+					+ "\r\n"
+					+ "<p>&nbsp;</p>\r\n"
+					+ "\r\n"
+					+ "<p><strong>Narrativa:</strong></p>";
+			str = str + "<div style='text-align:justify'>" + getRegistro().getProNarrativa();
+			str = str + "</div></body></html>";
+
 			HtmlConverter.convertToPdf(str, os);
-			
+
 			InputStream is = new ByteArrayInputStream(os.toByteArray());
-			return new DefaultStreamedContent(is, "application/pdf", "narrativa-ejecucion.pdf");
+			return new DefaultStreamedContent(is, "application/pdf", "narrativa-planificacion.pdf");
 		} catch (Exception e) {
 			e.printStackTrace();
 			addWarn(new FacesMessage("Advertencia", "Hubo un error al generar el documento de la narrativa"));

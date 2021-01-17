@@ -53,7 +53,7 @@ public class AuditoriaResponsableMB extends AudigoesController implements Serial
 			selectedUsuarios = new String[] {};
 			usuariosList = new ArrayList<Usuario>();
 			usuariosSelectedList = new ArrayList<Usuario>();
-			super.init();
+			//super.init();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

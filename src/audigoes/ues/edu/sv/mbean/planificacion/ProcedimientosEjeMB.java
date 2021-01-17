@@ -3,6 +3,7 @@ package audigoes.ues.edu.sv.mbean.planificacion;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -79,6 +80,22 @@ public class ProcedimientosEjeMB extends AudigoesController implements Serializa
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public boolean beforeDelete() {
+		try {
+			arcMB.fillByEjecucion(getRegistro());
+			if(arcMB.getListado().size()>0) {
+				addWarn(new FacesMessage("Error","El procedimiento posee archivos vinculador, debe eliminarlos primero"));
+				return false;
+			}
+		} catch (Exception e) {
+			addWarn(new FacesMessage("Error", "Hubo un problema al momento de eliminar"));
+			return false;
+		}
+		
+		return super.beforeDelete();
 	}
 
 	@Override
@@ -197,6 +214,7 @@ public class ProcedimientosEjeMB extends AudigoesController implements Serializa
 	public StreamedContent getNarrativa() {
 
 		try {
+			SimpleDateFormat  formatter = new SimpleDateFormat("dd/MM/yyyy");
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 
 			// Para definir los encabezados de pagina y los pie de pagina
@@ -207,15 +225,28 @@ public class ProcedimientosEjeMB extends AudigoesController implements Serializa
 			// Defino el texto del encabezado de pagina con el id header que es que se pone
 			// arriba running(header)
 			str = str + "<div id='header' style='margin-top:20px;'> "
-					+ "<strong>Unidad de Auditoría Interna</strong><br/><strong>Narrativa de Procedimiento de Planificación</strong></div>";
+					+ "<strong>Unidad de Auditoría Interna</strong><br/><strong>" + getRegistro().getProgramaEjecucion()
+							.getAuditoria().getPlanAnual().getInstitucion().getInsNombre()
+					+ "</strong><br/><strong>Narrativa de Procedimiento de Ejecución</strong></div>";
 			// Concateno el texto a agregar
+			str = str +"<p><strong>Procedimiento</strong>: "+getRegistro().getPejNombre()+"</p>\r\n"
+					+ "\r\n"
+					+ "<p><strong>Referencia: </strong>"+getRegistro().getPejReferencia()+"</p>\r\n"
+					+ "\r\n"
+					+ "<p><strong>Elaborado Por: &nbsp;</strong>"+getRegistro().getUsuario1().getUsuNombre()+"</p>\r\n"
+					+ "\r\n"
+					+ "<p><strong>Fecha Elaboraci&oacute;n: &nbsp;</strong>&nbsp;"+formatter.format(getRegistro().getPejFechaElaboro())+"</p>\r\n"
+					+ "\r\n"
+					+ "<p>&nbsp;</p>\r\n"
+					+ "\r\n"
+					+ "<p><strong>Narrativa:</strong></p>";
 			str = str + "<div style='text-align:justify'>" + getRegistro().getPejNarrativa();
 			str = str + "</div></body></html>";
 
 			HtmlConverter.convertToPdf(str, os);
 
 			InputStream is = new ByteArrayInputStream(os.toByteArray());
-			return new DefaultStreamedContent(is, "application/pdf", "narrativa.pdf");
+			return new DefaultStreamedContent(is, "application/pdf", "narrativa-ejecucion.pdf");
 		} catch (Exception e) {
 			e.printStackTrace();
 			addWarn(new FacesMessage("Advertencia", "Hubo un error al generar el documento de la narrativa"));

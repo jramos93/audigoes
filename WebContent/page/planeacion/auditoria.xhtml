@@ -77,12 +77,12 @@
 									styleClass="blue-btn raised-btn" icon="pi pi-folder"
 									actionListener="#{audMB.ejecucion}" ajax="false"
 									action="/page/ejecucion/ejecucion.xhtml"
-									rendered="#{audMB.registro.selected and audMB.registro.audFase>3}">
+									rendered="#{audMB.registro.selected and audMB.registro.audFase>=3}">
 								</p:commandButton>
 								<p:commandButton id="btnAuditInforme" value="Informe"
 									styleClass="blue-btn raised-btn" icon="pi pi-folder"
 									actionListener="#{audMB.informeAud()}"
-									rendered="#{audMB.registro.selected and audMB.registro.audFase>4}"
+									rendered="#{audMB.registro.selected and audMB.registro.audFase>=4}"
 									ajax="false">
 								</p:commandButton>
 								<p:commandButton id="btnAuditSeguimiento" value="Seguimiento"
@@ -133,7 +133,10 @@
 
 					<p:column headerText="Auditores Asignados" style="width:150px;">
 						<ui:repeat var="u" value="#{aud.auditoriaResponsable}">
-							<h:outputText value="#{u.usuario.usuNombre}." />
+							<h:outputText value="#{u.usuario.usuNombre}." title="Coordinador"
+								rendered="#{u.aurRol==0}" style="font-weight:bold;" />
+							<h:outputText value="#{u.usuario.usuNombre}."
+								rendered="#{u.aurRol==1}" title="Auditor"/>
 							<br />
 						</ui:repeat>
 					</p:column>
@@ -141,14 +144,14 @@
 						style="text-align:center; width:80px;"
 						sortBy="#{aud.audFechaInicioProgramado}">
 						<h:outputText value="#{aud.audFechaInicioProgramado}">
-							<f:convertDateTime pattern="dd-MM-yyyy" />
+							<f:convertDateTime pattern="dd-MM-yyyy" timeZone="GMT-6" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="Fecha Fin"
 						style="text-align:center; width:80px;"
 						sortBy="#{aud.audFechaFinProgramado}">
 						<h:outputText value="#{aud.audFechaInicioProgramado}">
-							<f:convertDateTime pattern="dd-MM-yyyy" />
+							<f:convertDateTime pattern="dd-MM-yyyy" timeZone="GMT-6" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="Fase" filterBy="#{aud.audFase}"
@@ -377,7 +380,8 @@
 					<p:column headerText="Fecha Inicio" filterBy="#{b.bitaFechaInicio}"
 						filterMatchMode="contains">
 						<h:outputText value="#{b.bitaFechaInicio}">
-							<f:convertDateTime pattern="dd-MM-yyyy hh:mm:ss a" />
+							<f:convertDateTime pattern="dd-MM-yyyy hh:mm:ss a"
+								timeZone="GMT-6" />
 						</h:outputText>
 					</p:column>
 
@@ -389,7 +393,8 @@
 					<p:column headerText="Fecha Fin" filterBy="#{b.bitaFechaFin}"
 						filterMatchMode="contains">
 						<h:outputText value="#{b.bitaFechaFin}">
-							<f:convertDateTime pattern="dd-MM-yyyy hh:mm:ss a" />
+							<f:convertDateTime pattern="dd-MM-yyyy hh:mm:ss a"
+								timeZone="GMT-6" />
 						</h:outputText>
 					</p:column>
 

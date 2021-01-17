@@ -18,14 +18,14 @@
 				<p:commandButton id="btn" value="Guardar" icon="fa fa-check"
 					styleClass="raised-btn" actionListener="#{pejeMB.onSave}"
 					update=":frmProgramaEje"
-					rendered="#{pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado ne 3}" />
+					rendered="#{pejeMB.registro.preEstado ne 3 and pejeMB.perEdit and pejeMB.status ne 'NEW'}" />
 			</div>
 
 			<div align="right" style="margin-top: 50px; float: right;">
 
 				<p:commandButton id="btnEnviar" action="#{pejeMB.prepararCorreo}"
 					oncomplete="PF('wvCorreo2').show();"
-					rendered="#{pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado eq 1}"
+					rendered="#{pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado eq 1 and pejeMB.perEnviar}"
 					title="Clic para enviar a revisión de la coordinación el programa de ejecución"
 					process="@this" value="Enviar a Revisión" icon="pi pi-check-circle"
 					style="float:left;" styleClass="blue-btn raised-btn"
@@ -37,14 +37,14 @@
 					actionListener="#{pejeMB.prepararCorreoObs}"
 					title="Clic para enviar las observaciones al auditor"
 					process="@this" value="Comunicar Observaciones"
-					rendered="#{pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado eq 2}"
+					rendered="#{pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado eq 2 and pejeMB.perAutorizar}"
 					icon="pi pi-check-circle" style="float:left;"
 					styleClass="blue-btn raised-btn" update=":frmCorreoObs2">
 				</p:commandButton>
 
 				<p:commandButton id="btnFin" oncomplete="PF('wvCorreoFin2').show();"
 					actionListener="#{pejeMB.prepararCorreoFin}"
-					rendered="#{pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado eq 2}"
+					rendered="#{pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado eq 2 and pejeMB.perAutorizar}"
 					title="Clic para finalizar la revisión" process="@this"
 					value="Finalizar Revisión" icon="pi pi-check-circle"
 					style="float:left;" styleClass="blue-btn raised-btn"
@@ -55,7 +55,7 @@
 					title="Importar programa de años anteriores" update=":frmProgramas"
 					oncomplete="PF('wvProgramas').show();" process="@this"
 					actionListener="#{pejeMB.buscarProgramas}"
-					rendered="#{pejeMB.status eq 'NEW'}"
+					rendered="#{pejeMB.status eq 'NEW' and pejeMB.perEdit}"
 					styleClass="green-btn raised-btn"></p:commandButton>
 
 				<p:commandButton value="Utilizar Programa" icon="pi pi-check"
@@ -67,8 +67,13 @@
 				</p:commandButton>
 
 				<p:commandButton value="Iniciar nuevo Programa"
-					icon="pi pi-plus-circle" rendered="#{pejeMB.status eq 'NEW'}"
-					styleClass="raised-btn" actionListener="#{pejeMB.iniciarPrograma}"></p:commandButton>
+					update=":frmProgramaEje" icon="pi pi-plus-circle"
+					rendered="#{pejeMB.status eq 'NEW' and pejeMB.perEdit}"
+					styleClass="raised-btn" actionListener="#{pejeMB.iniciarPrograma}">
+					<p:confirm header="Confirmación"
+						message="¿Esta seguro? No podrá reutilizar un programa si inicia uno nuevo"
+						icon="ui-icon-info"></p:confirm>
+				</p:commandButton>
 			</div>
 			<div class="name" align="center" style="margin-top: 100px;">
 
@@ -100,17 +105,20 @@
 								style="font-weight:bold;" />
 							<p:inputTextarea id="nombre" value="#{pejeMB.registro.preNombre}"
 								rows="2" required="true" maxlength="250"
+								readonly="#{pejeMB.status eq 'NEW' or (pejeMB.registro.preEstado ne 1) or !pejeMB.perEdit}"
 								requiredMessage="El nombre es requerido" />
 
 							<p:outputLabel for="objg" value="Objetivo General:"
 								style="font-weight:bold;" />
 							<p:inputTextarea id="objg" value="#{pejeMB.registro.preObjG}"
-								rows="2" maxlength="250" />
+								rows="2" maxlength="550"
+								readonly="#{pejeMB.status eq 'NEW' or (pejeMB.registro.preEstado ne 1) or !pejeMB.perEdit}" />
 
 							<p:outputLabel for="obje" value="Objetivos Especificos:"
 								style="font-weight:bold;" />
 							<p:inputTextarea id="obje" value="#{pejeMB.registro.preObjE}"
-								rows="4" maxlength="250" />
+								rows="4" maxlength="1000"
+								readonly="#{pejeMB.status eq 'NEW' or (pejeMB.registro.preEstado ne 1) or !pejeMB.perEdit}" />
 						</p:panelGrid>
 						<p:panelGrid columns="4"
 							columnClasses="ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4, ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4"
@@ -119,12 +127,15 @@
 
 							<p:outputLabel for="obje" value="Fecha de inicio:"
 								style="font-weight:bold;" />
-							<p:calendar mode="inline"
+							<p:calendar mode="inline" navigator="true" locale="es"
+								disabled="#{pejeMB.status eq 'NEW' or (pejeMB.registro.preEstado ne 1) or !pejeMB.perEdit}"
 								value="#{pejeMB.registro.preFechaInicio}"></p:calendar>
 
 							<p:outputLabel for="obje" value="Fecha de fin:"
 								style="font-weight:bold;" />
-							<p:calendar mode="inline" value="#{pejeMB.registro.preFechaFin}"></p:calendar>
+							<p:calendar mode="inline" value="#{pejeMB.registro.preFechaFin}"
+								disabled="#{pejeMB.status eq 'NEW' or (pejeMB.registro.preEstado ne 1) or !pejeMB.perEdit}"
+								navigator="true" locale="es"></p:calendar>
 						</p:panelGrid>
 						<p:panelGrid columns="2"
 							columnClasses="ui-g-9 ui-lg-10,ui-g-3 ui-md-4 ui-lg-2"
@@ -132,7 +143,7 @@
 							styleClass="ui-panelgrid-blank form-group form-elements">
 							<p:column></p:column>
 							<p:commandButton id="btn" value="Guardar" icon="fa fa-check"
-								rendered="#{pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado ne 3}"
+								rendered="#{pejeMB.registro.preEstado ne 3 and pejeMB.perEdit and pejeMB.status ne 'NEW'}"
 								actionListener="#{pejeMB.onSave}" update=":frmProgramaEje" />
 						</p:panelGrid>
 					</div>
@@ -160,14 +171,31 @@
 							<p:toolbar id="tMenu">
 								<p:toolbarGroup>
 									<p:commandButton value="Agregar" icon="pi pi-plus"
-										rendered="#{pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado ne 3}"
+										styleClass="raised-btn"
+										rendered="#{pejeMB.registro.preEstado ne 3 and pejeMB.perEdit and pejeMB.status ne 'NEW'}"
 										update=":frmProgramaEje, :frmProcedimientoEje"
 										actionListener="#{proejeMB.onNew}">
 									</p:commandButton>
 									<p:commandButton value="Editar" icon="pi pi-pencil"
+										styleClass="raised-btn"
 										update=":frmProgramaEje, :frmProcedimientoEje"
-										rendered="#{proejeMB.registro.selected and pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado ne 3}"
+										rendered="#{proejeMB.registro.selected and pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado ne 3 and pejeMB.registro.preEstado ne 3 and pejeMB.perEdit}"
 										actionListener="#{proejeMB.onEditSelected}">
+									</p:commandButton>
+									<p:commandButton value="Visualizar" icon="pi pi-eye"
+										styleClass="raised-btn"
+										update=":frmProgramaEje, :frmProcedimientoEje"
+										rendered="#{proejeMB.registro.selected}"
+										actionListener="#{proejeMB.onShowSelected}">
+									</p:commandButton>
+
+									<p:commandButton value="Eliminar" icon="pi pi-trash"
+										styleClass="raised-btn"
+										update=":frmProgramaEje, :frmProcedimientoEje"
+										rendered="#{proejeMB.registro.selected and pejeMB.status eq 'EDIT' and pejeMB.registro.preEstado eq 1 and pejeMB.perEdit}"
+										actionListener="#{proejeMB.onDelete}">
+										<p:confirm header="Confirmación"
+											message="¿Esta seguro que desea eliminar?" icon="pi pi-info"></p:confirm>
 									</p:commandButton>
 								</p:toolbarGroup>
 							</p:toolbar>
@@ -205,6 +233,7 @@
 
 				<p:tab title="Observaciones de la Coordinación">
 					<pe:ckEditor id="obs" width="100%" skin="office2013"
+						readonly="#{pejeMB.registro.preEstado ne 2 or !pejeMB.perEdit}"
 						customConfig="#{request.contextPath}/resources/js/customck.js"
 						value="#{pejeMB.registro.preObservaciones}" />
 				</p:tab>
@@ -257,8 +286,8 @@
 		</h:form>
 	</p:dialog>
 
-	<p:dialog widgetVar="wvCorreo2" modal="true" showEffect="fade" dynamic="true"
-		closable="true" closeOnEscape="true" responsive="true">
+	<p:dialog widgetVar="wvCorreo2" modal="true" showEffect="fade"
+		dynamic="true" closable="true" closeOnEscape="true" responsive="true">
 		<h:form id="frmCorreo2">
 			<p:commandButton id="btnEnviar" action="#{pejeMB.onEnviarRevision}"
 				title="Clic para enviar a revisión de la coordinación el programa de ejecución"

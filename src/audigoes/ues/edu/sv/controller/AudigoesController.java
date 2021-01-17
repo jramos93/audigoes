@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -36,6 +37,7 @@ public class AudigoesController {
 	public static final String REPORT_PATH = "/WEB-INF/reportes/";
 
 	private boolean rolAuditor;
+	private boolean rolCoordinadorAuditoria;
 	private boolean rolCoordinador;
 	private boolean rolJefe;
 	private boolean rolAuditado;
@@ -78,6 +80,7 @@ public class AudigoesController {
 
 	@PostConstruct
 	public void init() {
+		//System.out.println("init");
 		configBean();
 	}
 
@@ -143,7 +146,8 @@ public class AudigoesController {
 	}
 
 	public Date getToday() {
-		return Calendar.getInstance(Locale.getDefault()).getTime();
+		TimeZone timeZone = TimeZone.getTimeZone("UTC-6");
+		return Calendar.getInstance(timeZone).getTime();
 	}
 
 	/* Acciones al crear nuevo objeto */
@@ -363,6 +367,7 @@ public class AudigoesController {
 
 	public void onShowSelected() {
 		this.onRowSelect();
+		this.onShow();
 	}
 
 	public void onEditSelected() {
@@ -720,18 +725,37 @@ public class AudigoesController {
 		this.perSubir = perSubir;
 	}
 
+	public boolean isRolCoordinadorAuditoria() {
+		return rolCoordinadorAuditoria;
+	}
+
+	public void setRolCoordinadorAuditoria(boolean rolCoordinadorAuditoria) {
+		this.rolCoordinadorAuditoria = rolCoordinadorAuditoria;
+	}
+
 	protected void configBean() {
+		//System.out.println("controller");
 		if (getObjAppsSession() != null) {
-			setPerRoot(getObjAppsSession().isPermisoValido("ROOT"));
-			setRolAdministrador(getObjAppsSession().isPermisoValido("ROOT"));
-			setRolAuditor(getObjAppsSession().isPermisoValido("AUDITOR"));
-			setRolCoordinador(getObjAppsSession().isPermisoValido("COORDINADOR"));
-			setRolJefe(getObjAppsSession().isPermisoValido("JEFE"));
-			setRolAuditado(getObjAppsSession().isPermisoValido("AUDITADO"));
-			setRolAuditorExterno(getObjAppsSession().isPermisoValido("EXTERNO"));
+			setPerRoot(getObjAppsSession().isRolValido("ROOT"));
+			setRolAdministrador(getObjAppsSession().isRolValido("ROOT"));
+			setRolAuditor(getObjAppsSession().isRolValido("AUDITOR"));
+			setRolCoordinador(getObjAppsSession().isRolValido("COORDINADOR"));
+			setRolJefe(getObjAppsSession().isRolValido("JEFE"));
+			setRolAuditado(getObjAppsSession().isRolValido("AUDITADO"));
+			setRolAuditorExterno(getObjAppsSession().isRolValido("EXTERNO"));
+			setRolCoordinadorAuditoria(false);
+			
+			setPerEnviar(getObjAppsSession().isPermisoValido("ENVIAR"));
+			setPerAutorizar(getObjAppsSession().isPermisoValido("AUTORIZAR"));
+			setPerAprobar(getObjAppsSession().isPermisoValido("APROBAR"));
+			
+			//System.out.println(" Auditor: "+isRolAuditor());
+			//System.out.println(" Coordinador: "+isRolCoordinador());
+			//System.out.println(" Jefe: "+isRolJefe());
 		}
 
 		if (isPerRoot()) {
+			
 			setPerNew(true);
 			setPerEdit(true);
 			setPerRead(true);

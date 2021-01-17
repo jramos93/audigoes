@@ -30,7 +30,7 @@ public class BitacoraActividadMB extends AudigoesController implements Serializa
 	@PostConstruct
 	public void init() {
 		try {
-			super.init();
+			// super.init();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -88,20 +88,25 @@ public class BitacoraActividadMB extends AudigoesController implements Serializa
 	@SuppressWarnings("unchecked")
 	public void finalizarActividad(int correlativo, Auditoria auditoria, Usuario usuarioFin) {
 		try {
-			
 
 			setListado((List<BitacoraActividades>) audigoesLocal.findByNamedQuery(BitacoraActividades.class,
 					"actividad.by.correlativo", new Object[] { correlativo, auditoria.getAudId() }));
 
 			if (getListado() != null && !getListado().isEmpty()) {
-				setRegistro(getListado().get(0));
-				onEdit();
-				getRegistro().setUsuarioFin(usuarioFin);
-				getRegistro().setBitaFechaFin(getToday());
-				getRegistro().setUsuModi(getObjAppsSession().getUsuario().getUsuUsuario());
-				getRegistro().setFecModi(getToday());
+				for (BitacoraActividades b : getListado()) {
+					System.out.println(" - "+b.getBitaId());
+					setRegistro(b);
+					if (getRegistro().getBitaFechaFin() == null && getRegistro().getUsuarioFin() == null) {
+						onEdit();
+						System.out.println("id " + getRegistro().getBitaId());
+						getRegistro().setUsuarioFin(usuarioFin);
+						getRegistro().setBitaFechaFin(getToday());
+						getRegistro().setUsuModi(getObjAppsSession().getUsuario().getUsuUsuario());
+						getRegistro().setFecModi(getToday());
 
-				audigoesLocal.update(getRegistro());
+						audigoesLocal.update(getRegistro());
+					}
+				}
 
 			} else {
 				addWarn(new FacesMessage("Error no se encontrada actividad relacionada en la bitacora"));

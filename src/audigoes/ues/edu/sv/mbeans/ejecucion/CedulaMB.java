@@ -56,7 +56,7 @@ public class CedulaMB extends AudigoesController implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
-			super.init();
+			//super.init();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

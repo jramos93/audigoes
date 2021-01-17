@@ -30,7 +30,7 @@ public class AuditoriaUnidadMB extends AudigoesController implements Serializabl
 	@PostConstruct
 	public void init() {
 		try {
-			super.init();
+			//super.init();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

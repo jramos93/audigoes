@@ -16,8 +16,8 @@
 					update=":frmPrograma, :frmProcedimiento" process="@this">
 				</p:commandButton>
 				<p:commandButton value="Guardar" icon="fa fa-check"
-					styleClass="raised-btn" actionListener="#{proplaMB.onSave}"
-					update=":frmProcedimiento" />
+					rendered="#{proplaMB.status ne 'SHOW'}" styleClass="raised-btn"
+					actionListener="#{proplaMB.onSave}" update=":frmProcedimiento" />
 			</div>
 
 			<div align="right" style="margin-top: 50px; float: right;">
@@ -40,14 +40,15 @@
 							<p:outputLabel for="nombre" value="Nombre:"
 								style="font-weight:bold;" />
 							<p:inputTextarea id="nombre"
+								readonly="#{proplaMB.status eq 'SHOW' or pplaMB.registro.prpEstado ne 1}"
 								value="#{proplaMB.registro.proNombre}" rows="2" required="true"
 								maxlength="250" />
 
 							<p:outputLabel for="ref" value="Referencia:"
 								style="font-weight:bold;" />
-							<p:inputTextarea id="ref"
-								value="#{proplaMB.registro.proReferencia}" rows="2"
-								required="true" maxlength="250" />
+							<p:inputTextarea id="ref" readonly="#{proplaMB.status eq 'SHOW' or pplaMB.registro.prpEstado ne 1}"
+								value="#{proplaMB.registro.proReferencia}" rows="1"
+								maxlength="250" />
 						</p:panelGrid>
 						<p:panelGrid columns="4"
 							columnClasses="ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4, ui-g-12 ui-md-4 ui-lg-2, ui-g-12 ui-md-8 ui-lg-4"
@@ -55,11 +56,13 @@
 							styleClass="ui-panelgrid-blank form-group form-elements">
 
 							<p:outputLabel value="Fecha de inicio:" style="font-weight:bold;" />
-							<p:calendar mode="inline"
+							<p:calendar mode="inline" navigator="true"
+								disabled="#{proplaMB.status eq 'SHOW' or pplaMB.registro.prpEstado ne 1}" locale="es"
 								value="#{proplaMB.registro.proFechaInicio}"></p:calendar>
 
 							<p:outputLabel value="Fecha de fin:" style="font-weight:bold;" />
-							<p:calendar mode="inline"
+							<p:calendar mode="inline" navigator="true" locale="es"
+								disabled="#{proplaMB.status eq 'SHOW' or pplaMB.registro.prpEstado ne 1}"
 								value="#{proplaMB.registro.proFechaFin}"></p:calendar>
 						</p:panelGrid>
 
@@ -71,6 +74,7 @@
 							<p:outputLabel for="narra" value="Narrativa"
 								style="font-weight:bold;" />
 							<pe:ckEditor id="narra" width="100%" skin="office2013"
+								readonly="#{proplaMB.status eq 'SHOW' or pplaMB.registro.prpEstado ne 1}"
 								customConfig="#{request.contextPath}/resources/js/customck.js"
 								value="#{proplaMB.registro.proNarrativa}" />
 						</p:panelGrid>
@@ -79,10 +83,10 @@
 						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
 							styleClass="ui-panelgrid-blank form-group form-elements">
 							<h:outputText value="Subida de archivos:"></h:outputText>
-							<p:fileUpload listener="#{proplaMB.handleFileUpload}"
+							<p:fileUpload listener="#{proplaMB.handleFileUpload}" 
 								multiple="true" mode="advanced" dragDropSupport="false"
 								cancelLabel="Cancelar" uploadLabel="Subir" label="Elegir"
-								disabled="#{proplaMB.status eq 'NEW'}"
+								disabled="#{proplaMB.status eq 'NEW' or proplaMB.status eq 'SHOW' or pplaMB.registro.prpEstado ne 1}"
 								update=":frmProcedimiento:tview:dtArchivos"
 								allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
 						</p:panelGrid>
@@ -105,6 +109,7 @@
 
 							<p:column headerText="Eliminar" style="width:60px;">
 								<p:commandButton actionListener="#{arcMB.onBorrar(a)}"
+									disabled="#{proplaMB.status eq 'SHOW' or pplaMB.registro.prpEstado ne 1}"
 									update=":frmProcedimiento:tview:dtArchivos" icon="pi pi-trash"
 									title="Clic para eliminar el archivo">
 									<p:confirm header="Confirmación" message="¿Eliminar?"
@@ -115,8 +120,9 @@
 						</p:dataTable>
 					</p:tab>
 
-					<p:tab title="Observaciones">
+					<p:tab title="Observaciones de la Coordinación">
 						<pe:ckEditor id="obs" width="100%"
+							readonly="#{proplaMB.rolAuditor and proplaMB.status eq 'SHOW'}"
 							value="#{proplaMB.registro.proObservaciones}" />
 					</p:tab>
 				</p:tabView>
@@ -127,6 +133,7 @@
 					styleClass="ui-panelgrid-blank form-group form-elements">
 					<p:column></p:column>
 					<p:commandButton value="Guardar" icon="fa fa-check"
+						rendered="#{proplaMB.status ne 'SHOW'}"
 						actionListener="#{proplaMB.onSave}" update=":frmProcedimiento" />
 				</p:panelGrid>
 			</div>

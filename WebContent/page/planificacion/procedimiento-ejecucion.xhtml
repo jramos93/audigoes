@@ -9,7 +9,7 @@
 	<h:form id="frmProcedimientoEje">
 		<p:panel rendered="#{proejeMB.status ne 'SEARCH'}">
 
-			<div align="left" style="margin-top: 50px;">
+			<div align="left" style="margin-top: 50px; float:left;">
 				<p:commandButton id="btnCancel" action="#{proejeMB.onCancel}"
 					value="Regresar" icon="pi pi-arrow-left" style="float:left;"
 					styleClass="pink-btn raised-btn"
@@ -17,10 +17,10 @@
 				</p:commandButton>
 
 				<p:commandButton value="Guardar" icon="fa fa-check"
-					styleClass="raised-btn" actionListener="#{proejeMB.onSave}"
-					update=":frmProcedimientoEje" />
+					rendered="#{proejeMB.status ne 'SHOW'}" styleClass="raised-btn"
+					actionListener="#{proejeMB.onSave}" update=":frmProcedimientoEje" />
 			</div>
-			<div class="name" align="center" style="margin-top: 50px;">
+			<div class="name" align="center" style="margin-top: 100px;">
 				<span class="app-name">Procedimiento de Ejecución </span>
 			</div>
 			<div class="ui-fluid p-formgrid p-grid">
@@ -32,17 +32,20 @@
 							<p:outputLabel for="nombre" value="Nombre:"
 								style="font-weight:bold;" />
 							<p:inputTextarea id="nombre"
+								readonly="#{proejeMB.status eq 'SHOW' or pejeMB.registro.preEstado ne 1}"
 								value="#{proejeMB.registro.pejNombre}" rows="2" required="true"
 								maxlength="250" />
 
 							<p:outputLabel for="ref" value="Referencia:"
 								style="font-weight:bold;" />
 							<p:inputText id="ref" value="#{proejeMB.registro.pejReferencia}"
+								readonly="#{proejeMB.status eq 'SHOW' or pejeMB.registro.preEstado ne 1}"
 								required="true" />
 
 							<p:outputLabel for="des" value="Descripción:"
 								style="font-weight:bold;" />
 							<p:inputTextarea id="des"
+								readonly="#{proejeMB.status eq 'SHOW' or pejeMB.registro.preEstado ne 1}"
 								value="#{proejeMB.registro.pejDescripcion}" rows="2"
 								required="true" maxlength="250" />
 						</p:panelGrid>
@@ -50,6 +53,7 @@
 					</p:tab>
 					<p:tab title="Observaciones">
 						<pe:ckEditor id="obs" width="100%" skin="office2013"
+							readonly="#{proejeMB.rolAuditor and proejeMB.status eq 'SHOW'}"
 							customConfig="#{request.contextPath}/resources/js/customck.js"
 							value="#{proejeMB.registro.pejObservaciones}" />
 					</p:tab>
@@ -61,6 +65,7 @@
 					styleClass="ui-panelgrid-blank form-group form-elements">
 					<p:column></p:column>
 					<p:commandButton value="Guardar" icon="fa fa-check"
+						rendered="#{proejeMB.status ne 'SHOW'}"
 						actionListener="#{proejeMB.onSave}" update=":frmProcedimientoEje" />
 				</p:panelGrid>
 			</div>
