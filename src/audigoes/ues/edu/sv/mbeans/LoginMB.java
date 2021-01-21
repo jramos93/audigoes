@@ -52,6 +52,7 @@ public class LoginMB extends SecurityController implements Serializable{
 		        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
 		        if (session != null) {
 		            session.invalidate(); //Cierre de sesion
+		            session=(HttpSession) facesContext.getExternalContext().getSession(true);
 		        }
 		        return "/inicio.xhtml?faces-redirect=true";// indicas a donde quieres direccionar después de cerrar sesión 
 		    }

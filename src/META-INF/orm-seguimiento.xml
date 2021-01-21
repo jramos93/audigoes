@@ -18,4 +18,7 @@
 	<named-query name="hallazgos.by.auditoria">
 		<query>select o from CedulaNota o where o.auditoria.audId = ?1 and o.regActivo = 1</query>
 	</named-query>
+	<named-query name="seguimiento.recomendaciones.seguimiento.selected">
+		<query>select o from Recomendacion o where o.auditoria.audId = ?1 and o.regActivo = 1</query>
+	</named-query>
 </entity-mappings>

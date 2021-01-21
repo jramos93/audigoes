@@ -14,6 +14,7 @@ import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.seguimiento.Recomendacion;
+import audigoes.ues.edu.sv.entities.seguimiento.Seguimiento;
 
 @ManagedBean(name = "recMB")
 @ViewScoped
@@ -27,6 +28,7 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 
 	private Auditoria auditoria;
 	private CedulaNota cedula;
+	private Seguimiento seguimiento;
 
 	@ManagedProperty(value = "#{comMB}")
 	private ComentarioMB comMB = new ComentarioMB();
@@ -38,7 +40,9 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 	@PostConstruct
 	public void init() {
 		try {
+			configBean();
 			super.init();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -49,7 +53,6 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 		try {
 			setListado((List<Recomendacion>) audigoesLocal.findByNamedQuery(Recomendacion.class,
 					"recomendacion.get.all.auditoria", new Object[] { getAuditoria().getAudId() }));
-			System.out.println(getListado().size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -71,6 +74,16 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 		comMB.setRecomendacion(getRegistro());
 		comMB.obtenerComentario();
 	}
+	
+	public void onSaveComentario() {
+		comMB.onSave();
+		System.out.println(getRegistro().getSeguimiento());
+		onEdit();
+		System.out.println(getStatus());
+		getRegistro().setSeguimiento(getSeguimiento());
+		System.out.println(getRegistro().getSeguimiento());
+		onSave();
+	}
 
 	public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
 		String filterText = (filter == null) ? null : filter.toString().trim().toLowerCase();
@@ -81,14 +94,6 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 		Recomendacion rec = (Recomendacion) value;
 		return rec.getRecRecomendacion().toLowerCase().contains(filterText)
 				|| rec.getRecTitulo().toLowerCase().contains(filterText);
-	}
-
-	private int getInteger(String string) {
-		try {
-			return Integer.valueOf(string);
-		} catch (NumberFormatException ex) {
-			return 0;
-		}
 	}
 
 	@Override
@@ -153,6 +158,14 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 
 	public void setCedula(CedulaNota cedula) {
 		this.cedula = cedula;
+	}
+
+	public Seguimiento getSeguimiento() {
+		return seguimiento;
+	}
+
+	public void setSeguimiento(Seguimiento seguimiento) {
+		this.seguimiento = seguimiento;
 	}
 
 }

@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<h:form id="frmRecomendacionesComentarios">
+		<p:panel rendered="#{comMB.status eq 'RECOMENDACIONES_SEGUIMIENTO'}">
+			
+			<div class="ui-fluid p-formgrid p-grid">
+				<p:dataTable id="dtRecomSegSelected" var="recSeg">
+				</p:dataTable>
+			</div>
+			<div class="ui-fluid p-formgrid p-grid">
+				<p:tabView id="tvRecomendacionesComentarios">
+					<p:tab title="Comentarios de Unidad(es) Auditada(s)">
+						<pe:ckEditor id="comentarioAuditadoSeguimiento" width="100%"
+								value="#{segMB.comentarioRecomendacion.comComentario}" />
+					</p:tab>
+					<p:tab title="Comentarios de Auditoría">
+						<pe:ckEditor id="comentarioAuditariaSeguimiento" width="100%"
+								value="#{segMB.comentarioRecomendacion.comComentarioAuditoria}" />
+					</p:tab>
+				</p:tabView>
+			</div>
+		</p:panel>
+	</h:form>
+
+</ui:composition>

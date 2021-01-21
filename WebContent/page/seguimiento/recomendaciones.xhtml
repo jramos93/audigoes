@@ -2,7 +2,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 
 	<h:form id="frmSeguimiento">
 		<p:panel rendered="#{comMB.status eq 'SEARCH'}">
@@ -17,6 +18,7 @@
 				<span class="app-name">Seguimiento Recomendaciones de
 					Auditoría </span>
 			</div>
+
 			<div class="ui-fluid p-formgrid p-grid">
 				<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
 					styleClass="ui-panelgrid-blank form-group form-elements">
@@ -26,140 +28,173 @@
 					<p:inputTextarea id="audSeg" value="#{segMB.auditoria.audNombre}"
 						rows="2" readonly="true" />
 
+					<p:outputLabel for="fechainicio" value="Fecha inicio seguimiento:"
+						style="font-weight:bold;" />
+					<p:outputLabel id="fechainicio"
+						value="#{segMB.registro.segFecInicio}" />
+
+					<p:outputLabel for="fechafin" value="Fecha fin:"
+						style="font-weight:bold;" />
+					<p:outputLabel id="fechafin" value="#{segMB.registro.segFecFin}" />
+
 				</p:panelGrid>
 			</div>
 			<div class="ui-fluid p-formgrid p-grid">
-				<p:dataTable var="seg" value="#{segMB.listado}"
-					rowIndexVar="indexSeguimiento" widgetVar="wvSeguimientos"
-					reflow="true" id="dtSeguimientos" style="margin-top:20px;"
-					paginator="true" filteredValue="#{segMB.filteredSeguimientos}"
-					selection="#{segMB.regSelected}" selectionMode="single"
-					paginatorPosition="bottom" rowsPerPageTemplate="1,5,10,15" rows="5"
-					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
-					rowKey="#{seg.segId}">
-					<p:column headerText="N°">
-						<h:outputText value="#{indexSeguimiento+1}" />
-					</p:column>
-					<p:column headerText="Fecha Inicio">
-						<h:outputText value="#{seg.segFecInicio}">
-							<f:convertDateTime pattern="dd-MM-yyyy" />
-						</h:outputText>
-					</p:column>
-					<p:column headerText="Fecha Fin">
-						<h:outputText value="#{seg.segFecFin}" >
-							<f:convertDateTime pattern="dd-MM-yyyy" />
-						</h:outputText>
-					</p:column>
-				</p:dataTable>
+				<p:tabView id="tvSeguimientoAuditoria">
+					<p:tab title="Seguimiento">
+						<div class="ui-fluid p-formgrid p-grid">
+							<p:separator />
+							<div class="name" align="center">
+								<span class="app-name">Auditor Asignado</span>
+							</div>
+
+							<p:panelGrid columnClasses="ui-lg-1,ui-lg-1,ui-lg-1,ui-lg-1"
+								styleClass="ui-panelgrid-blank form-group form-elements">
+								<p:row>
+									<p:column>
+										<p:graphicImage value="/resources/images/logo_usuario.png"
+											style="height:125px;">
+										</p:graphicImage>
+									</p:column>
+									<p:column style="text-align:center;">
+										<p:outputLabel style="font-size:2em;"
+											value="#{segMB.coordinador.usuNombre} #{segMB.coordinador.usuApellido}" />
+									</p:column>
+									<p:column rendered="false">
+										<p:commandButton value="Cambiar Auditor Asignado"
+											icon="pi pi-pencil" update="@form">
+										</p:commandButton>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column>
+										<p:outputLabel value="Indicaciones generales para el auditor"></p:outputLabel>
+									</p:column>
+
+									<p:column colspan="2">
+										<p:inputTextarea id="indicaciones"
+											value="#{segMB.registro.segObservacion}" rows="4" cols="300">
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+
+						</div>
+						<p:panelGrid style="width:100%"
+							styleClass="ui-panelgrid-blank form-group form-elements">
+							<p:row style="text-align:center;">
+								<p:column>
+									<p:commandButton id="btnNotificarSeguimiento"
+										oncomplete="PF('wvCorreo').show();"
+										actionListener="#{segMB.prepararCorreo}"
+										value="Notificar Seguimiento" styleClass="blue-btn"
+										title="Clic para enviar la notificacion" process="@form"
+										icon="pi pi-check-circle" style="float:Righ;"
+										rendered="#{segMB.registro.segFecInicio != null and segMB.registro.segFecFin == null}" />
+								</p:column>
+								<p:column>
+									<p:commandButton id="btnIniciarSeguimiento"
+										value="Iniciar Seguimiento" styleClass="blue-btn"
+										actionListener="#{segMB.iniciarSeguimiento}" update="@form"
+										rendered="#{segMB.registro.segFecInicio == null}" />
+									<p:commandButton id="btnFinalizarSeguimiento"
+										value="Finalizar Seguimiento"
+										actionListener="#{segMB.finalizarSeguimiento}" update="@form"
+										rendered="#{segMB.registro.segFecInicio != null and segMB.registro.segFecFin == null}">
+									</p:commandButton>
+								</p:column>
+								<p:column>
+									<p:commandButton id="btnGuardarSeguimiento"
+										value="Guardar Seguimiento" icon="fa fa-check"
+										actionListener="#{segMB.onSave}" styleClass="green-btn"
+										rendered="#{segMB.registro.segFecFin == null}" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+						<p:dataTable var="recm" value="#{recMB.listado}"
+							expandedRow="single" expandableRowGroups="true"
+							sortBy="#{recm.cedulaNota.cedTitulo}"
+							widgetVar="wvRecomendaciones" id="dtRecomendacion"
+							style="margin-top:20px;" paginator="true" rowKey="#{recm.recId}"
+							selection="#{recMB.regSelected}" selectionMode="single"
+							paginatorPosition="bottom" rowsPerPageTemplate="5,10,15" rows="5"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+							<p:ajax event="rowSelect" listener="#{recMB.onRowSelect}"
+								update="dtRecomendacion:tMenuRecomendaciones" />
+							<f:facet name="header"> Listado de Hallazgos y Recomendaciones
+								<p:toolbar id="tMenuRecomendaciones">
+									<p:toolbarGroup>
+										<p:commandButton id="btnComentarios" value="Comentarios"
+											icon="pi pi-plus"
+											rendered="#{recMB.registro.selected and segMB.registro.segFecInicio != null}"
+											action="#{segMB.mostrarComentarios}"
+											update="@form :frmComentarios" styleClass="raised-btn"
+											process="@this">
+										</p:commandButton>
+									</p:toolbarGroup>
+								</p:toolbar>
+							</f:facet>
+							<p:headerRow>
+								<p:column colspan="2">
+									<h:outputText value="Hallazgo: #{recm.cedulaNota.cedTitulo}"></h:outputText>
+								</p:column>
+							</p:headerRow>
+							<p:column headerText="Titulo Recomendación">
+								<h:outputText value="#{recm.recTitulo}"></h:outputText>
+							</p:column>
+							<p:column headerText="Situación Encontrada">
+								<h:outputText value="#{recm.recSituacion}"></h:outputText>
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+					<p:tab title="Historial Seguimiento">
+						<p:dataTable var="seg" value="#{segMB.listado}"
+							rowIndexVar="indexSeguimiento" widgetVar="wvSeguimientos"
+							reflow="true" id="dtSeguimientos" style="margin-top:20px;"
+							paginator="true" selectionMode="single" rows="5"
+							selection="#{segMB.seguimientoSelected}"
+							paginatorPosition="bottom" rowsPerPageTemplate="5,10,15"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+							rowKey="#{seg.segId}">
+							<p:ajax event="rowSelect"
+								update="dtSeguimientos:tMenuSeguimientos"
+								listener="#{segMB.onRowSeguimientoSelected}" />
+							<f:facet name="header">
+								<p:toolbar id="tMenuSeguimientos">
+									<p:toolbarGroup>
+										<p:commandButton id="btnRecSeguimiento"
+											value="Recomendaciones y Comentarios" icon="pi pi-plus"
+											rendered="#{segMB.seguimientoSelected.selected}"
+											action="#{segMB.obtenerRecomendacionesSeguimiento()}"
+											update="@form :frmRecomendacionesComentarios"
+											styleClass="raised-btn" process="@this">
+										</p:commandButton>
+									</p:toolbarGroup>
+								</p:toolbar>
+							</f:facet>
+							<p:column headerText="N°" width="60" style="text-align:center;">
+								<h:outputText value="#{indexSeguimiento+1}" />
+							</p:column>
+							<p:column headerText="Fecha Inicio">
+								<h:outputText value="#{seg.segFecInicio}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Fecha Fin">
+								<h:outputText value="#{seg.segFecFin}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+				</p:tabView>
 			</div>
 
-			<div class="ui-fluid p-formgrid p-grid">
-				<p:dataTable var="recm" value="#{recMB.listado}"
-					expandableRowGroups="true" sortBy="#{recm.cedulaNota.cedTitulo}"
-					widgetVar="wvRecomendaciones"  id="dtRecomendacion"
-					style="margin-top:20px;" paginator="true"
-					rowKey="#{recm.recId}" selection="#{recMB.regSelected}"
-					selectionMode="single" paginatorPosition="top"
-					rowsPerPageTemplate="5,10,15" rows="5"
-					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
-					<p:ajax event="rowSelect" listener="#{recMB.onRowSelect}"
-						update="dtRecomendacion:tMenuRecomendaciones" />
-					<f:facet name="header"> Recomendaciones
-						<p:toolbar id="tMenuRecomendaciones">
-							<p:toolbarGroup>
-								<p:commandButton id="btnComentarios2" value="Comentarios"
-									icon="pi pi-plus" rendered="#{recMB.registro.selected}"
-									action="#{recMB.mostrarComentarios}"
-									update="@form :frmComentarios" styleClass="raised-btn"
-									actionListener="#{segMB.mostrarComentarios}" process="@this">
-								</p:commandButton>
-							</p:toolbarGroup>
-						</p:toolbar>
-					</f:facet>
-					<p:headerRow>
-						<p:column colspan="2">
-							<h:outputText value="Hallazgo: #{recm.cedulaNota.cedTitulo}"></h:outputText>
-						</p:column>
-					</p:headerRow>
-					<p:column headerText="Titulo Recomendación">
-						<h:outputText value="#{recm.recTitulo}"></h:outputText>
-					</p:column>
-					<p:column headerText="Situación Encontrada">
-						<h:outputText value="#{recm.recSituacion}"></h:outputText>
-					</p:column>
-				</p:dataTable>
-			</div>
+			<div class="ui-fluid p-formgrid p-grid"></div>
 
-			<div class="ui-fluid p-formgrid p-grid">
-				<p:separator />
-				<div class="name" align="center">
-					<span class="app-name">Auditor Asignado</span>
-				</div>
 
-				<p:panelGrid columnClasses="ui-lg-1,ui-lg-1,ui-lg-1,ui-lg-1"
-					styleClass="ui-panelgrid-blank form-group form-elements">
-					<p:row>
-						<p:column>
-							<p:graphicImage value="/resources/images/logo_usuario.png"
-								style="height:200px;">
-							</p:graphicImage>
-						</p:column>
-						<p:column style="text-align:center;">
-							<p:outputLabel style="font-size:2em;"
-								value="#{segMB.coordinador.usuNombre} #{segMB.coordinador.usuApellido}" />
-						</p:column>
-						<p:column rendered="false">
-							<p:commandButton value="Cambiar Auditor Asignado"
-								icon="pi pi-pencil" update="@form">
-							</p:commandButton>
-						</p:column>
-					</p:row>
-					<p:row>
-						<p:column>
-							<p:outputLabel value="Indicaciones generales para el auditor"></p:outputLabel>
-						</p:column>
-
-						<p:column colspan="2">
-							<p:inputTextarea id="indicaciones"
-								value="#{segMB.registro.segObservacion}" rows="4" cols="300">
-							</p:inputTextarea>
-						</p:column>
-					</p:row>
-				</p:panelGrid>
-				<p:panelGrid style="width:100%"
-					styleClass="ui-panelgrid-blank form-group form-elements">
-					<p:row style="text-align:center;">
-						<p:column>
-							<p:commandButton id="btnNotificarSeguimiento"
-								oncomplete="PF('wvCorreo').show();"
-								actionListener="#{segMB.prepararCorreo}"
-								value="Notificar Seguimiento"
-								title="Clic para enviar la notificacion" process="@form"
-								icon="pi pi-check-circle" style="float:Righ;"
-								rendered="#{segMB.registro.segFecInicio != null and segMB.registro.segFecFin == null}" />
-						</p:column>
-						<p:column>
-							<p:commandButton id="btnIniciarSeguimiento"
-								value="Iniciar Seguimiento"
-								actionListener="#{segMB.iniciarSeguimiento}" update="@form"
-								rendered="#{segMB.registro.segFecInicio == null}" />
-							<p:commandButton id="btnFinalizarSeguimiento"
-								value="Finalizar Seguimiento"
-								actionListener="#{segMB.finalizarSeguimiento}" update="@form"
-								rendered="#{segMB.registro.segFecInicio != null and segMB.registro.segFecFin == null}">
-							</p:commandButton>
-						</p:column>
-						<p:column>
-							<p:commandButton id="btnGuardarSeguimiento"
-								value="Guardar Seguimiento" icon="fa fa-check"
-								actionListener="#{segMB.onSave}"
-								rendered="#{segMB.registro.segFecFin == null}" />
-						</p:column>
-					</p:row>
-				</p:panelGrid>
-			</div>
 		</p:panel>
 	</h:form>
 

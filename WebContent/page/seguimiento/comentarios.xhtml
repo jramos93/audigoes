@@ -39,16 +39,16 @@
 			</div>
 			<div class="ui-fluid p-formgrid p-grid">
 				<p:tabView id="tvComentarios">
-					<p:tab title="Comentarios de Unidad(es) Auditada(s)">
+					<p:tab title="Comentarios de Unidad(es) Auditada(s)" >
 						<pe:ckEditor id="comentarioAuditado" width="100%"
-								value="#{comMB.registro.comComentario}" />
+								value="#{comMB.registro.comComentario}" readonly="#{!comMB.rolAuditor}"/>
 					</p:tab>
 					<p:tab title="Comentarios de Auditoría">
-						<pe:ckEditor id="comentarioAuditaria" width="100%"
+						<pe:ckEditor id="comentarioAuditaria" width="100%" readonly="#{!comMB.rolAuditado}"
 								value="#{comMB.registro.comComentarioAuditoria}" />
 					</p:tab>
 				</p:tabView>
-				<p:commandButton id="btnGuardarBottom" action="#{comMB.onSave}"
+				<p:commandButton id="btnGuardarBottom" action="#{recMB.onSaveComentario}"
 					value="Guardar" update="@form :frmSeguimiento" process="@this @form" />
 			</div>
 		</p:panel>

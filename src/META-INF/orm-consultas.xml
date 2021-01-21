@@ -47,20 +47,22 @@
 		name="consulta.stat.auditoria.estado"
 		result-class="audigoes.ues.edu.sv.entities.vistas.StatsAuditoriaEstado">
 		<query>
-				select TOTAL,
-				sum(case when fase = "PROGRAMADA" then sub else 0 end) as "PROGRAMADA",
-				sum(case when fase = "PLANIFICACION" then sub else 0 end) as "PLANIFICACION",
-				sum(case when fase = "EJECUCION" then sub else 0 end) as "EJECUCION",
-				sum(case when fase = "INFORME" then sub else 0 end) as  "INFORME",
-				sum(case when fase = "SEGUIMIENTO" then sub else 0 end) as "SEGUIMIENTO",
-				sum(case when fase = "FINALIZADA" then sub else 0 end) as "FINALIZADA"
+				select "TOTAL",
+				if(isnull(sum(case when fase = "PROGRAMADA" then sub else 0 end)) = 1, 0, sum(case when fase = "PROGRAMADA" then sub else 0 end) ) as "PROGRAMADA",
+				if(isnull(sum(case when fase = "ASIGNADA" then sub else 0 end)) = 1, 0, sum(case when fase = "ASIGNADA" then sub else 0 end) ) as "ASIGNADA",
+				if(isnull(sum(case when fase = "PLANIFICACION" then sub else 0 end)) = 1, 0, sum(case when fase = "PLANIFICACION" then sub else 0 end))  as "PLANIFICACION",
+				if(isnull(sum(case when fase = "EJECUCION" then sub else 0 end)) = 1, 0, sum(case when fase = "EJECUCION" then sub else 0 end)) as "EJECUCION",
+				if(isnull(sum(case when fase = "INFORME" then sub else 0 end)) = 1, 0, sum(case when fase = "INFORME" then sub else 0 end)) as  "INFORME",
+				if(isnull(sum(case when fase = "SEGUIMIENTO" then sub else 0 end)) = 1, 0, sum(case when fase = "SEGUIMIENTO" then sub else 0 end)) as "SEGUIMIENTO",
+				if(isnull(sum(case when fase = "FINALIZADA" then sub else 0 end)) = 1, 0, sum(case when fase = "FINALIZADA" then sub else 0 end)) as "FINALIZADA"
 				from (
 				select "TOTAL", case when aud_fase = 0 then "PROGRAMADA"
-				when aud_fase = 1 then "PLANIFICACION"
-				when aud_fase = 2 then "EJECUCION" 
-				when aud_fase = 3 then "INFORME"
-				when aud_fase = 4 then "SEGUIMIENTO"
-				when aud_fase = 5 then "FINALIZADA"
+				when aud_fase = 1 then "ASIGNADA"
+				when aud_fase = 2 then "PLANIFICACION"
+				when aud_fase = 3 then "EJECUCION" 
+				when aud_fase = 4 then "INFORME"
+				when aud_fase = 5 then "SEGUIMIENTO"
+				when aud_fase = 6 then "FINALIZADA"
 				end as fase, count(aud_id) sub
 				from auditoria  a 
 				inner join plan_anual b on a.aud_pla_id = b.pla_id
@@ -72,13 +74,13 @@
 		name="consulta.cantidad.hallazgos.estado"
 		result-class="audigoes.ues.edu.sv.entities.vistas.StatsHallazgoEstado">
 		<query>
-			select TOTAL,
-				sum(case when estado = "REDACCION" then sub else 0 end) as "REDACCION",
-				sum(case when estado = "REVISION" then sub else 0 end) as "REVISION",
-				sum(case when estado = "COMUNICAR" then sub else 0 end) as "COMUNICAR",
-				sum(case when estado = "COMUNICADO" then sub else 0 end) as  "COMUNICADO",
-				sum(case when estado = "ANALISIS" then sub else 0 end) as "ANALISIS",
-				sum(case when estado = "FINALIZADO" then sub else 0 end) as "FINALIZADO"
+			select "TOTAL",
+				if(isnull(sum(case when estado = "REDACCION" then sub else 0 end)) = 1, 0, sum(case when estado = "REDACCION" then sub else 0 end)) as "REDACCION",
+				if(isnull(sum(case when estado = "REVISION" then sub else 0 end)) = 1, 0, sum(case when estado = "REVISION" then sub else 0 end)) as "REVISION",
+				if(isnull(sum(case when estado = "COMUNICAR" then sub else 0 end)) = 1, 0, sum(case when estado = "COMUNICAR" then sub else 0 end)) as "COMUNICAR",
+				if(isnull(sum(case when estado = "COMUNICADO" then sub else 0 end)) = 1, 0, sum(case when estado = "COMUNICADO" then sub else 0 end)) as  "COMUNICADO",
+				if(isnull(sum(case when estado = "ANALISIS" then sub else 0 end)) = 1, 0, sum(case when estado = "ANALISIS" then sub else 0 end)) as "ANALISIS",
+				if(isnull(sum(case when estado = "FINALIZADO" then sub else 0 end)) = 1, 0, sum(case when estado = "FINALIZADO" then sub else 0 end)) as "FINALIZADO"
 				from (
 				SELECT "TOTAL",
         			(CASE
@@ -114,7 +116,36 @@
 			 from auditoria a 
 			 inner join plan_anual b on a.aud_pla_id = b.pla_id
 			 inner join institucion c on b.pla_ins_id = ins_id
-			 where ins_id = ?1
+			 where ins_id = ?1 and a.reg_activo = 1 and aud_fecha_inicio_programado between ?2 and ?3
+		</query>
+	</named-native-query>
+	<named-native-query name="consulta.tiempo.planificado.vs.ejecutado"
+		result-class="audigoes.ues.edu.sv.entities.vistas.TiempoPlanificadoVsTiempoEjecutado">
+		<query>
+			select aud_id, ins_id, ins_nombre, aud_codigo, aud_nombre, 
+			timestampdiff(day, aud_fecha_inicio_programado, aud_fecha_fin_programado) tiempo_programado,
+			timestampdiff(day, aud_fecha_inicio_programado, now()) tiempo_ejecutado
+			from auditoria a 
+			inner join plan_anual b on a.aud_pla_id = b.pla_id
+			inner join institucion c on b.pla_ins_id = ins_id
+			where ins_id = ?1 and a.reg_activo = 1 and a.aud_fecha_inicio_programado between ?2 and ?3
+		</query>
+	</named-native-query>
+	<named-native-query name="consulta.duracion.auditorias.horas"
+		result-class="audigoes.ues.edu.sv.entities.vistas.DuracionAuditorias">
+		<query>
+			select aud_id, aud_codigo, if(isnull(timestampdiff(hour, aud_fecha_inicio_programado, now())) = 1, 0 , timestampdiff(hour, aud_fecha_inicio_programado, now())) tiempo_ejecutado 
+			from auditoria a
+			inner join plan_anual b on a.aud_pla_id = b.pla_id
+			where a.reg_activo = 1 and b.pla_ins_id = ?1 and aud_fase not in ( ?2 ) and aud_fecha_inicio_programado 
+			between ?3 and ?4
+			union
+			select aud_id, aud_codigo, if(isnull(timestampdiff(hour, aud_fecha_inicio_programado, aud_fecha_finalizada)) = 1, 0 , timestampdiff(hour, aud_fecha_inicio_programado, aud_fecha_finalizada)) tiempo_ejecutado  
+			from auditoria a 
+			inner join plan_anual b on a.aud_pla_id = b.pla_id
+			where a.reg_activo = 1 and b.pla_ins_id = ?5 and aud_fase = ?6 and aud_fecha_inicio_programado and aud_fecha_inicio_programado 
+			between ?7 and ?8 
+			order by aud_id
 		</query>
 	</named-native-query>
 </entity-mappings>

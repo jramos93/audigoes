@@ -12,9 +12,9 @@ import java.math.BigInteger;
 @Entity
 @SqlResultSetMapping(name = "StatsAuditoriaEstado", entities = {@EntityResult(entityClass = StatsAuditoriaEstado.class, fields = {
 		@FieldResult(name = "total", column = "TOTAL"), @FieldResult(name = "programada", column = "PROGRAMADA"),
-		@FieldResult(name = "planificacion", column = "PLANIFICACION"), @FieldResult(name = "ejecucion", column = "EJECUCION"),
-		@FieldResult(name = "informe", column = "INFORME"), @FieldResult(name = "seguimiento", column = "SEGUIMIENTO"),
-		@FieldResult(name = "finalizada", column = "FINALIZADA")
+		@FieldResult(name = "asignada", column = "ASIGNADA"), @FieldResult(name = "planificacion", column = "PLANIFICACION"), 
+		@FieldResult(name = "ejecucion", column = "EJECUCION"), @FieldResult(name = "informe", column = "INFORME"), 
+		@FieldResult(name = "seguimiento", column = "SEGUIMIENTO"), @FieldResult(name = "finalizada", column = "FINALIZADA")
 })})
 public class StatsAuditoriaEstado implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -25,6 +25,9 @@ public class StatsAuditoriaEstado implements Serializable {
 
 	@Column(name="programada")
 	private BigInteger programada;
+	
+	@Column(name="asignada")
+	private BigInteger asignada;
 	
 	@Column(name="planificacion")
 	private BigInteger planificacion;
@@ -58,6 +61,14 @@ public class StatsAuditoriaEstado implements Serializable {
 
 	public void setProgramada(BigInteger programada) {
 		this.programada = programada;
+	}
+
+	public BigInteger getAsignada() {
+		return asignada;
+	}
+
+	public void setAsignada(BigInteger asignada) {
+		this.asignada = asignada;
 	}
 
 	public BigInteger getPlanificacion() {

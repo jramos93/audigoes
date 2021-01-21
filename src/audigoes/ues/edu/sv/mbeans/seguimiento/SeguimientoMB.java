@@ -16,6 +16,8 @@ import javax.mail.Address;
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
+import audigoes.ues.edu.sv.entities.seguimiento.Comentario;
+import audigoes.ues.edu.sv.entities.seguimiento.Recomendacion;
 import audigoes.ues.edu.sv.entities.seguimiento.Seguimiento;
 import audigoes.ues.edu.sv.util.SendMailAttach;
 
@@ -33,6 +35,9 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 
 	private List<Seguimiento> filteredSeguimientos;
 	
+	private Seguimiento seguimientoSelected;
+	private List<Recomendacion> recomendacionesSeguimientoList;
+	private Comentario comentarioRecomendacion;
 
 	@ManagedProperty(value = "#{recMB}")
 	private RecomendacionMB recMB = new RecomendacionMB();
@@ -44,6 +49,7 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
+			configBean();
 			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 			setAuditoria((Auditoria) sessionMap.get("auditoria"));
 
@@ -104,9 +110,31 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 			e.printStackTrace();
 		}
 	}
+	
+	public void onRowSeguimientoSelected() {
+		seguimientoSelected.setSelected(true);
+	}
 
+	@SuppressWarnings("unchecked")
+	public void obtenerRecomendacionesSeguimiento() {
+		/* Mostrar recomendaciones de seguimiento seleccionado */
+		setStatus("RECOMENDACIONES_SEGUIMIENTO");
+		try {
+			setRecomendacionesSeguimientoList((List<Recomendacion>) audigoesLocal.findByNamedQuery(Recomendacion.class,
+					"seguimiento.recomendaciones.seguimiento.selected", new Object[] { seguimientoSelected.getSegId() }));
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage(SYSTEM_NAME,"Problemas al obtener recomendaciones del seguimiento seleccionado"));
+		}
+	}
+
+	public void obtenerComentariosSeguimiento() {
+		/* Mostrar comentarios de seguimiento seleccionado */
+	}
+	
 	public void mostrarComentarios() {
-
+		recMB.mostrarComentarios();
+		recMB.setSeguimiento(getRegistro());
 	}
 
 	public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
@@ -255,4 +283,33 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 		this.filteredSeguimientos = filteredSeguimientos;
 	}
 
+	public Seguimiento getSeguimientoSelected() {
+		return seguimientoSelected;
+	}
+
+	public void setSeguimientoSelected(Seguimiento seguimientoSelected) {
+		this.seguimientoSelected = seguimientoSelected;
+	}
+
+	public List<Recomendacion> getRecomendacionesSeguimientoList() {
+		return recomendacionesSeguimientoList;
+	}
+
+	public Comentario getComentarioRecomendacion() {
+		return comentarioRecomendacion;
+	}
+
+	public void setRecomendacionesSeguimientoList(List<Recomendacion> recomendacionesSeguimientoList) {
+		this.recomendacionesSeguimientoList = recomendacionesSeguimientoList;
+	}
+
+	public void setComentarioRecomendacion(Comentario comentarioRecomendacion) {
+		this.comentarioRecomendacion = comentarioRecomendacion;
+	}
+	
+	@Override
+	protected void configBean() {
+		// TODO Auto-generated method stub
+		super.configBean();
+	}
 }

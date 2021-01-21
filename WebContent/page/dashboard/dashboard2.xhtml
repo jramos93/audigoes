@@ -14,7 +14,7 @@
 								<span class="app-name"> Dashboard</span>
 							</div>
 						</p:panel>
-						<p:panelGrid columns="7" styleClass="ui-panelgrid-blank">
+						<p:panelGrid columns="5" styleClass="ui-panelgrid-blank">
 							<p:outputLabel value="Fecha inicio" />
 							<p:calendar id="dashfechainicioaud" value="#{dashMB.fechaInicio}"
 								pattern="dd/MM/yyyy" />
@@ -23,36 +23,31 @@
 							<p:calendar id="dashfechafinaud" value="#{dashMB.fechaFin}"
 								pattern="dd/MM/yyyy" />
 
-							
-
 							<p:commandButton id="btnBuscarAuditorias" value="Buscar"
 								icon="ui-icon ui-icon-check"
-								actionListener="#{dashMB.crearGraficos()}" update="frmConsultas"
+								actionListener="#{dashMB.crearGraficos()}"
+								update="frmConsultas"
 								process="@this dashfechainicioaud dashfechafinaud" />
 						</p:panelGrid>
-						<p:panelGrid columns="2"
+						<p:panelGrid columns="2" rendered="#{dashMB.donutChartAuditoriasPorEstado != null and dashMB.donulChartHallazgosPoeEstado != null}"
 							style="width:90%; margin: auto; text-align:center"
 							styleClass="ui-panelgrid-blank">
-							<p:chart type="donut"
-								rendered="#{dashMB.renderAuditoriasPorEstado}"
+							<p:chart type="donut" rendered="#{dashMB.renderAuditoriasPorEstado}"
 								model="#{dashMB.donutChartAuditoriasPorEstado}" />
-							<p:chart type="donut"
-								rendered="#{dashMB.renderHallazgosPorEstado}"
+							<p:chart type="donut" rendered="#{dashMB.renderHallazgosPorEstado}"
 								model="#{dashMB.donulChartHallazgosPoeEstado}" />
 						</p:panelGrid>
-						<p:separator rendered="#{dashMB.renderCompTiempos}" />
+						<p:separator />
 						<p:panelGrid style="margin-top:50px;">
-							<p:chart type="bar" rendered="#{dashMB.renderCompTiempos}"
-								model="#{dashMB.chartModelCompTiempos}" />
+							<p:chart type="bar" model="#{dashMB.chartModelCompTiempos}"/>
 						</p:panelGrid>
-						<p:separator rendered="#{dashMB.renderTotalVsFinalizadas}" />
+						<p:separator />
 						<p:panelGrid style="margin-top:50px;">
-							<p:chart type="bar" rendered="#{dashMB.renderTotalVsFinalizadas}"
-								model="#{dashMB.barChartTotalVsFinalizadas}" />
+							<p:chart type="bar" model="#{dashMB.barChartTotalVsFinalizadas}"/>
 						</p:panelGrid>
 						<p:panelGrid style="margin-top:50px;">
 							<p:chart type="bar" style="height:500px;"
-								model="#{dashMB.barChartTotalDuracionAuditorias}" />
+								model="#{dashMB.barChartTotalDuracionAuditorias}"/>
 						</p:panelGrid>
 						<p:separator />
 						<p:dataTable id="dtTiempoPorFaseAuditorias"
@@ -97,8 +92,8 @@
 								sortBy="#{tfase.tiempoSeguimiento}" style="text-align:center;">
 								<h:outputText value="#{tfase.tiempoSeguimiento}" />
 							</p:column>
-						</p:dataTable>
 
+						</p:dataTable>
 					</h:form>
 				</div>
 			</div>

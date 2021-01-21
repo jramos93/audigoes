@@ -63,5 +63,7 @@
 		<class>audigoes.ues.edu.sv.entities.vistas.StatsAuditoriaEstado</class>
 		<class>audigoes.ues.edu.sv.entities.vistas.StatsHallazgoEstado</class>
 		<class>audigoes.ues.edu.sv.entities.vistas.TiempoPorFaseAuditorias</class>
+		<class>audigoes.ues.edu.sv.entities.vistas.TiempoPlanificadoVsTiempoEjecutado</class>
+		<class>audigoes.ues.edu.sv.entities.vistas.DuracionAuditorias</class>
 	</persistence-unit>
 </persistence>

@@ -23,6 +23,8 @@ public class RecomendacionConverter implements Converter {
 				valor = "Implementada";
 			} else if (valor.equals("3")) {
 				valor = "En proceso";
+			} else if (valor.equals("4")) {
+				valor = "No Implementada";
 			}  else {
 				valor = "---";
 			}

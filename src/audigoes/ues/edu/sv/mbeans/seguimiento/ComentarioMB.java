@@ -33,6 +33,7 @@ public class ComentarioMB extends AudigoesController implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
+			configBean();
 			super.init();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -56,7 +57,8 @@ public class ComentarioMB extends AudigoesController implements Serializable {
 		}
 		int filterInt = getInteger(filterText);
 
-		Auditoria auditoria = (Auditoria) value;
+		Auditoria auditoria = 
+				(Auditoria) value;
 		return auditoria.getAudNombre().toLowerCase().contains(filterText)
 				|| auditoria.getAudDescripcion().toLowerCase().contains(filterText)
 				|| auditoria.getAudId() == filterInt;
@@ -141,5 +143,11 @@ public class ComentarioMB extends AudigoesController implements Serializable {
 	public void setRecomendacion(Recomendacion recomendacion) {
 		this.recomendacion = recomendacion;
 	}
-
+	
+	@Override
+	protected void configBean() {
+		// TODO Auto-generated method stub
+		super.configBean();
+	}
+	
 }
