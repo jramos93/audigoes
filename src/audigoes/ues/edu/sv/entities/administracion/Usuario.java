@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.ejecucion.ComentarioHallazgo;
 import audigoes.ues.edu.sv.entities.ejecucion.ProcedimientoEjecucion;
 import audigoes.ues.edu.sv.entities.ejecucion.ProgramaEjecucion;
 import audigoes.ues.edu.sv.entities.informe.CedulaNota;
@@ -109,6 +110,10 @@ public class Usuario extends SuperEntity implements Serializable {
 	//bi-directional many-to-one association to ProcedimientoEjecucion
 	@OneToMany(mappedBy="usuario1")
 	private List<ProcedimientoEjecucion> procedimientoEjecucion1;
+	
+	//bi-directional many-to-one association to ComentarioHallazgo
+	@OneToMany(mappedBy="usuario")
+	private List<ComentarioHallazgo> comentarioHallazgos;
 
 	//bi-directional many-to-one association to ProcedimientoEjecucion
 	@OneToMany(mappedBy="usuario2")
@@ -689,6 +694,14 @@ public class Usuario extends SuperEntity implements Serializable {
 		usuarioUnidad.setUsuario(null);
 
 		return usuarioUnidad;
+	}
+
+	public List<ComentarioHallazgo> getComentarioHallazgos() {
+		return comentarioHallazgos;
+	}
+
+	public void setComentarioHallazgos(List<ComentarioHallazgo> comentarioHallazgos) {
+		this.comentarioHallazgos = comentarioHallazgos;
 	}
 
 	public int getUsuRol() {

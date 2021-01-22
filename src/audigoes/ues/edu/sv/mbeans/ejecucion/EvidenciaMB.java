@@ -18,6 +18,7 @@ import org.primefaces.model.StreamedContent;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Archivo;
+import audigoes.ues.edu.sv.entities.ejecucion.ComentarioHallazgo;
 import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 import audigoes.ues.edu.sv.entities.seguimiento.Evidencia;
 
@@ -32,6 +33,8 @@ public class EvidenciaMB extends AudigoesController implements Serializable {
 	private List<Evidencia> filteredArchivos;
 
 	private CedulaNota cedula;
+	
+	private ComentarioHallazgo comentarioHallazgo;
 
 	private StreamedContent pt;
 
@@ -53,6 +56,16 @@ public class EvidenciaMB extends AudigoesController implements Serializable {
 		try {
 			setListado((List<Evidencia>) audigoesLocal.findByNamedQuery(Evidencia.class, "evidencia.cedula",
 					new Object[] { cedula.getCedId() }));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void fillByComentario() {
+		try {
+			setListado((List<Evidencia>) audigoesLocal.findByNamedQuery(Evidencia.class, "evidencia.comentario",
+					new Object[] { comentarioHallazgo.getComeId() }));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -85,6 +98,7 @@ public class EvidenciaMB extends AudigoesController implements Serializable {
 			// this.getRegistro().setProcedimientoEjecucion(getRegistro());
 			this.getRegistro().setEvdArchivo(event.getFile().getContent());
 			this.getRegistro().setCedula(cedula);
+			this.getRegistro().setComentarioHallazgo(comentarioHallazgo);
 			this.getRegistro().setEvdNombre(event.getFile().getFileName());
 			this.getRegistro().setEvdExtension(event.getFile().getContentType());
 			this.getRegistro().setFecCrea(getToday());
@@ -151,6 +165,14 @@ public class EvidenciaMB extends AudigoesController implements Serializable {
 
 	public void setPt(StreamedContent pt) {
 		this.pt = pt;
+	}
+
+	public ComentarioHallazgo getComentarioHallazgo() {
+		return comentarioHallazgo;
+	}
+
+	public void setComentarioHallazgo(ComentarioHallazgo comentarioHallazgo) {
+		this.comentarioHallazgo = comentarioHallazgo;
 	}
 
 }

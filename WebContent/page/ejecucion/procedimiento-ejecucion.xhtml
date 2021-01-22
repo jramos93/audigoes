@@ -17,19 +17,59 @@
 				</p:commandButton>
 
 				<p:commandButton value="Guardar" icon="fa fa-check"
-					styleClass="raised-btn" actionListener="#{proejeMB.onSave}"
-					update=":frmProcedimientoEje" />
+					rendered="#{proejeMB.perEdit}" styleClass="raised-btn"
+					actionListener="#{proejeMB.onSave}" update=":frmProcedimientoEje" />
 			</div>
 
-			<div align="right" style="margin-top: 50px; float: right;">
+			<div align="right" style="margin-top: 50px; float: right;" id="dbts">
 				<p:commandButton id="btnNarrativa"
 					title="Clic para generar la narrativa del procedimiento"
 					process="@this" value="Generar Narrativa" icon="pi pi-check-circle"
-					style="float:left;" styleClass="blue-btn raised-btn" ajax="false">
+					style="float:left;" styleClass="raised-btn" ajax="false">
 					<p:fileDownload value="#{proejeMB.narrativa}"></p:fileDownload>
+				</p:commandButton>
+
+				<p:commandButton id="btnEnviar" oncomplete="PF('wvCorreoRev').show();"
+					actionListener="#{proejeMB.prepararCorreo}"
+					rendered="#{proejeMB.registro.pejEstado eq 1 and proejeMB.perEnviar}"
+					title="Clic para enviar a revisión de la coordinación el programa de planificación"
+					process="@this" value="Enviar a Revisión" icon="pi pi-check-circle"
+					style="float:left;" styleClass="blue-btn raised-btn"
+					update=":frmCorreoRev">
+				</p:commandButton>
+
+				<p:commandButton id="btnEnviarObs"
+					oncomplete="PF('wvCorreoObs').show();"
+					actionListener="#{proejeMB.prepararCorreoObs}"
+					rendered="#{proejeMB.registro.pejEstado eq 2 and proejeMB.perAutorizar}"
+					title="Clic para enviar las observaciones al auditor"
+					process="@this" value="Comunicar Observaciones"
+					icon="pi pi-check-circle" style="float:left;"
+					styleClass="blue-btn raised-btn" update=":frmCorreoObs">
+				</p:commandButton>
+
+				<p:commandButton id="btnFin" oncomplete="PF('wvCorreoFin').show();"
+					actionListener="#{proejeMB.prepararCorreoFin}"
+					rendered="#{proejeMB.registro.pejEstado eq 2 and proejeMB.perAutorizar}"
+					title="Clic para finalizar la revisión" process="@this"
+					value="Finalizar Revisión" icon="pi pi-check-circle"
+					style="float:left;" styleClass="blue-btn raised-btn"
+					update=":frmCorreoFin">
 				</p:commandButton>
 			</div>
 			<div class="name" align="center" style="margin-top: 100px;">
+				<h:outputText rendered="#{proejeMB.registro.pejEstado eq 1}"
+					style="float:right; font-size:large; font-weight: bold; color:#2ab1be;"
+					value="Elaboración"></h:outputText>
+				<h:outputText rendered="#{proejeMB.registro.pejEstado eq 2}"
+					style="float:right; font-size:large; font-weight: bold; color:#2ab1be;"
+					value="Revisión"></h:outputText>
+				<h:outputText rendered="#{proejeMB.registro.pejEstado eq 3}"
+					style="float:right; font-size:large; font-weight: bold; color:#2ab1be;"
+					value="Finalizado"></h:outputText>
+				<h:outputText
+					style="float:right; font-size:large; font-weight: bold; color:#525c65; margin-right:10px;"
+					value="Estado:"></h:outputText>
 				<span class="app-name">Desarrollo de Procedimiento de
 					Ejecución </span>
 			</div>
@@ -64,6 +104,7 @@
 							<p:outputLabel for="narra" value="Narrativa"
 								style="font-weight:bold;" />
 							<pe:ckEditor id="narra" width="100%" skin="office2013"
+								readonly="#{!proejeMB.perEdit or proejeMB.registro.pejEstado ne 1}"
 								customConfig="#{request.contextPath}/resources/js/customck.js"
 								value="#{proejeMB.registro.pejNarrativa}" />
 						</p:panelGrid>
@@ -73,9 +114,9 @@
 							styleClass="ui-panelgrid-blank form-group form-elements">
 							<h:outputText value="Subida de archivos:"></h:outputText>
 							<p:fileUpload listener="#{proejeMB.handleFileUpload}"
-								disabled="#{proejeMB.status eq 'NEW'}" multiple="true"
-								mode="advanced" dragDropSupport="false" cancelLabel="Cancelar"
-								uploadLabel="Subir" label="Elegir"
+								disabled="#{proejeMB.status eq 'NEW' or !proejeMB.perEdit or proejeMB.registro.pejEstado ne 1}"
+								multiple="true" mode="advanced" dragDropSupport="false"
+								cancelLabel="Cancelar" uploadLabel="Subir" label="Elegir"
 								update=":frmProcedimientoEje:tview:dtArchivos"
 								allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
 						</p:panelGrid>
@@ -96,8 +137,19 @@
 								<h:outputText value="#{a.arcNombre}"></h:outputText>
 							</p:column>
 
+							<p:column headerText="Descargar"
+								style="width:60px; text-align:center;">
+								<p:commandButton actionListener="#{arcMB.downloadFile}"
+									ajax="false" icon="ui-icon-arrowthick-1-s"
+									title="Clic para descargar el archivo">
+									<f:attribute name="pt" value="#{a}"></f:attribute>
+									<p:fileDownload value="#{arcMB.pt}"></p:fileDownload>
+								</p:commandButton>
+							</p:column>
+
 							<p:column headerText="Eliminar" style="width:60px;">
 								<p:commandButton actionListener="#{arcMB.onBorrar(a)}"
+									disabled="#{!proejeMB.perEdit or proejeMB.registro.pejEstado ne 1}"
 									update=":frmProcedimientoEje:tview:dtArchivos"
 									icon="pi pi-trash" title="Clic para eliminar el archivo">
 									<p:confirm header="Confirmación" message="¿Eliminar?"
@@ -115,6 +167,7 @@
 							<p:outputLabel for="obs" value="Observaciones"
 								style="font-weight:bold;" />
 							<pe:ckEditor id="obs" width="100%" skin="office2013"
+								readonly="#{!proejeMB.perEdit or proejeMB.registro.pejEstado ne 2}"
 								customConfig="#{request.contextPath}/resources/js/customck.js"
 								value="#{proejeMB.registro.pejObservaciones}" />
 						</p:panelGrid>
@@ -127,12 +180,82 @@
 					styleClass="ui-panelgrid-blank form-group form-elements">
 					<p:column></p:column>
 					<p:commandButton value="Guardar" icon="fa fa-check"
-						actionListener="#{proejeMB.onSave}" update=":frmProcedimientoEje" />
+						rendered="#{proejeMB.perEdit}" actionListener="#{proejeMB.onSave}"
+						update=":frmProcedimientoEje" />
 				</p:panelGrid>
 			</div>
 
 		</p:panel>
 
 	</h:form>
+
+	<p:dialog widgetVar="wvCorreoRev" modal="true" showEffect="fade"
+		closable="true" closeOnEscape="true" responsive="true">
+		<h:form id="frmCorreoRev">
+			<p:commandButton id="btnEnviar" action="#{proejeMB.onEnviarRevision}"
+				title="Clic para enviar a revisión de la coordinación el programa de planificación"
+				process=":frmCorreoRev" value="Enviar procedimiento a Revisión"
+				icon="pi pi-check-circle" style="float:left;"
+				styleClass="blue-btn raised-btn" oncomplete="PF('wvCorreoRev').hide();"
+				update=":frmProgramaEje, :frmProcedimientoEje">
+				<p:confirm header="Confirmación" message="¿Enviar procedimiento a revisión?"></p:confirm>
+			</p:commandButton>
+			<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+				<p:outputLabel for="narra" value="Digite el texto del correo:"
+					style="font-weight:bold;" />
+				<pe:ckEditor id="narra" width="100%" value="#{proejeMB.textoCorreo}"
+					skin="office2013"
+					customConfig="#{request.contextPath}/resources/js/customck.js" />
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog widgetVar="wvCorreoObs" modal="true" showEffect="fade"
+		closable="true" closeOnEscape="true" responsive="true">
+		<h:form id="frmCorreoObs">
+			<p:commandButton id="btnEnviar"
+				action="#{proejeMB.onEnviarObservacion}"
+				title="Clic para enviar las observaciones al auditor"
+				process=":frmCorreoObs" value="Comunicar Observaciones"
+				icon="pi pi-check-circle" style="float:left;"
+				styleClass="blue-btn raised-btn"
+				oncomplete="PF('wvCorreoObs').hide();"
+				update=":frmProgramaEje, :frmProcedimientoEje">
+				<p:confirm header="Confirmación" message="¿Enviar observaciones?"></p:confirm>
+			</p:commandButton>
+			<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+				<p:outputLabel for="narra" value="Digite el texto del correo:"
+					style="font-weight:bold;" />
+				<pe:ckEditor id="narra" width="100%" skin="office2013"
+					customConfig="#{request.contextPath}/resources/js/customck.js"
+					value="#{proejeMB.textoCorreoObs}" />
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog widgetVar="wvCorreoFin" modal="true" showEffect="fade"
+		closable="true" closeOnEscape="true" responsive="true">
+		<h:form id="frmCorreoFin">
+			<p:commandButton id="btnEnviar" action="#{proejeMB.onFinalizar}"
+				title="Clic para finalizar la revisión del programa de planificación"
+				process=":frmCorreoFin" value="Finalizar Revisión"
+				icon="pi pi-check-circle" style="float:left;"
+				styleClass="blue-btn raised-btn"
+				oncomplete="PF('wvCorreoFin').hide();"
+				update=":frmProgramaEje, :frmProcedimientoEje">
+				<p:confirm header="Confirmación" message="¿Finalizar Revisión?"></p:confirm>
+			</p:commandButton>
+			<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+				<p:outputLabel for="narra" value="Digite el texto del correo:"
+					style="font-weight:bold;" />
+				<pe:ckEditor id="narra" width="100%" skin="office2013"
+					customConfig="#{request.contextPath}/resources/js/customck.js"
+					value="#{proejeMB.textoCorreoFin}" />
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
 
 </ui:composition>

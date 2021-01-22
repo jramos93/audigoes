@@ -28,6 +28,8 @@ public class EstadoHallazgoConverter implements Converter {
 			} else if (valor.equals("5")) {
 				valor = "ANÁLISIS";
 			} else if (valor.equals("6")) {
+				valor = "SUPERVISIÓN";
+			} else if (valor.equals("7")) {
 				valor = "FINALIZADO";
 			} else {
 				valor = "---";

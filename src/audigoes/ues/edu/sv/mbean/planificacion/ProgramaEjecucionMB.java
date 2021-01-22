@@ -301,6 +301,7 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 			if (!getListado().isEmpty()) {
 				setRegistro(getListado().get(0));
 				proejeMB.setPrograma(getRegistro());
+				proejeMB.setAuditoria(auditoria);
 				proejeMB.fillProcedimientos();
 				onEdit();
 			} else {
@@ -556,5 +557,6 @@ public class ProgramaEjecucionMB extends AudigoesController implements Serializa
 			}
 		}
 	}
+	
 
 }

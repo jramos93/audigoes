@@ -10,23 +10,23 @@
 		<p:panel rendered="#{ceduUsuMB.status ne 'SEARCH'}">
 
 			<div align="left" style="margin-top: 50px; float: left;">
-				<p:commandButton id="btnCancel"
-					action="#{ceduUsuMB.onCancel}" value="Regresar"
-					icon="pi pi-arrow-left" style="float:left;"
+				<p:commandButton id="btnCancel" action="#{ceduUsuMB.onCancel}"
+					value="Regresar" icon="pi pi-arrow-left" style="float:left;"
 					styleClass="pink-btn raised-btn"
 					update=":frmListaHallazgos, :frmHallazgo" process="@this">
 				</p:commandButton>
 
 				<p:commandButton value="Guardar" icon="fa fa-check"
-					rendered="#{ceduUsuMB.registro.cedEstado eq 4}" styleClass="raised-btn"
-					actionListener="#{ceduUsuMB.onSave}" update=":frmHallazgo" />
+					rendered="#{ceduUsuMB.registro.cedEstado eq 4 and comeMB.registro.comeEnviado==0}"
+					styleClass="raised-btn" actionListener="#{ceduUsuMB.onSave}"
+					update=":frmHallazgo" />
 			</div>
 
 			<div align="right" style="margin-top: 50px; float: right;">
 
 				<p:commandButton action="#{ceduUsuMB.prepararCorreo}"
 					oncomplete="PF('wvCorreo').show();"
-					rendered="#{ceduUsuMB.status eq 'EDIT' and ceduUsuMB.registro.cedEstado eq 4}"
+					rendered="#{ceduUsuMB.status eq 'EDIT' and ceduUsuMB.registro.cedEstado eq 4 and comeMB.registro.comeEnviado==0}"
 					title="Clic para enviar comentarios al auditor" process="@this"
 					value="Enviar Comentarios" icon="pi pi-check-circle"
 					style="float:left;" styleClass="blue-btn raised-btn"
@@ -44,6 +44,26 @@
 					value="Estado:"></h:outputText>
 				<br /> <br /> <span class="app-name">Desarrollo de Hallazgo
 				</span>
+				<h3 style="color: #2ab1be;">Cuenta con #{ceduUsuMB.dias} días
+					para dar respuesta</h3>
+				<p:fieldset legend="Indicaciones"
+					style="font-size:larger; font-weight:bold;">
+					<h:panelGrid columns="4" cellspacing="15"
+						style="font-size:small; text-align:left;"
+						columnClasses="ui-lg-3,ui-lg-3,ui-lg-3,ui-lg-3">
+
+						<h:outputText style="font-weight:bold;" value="Fecha Plazo:" />
+						<h:outputText style="color:#2ab1be;"
+							value="#{ceduUsuMB.registro.cedFechaPlazo}">
+							<f:convertDateTime pattern="dd-MM-yyyy" />
+						</h:outputText>
+						<h:outputText style="font-weight:bold;" value="Auditor Encargado:" />
+						<h:outputText
+							value="#{ceduUsuMB.registro.usuario1.usuNombre} #{ceduUsuMB.registro.usuario1.usuApellido}"
+							style="color:#2ab1be;">
+						</h:outputText>
+					</h:panelGrid>
+				</p:fieldset>
 			</div>
 			<p:tabView id="tview">
 				<p:tab title="Detalle del Hallazgo">
@@ -127,8 +147,9 @@
 
 						<p:outputLabel value="Ingrese sus comentarios: "
 							style="font-weight:bold;" />
-						<p:inputTextarea value="#{ceduUsuMB.registro.cedComentario}"
-							rows="12" style="width:100%;" />
+						<pe:ckEditor id="narra4" width="100%" height="150" readonly="#{comeMB.registro.comeEnviado==1}"
+							value="#{comeMB.registro.comeComentario}" skin="office2013"
+							customConfig="#{request.contextPath}/resources/js/customck.js" />
 
 					</p:panelGrid>
 
@@ -136,7 +157,7 @@
 						styleClass="ui-panelgrid-blank form-group form-elements">
 						<h:outputText value="Subida de archivos:"></h:outputText>
 						<p:fileUpload listener="#{evdMB.handleFileUpload}"
-							disabled="#{ceduUsuMB.status eq 'NEW' or ceduUsuMB.registro.cedEstado ne 4}"
+							disabled="#{ceduUsuMB.status eq 'NEW' or ceduUsuMB.registro.cedEstado ne 4 or comeMB.registro.comeEnviado==1}"
 							multiple="true" mode="advanced" dragDropSupport="false"
 							cancelLabel="Cancelar" uploadLabel="Subir" label="Elegir"
 							update=":frmHallazgo:tview:dtArchivos"
@@ -178,7 +199,7 @@
 						<p:column headerText="Eliminar"
 							style="width:60px; text-align:center;">
 							<p:commandButton actionListener="#{evdMB.onBorrar(a)}"
-								disabled="#{ceduUsuMB.registro.cedEstado ne 4}"
+								disabled="#{ceduUsuMB.registro.cedEstado ne 4 or comeMB.registro.comeEnviado==1}"
 								update=":frmHallazgo:tview:dtArchivos" icon="pi pi-trash"
 								title="Clic para eliminar el archivo">
 								<p:confirm header="Confirmación" message="¿Eliminar?"
@@ -187,26 +208,6 @@
 						</p:column>
 
 					</p:dataTable>
-				</p:tab>
-
-				<p:tab title="Valorización de Auditor">
-
-					<p:panelGrid columns="1" columnClasses="ui-lg-12" layout="grid"
-						styleClass="ui-panelgrid-blank form-group form-elements">
-
-						<p:outputLabel value="Comentarios de auditor: "
-							style="font-weight:bold;" />
-						<p:inputTextarea
-							value="#{ceduUsuMB.registro.cedComentarioAuditor}" rows="12"
-							style="width:100%;" readonly="true" />
-						<p:outputLabel value="Valorización:" style="font-weight:bold;"></p:outputLabel>
-						<p:selectOneRadio value="#{ceduUsuMB.registro.cedValorizacion}"
-							disabled="true">
-							<f:selectItem itemValue="1" itemLabel="Hallazgo"></f:selectItem>
-							<f:selectItem itemValue="0" itemLabel="Asuntos Menores"></f:selectItem>
-							<f:selectItem itemValue="2" itemLabel="Superada"></f:selectItem>
-						</p:selectOneRadio>
-					</p:panelGrid>
 				</p:tab>
 
 			</p:tabView>
@@ -230,7 +231,7 @@
 			<p:commandButton id="btnEnviar"
 				action="#{ceduUsuMB.onEnviarComentarios}"
 				title="Clic para enviar a revisión de la coordinación el hallazgo encontrado"
-				process=":frmCorreo" value="Enviar a Revisión"
+				process=":frmCorreo" value="Enviar a Auditor"
 				icon="pi pi-check-circle" style="float:left;"
 				styleClass="blue-btn raised-btn" oncomplete="PF('wvCorreo').hide();"
 				update=":frmHallazgo :frmListaHallazgos">

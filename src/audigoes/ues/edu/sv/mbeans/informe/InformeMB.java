@@ -1,7 +1,6 @@
 package audigoes.ues.edu.sv.mbeans.informe;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -17,7 +16,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.mail.Address;
 
-import org.omg.CORBA.Environment;
 import org.primefaces.component.tabview.TabView;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -25,19 +23,15 @@ import org.primefaces.model.StreamedContent;
 
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.io.source.ByteArrayOutputStream;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.sun.jndi.toolkit.url.Uri;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
-import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.administracion.BitacoraActividades;
 import audigoes.ues.edu.sv.entities.informe.ActaLectura;
-import audigoes.ues.edu.sv.entities.informe.CartaGerencia;
 import audigoes.ues.edu.sv.entities.informe.Convocatoria;
 import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
-import audigoes.ues.edu.sv.entities.planificacion.ProgramaPlanificacion;
+import audigoes.ues.edu.sv.mbean.planificacion.BitacoraActividadMB;
 import audigoes.ues.edu.sv.mbeans.administracion.ArchivoMB;
-import audigoes.ues.edu.sv.mbeans.planeacion.AuditoriaMB;
 import audigoes.ues.edu.sv.util.SendMailAttach;
 
 @ManagedBean(name = "informeMB")
@@ -50,20 +44,23 @@ public class InformeMB extends AudigoesController implements Serializable {
 
 	private List<Informe> filteredInformes;
 	private StreamedContent informe;
-	private String textoCorreo="";
-	
+	private String textoCorreo = "";
+
 	@ManagedProperty(value = "#{actaLecturaMB}")
 	private ActaLecturaMB actLecMB = new ActaLecturaMB();
-	
+
 	@ManagedProperty(value = "#{cartaGerenciaMB}")
 	private CartaGerenciaMB cartaGMB = new CartaGerenciaMB();
-	
-	@ManagedProperty(value= "#{convocatoriaMB}")
+
+	@ManagedProperty(value = "#{convocatoriaMB}")
 	private ConvocatoriaMB convMB = new ConvocatoriaMB();
-	
+
 	@ManagedProperty(value = "#{arcMB}")
 	private ArchivoMB arcMB = new ArchivoMB();
-	
+
+	@ManagedProperty(value = "#{bitaMB}")
+	private BitacoraActividadMB bitaMB = new BitacoraActividadMB();
+
 	private Auditoria auditoria;
 	private int versionActual;
 
@@ -74,89 +71,135 @@ public class InformeMB extends AudigoesController implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
-			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-			setAuditoria((Auditoria) sessionMap.get("auditoria"));
-			setInforme();
-			this.arcMB.fillByInforme(getRegistro());
-			System.out.println(getAuditoria().getAudId());
+//			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+//			setAuditoria((Auditoria) sessionMap.get("auditoria"));
+//			setInforme();
+			// System.out.println(getAuditoria().getAudId());
 			super.init();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void onSave() {
-		if(getRegistro().getInfId() > 0 ) {
+		if (getRegistro().getInfId() > 0) {
 			setStatus("EDIT");
 		} else {
 			setStatus("NEW");
 		}
 		super.onSave();
 	}
-	
+
 	public void setInforme() {
 		try {
-			setRegistro((Informe)audigoesLocal.findByNamedQuery(Informe.class,"informe.by.auditoria",
-					new Object[] {getAuditoria().getAudId()}).get(0));
+
+			setRegistro((Informe) audigoesLocal
+					.findByNamedQuery(Informe.class, "informe.by.auditoria", new Object[] { getAuditoria().getAudId() })
+					.get(0));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	public void buscaInforme(Auditoria auditoria) {
+		try {
+			setListado((List<Informe>) audigoesLocal.findByNamedQuery(Informe.class, "informe.by.auditoria",
+					new Object[] { auditoria.getAudId() }));
+			if (getListado() != null && !getListado().isEmpty()) {
+				setRegistro(getListado().get(0));
+			} else {
+				onNew();
+				getRegistro().setInfTitulo("INFORME DE AUDITORIA " + auditoria.getAudNombre().toUpperCase());
+				getRegistro().setAuditoria(auditoria);
+				getRegistro().setFecCrea(getToday());
+				getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+				getRegistro().setRegActivo(1);
+				getRegistro().setInfEstado(1);
+				getRegistro().setInfVersion(1);
+				audigoesLocal.insert(getRegistro());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void onInforme() {
+		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+		setAuditoria(((Auditoria) sessionMap.get("auditoria")));
+
+		buscaInforme(getAuditoria());
+		onEdit();
+		this.arcMB.fillByInforme(getRegistro());
+
+		BitacoraActividades a = bitaMB.buscarActividad(15, getAuditoria());
+		if (a == null) {
+			bitaMB.iniciarActividad(15, "Elaboración Borrador de Informe", getAuditoria(),
+					getObjAppsSession().getUsuario());
+		}
+
+		if (getRegistro().getInfId() > 0) {
+			setVersionActual(getRegistro().getInfVersion());
+		} else {
+			setVersionActual(1);
+			getRegistro().setInfVersion(getVersionActual());
+		}
+		setStatus("INFORME");
+
+		inicializarValores();
+	}
+
 	@Override
 	public boolean beforeSaveNew() {
-		getRegistro().setAuditoria(getAuditoria());
-		getRegistro().setRegActivo(1);
-		getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
-		getRegistro().setFecCrea(getToday());
+//		getRegistro().setAuditoria(getAuditoria());
+//		getRegistro().setRegActivo(1);
+//		getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+//		getRegistro().setFecCrea(getToday());
 		return super.beforeSaveNew();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void fillListado() {
 		try {
-			setListado((List<Informe>) audigoesLocal.findByNamedQuery(Informe.class,"informe.all",
-					new Object[] {}));
+			setListado((List<Informe>) audigoesLocal.findByNamedQuery(Informe.class, "informe.all", new Object[] {}));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
 	@SuppressWarnings("unchecked")
 	public void fillInforme() {
 		try {
-			setListado((List<Informe>) audigoesLocal.findByNamedQuery(Informe.class,
-					"informe.by.auditoria",
-					new Object[] {getAuditoria().getAudId()}));
-			if(!getListado().isEmpty()) {
+			setListado((List<Informe>) audigoesLocal.findByNamedQuery(Informe.class, "informe.by.auditoria",
+					new Object[] { getAuditoria().getAudId() }));
+			if (!getListado().isEmpty()) {
 				setRegistro(getListado().get(0));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void fillActaLectura() {
 		try {
-			setListado((List<ActaLectura>) audigoesLocal.findByNamedQuery(ActaLectura.class,
-					"actaLectura.by.informe",
-					new Object[] {getRegistro().getInfId()}));
-			if(!getListado().isEmpty()) {
+			setListado((List<ActaLectura>) audigoesLocal.findByNamedQuery(ActaLectura.class, "actaLectura.by.informe",
+					new Object[] { getRegistro().getInfId() }));
+			if (!getListado().isEmpty()) {
 				setRegistro(getListado().get(0));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void fillConvocatoria() {
 		try {
 			setListado((List<Convocatoria>) audigoesLocal.findByNamedQuery(Convocatoria.class,
-					"convocatoria.by.informe",
-					new Object[] {getRegistro().getInfId()}));
-			if(!getListado().isEmpty()) {
+					"convocatoria.by.informe", new Object[] { getRegistro().getInfId() }));
+			if (!getListado().isEmpty()) {
 				setRegistro(getListado().get(0));
 			}
 		} catch (Exception e) {
@@ -172,8 +215,8 @@ public class InformeMB extends AudigoesController implements Serializable {
 		int filterInt = getInteger(filterText);
 
 		Informe informe = (Informe) value;
-		return informe.getInfTitulo().toLowerCase().contains(filterText)
-				|| informe.getInfVersion() == filterInt || informe.getInfId() == filterInt;
+		return informe.getInfTitulo().toLowerCase().contains(filterText) || informe.getInfVersion() == filterInt
+				|| informe.getInfId() == filterInt;
 	}
 
 	private int getInteger(String string) {
@@ -183,47 +226,48 @@ public class InformeMB extends AudigoesController implements Serializable {
 			return 0;
 		}
 	}
-	
+
 	@Override
 	public void afterCancel() {
 		try {
-			TabView tv = (TabView) FacesContext.getCurrentInstance().getViewRoot().findComponent("frmInforme:tvInforme");
+			TabView tv = (TabView) FacesContext.getCurrentInstance().getViewRoot()
+					.findComponent("frmInforme:tvInforme");
 			tv.setActiveIndex(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		super.afterCancel();
 	}
-	
+
 	public void showInforme() {
 		fillInforme();
 		if (getRegistro().getInfId() > 0) {
 			setVersionActual(getRegistro().getInfVersion());
-		}else {
+		} else {
 			setVersionActual(1);
 			getRegistro().setInfVersion(getVersionActual());
 		}
 		setStatus("INFORME");
 	}
-	
+
 	public void showActaLectura() {
 		this.getConvMB().setInforme(getRegistro());
 		this.getConvMB().fillConvocatoria();
 		this.getActLecMB().setInforme(getRegistro());
 		this.getActLecMB().fillActaLectura();
-		//fillActaLectura();
-		//fillConvocatoria();
+		// fillActaLectura();
+		// fillConvocatoria();
 		setStatus("ACTA_LECTURA");
 	}
-	
+
 	public void showCarta() {
-		//fillCartaGerencia();
+		// fillCartaGerencia();
 		this.getCartaGMB().setInforme(getRegistro());
 		this.getCartaGMB().fillCartaGerencia();
 		setStatus("CARTA_GERENCIA");
 	}
-	
+
 	/* GETS y SETS */
 
 	@Override
@@ -284,96 +328,140 @@ public class InformeMB extends AudigoesController implements Serializable {
 	public void setVersionActual(int versionActual) {
 		this.versionActual = versionActual;
 	}
-	
-@SuppressWarnings("deprecation")
-public StreamedContent getInforme() {
-	
+
+	public void inicializarValores() {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+		String portada = "";
+
+		portada = portada + "<div>&nbsp;\r\n" + "<h1 style=\"text-align:center\"><strong>"
+				+ getRegistro().getAuditoria().getPlanAnual().getInstitucion().getInsNombre().toUpperCase()
+				+ "</strong></h1>\r\n" + "\r\n" + "<h1 style=\"text-align:center\"><strong>UNIDAD DE AUDITORIA INTERNA</strong></h1>\r\n"
+				+ "</div>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
+				+ "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
+				+ "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
+				+ "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
+				+ "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
+				+ "<h1 style=\"text-align:center\"><strong>Informe de " + getRegistro().getAuditoria().getAudNombre()
+				+ "</strong><h3 style=\"text-align:center\"><strong> PERIODO DEL "
+				+ formatter.format(getRegistro().getAuditoria().getAudFechaInicioProgramado()) + "   AL "
+				+ formatter.format(getRegistro().getAuditoria().getAudFechaFinProgramado()) + "</strong></h3>\r\n"
+				+ "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
+				+ "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
+				+ "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
+				+ "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
+				+ "<p>&nbsp;</p>\r\n" + "\r\n" + "<h3 style=\"text-align:right\"><br />\r\n" + "<br />\r\n"
+				+ "<strong>SAN SALVADOR, ENERO 2020</strong></h3>\r\n";
+
+		String indice = "";
+
+		indice = indice + "<div>\r\n" + "<h1 style=\"text-align:center\"><strong>INDICE</strong></h1><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>\r\n" + "\r\n"
+				+ "<h2 style=\"text-align:justify\"><strong>I. Objetivos de la Auditoria</strong></h2>\r\n" + "\r\n"
+				+ "<h2 style=\"text-align:justify\"><strong>II. Alcance de la Auditoria</strong></h2>\r\n" + "\r\n"
+				+ "<h2 style=\"text-align:justify\"><strong>III. Procedimientos de Auditoria Aplicados</strong></h2>\r\n"
+				+ "\r\n" + "<h2 style=\"text-align:justify\"><strong>IV. Resultados de la Auditoria</strong></h2>\r\n"
+				+ "\r\n"
+				+ "<h2 style=\"text-align:justify\"><strong>V. Seguimiento a las recomendaciones de auditorias anteriores</strong></h2>\r\n"
+				+ "\r\n"
+				+ "<h2 style=\"text-align:justify\"><strong>VI. Recomendacioes de la Auditoria</strong></h2>\r\n"
+				+ "\r\n" + "<h2 style=\"text-align:justify\"><strong>VII. Conclusion</strong></h2>\r\n" + "\r\n"
+				+ "<h2 style=\"text-align:justify\"><strong>VIII. Parrafo Aclaratorio</strong></h2>\r\n" + "</div>\r\n";
+
+		getRegistro().setInfPortada(portada);
+		getRegistro().setInfIndice(indice);
+	}
+
+	@SuppressWarnings("deprecation")
+	public StreamedContent getInforme() {
+
 		try {
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-			
+
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			
+
 			// Para definir los encabezados de pagina y los pie de pagina
 			String str = "<html><head>"
 					+ "<style>#header{position: running(header);} @page {margin: 70px 70px 100px;@bottom-right @top-center {content: element(header);} }</style>"
 					+ "</head><body style='width:500px; font-size:smaller;'>";
-			
-			// Defino el texto del encabezado de pagina con el id header que es que se pone arriba running(header)
-			str=str+"<div style='margin-top:20px;'> "
-					+ "<strong><br><strong><h2 style='text-align:center'>" +getRegistro().getInfPortada();
-			str=str + "</strong></div></h2>"
-					+ "<br><br><br><br><br><br><br> <br><br><br><br><br><br>";
+
+			// Defino el texto del encabezado de pagina con el id header que es que se pone
+			// arriba running(header)
+			str = str + "<div style='margin-top:20px;'> " + "<strong><br><strong><h2 style='text-align:center'>"
+					+ getRegistro().getInfPortada();
+			str = str + "</strong></div></h2>" + "<br><br><br><br><br><br><br> <br><br><br><br><br><br>";
 			// Concateno el texto a agregar
-			str=str+"<h1 style='text-align:center'> Informe de " +getRegistro().getAuditoria().getAudNombre();
-			str=str+"</h1><h3 style='text-align:center'>PERIODO DEL " +formatter.format(getRegistro().getAuditoria().getAudFechaInicioProgramado());
-			str=str+"   AL "+formatter.format(getRegistro().getAuditoria().getAudFechaFinProgramado());
-			str=str+ "</h3><br>";
-		
-			str=str+"<div style= 'page-break-after:always'></div>";
-			
-			str=str+"<div style='margin-top:20px;'> "
-					+ "<h3>INDICE</h3>";
-			str=str+"<h5 style='text-align:justify'> I. Objetivos de la Auditoria </h5>";
-			str=str+"<h5 style='text-align:justify'> II. Alcance de la Auditoria </h5>";
-			str=str+"<h5 style='text-align:justify'> III. Procedimientos de Auditoria Aplicados </h5>";
-			str=str+"<h5 style='text-align:justify'> IV. Resultados de la Auditoria </h5>";
-			str=str+"<h5 style='text-align:justify'> V. Seguimiento a las recomendaciones de auditorias anteriores </h5>";
-			str=str+"<h5 style='text-align:justify'> VI. Recomendacioes de la Auditoria </h5>";
-			str=str+"<h5 style='text-align:justify'> VII. Conclusion </h5>";
-			str=str+"<h5 style='text-align:justify'> VIII. Parrafo Aclaratorio</h5>";
-			
-			str=str+"<div style= 'page-break-after:always'></div>";
-			
-			str=str+"<div> "
-					+ "<strong>Señor(es)</strong><strong>" +getRegistro().getInfDestinatario();
-			str=str + "</strong></div>"
-					+ "<br>";
-			
-			str=str+ "<div style='text-align:justify'> El presente informe contiene los resultados de " +getRegistro().getAuditoria().getAudNombre();
-			str=str+ ", por el periodo del " + getRegistro().getAuditoria().getAudFechaInicioReal();
-			str=str+" al " +getRegistro().getAuditoria().getAudFechaFinReal();
-			str=str+". La auditoría fue realizada en cumplimiento a los Arts. 30 y 31 de la Ley de la Corte de Cuentas de la República, a las Normas de Auditoría\r\n" + 
-					"Interna del Sector Gubernamental, emitidas por la Corte de Cuentas de la República.</div>";
-			
-			str=str+"<h3 style='text-align:justify'> I. Objetivos de la Auditoria </h3>";
-			str=str+"<div>"+getRegistro().getAuditoria().getAudObjetivos();
-			str=str + "</div>";
-			
-			str=str+"<h3 style='text-align:justify'> II. Alcance de la Auditoria </h3>";
-			str=str+"<div>"+getRegistro().getAuditoria().getAudAlcances();
-			str=str + "</div>";
-			
-			str=str+"<h3 style='text-align:justify'> III. Procedimientos de Auditoria Aplicados </h3>";
-			str=str+"<div>"+getRegistro().getInfProcedimientos();
-			str=str + "</div>";
-			
-			str=str+"<h3 style='text-align:justify'> IIV. Resultados de la Auditoria</h3>";
-			str=str+"<div>"+getRegistro().getInfResultados();
-			str=str + "</div>";
-			
-			str=str+"<h3 style='text-align:justify'>V. Seguimiento a las recomendaciones de auditorias anteriores</h3>";
-			str=str+"<div>"+getRegistro().getInfSeguimiento();
-			str=str + "</div>";
-			
-			str=str+"<h3 style='text-align:justify'> VI. Recomendacioes de la Auditoria </h3>";
-			str=str+"<div>"+getRegistro().getInfRecomendaciones();
-			str=str + "</div>";
-			
-			str=str+"<h3 style='text-align:justify'> VII. Conclusion </h3>";
-			str=str+"<div>"+getRegistro().getInfConclusion();
-			str=str + "</div>";
-			
-			str=str+"<h3 style='text-align:justify'> VIII. Parrafo Aclaratorio </h3>";
-			str=str+"<div>"+getRegistro().getInfAclaracion();
-			str=str + "</div>";
-			
-			str=str+"<div style= 'page-break-after:always'></div>";
-			
+			str = str + "<h1 style='text-align:center'> Informe de " + getRegistro().getAuditoria().getAudNombre();
+			str = str + "</h1><h3 style='text-align:center'>PERIODO DEL "
+					+ formatter.format(getRegistro().getAuditoria().getAudFechaInicioProgramado());
+			str = str + "   AL " + formatter.format(getRegistro().getAuditoria().getAudFechaFinProgramado());
+			str = str + "</h3><br>";
+
+			str = str + "<div style= 'page-break-after:always'></div>";
+
+			str = str + "<div style='margin-top:20px;'> " + "<h3>INDICE</h3>";
+			str = str + "<h5 style='text-align:justify'> I. Objetivos de la Auditoria </h5>";
+			str = str + "<h5 style='text-align:justify'> II. Alcance de la Auditoria </h5>";
+			str = str + "<h5 style='text-align:justify'> III. Procedimientos de Auditoria Aplicados </h5>";
+			str = str + "<h5 style='text-align:justify'> IV. Resultados de la Auditoria </h5>";
+			str = str
+					+ "<h5 style='text-align:justify'> V. Seguimiento a las recomendaciones de auditorias anteriores </h5>";
+			str = str + "<h5 style='text-align:justify'> VI. Recomendacioes de la Auditoria </h5>";
+			str = str + "<h5 style='text-align:justify'> VII. Conclusion </h5>";
+			str = str + "<h5 style='text-align:justify'> VIII. Parrafo Aclaratorio</h5>";
+
+			str = str + "<div style= 'page-break-after:always'></div>";
+
+			str = str + "<div> " + "<strong>Señor(es)</strong><strong>" + getRegistro().getInfDestinatario();
+			str = str + "</strong></div>" + "<br>";
+
+			str = str + "<div style='text-align:justify'> El presente informe contiene los resultados de "
+					+ getRegistro().getAuditoria().getAudNombre();
+			str = str + ", por el periodo del " + getRegistro().getAuditoria().getAudFechaInicioReal();
+			str = str + " al " + getRegistro().getAuditoria().getAudFechaFinReal();
+			str = str
+					+ ". La auditoría fue realizada en cumplimiento a los Arts. 30 y 31 de la Ley de la Corte de Cuentas de la República, a las Normas de Auditoría\r\n"
+					+ "Interna del Sector Gubernamental, emitidas por la Corte de Cuentas de la República.</div>";
+
+			str = str + "<h3 style='text-align:justify'> I. Objetivos de la Auditoria </h3>";
+			str = str + "<div>" + getRegistro().getAuditoria().getAudObjetivos();
+			str = str + "</div>";
+
+			str = str + "<h3 style='text-align:justify'> II. Alcance de la Auditoria </h3>";
+			str = str + "<div>" + getRegistro().getAuditoria().getAudAlcances();
+			str = str + "</div>";
+
+			str = str + "<h3 style='text-align:justify'> III. Procedimientos de Auditoria Aplicados </h3>";
+			str = str + "<div>" + getRegistro().getInfProcedimientos();
+			str = str + "</div>";
+
+			str = str + "<h3 style='text-align:justify'> IIV. Resultados de la Auditoria</h3>";
+			str = str + "<div>" + getRegistro().getInfResultados();
+			str = str + "</div>";
+
+			str = str
+					+ "<h3 style='text-align:justify'>V. Seguimiento a las recomendaciones de auditorias anteriores</h3>";
+			str = str + "<div>" + getRegistro().getInfSeguimiento();
+			str = str + "</div>";
+
+			str = str + "<h3 style='text-align:justify'> VI. Recomendacioes de la Auditoria </h3>";
+			str = str + "<div>" + getRegistro().getInfRecomendaciones();
+			str = str + "</div>";
+
+			str = str + "<h3 style='text-align:justify'> VII. Conclusion </h3>";
+			str = str + "<div>" + getRegistro().getInfConclusion();
+			str = str + "</div>";
+
+			str = str + "<h3 style='text-align:justify'> VIII. Parrafo Aclaratorio </h3>";
+			str = str + "<div>" + getRegistro().getInfAclaracion();
+			str = str + "</div>";
+
+			str = str + "<div style= 'page-break-after:always'></div>";
+
 			HtmlConverter.convertToPdf(str, os);
-			
+
 			InputStream is = new ByteArrayInputStream(os.toByteArray());
 			return new DefaultStreamedContent(is, "application/pdf", "informe.pdf");
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			addWarn(new FacesMessage("Advertencia", "Hubo un error al generar el documento de la narrativa"));
@@ -384,15 +472,14 @@ public StreamedContent getInforme() {
 	public void setInforme(StreamedContent informe) {
 		this.informe = informe;
 	}
-	
+
 	public void prepararCorreo() {
-		textoCorreo="<p><strong>AUDIGOES LE INFORMA:</strong></p>" + 
-				"<p>Se ha enviado para su revisi&oacute;n el informe "
+		textoCorreo = "<p><strong>AUDIGOES LE INFORMA:</strong></p>"
+				+ "<p>Se ha enviado para su revisi&oacute;n el informe "
 				+ "correspondiente a la auditor&iacute;a <strong>"
-				+getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo()+"-"+getRegistro().getAuditoria().getAudAnio()+
-				"-"+getRegistro().getAuditoria().getAudCorrelativo()
-				+"</strong> por lo que se le pide ingresar al sistema para revisarlo.</p>\r\n"
-				+"<p>Atte.-</p>";
+				+ getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo() + "-"
+				+ getRegistro().getAuditoria().getAudAnio() + "-" + getRegistro().getAuditoria().getAudCorrelativo()
+				+ "</strong> por lo que se le pide ingresar al sistema para revisarlo.</p>\r\n" + "<p>Atte.-</p>";
 	}
 
 	public void onEnviarRevision() {
@@ -410,37 +497,37 @@ public StreamedContent getInforme() {
 		String body;
 		Address[] toList;
 		Address[] toCc;
-		
+
 		try {
 			from = "audigoes.ues@gmail.com";
 			cc = "bren9414@gmail.com";
 			to = "bren9414@gmail.com";
 			subject = "Correo de Prueba";
-			
+
 			body = texto;
 			logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/images/logo-azul.png");
-			
+
 			SendMailAttach mail = new SendMailAttach(from, cc, to, subject, body, null, logo);
 			mail.send();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 	}
-	
+
 	public void handleFileUpload(FileUploadEvent event) {
 		try {
-			System.out.println(" archivo "+event.getFile().getFileName());
+			System.out.println(" archivo " + event.getFile().getFileName());
 			if (getStatus().equals("NEW")) {
 				onSave();
 				onEdit();
-			} 
+			}
 			this.arcMB.onNew();
 			this.arcMB.getRegistro().setInforme(getRegistro());
 			this.arcMB.getRegistro().setArcArchivo(event.getFile().getContent());
 			this.arcMB.getRegistro().setArcNombre(event.getFile().getFileName());
 			this.arcMB.getRegistro().setArcExt(event.getFile().getContentType());
 			this.arcMB.onSave();
-			//this.arcMB.afterSaveNew();
+			// this.arcMB.afterSaveNew();
 			this.arcMB.fillByInforme(getRegistro());
 			if (!getStatus().equals("NEW")) {
 				addWarn(new FacesMessage(SYSTEM_NAME, "Archivo Guardado con Éxito"));
@@ -451,7 +538,7 @@ public StreamedContent getInforme() {
 		}
 
 	}
-	
+
 	public ArchivoMB getArcMB() {
 		return arcMB;
 	}
@@ -468,5 +555,12 @@ public StreamedContent getInforme() {
 		this.textoCorreo = textoCorreo;
 	}
 
+	public BitacoraActividadMB getBitaMB() {
+		return bitaMB;
+	}
+
+	public void setBitaMB(BitacoraActividadMB bitaMB) {
+		this.bitaMB = bitaMB;
+	}
 
 }

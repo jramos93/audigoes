@@ -104,6 +104,7 @@ public class UsrMB extends AudigoesController implements Serializable {
 			getRegistro().setFecCrea(getToday());
 			getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
 			getRegistro().setUsuContrasenia(onGeneratePassword(getRegistro()));
+			getRegistro().setInstitucion(getObjAppsSession().getUsuario().getInstitucion());
 			getRegistro().setRegActivo(1);
 			audigoesLocal.insert(getRegistro());
 			if (getRegistro() != null && getRegistro().getUsuId() > 0) {

@@ -1,6 +1,7 @@
 package audigoes.ues.edu.sv.mbeans.ejecucion;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -14,11 +15,14 @@ import javax.faces.context.FacesContext;
 import javax.mail.Address;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
+import audigoes.ues.edu.sv.entities.administracion.BitacoraActividades;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
+import audigoes.ues.edu.sv.entities.ejecucion.ComentarioHallazgo;
 import audigoes.ues.edu.sv.entities.ejecucion.ProgramaEjecucion;
 import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planeacion.AuditoriaResponsable;
+import audigoes.ues.edu.sv.mbean.planificacion.BitacoraActividadMB;
 import audigoes.ues.edu.sv.mbeans.administracion.ArchivoMB;
 import audigoes.ues.edu.sv.mbeans.seguimiento.RecomendacionMB;
 import audigoes.ues.edu.sv.util.SendMailAttach;
@@ -34,9 +38,8 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 	private List<CedulaNota> filteredCedula;
 	private Auditoria auditoria;
 	private String textoCorreo = "";
-	private String textoCorreoObs = "";
-	private String textoCorreoFin = "";
-	private String textoCorreoUnidad = "";
+
+	private int dias;
 
 	private List<ProgramaEjecucion> programasList;
 
@@ -48,6 +51,12 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 
 	@ManagedProperty(value = "#{arcMB}")
 	private ArchivoMB arcMB = new ArchivoMB();
+
+	@ManagedProperty(value = "#{bitaMB}")
+	private BitacoraActividadMB bitaMB = new BitacoraActividadMB();
+
+	@ManagedProperty(value = "#{comeMB}")
+	private ComentarioHallazgoMB comeMB = new ComentarioHallazgoMB();
 
 	public CedulaUsuMB() {
 		super(new CedulaNota());
@@ -66,6 +75,13 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 	@Override
 	public void onRowSelect() {
 		super.onRowSelect();
+		if (getRegistro().getComentarioHallazgos() != null && !getRegistro().getComentarioHallazgos().isEmpty()) {
+			if (getRegistro().getComentarioHallazgos().size() == 1) {
+				comeMB.setRegistro(getRegistro().getComentarioHallazgos().get(0));
+				evdMB.setComentarioHallazgo(getRegistro().getComentarioHallazgos().get(0));
+				evdMB.fillByComentario();
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -101,7 +117,7 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 			setAuditoria(((Auditoria) sessionMap.get("auditoria")));
 
 			setListado((List<CedulaNota>) audigoesLocal.findByNamedQuery(CedulaNota.class, "notas.by.usuario",
-					new Object[] {}));
+					new Object[] { getObjAppsSession().getUsuario().getUsuId() }));
 		} catch (Exception e) {
 			e.printStackTrace();
 			addWarn(new FacesMessage("Advertencia", "No se pudo obtener las auditorias"));
@@ -122,9 +138,8 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 	}
 
 	@Override
-	public void onEditSelected() {
+	public void onShowSelected() {
 		// TODO Auto-generated method stub
-		super.onEditSelected();
 		recMB.setAuditoria(getRegistro().getAuditoria());
 		recMB.setCedula(getRegistro());
 		recMB.fillRecomendaciones();
@@ -134,6 +149,65 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 
 		arcMB.setCedula(getRegistro());
 		arcMB.fillByCedula(getRegistro());
+
+		super.onShowSelected();
+	}
+
+	@Override
+	public boolean beforeShow() {
+		if (getRegistro().getComentarioHallazgos() != null && !getRegistro().getComentarioHallazgos().isEmpty()) {
+			if (getRegistro().getComentarioHallazgos().size() == 1) {
+				comeMB.onEdit();
+				comeMB.setRegistro(getRegistro().getComentarioHallazgos().get(0));
+				evdMB.setComentarioHallazgo(getRegistro().getComentarioHallazgos().get(0));
+				evdMB.fillByComentario();
+			} else {
+				addWarn(new FacesMessage("Advertencia", "Problema al obtener los responsables"));
+				return false;
+			}
+		} else {
+			addWarn(new FacesMessage("Advertencia", "Problema al obtener los responsables"));
+			return false;
+		}
+		return super.beforeShow();
+	}
+
+	@Override
+	public boolean beforeEdit() {
+		if (getRegistro().getComentarioHallazgos() != null && !getRegistro().getComentarioHallazgos().isEmpty()) {
+			if (getRegistro().getComentarioHallazgos().size() == 1) {
+				comeMB.onEdit();
+				comeMB.setRegistro(getRegistro().getComentarioHallazgos().get(0));
+				evdMB.setComentarioHallazgo(getRegistro().getComentarioHallazgos().get(0));
+				evdMB.fillByComentario();
+			} else {
+				addWarn(new FacesMessage("Advertencia", "Problema al obtener los responsables"));
+				return false;
+			}
+		} else {
+			addWarn(new FacesMessage("Advertencia", "Problema al obtener los responsables"));
+			return false;
+		}
+		return super.beforeEdit();
+	}
+
+	@Override
+	public void onEditSelected() {
+		// TODO Auto-generated method stub
+		super.onEditSelected();
+		recMB.setAuditoria(getRegistro().getAuditoria());
+		recMB.setCedula(getRegistro());
+		recMB.fillRecomendaciones();
+
+		evdMB.setCedula(getRegistro());
+		// evdMB.setComentarioHallazgo(comeMB);
+
+		arcMB.setCedula(getRegistro());
+		arcMB.fillByCedula(getRegistro());
+
+		dias = (int) ((getRegistro().getCedFechaPlazo().getTime() - getToday().getTime()) / 86400000);
+
+		System.out.println("Hay " + dias + " dias de diferencia");
 	}
 
 	@Override
@@ -151,9 +225,21 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 		return super.beforeSaveNew();
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<CedulaNota> fillAllNotas(Auditoria auditoria) {
+		try {
+			return (List<CedulaNota>) audigoesLocal.findByNamedQuery(CedulaNota.class, "notas.by.auditoria",
+					new Object[] { auditoria.getAudId() });
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage("Advertencia", "No se pudo obtener las auditorias"));
+			return null;
+		}
+	}
+
 	public void prepararCorreo() {
 		textoCorreo = "<p><strong>AUDIGOES LE INFORMA:</strong></p>"
-				+ "<p>Se ha enviado para su revisi&oacute;n los comentarios al hallazgo "
+				+ "<p>Se ha dado respuesta y enviado para su revisi&oacute;n los comentarios al hallazgo "
 				+ "correspondiente a la auditor&iacute;a <strong>"
 				+ getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo() + "-"
 				+ getRegistro().getAuditoria().getAudAnio() + "-" + getRegistro().getAuditoria().getAudCorrelativo()
@@ -161,102 +247,72 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 				+ " </strong> por lo que se le pide ingresar al sistema para realizarlo.</p>\r\n" + "<p>Atte.-</p>";
 	}
 
-	public void prepararCorreoObs() {
-		textoCorreoObs = "<p><strong>AUDIGOES LE INFORMA:</strong></p>" + "<p>Se ha revisado el hallazgo "
-				+ "correspondiente a la auditor&iacute;a <strong>"
-				+ getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo() + "-"
-				+ getRegistro().getAuditoria().getAudAnio() + "-" + getRegistro().getAuditoria().getAudCorrelativo()
-				+ "</strong> denominado <strong>" + getRegistro().getCedTitulo()
-				+ " </strong> con las siguientes observaciones, por lo que se pide ingresar al sistema para realizarlo.</p>\r\n"
-				+ "<p>Atte.-</p>";
-	}
-
-	public void prepararCorreoFin() {
-		textoCorreoFin = "<p><strong>AUDIGOES LE INFORMA:</strong></p>" + "<p>Se ha revisado el hallazgo "
-				+ "correspondiente a la auditor&iacute;a <strong>"
-				+ getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo() + "-"
-				+ getRegistro().getAuditoria().getAudAnio() + "-" + getRegistro().getAuditoria().getAudCorrelativo()
-				+ "</strong> denominado <strong>" + getRegistro().getCedTitulo()
-				+ " </strong> por lo que se le pide ingresar al sistema para comunicarlo a la unidad correspondiente</p>\r\n"
-				+ "<p>Atte.-</p>";
-	}
-
-	public void prepararCorreoUnidad() {
-		textoCorreoUnidad = "<p><strong>AUDIGOES LE INFORMA:</strong></p>" + "<p>La Unidad de Auditoría Interna ha "
-				+ "identificado el siguiente hallazgo preliminar " + "correspondiente a la auditor&iacute;a <strong>"
-				+ getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo() + "-"
-				+ getRegistro().getAuditoria().getAudAnio() + "-" + getRegistro().getAuditoria().getAudCorrelativo()
-				+ "</strong> por lo que se le pide ingresar al sistema para comunicarlo a la unidad correspondiente</p>\r\n"
-				+ "<p><strong>Título: </strong>" + getRegistro().getCedTitulo() + "</p>"
-				+ "<p><strong>Condición: </strong>" + getRegistro().getCedCondicion() + "</p>"
-				+ "<p><strong>Criterio:</strong> " + getRegistro().getCedCriterio() + "</p>" + "<br/><p>Atte.-</p>";
-	}
-
 	public void onEnviarComentarios() {
 		Usuario usr = getRegistro().getUsuario1();
 		if (usr != null) {
 			try {
-				getRegistro().setCedEstado(5);
-				onSave();
-				correoComentarios(textoCorreo, getObjAppsSession().getUsuario(), usr);
+				if (correoComentarios(textoCorreo, getObjAppsSession().getUsuario(), usr)) {
+					System.out.println("correo");
+					comeMB.getRegistro().setComeEnviado(1);
+					comeMB.getRegistro().setComeFechaEnvio(getToday());
+					audigoesLocal.update(comeMB.getRegistro());
+
+					List<ComentarioHallazgo> comentarios = comeMB.fillComentarios(getRegistro());
+					if (comentarios != null) {
+						int contador = 0;
+						for (ComentarioHallazgo c : comentarios) {
+							if (c.getComeEnviado() == 0) {
+								contador = contador + 1;
+							}
+						}
+
+						if (contador == 0) {
+							getRegistro().setCedEstado(5);
+							getRegistro().setCedFechaRespuesta(getToday());
+							onSave();
+						}
+					}
+
+					List<CedulaNota> notas = fillAllNotas(getRegistro().getAuditoria());
+					if (notas != null) {
+						int contador = 0;
+						for (CedulaNota c : notas) {
+							if (c.getCedEstado() < 5) {
+								contador = contador + 1;
+							}
+						}
+
+						if (contador == 0) {
+							BitacoraActividades a = bitaMB.buscarActividad(13, getRegistro().getAuditoria());
+							if (a == null) {
+								bitaMB.iniciarActividad(13, "Comunicación de hallazgos preliminares",
+										getRegistro().getAuditoria(), getObjAppsSession().getUsuario());
+								bitaMB.finalizarActividad(13, auditoria, getObjAppsSession().getUsuario());
+							} else {
+								bitaMB.finalizarActividad(13, auditoria, getObjAppsSession().getUsuario());
+							}
+
+						}
+
+					}
+
+					BitacoraActividades a2 = bitaMB.buscarActividad(14, getRegistro().getAuditoria());
+					if (a2 == null) {
+						System.out.println(" 2 ");
+						bitaMB.iniciarActividad(14, "Análisis de comentarios de unidad", getRegistro().getAuditoria(),
+								getObjAppsSession().getUsuario());
+					}
+				} else {
+					addWarn(new FacesMessage("Error al enviar al auditor"));
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				addWarn(new FacesMessage("Error al enviar a revisión"));
+				addWarn(new FacesMessage("Error al enviar al auditor"));
 			}
 		}
 	}
 
-	public void onEnviarObservacion() {
-		Usuario usr = buscarCoordinador(getRegistro().getAuditoria());
-		if (usr != null) {
-			try {
-				getRegistro().setCedEstado(1);
-				getRegistro().setUsuario2(getObjAppsSession().getUsuario());
-				getRegistro().setCedFechaReviso(getToday());
-				onSave();
-				//correoRevision(textoCorreoObs, getRegistro().getUsuario1(), usr);
-				setStatus("VIEW");
-			} catch (Exception e) {
-				e.printStackTrace();
-				addWarn(new FacesMessage("Error al enviar las observaciones"));
-			}
-		}
-	}
-
-	public void onFinalizar() {
-		Usuario usr = buscarCoordinador(getRegistro().getAuditoria());
-		if (usr != null) {
-			try {
-				getRegistro().setCedEstado(3);
-				getRegistro().setUsuario2(getObjAppsSession().getUsuario());
-				getRegistro().setCedFechaReviso(getToday());
-				onSave();
-				correoFin(textoCorreoFin, getRegistro().getUsuario1(), usr);
-				setStatus("VIEW");
-			} catch (Exception e) {
-				e.printStackTrace();
-				addWarn(new FacesMessage("Error al finalizar las observaciones"));
-			}
-		}
-	}
-
-	public void onEnviarUnidad() {
-		Usuario usr = getObjAppsSession().getUsuario();
-		if (usr != null) {
-			try {
-				getRegistro().setCedEstado(4);
-				getRegistro().setCedFechaComunicacion(getToday());
-				onSave();
-				correoUnidad(textoCorreoUnidad, usr, getObjAppsSession().getUsuario());
-				setStatus("VIEW");
-			} catch (Exception e) {
-				e.printStackTrace();
-				addWarn(new FacesMessage("Error al finalizar las observaciones"));
-			}
-		}
-	}
-
-	public void correoComentarios(String texto, Usuario auditado, Usuario auditor) {
+	public boolean correoComentarios(String texto, Usuario auditado, Usuario auditor) {
 		String from;
 		String cc;
 		String to;
@@ -277,86 +333,10 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 
 			SendMailAttach mail = new SendMailAttach(from, cc, to, subject, body, null, logo);
 			mail.send();
+			return true;
 		} catch (Exception e) {
-			// TODO: handle exception
-		}
-	}
-
-	public void correoObservacion(String texto, Usuario auditor, Usuario coordinador) {
-		String from;
-		String cc;
-		String to;
-		String subject;
-		String attach;
-		String logo;
-		String body;
-		Address[] toList;
-		Address[] toCc;
-
-		try {
-			from = "audigoes.ues@gmail.com";
-			cc = coordinador.getUsuCorreo();
-			subject = "Observaciones al programa de ejecución";
-			to = auditor.getUsuCorreo();
-			body = texto;
-			logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/images/logo-azul.png");
-
-			SendMailAttach mail = new SendMailAttach(from, cc, to, subject, body, null, logo);
-			mail.send();
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-	}
-
-	public void correoFin(String texto, Usuario auditor, Usuario coordinador) {
-		String from;
-		String cc;
-		String to;
-		String subject;
-		String attach;
-		String logo;
-		String body;
-		Address[] toList;
-		Address[] toCc;
-
-		try {
-			from = "audigoes.ues@gmail.com";
-			cc = coordinador.getUsuCorreo();
-			subject = "Finalización de revisión al programa de ejecución";
-			to = auditor.getUsuCorreo();
-			body = texto;
-			logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/images/logo-azul.png");
-
-			SendMailAttach mail = new SendMailAttach(from, cc, to, subject, body, null, logo);
-			mail.send();
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-	}
-
-	public void correoUnidad(String texto, Usuario usuario, Usuario auditor) {
-		String from;
-		String cc;
-		String to;
-		String subject;
-		String attach;
-		String logo;
-		String body;
-		Address[] toList;
-		Address[] toCc;
-
-		try {
-			from = "audigoes.ues@gmail.com";
-			cc = auditor.getUsuCorreo();
-			subject = "Finalización de revisión al programa de ejecución";
-			to = usuario.getUsuCorreo();
-			body = texto;
-			logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/images/logo-azul.png");
-
-			SendMailAttach mail = new SendMailAttach(from, cc, to, subject, body, null, logo);
-			mail.send();
-		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
+			return false;
 		}
 	}
 
@@ -376,6 +356,13 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 	@Override
 	public void afterSave() {
 		super.afterSave();
+		try {
+			audigoesLocal.update(comeMB.getRegistro());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		comeMB.onEdit();
 		onEdit();
 	}
 
@@ -407,22 +394,6 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 
 	public void setTextoCorreo(String textoCorreo) {
 		this.textoCorreo = textoCorreo;
-	}
-
-	public String getTextoCorreoObs() {
-		return textoCorreoObs;
-	}
-
-	public void setTextoCorreoObs(String textoCorreoObs) {
-		this.textoCorreoObs = textoCorreoObs;
-	}
-
-	public String getTextoCorreoFin() {
-		return textoCorreoFin;
-	}
-
-	public void setTextoCorreoFin(String textoCorreoFin) {
-		this.textoCorreoFin = textoCorreoFin;
 	}
 
 	public List<ProgramaEjecucion> getProgramasList() {
@@ -457,12 +428,28 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 		this.arcMB = arcMB;
 	}
 
-	public String getTextoCorreoUnidad() {
-		return textoCorreoUnidad;
+	public int getDias() {
+		return dias;
 	}
 
-	public void setTextoCorreoUnidad(String textoCorreoUnidad) {
-		this.textoCorreoUnidad = textoCorreoUnidad;
+	public void setDias(int dias) {
+		this.dias = dias;
+	}
+
+	public BitacoraActividadMB getBitaMB() {
+		return bitaMB;
+	}
+
+	public void setBitaMB(BitacoraActividadMB bitaMB) {
+		this.bitaMB = bitaMB;
+	}
+
+	public ComentarioHallazgoMB getComeMB() {
+		return comeMB;
+	}
+
+	public void setComeMB(ComentarioHallazgoMB comeMB) {
+		this.comeMB = comeMB;
 	}
 
 }

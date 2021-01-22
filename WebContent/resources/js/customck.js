@@ -21,7 +21,7 @@ CKEDITOR.editorConfig = function(config) {
 		{ name: 'about', groups: [ 'about' ] }
 	];
 
-	config.removeButtons = 'Link,Unlink,Form,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Blockquote,CreateDiv,Flash,Smiley,Iframe,About';
+	config.removeButtons = 'Link,Unlink,Form,Radio,TextField,Textarea,Select,Button,HiddenField,Blockquote,CreateDiv,Flash,Smiley,Iframe,About';
 
 	config.bodyClass = 'document-editor';
 	config.height = 350;
@@ -31,6 +31,6 @@ CKEDITOR.editorConfig = function(config) {
 
 	// Simplify the Image and Link dialog windows. The "Advanced" tab is not
 	// needed in most cases.
-	config.removeDialogTabs = 'image:advanced;link:advanced';
+	//config.removeDialogTabs = 'image:advanced;link:advanced';
 
 }

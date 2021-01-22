@@ -16,6 +16,14 @@
 					update=":frmEjecucion, :frmProgramaEje">
 				</p:commandButton>
 			</div>
+			
+			<div align="right" style="margin-top: 50px; float: right;" id="dbts">
+				<p:commandButton id="btnCedulaMarca"
+					title="Clic para gestionar la cedula de marcas"
+					process="@this" value="Cédula de Marcas" icon="pi pi-table"
+					style="float:left;" styleClass="green-btn raised-btn ">
+				</p:commandButton>
+			</div>
 
 			<div class="ui-fluid p-formgrid p-grid">
 				<div class="name" align="center" style="margin-top: 100px;">
@@ -72,7 +80,7 @@
 							<p:toolbarGroup>
 								<p:commandButton value="Desarrollo de Procedimiento"
 									icon="pi pi-comments"
-									update=":frmProgramaEje, :frmProcedimientoEje"
+									update=":frmProgramaEje, :frmProcedimientoEje, :frmProcedimientoEje:btnEnviar"
 									rendered="#{proejeMB.registro.selected}"
 									actionListener="#{proejeMB.onEditSelected}">
 								</p:commandButton>
@@ -106,13 +114,13 @@
 
 					<p:column headerText="Fecha Elaboración">
 						<h:outputText value="#{p.pejFechaElaboro}">
-							<f:convertDateTime pattern="dd-MM-yyyy" />
+							<f:convertDateTime pattern="dd-MM-yyyy" timeZone="GMT-6"/>
 						</h:outputText>
 					</p:column>
 
 					<p:column headerText="Fecha Revisión">
 						<h:outputText value="#{p.pejFechaReviso}">
-							<f:convertDateTime pattern="dd-MM-yyyy" />
+							<f:convertDateTime pattern="dd-MM-yyyy" timeZone="GMT-6"/>
 						</h:outputText>
 					</p:column>
 

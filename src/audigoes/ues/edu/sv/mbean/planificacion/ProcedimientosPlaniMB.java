@@ -160,6 +160,7 @@ public class ProcedimientosPlaniMB extends AudigoesController implements Seriali
 	public void onShowSelected() {
 		// TODO Auto-generated method stub
 		super.onShowSelected();
+		arcMB.fillByPlanificacion(getRegistro());
 	}
 
 	@Override

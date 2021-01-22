@@ -65,5 +65,6 @@
 		<class>audigoes.ues.edu.sv.entities.vistas.TiempoPorFaseAuditorias</class>
 		<class>audigoes.ues.edu.sv.entities.vistas.TiempoPlanificadoVsTiempoEjecutado</class>
 		<class>audigoes.ues.edu.sv.entities.vistas.DuracionAuditorias</class>
+		<class>audigoes.ues.edu.sv.entities.ejecucion.ComentarioHallazgo</class>
 	</persistence-unit>
 </persistence>

@@ -104,19 +104,9 @@
 								rendered="#{marMB.status ne 'SHOW'}" multiple="false"
 								fileLimit="1" mode="advanced" dragDropSupport="false"
 								cancelLabel="Cancelar" label="Elegir" uploadLabel="Subir"
-								allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf)$/" />
+								allowTypes="/(\.|\/)(jpe?g|png)$/" />
 						</p:panelGrid>
-						<h:panelGroup id="btn">
-							<p:commandButton actionListener="#{marMB.downloadFile}"
-								style="width:50%;" value="Descargar"
-								rendered="#{marMB.registro.marArcArchivo!=null}" ajax="false"
-								icon="ui-icon-arrowthick-1-s" process="@this"
-								title="Clic para descargar el archivo">
-								<f:attribute name="marca" value="#{marMB.registro}"></f:attribute>
-								<p:fileDownload value="#{marMB.marca}"></p:fileDownload>
-							</p:commandButton>
-
-						</h:panelGroup>
+						<p:graphicImage id="btn" value="/marcaImage?id=#{marMB.registro.marId}" width="40" height="40"></p:graphicImage>
 					</div>
 
 					<div class="p-field-radiobutton">

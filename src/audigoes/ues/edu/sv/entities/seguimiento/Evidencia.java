@@ -4,66 +4,71 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.ejecucion.ComentarioHallazgo;
 import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 
 import java.util.Date;
-
 
 /**
  * The persistent class for the evidencia database table.
  * 
  */
 @Entity
-@NamedQuery(name="Evidencia.findAll", query="SELECT e FROM Evidencia e")
+@NamedQuery(name = "Evidencia.findAll", query = "SELECT e FROM Evidencia e")
 public class Evidencia extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "evd_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "evd_id", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "evd_id")
-	@Column(name="evd_id")
+	@Column(name = "evd_id")
 	private int evdId;
 
-	@Column(name="evd_extension")
+	@Column(name = "evd_extension")
 	private String evdExtension;
 
-	@Column(name="evd_nombre")
+	@Column(name = "evd_nombre")
 	private String evdNombre;
 
-	@Column(name="evd_referencia")
+	@Column(name = "evd_referencia")
 	private String evdReferencia;
 
-	@Column(name="evd_ruta")
+	@Column(name = "evd_ruta")
 	private String evdRuta;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fec_crea")
+	@Column(name = "fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fec_modi")
+	@Column(name = "fec_modi")
 	private Date fecModi;
 
-	@Column(name="reg_activo")
+	@Column(name = "reg_activo")
 	private int regActivo;
 
-	@Column(name="usu_crea")
+	@Column(name = "usu_crea")
 	private String usuCrea;
 
-	@Column(name="usu_modi")
+	@Column(name = "usu_modi")
 	private String usuModi;
 
-	//bi-directional many-to-one association to Comentario
+	// bi-directional many-to-one association to Comentario
 	@ManyToOne
-	@JoinColumn(name="evd_com_id")
+	@JoinColumn(name = "evd_com_id")
 	private Comentario comentario;
-	
+
 	@ManyToOne
-	@JoinColumn(name="evd_ced_id")
+	@JoinColumn(name = "evd_ced_id")
 	private CedulaNota cedula;
-	
+
+	// bi-directional many-to-one association to Comentario
+	@ManyToOne
+	@JoinColumn(name = "evd_come_id")
+	private ComentarioHallazgo comentarioHallazgo;
+
 	@Lob
-	@Column(name="evd_archivo")
+	@Column(name = "evd_archivo")
 	private byte[] evdArchivo;
 
 	public Evidencia() {
@@ -171,6 +176,14 @@ public class Evidencia extends SuperEntity implements Serializable {
 
 	public void setEvdArchivo(byte[] evdArchivo) {
 		this.evdArchivo = evdArchivo;
+	}
+
+	public ComentarioHallazgo getComentarioHallazgo() {
+		return comentarioHallazgo;
+	}
+
+	public void setComentarioHallazgo(ComentarioHallazgo comentarioHallazgo) {
+		this.comentarioHallazgo = comentarioHallazgo;
 	}
 
 	@Override

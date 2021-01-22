@@ -40,6 +40,11 @@
 		<query>select o from Usuario o where o.regActivo=1 and o.institucion.insId=?1 and o.usuId not in (select b.usuario.usuId from AuditoriaResponsable b where b.auditoria.audId=?2)</query>
 	</named-query>
 	
+	<named-query name="usuarios.auditoria.responsable">
+		<query>select a from Usuario a join fetch a.usuarioUnidad b where b.unidad.uniId in (
+		select c.unidad.uniId from AuditoriaUnidad c where c.auditoria.audId=?1)</query>
+	</named-query>
+	
 	<named-query name="find.coordinador.by.auditoria">
 		<query>select o from AuditoriaResponsable o where o.auditoria.audId=?1 and o.aurRol=0 and o.regActivo=1</query>
 	</named-query>

@@ -21,131 +21,146 @@ import javax.persistence.TemporalType;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
+import audigoes.ues.edu.sv.entities.ejecucion.ComentarioHallazgo;
 import audigoes.ues.edu.sv.entities.ejecucion.ProcedimientoEjecucion;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planificacion.ProcedimientoPlanificacion;
 import audigoes.ues.edu.sv.entities.seguimiento.Recomendacion;
-
 
 /**
  * The persistent class for the cedula_notas database table.
  * 
  */
 @Entity
-@Table(name="cedula_notas")
-@NamedQuery(name="CedulaNota.findAll", query="SELECT c FROM CedulaNota c")
+@Table(name = "cedula_notas")
+@NamedQuery(name = "CedulaNota.findAll", query = "SELECT c FROM CedulaNota c")
 public class CedulaNota extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "ced_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "ced_id", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "ced_id")
-	@Column(name="ced_id")
+	@Column(name = "ced_id")
 	private int cedId;
 
 	@Lob
-	@Column(name="ced_causa")
+	@Column(name = "ced_causa")
 	private String cedCausa;
 
 	@Lob
-	@Column(name="ced_condicion")
+	@Column(name = "ced_condicion")
 	private String cedCondicion;
 
 	@Lob
-	@Column(name="ced_criterio")
+	@Column(name = "ced_criterio")
 	private String cedCriterio;
 
 	@Lob
-	@Column(name="ced_efecto")
+	@Column(name = "ced_efecto")
 	private String cedEfecto;
 
-	@Column(name="ced_estado")
+	@Column(name = "ced_estado")
 	private int cedEstado;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="ced_fecha_elaboro")
+	@Column(name = "ced_fecha_elaboro")
 	private Date cedFechaElaboro;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="ced_fecha_reviso")
+	@Column(name = "ced_fecha_reviso")
 	private Date cedFechaReviso;
 
 	@Lob
-	@Column(name="ced_observacion")
+	@Column(name = "ced_observacion")
 	private String cedObservacion;
 
-	@Column(name="ced_referencia")
+	@Column(name = "ced_referencia")
 	private String cedReferencia;
 
-	@Column(name="ced_titulo")
+	@Column(name = "ced_titulo")
 	private String cedTitulo;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_crea")
+	@Column(name = "fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_modi")
+	@Column(name = "fec_modi")
 	private Date fecModi;
 
-	@Column(name="reg_activo")
+	@Column(name = "reg_activo")
 	private int regActivo;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="ced_fecha_plazo")
-	private Date cedFechaPlazo;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="ced_fecha_comunicacion")
-	private Date cedFechaComunicacion;
 
-	@Column(name="usu_crea")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "ced_fecha_plazo")
+	private Date cedFechaPlazo;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "ced_fecha_comunicacion")
+	private Date cedFechaComunicacion;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "ced_fecha_respuesta")
+	private Date cedFechaRespuesta;
+
+	@Column(name = "usu_crea")
 	private String usuCrea;
 
-	@Column(name="usu_modi")
+	@Column(name = "usu_modi")
 	private String usuModi;
-	
-	@Column(name="ced_comentario")
+
+	@Lob
+	@Column(name = "ced_comentario")
 	private String cedComentario;
-	
-	@Column(name="ced_comentario_auditor")
+
+	@Lob
+	@Column(name = "ced_comentario_auditor")
 	private String cedComentarioAuditor;
-	
-	@Column(name="ced_valorizacion")
+
+	@Column(name = "ced_valorizacion")
 	private int cedValorizacion;
-	
+
 	@ManyToOne
-	@JoinColumn(name="ced_aud_id")
+	@JoinColumn(name = "ced_aud_id")
 	private Auditoria auditoria;
 
-	//bi-directional many-to-one association to Informe
+	// bi-directional many-to-one association to Informe
 	@ManyToOne
-	@JoinColumn(name="ced_inf_id")
+	@JoinColumn(name = "ced_inf_id")
 	private Informe informe;
 
-	//bi-directional many-to-one association to ProcedimientoEjecucion
+	// bi-directional many-to-one association to ProcedimientoEjecucion
 	@ManyToOne
-	@JoinColumn(name="ced_pej_id")
+	@JoinColumn(name = "ced_pej_id")
 	private ProcedimientoEjecucion procedimientoEjecucion;
 
-	//bi-directional many-to-one association to ProcedimientoPlanificacion
+	// bi-directional many-to-one association to ProcedimientoPlanificacion
 	@ManyToOne
-	@JoinColumn(name="ced_pro_id")
+	@JoinColumn(name = "ced_pro_id")
 	private ProcedimientoPlanificacion procedimientoPlanificacion;
 
-	//bi-directional many-to-one association to Usuario
+	// bi-directional many-to-one association to Usuario
 	@ManyToOne
-	@JoinColumn(name="ced_usu_id")
+	@JoinColumn(name = "ced_usu_id")
 	private Usuario usuario1;
 
-	//bi-directional many-to-one association to Usuario
+	// bi-directional many-to-one association to Usuario
 	@ManyToOne
-	@JoinColumn(name="ced_usu_usu_id")
+	@JoinColumn(name = "ced_usu_usu_id")
 	private Usuario usuario2;
 
-	//bi-directional many-to-one association to Recomendacion
-	@OneToMany(mappedBy="cedulaNota")
+	// bi-directional many-to-one association to Usuario
+	@ManyToOne
+	@JoinColumn(name = "ced_usu_responsable")
+	private Usuario usuarioResponsable;
+
+	// bi-directional many-to-one association to Recomendacion
+	@OneToMany(mappedBy = "cedulaNota")
 	private List<Recomendacion> recomendacion;
+	
+	//bi-directional many-to-one association to ComentarioHallazgo
+	@OneToMany(mappedBy="cedulaNota")
+	private List<ComentarioHallazgo> comentarioHallazgos;
 
 	public CedulaNota() {
 	}
@@ -386,6 +401,30 @@ public class CedulaNota extends SuperEntity implements Serializable {
 
 	public void setCedFechaComunicacion(Date cedFechaComunicacion) {
 		this.cedFechaComunicacion = cedFechaComunicacion;
+	}
+
+	public Usuario getUsuarioResponsable() {
+		return usuarioResponsable;
+	}
+
+	public void setUsuarioResponsable(Usuario usuarioResponsable) {
+		this.usuarioResponsable = usuarioResponsable;
+	}
+
+	public Date getCedFechaRespuesta() {
+		return cedFechaRespuesta;
+	}
+
+	public void setCedFechaRespuesta(Date cedFechaRespuesta) {
+		this.cedFechaRespuesta = cedFechaRespuesta;
+	}
+
+	public List<ComentarioHallazgo> getComentarioHallazgos() {
+		return comentarioHallazgos;
+	}
+
+	public void setComentarioHallazgos(List<ComentarioHallazgo> comentarioHallazgos) {
+		this.comentarioHallazgos = comentarioHallazgos;
 	}
 
 	@Override

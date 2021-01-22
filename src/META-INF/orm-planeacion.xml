@@ -11,7 +11,12 @@
 		<query>select o from PlanAnual o where o.institucion.insId = ?1 </query>
 	</named-query>
 	<named-query name="auditoria.get.all.institucion">
-		<query>select distinct o from Auditoria o join fetch o.auditoriaResponsable where o.planAnual.institucion.insId = ?1 and o.regActivo = 1</query>
+		<query>select distinct o from Auditoria o join fetch o.auditoriaResponsable r where o.planAnual.institucion.insId = ?1 and o.regActivo = 1 and r.regActivo=1</query>
+	</named-query>
+	<named-query
+		name="auditoria.get.all.institucion.by.auditor">
+		<query>select distinct o from Auditoria o join fetch o.auditoriaResponsable 
+		where o.planAnual.institucion.insId = ?1 and o.regActivo = 1 and o.audId in (select a.auditoria.audId from AuditoriaResponsable a where a.usuario.usuId=?2 and a.regActivo=1)</query>
 	</named-query>
 	<named-query name="auditoria.get.all.institucion.plan">
 		<query>select o from Auditoria o where o.planAnual.institucion.insId = ?1 and o.planAnual.plaId = ?2 and o.regActivo = 1</query>
@@ -27,7 +32,7 @@
 		<query>select o from Unidad o where o.institucion.insId = ?1 and o.regActivo = 1</query>
 	</named-query>
 	<named-query name="usuario.get.all.institucion">
-		<query>select o from Usuario o where o.institucion.insId = ?1 and o.regActivo = 1</query>
+		<query>select distinct o from Usuario o join fetch o.usuarioPermiso p where o.institucion.insId = ?1 and o.regActivo = 1 and p.rol.rolIdentificador='COORDINADOR'</query>
 	</named-query>
 	<named-query name="usuario.get.coordinador">
 		<query>select o.usuario from AuditoriaResponsable o where o.auditoria.audId = ?1 and o.aurRol = 0 and o.regActivo = 1</query>

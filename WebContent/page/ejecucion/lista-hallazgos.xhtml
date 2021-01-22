@@ -43,12 +43,30 @@
 						<p:toolbarGroup>
 							<p:commandButton value="Agregar" icon="pi pi-plus"
 								update=":frmListaHallazgos, :frmHallazgo"
-								actionListener="#{ceduMB.onNew}">
+								rendered="#{ceduMB.rolAuditor and ceduMB.auditoria.audFase==3}" actionListener="#{ceduMB.onNew}">
 							</p:commandButton>
 
 							<p:commandButton value="Editar" icon="pi pi-pencil"
 								update=":frmListaHallazgos, :frmHallazgo"
+								rendered="#{ceduMB.registro.selected and ceduMB.registro.cedEstado eq 1 and ceduMB.perEdit}"
+								actionListener="#{ceduMB.onEditSelected}">
+							</p:commandButton>
+
+							<p:commandButton value="Análisis" icon="pi pi-pencil"
+								update=":frmListaHallazgos, :frmHallazgo"
+								rendered="#{ceduMB.registro.selected and ceduMB.registro.cedEstado eq 5 and ceduMB.perEdit}"
+								actionListener="#{ceduMB.onEditSelected}">
+							</p:commandButton>
+
+							<p:commandButton value="Visualizar" icon="pi pi-eye"
+								update=":frmListaHallazgos, :frmHallazgo"
 								rendered="#{ceduMB.registro.selected}"
+								actionListener="#{ceduMB.onShowSelected}">
+							</p:commandButton>
+
+							<p:commandButton value="Supervisar" icon="pi pi-pencil"
+								update=":frmListaHallazgos, :frmHallazgo"
+								rendered="#{ceduMB.registro.selected and !ceduMB.rolAuditor and ceduMB.registro.cedEstado ne 7}"
 								actionListener="#{ceduMB.onEditSelected}">
 							</p:commandButton>
 						</p:toolbarGroup>
@@ -62,7 +80,7 @@
 					</p:outputPanel>
 				</f:facet>
 
-				<p:column headerText="No." style="text-align:center;">
+				<p:column headerText="No." style="text-align:center; width:50px;">
 					<h:outputText value="#{index+1}"></h:outputText>
 				</p:column>
 
@@ -78,7 +96,8 @@
 					<h:outputText value="#{c.cedCriterio}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Estado" style="text-align:center;">
+				<p:column headerText="Estado"
+					style="text-align:center; width:100px;">
 					<h:outputText value="#{c.cedEstado}" converter="estadoHallazgo">
 					</h:outputText>
 				</p:column>

@@ -19,6 +19,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.ejecucion.ComentarioHallazgo;
 import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planificacion.Actividad;
 import audigoes.ues.edu.sv.entities.planificacion.Memorando;
@@ -170,6 +171,10 @@ public class Auditoria extends SuperEntity implements Serializable {
 	// bi-directional many-to-one association to Recomendacion
 	@OneToMany(mappedBy = "auditoria")
 	private List<Recomendacion> recomendacion;
+	
+	//bi-directional many-to-one association to ComentarioHallazgo
+	@OneToMany(mappedBy="auditoria")
+	private List<ComentarioHallazgo> comentarioHallazgos;
 
 	public Auditoria() {
 	}
@@ -550,6 +555,14 @@ public class Auditoria extends SuperEntity implements Serializable {
 
 	public void setAudFechaAsignada(Date audFechaAsignada) {
 		this.audFechaAsignada = audFechaAsignada;
+	}
+
+	public List<ComentarioHallazgo> getComentarioHallazgos() {
+		return comentarioHallazgos;
+	}
+
+	public void setComentarioHallazgos(List<ComentarioHallazgo> comentarioHallazgos) {
+		this.comentarioHallazgos = comentarioHallazgos;
 	}
 
 	@Override

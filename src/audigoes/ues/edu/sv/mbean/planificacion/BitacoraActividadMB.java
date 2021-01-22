@@ -1,12 +1,18 @@
 package audigoes.ues.edu.sv.mbean.planificacion;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+
+import org.primefaces.model.timeline.TimelineEvent;
+import org.primefaces.model.timeline.TimelineModel;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.BitacoraActividades;
@@ -23,6 +29,8 @@ public class BitacoraActividadMB extends AudigoesController implements Serializa
 
 	private Auditoria auditoria;
 
+	private TimelineModel<BitacoraActividades, ?> modelBitacora;
+
 	public BitacoraActividadMB() {
 		super(new BitacoraActividades());
 	}
@@ -31,9 +39,43 @@ public class BitacoraActividadMB extends AudigoesController implements Serializa
 	public void init() {
 		try {
 			// super.init();
+			//createModel();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void createModel() {
+		modelBitacora = new TimelineModel<>();
+
+		if (getListado() != null) {
+			for (BitacoraActividades c : getListado()) {
+				//Calendar calInicio = Calendar.getInstance();
+				//Calendar calFin = Calendar.getInstance();
+				if (c.getBitaFechaFin() != null) {
+
+					modelBitacora.add(TimelineEvent.<BitacoraActividades>builder().data(c)
+							.startDate(c.getBitaFechaInicio().toInstant()
+								      .atZone(ZoneId.systemDefault())
+								      .toLocalDate())
+							.endDate(c.getBitaFechaFin().toInstant()
+								      .atZone(ZoneId.systemDefault())
+								      .toLocalDate())
+							.build());
+				} else {
+					
+					modelBitacora.add(TimelineEvent.<BitacoraActividades>builder().data(c)
+							.startDate(c.getBitaFechaInicio().toInstant()
+								      .atZone(ZoneId.systemDefault())
+								      .toLocalDate())
+							.endDate(getToday().toInstant()
+								      .atZone(ZoneId.systemDefault())
+								      .toLocalDate())
+							.build());
+				}
+			}
+		}
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -41,6 +83,7 @@ public class BitacoraActividadMB extends AudigoesController implements Serializa
 		try {
 			setListado((List<BitacoraActividades>) audigoesLocal.findByNamedQuery(BitacoraActividades.class,
 					"bitacora.by.auditoria", new Object[] { auditoria.getAudId() }));
+			createModel();
 		} catch (Exception e) {
 			e.printStackTrace();
 			addWarn(new FacesMessage("Error al obtener el listado"));
@@ -94,7 +137,7 @@ public class BitacoraActividadMB extends AudigoesController implements Serializa
 
 			if (getListado() != null && !getListado().isEmpty()) {
 				for (BitacoraActividades b : getListado()) {
-					System.out.println(" - "+b.getBitaId());
+					System.out.println(" - " + b.getBitaId());
 					setRegistro(b);
 					if (getRegistro().getBitaFechaFin() == null && getRegistro().getUsuarioFin() == null) {
 						onEdit();
@@ -161,6 +204,14 @@ public class BitacoraActividadMB extends AudigoesController implements Serializa
 	public void afterSaveNew() {
 		getListado().add(getRegistro());
 		super.afterSaveNew();
+	}
+
+	public TimelineModel<BitacoraActividades, ?> getModelBitacora() {
+		return modelBitacora;
+	}
+
+	public void setModelBitacora(TimelineModel<BitacoraActividades, ?> modelBitacora) {
+		this.modelBitacora = modelBitacora;
 	}
 
 	public Auditoria getAuditoria() {

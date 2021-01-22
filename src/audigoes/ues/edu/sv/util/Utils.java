@@ -10,7 +10,7 @@ import javax.crypto.SecretKey;
 
 public class Utils {
 	
-	public static final String claveEstandar = "Cambiame1";
+	public static final String claveEstandar = "Tesis2020";
 	
 	public static final String rolAuditor = "AUDITOR";
 	public static final String rolCoordinador = "COORDINADOR";

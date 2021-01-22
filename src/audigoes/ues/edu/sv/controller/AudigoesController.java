@@ -146,7 +146,7 @@ public class AudigoesController {
 	}
 
 	public Date getToday() {
-		TimeZone timeZone = TimeZone.getTimeZone("UTC-6");
+		TimeZone timeZone = TimeZone.getTimeZone("GMT-6");
 		return Calendar.getInstance(timeZone).getTime();
 	}
 

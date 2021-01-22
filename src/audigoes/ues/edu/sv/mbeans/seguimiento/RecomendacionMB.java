@@ -42,7 +42,6 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 		try {
 			configBean();
 			super.init();
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -98,6 +97,7 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 
 	@Override
 	public void afterNew() {
+		getRegistro().setRecSituacion(cedula.getCedCondicion());
 		super.afterNew();
 	}
 

@@ -64,6 +64,10 @@ public class Informe extends SuperEntity implements Serializable {
 	private String infPortada;
 	
 	@Lob
+	@Column(name="inf_indice")
+	private String infIndice;
+	
+	@Lob
 	@Column(name="inf_destinatario")
 	private String infDestinatario;
 
@@ -425,6 +429,14 @@ public class Informe extends SuperEntity implements Serializable {
 
 	public void setArchivo(List<Archivo> archivo) {
 		this.archivo = archivo;
+	}
+
+	public String getInfIndice() {
+		return infIndice;
+	}
+
+	public void setInfIndice(String infIndice) {
+		this.infIndice = infIndice;
 	}
 
 	public Archivo addArchivo(Archivo archivo) {

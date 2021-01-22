@@ -18,6 +18,7 @@ import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.BitacoraActividades;
 import audigoes.ues.edu.sv.entities.administracion.Unidad;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
+import audigoes.ues.edu.sv.entities.ejecucion.ProcedimientoEjecucion;
 import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planeacion.AuditoriaResponsable;
@@ -102,7 +103,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		try {
 			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 			sessionMap.put("auditoria", getRegistro());
-			FacesContext.getCurrentInstance().getExternalContext().redirect("/audigoes/page/informe/informe.xhtml");
+			//FacesContext.getCurrentInstance().getExternalContext().redirect("/audigoes/page/informe/informe.xhtml");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -111,9 +112,16 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	@SuppressWarnings("unchecked")
 	public void fillListado() {
 		try {
-			setListado(
-					(List<Auditoria>) audigoesLocal.findByNamedQuery(Auditoria.class, "auditoria.get.all.institucion",
-							new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() }));
+			if (isRolAuditor()) {
+				setListado((List<Auditoria>) audigoesLocal.findByNamedQuery(Auditoria.class,
+						"auditoria.get.all.institucion.by.auditor",
+						new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId(),
+								getObjAppsSession().getUsuario().getUsuId() }));
+			} else {
+				setListado((List<Auditoria>) audigoesLocal.findByNamedQuery(Auditoria.class,
+						"auditoria.get.all.institucion",
+						new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() }));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -152,6 +160,29 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		pplaMB.fillPrograma();
 		pplaMB.onEdit();
 		pplaMB.revisarPermisos();
+	}
+
+	public void onEjecucion() {
+		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+		setRegistro(((Auditoria) sessionMap.get("auditoria")));
+		pejeMB.fillPrograma();
+		BitacoraActividades a = bitaMB.buscarActividad(12, getRegistro());
+		if (a == null) {
+			bitaMB.iniciarActividad(12, "Desarrollo de Procecdimientos de Ejecución", getRegistro(),
+					getObjAppsSession().getUsuario());
+			for (ProcedimientoEjecucion p : pejeMB.getProejeMB().getListado()) {
+				p.setPejEstado(1);
+				try {
+					audigoesLocal.update(p);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+		// pejeMB.revisarPermisosDesarrollo();
+		// pejeMB.onEdit();
 	}
 
 	public void onProgramaEje() {

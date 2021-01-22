@@ -46,7 +46,8 @@
 
 							<p:outputLabel for="ref" value="Referencia:"
 								style="font-weight:bold;" />
-							<p:inputTextarea id="ref" readonly="#{proplaMB.status eq 'SHOW' or pplaMB.registro.prpEstado ne 1}"
+							<p:inputTextarea id="ref"
+								readonly="#{proplaMB.status eq 'SHOW' or pplaMB.registro.prpEstado ne 1}"
 								value="#{proplaMB.registro.proReferencia}" rows="1"
 								maxlength="250" />
 						</p:panelGrid>
@@ -57,8 +58,8 @@
 
 							<p:outputLabel value="Fecha de inicio:" style="font-weight:bold;" />
 							<p:calendar mode="inline" navigator="true"
-								disabled="#{proplaMB.status eq 'SHOW' or pplaMB.registro.prpEstado ne 1}" locale="es"
-								value="#{proplaMB.registro.proFechaInicio}"></p:calendar>
+								disabled="#{proplaMB.status eq 'SHOW' or pplaMB.registro.prpEstado ne 1}"
+								locale="es" value="#{proplaMB.registro.proFechaInicio}"></p:calendar>
 
 							<p:outputLabel value="Fecha de fin:" style="font-weight:bold;" />
 							<p:calendar mode="inline" navigator="true" locale="es"
@@ -83,7 +84,7 @@
 						<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
 							styleClass="ui-panelgrid-blank form-group form-elements">
 							<h:outputText value="Subida de archivos:"></h:outputText>
-							<p:fileUpload listener="#{proplaMB.handleFileUpload}" 
+							<p:fileUpload listener="#{proplaMB.handleFileUpload}"
 								multiple="true" mode="advanced" dragDropSupport="false"
 								cancelLabel="Cancelar" uploadLabel="Subir" label="Elegir"
 								disabled="#{proplaMB.status eq 'NEW' or proplaMB.status eq 'SHOW' or pplaMB.registro.prpEstado ne 1}"
@@ -105,6 +106,16 @@
 							<p:column headerText="Nombre" filterBy="#{a.arcNombre}"
 								filterMatchMode="contains">
 								<h:outputText value="#{a.arcNombre}"></h:outputText>
+							</p:column>
+
+							<p:column headerText="Descargar"
+								style="width:60px; text-align:center;">
+								<p:commandButton actionListener="#{arcMB.downloadFile}"
+									ajax="false" icon="ui-icon-arrowthick-1-s"
+									title="Clic para descargar el archivo">
+									<f:attribute name="pt" value="#{a}"></f:attribute>
+									<p:fileDownload value="#{arcMB.pt}"></p:fileDownload>
+								</p:commandButton>
 							</p:column>
 
 							<p:column headerText="Eliminar" style="width:60px;">
