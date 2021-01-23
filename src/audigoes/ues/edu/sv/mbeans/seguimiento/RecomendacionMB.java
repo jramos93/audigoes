@@ -75,13 +75,33 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 	}
 	
 	public void onSaveComentario() {
-		comMB.onSave();
-		System.out.println(getRegistro().getSeguimiento());
-		onEdit();
-		System.out.println(getStatus());
-		getRegistro().setSeguimiento(getSeguimiento());
-		System.out.println(getRegistro().getSeguimiento());
-		onSave();
+		if(comMB.beforeSave()) {
+			comMB.onSave();
+			onEdit();
+			getRegistro().setSeguimiento(getSeguimiento());
+			getRegistro().setRecEstado(3); //estado 3 = en proceso
+			onSave();
+		}
+	}
+	
+	public void onSaveImplementarRec() {
+		if(comMB.beforeSave()) {
+			comMB.onSave();
+			onEdit();
+			getRegistro().setSeguimiento(getSeguimiento());
+			getRegistro().setRecEstado(2); //estado 2 = implementado
+			onSave();
+		}
+	}
+	
+	public void onSaveNoImplementarRec() {
+		if(comMB.beforeSave()) {
+			comMB.onSave();
+			onEdit();
+			getRegistro().setSeguimiento(getSeguimiento());
+			getRegistro().setRecEstado(4); //estado 4 = no implementado
+			onSave();
+		}
 	}
 
 	public boolean globalFilterFunction(Object value, Object filter, Locale locale) {

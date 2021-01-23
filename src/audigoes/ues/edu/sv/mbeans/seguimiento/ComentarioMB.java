@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -91,9 +92,34 @@ public class ComentarioMB extends AudigoesController implements Serializable {
 	}
 	
 	@Override
+	public boolean beforeSave() {
+		if(isRolAuditor()) {
+			if(getRegistro().getComComentarioAuditoria() == null || getRegistro().getComComentarioAuditoria().isEmpty()) {
+				addWarn(new FacesMessage(SYSTEM_NAME, "Debe ingresar un comentario para poder guardar"));
+				return false;
+			} else {
+				return super.beforeSaveNew();
+			}
+			
+		}else if (isRolAuditado()) {
+			if (getRegistro().getComComentario() == null || getRegistro().getComComentario().isEmpty()) {
+				addWarn(new FacesMessage(SYSTEM_NAME, "Debe ingresar un comentario para poder guardar"));
+				return false;
+			} else {
+				return super.beforeSaveNew();
+			}
+		} else {
+			addWarn(new FacesMessage(SYSTEM_NAME, "No tiene permisos para realizar cambios en los comentarios"));
+			return false;
+		}
+		
+	}
+	
+	@Override
 	public boolean beforeSaveNew() {
 		getRegistro().setRecomendacion(getRecomendacion());
 		return super.beforeSaveNew();
+		
 	}
 
 	@Override

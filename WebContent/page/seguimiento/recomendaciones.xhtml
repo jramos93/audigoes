@@ -31,11 +31,15 @@
 					<p:outputLabel for="fechainicio" value="Fecha inicio seguimiento:"
 						style="font-weight:bold;" />
 					<p:outputLabel id="fechainicio"
-						value="#{segMB.registro.segFecInicio}" />
+						value="#{segMB.registro.segFecInicio}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</p:outputLabel>
 
 					<p:outputLabel for="fechafin" value="Fecha fin:"
 						style="font-weight:bold;" />
-					<p:outputLabel id="fechafin" value="#{segMB.registro.segFecFin}" />
+					<p:outputLabel id="fechafin" value="#{segMB.registro.segFecFin}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</p:outputLabel>
 
 				</p:panelGrid>
 			</div>
@@ -45,7 +49,7 @@
 						<div class="ui-fluid p-formgrid p-grid">
 							<p:separator />
 							<div class="name" align="center">
-								<span class="app-name">Auditor Asignado</span>
+								<span class="app-name">Auditores Auditoría</span>
 							</div>
 
 							<p:panelGrid columnClasses="ui-lg-1,ui-lg-1,ui-lg-1,ui-lg-1"
@@ -136,7 +140,7 @@
 								</p:toolbar>
 							</f:facet>
 							<p:headerRow>
-								<p:column colspan="2">
+								<p:column colspan="3">
 									<h:outputText value="Hallazgo: #{recm.cedulaNota.cedTitulo}"></h:outputText>
 								</p:column>
 							</p:headerRow>
@@ -145,6 +149,10 @@
 							</p:column>
 							<p:column headerText="Situación Encontrada">
 								<h:outputText value="#{recm.recSituacion}"></h:outputText>
+							</p:column>
+							<p:column headerText="Estado">
+								<h:outputText value="#{recm.recEstado}"
+									converter="estadoRecomendacion"></h:outputText>
 							</p:column>
 						</p:dataTable>
 					</p:tab>
@@ -168,14 +176,19 @@
 											value="Recomendaciones y Comentarios" icon="pi pi-plus"
 											rendered="#{segMB.seguimientoSelected.selected}"
 											action="#{segMB.obtenerRecomendacionesSeguimiento()}"
-											update="@form :frmRecomendacionesComentarios"
-											styleClass="raised-btn" process="@this">
+											update=":dgRecomendacionesSeguimiento"
+											oncomplete="PF('wvRecomendacionesSeguimiento').show();"
+											styleClass="raised-btn">
 										</p:commandButton>
 									</p:toolbarGroup>
 								</p:toolbar>
 							</f:facet>
 							<p:column headerText="N°" width="60" style="text-align:center;">
 								<h:outputText value="#{indexSeguimiento+1}" />
+							</p:column>
+							<p:column headerText="Comentario">
+								<h:outputText value="#{seg.segObservacion}">
+								</h:outputText>
 							</p:column>
 							<p:column headerText="Fecha Inicio">
 								<h:outputText value="#{seg.segFecInicio}">
@@ -192,10 +205,38 @@
 				</p:tabView>
 			</div>
 
-			<div class="ui-fluid p-formgrid p-grid"></div>
-
-
 		</p:panel>
 	</h:form>
+
+	<p:dialog id="dgRecomendacionesSeguimiento" maximizable="true"
+		widgetVar="wvRecomendacionesSeguimiento" responsive="true" width="900" minHeight="650"
+		closeOnEscape="true" header="Historial Recomendaciones" modal="true">
+		<h:form id="frmRecomendacionesSeguimiento">
+			<p:dataTable var="hrecm" value="#{segMB.recomendacionesSeguimientoList}" expandedRow="single"
+				expandableRowGroups="true" sortBy="#{hrecm.cedulaNota.cedTitulo}"
+				widgetVar="wvRecomendacionesHist" id="dtRecomendacionHist"
+				style="margin-top:20px;" paginator="true" rowKey="#{hrecm.recId}"
+				selection="#{recMB.regSelected}" selectionMode="single"
+				paginatorPosition="bottom" rowsPerPageTemplate="5,10,15" rows="5"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+				<p:headerRow>
+					<p:column colspan="3">
+						<h:outputText value="Hallazgo: #{hrecm.cedulaNota.cedTitulo}"></h:outputText>
+					</p:column>
+				</p:headerRow>
+				<p:column headerText="Titulo Recomendación">
+					<h:outputText value="#{hrecm.recTitulo}"></h:outputText>
+				</p:column>
+				<p:column headerText="Situación Encontrada">
+					<h:outputText value="#{hrecm.recSituacion}"></h:outputText>
+				</p:column>
+				<p:column headerText="Estado" width="150" style="text-align:center">
+					<h:outputText value="#{hrecm.recEstado}"
+						converter="estadoRecomendacion"></h:outputText>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:dialog>
 
 </ui:composition>

@@ -10,7 +10,7 @@
 			<div align="left" style="margin-top: 50px;">
 				<p:commandButton id="btnCancelComentario" action="#{comMB.onCancel}"
 					process="@this" value="Regresar" icon="pi pi-arrow-left"
-					style="float:left;" update="@form :frmSeguimiento" 
+					style="float:left;" update="@form :frmSeguimiento"
 					actionListener="/audigoes/page/planeacion/auditoria.xhtml">
 				</p:commandButton>
 			</div>
@@ -39,17 +39,49 @@
 			</div>
 			<div class="ui-fluid p-formgrid p-grid">
 				<p:tabView id="tvComentarios">
-					<p:tab title="Comentarios de Unidad(es) Auditada(s)" >
+					<p:tab title="Comentarios de Unidad(es) Auditada(s)">
 						<pe:ckEditor id="comentarioAuditado" width="100%"
-								value="#{comMB.registro.comComentario}" readonly="#{!comMB.rolAuditor}"/>
+							value="#{comMB.registro.comComentario}"
+							readonly="#{!comMB.rolAuditado}" />
 					</p:tab>
 					<p:tab title="Comentarios de Auditoría">
-						<pe:ckEditor id="comentarioAuditaria" width="100%" readonly="#{!comMB.rolAuditado}"
-								value="#{comMB.registro.comComentarioAuditoria}" />
+						<pe:ckEditor id="comentarioAuditaria" width="100%"
+							value="#{comMB.registro.comComentarioAuditoria}"
+							readonly="#{!comMB.rolAuditor}" />
 					</p:tab>
 				</p:tabView>
-				<p:commandButton id="btnGuardarBottom" action="#{recMB.onSaveComentario}"
-					value="Guardar" update="@form :frmSeguimiento" process="@this @form" />
+				<p:panelGrid style="width:100%"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+					<p:row style="text-align:center;">
+						<p:column>
+							<p:commandButton id="btnGuardarBottom" styleClass="blue-btn"
+								action="#{recMB.onSaveComentario}" value="Guardar Comentario"
+								update="@form :frmSeguimiento" process="@this @form" />
+						</p:column>
+						<p:column>
+							<p:commandButton id="btnImplementarBottom" styleClass="green-btn"
+								action="#{recMB.onSaveImplementarRec}"
+								value="Recomendación Implementada"
+								rendered="#{comMB.rolAuditado}" update="@form :frmSeguimiento"
+								process="@this @form">
+								<p:confirm header="Confirmación"
+									message="Al guardar comentario la recomendación quedará IMPLEMENTADA. ¿Desea continuar?"
+									icon="pi pi-exclamation-triangle" />
+							</p:commandButton>
+						</p:column>
+						<p:column>
+							<p:commandButton id="btnNoImplementarBottom"
+								styleClass="pink-btn" action="#{recMB.onSaveNoImplementarRec}"
+								value="Recomendación No Implementada"
+								rendered="#{comMB.rolAuditado}" update="@form :frmSeguimiento"
+								process="@this @form">
+								<p:confirm header="Confirmación"
+									message="Al guardar comentario la recomendación quedará NO IMPLEMENTADA. ¿Desea continuar?"
+									icon="pi pi-exclamation-triangle" />
+							</p:commandButton>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
 			</div>
 		</p:panel>
 	</h:form>

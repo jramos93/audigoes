@@ -29,6 +29,7 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private List<Usuario> auditoresList;
 	private Usuario coordinador;
 	private Auditoria auditoria;
 	private String textoCorreo = "";
@@ -76,10 +77,12 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 	public void obtenerCoordinador() {
 		try {
 			if (getAuditoria() != null) {
-				List<Usuario> usrs = (List<Usuario>) audigoesLocal.findByNamedQuery(Usuario.class,
-						"usuario.get.coordinador", new Object[] { getAuditoria().getAudId() });
-				if (!usrs.isEmpty()) {
-					setCoordinador(usrs.get(0));
+				setAuditoresList((List<Usuario>) audigoesLocal.findByNamedQuery(Usuario.class,
+						"usuario.get.coordinador", new Object[] { getAuditoria().getAudId() }));
+				System.out.println(getAuditoresList().size());
+				if (getAuditoresList().isEmpty()) {
+					setCoordinador(getAuditoresList().get(0));
+					System.out.println(getAuditoresList().get(0).getUsuNombre());
 				} else {
 					setCoordinador(new Usuario());
 				}
@@ -135,6 +138,10 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 	public void mostrarComentarios() {
 		recMB.mostrarComentarios();
 		recMB.setSeguimiento(getRegistro());
+	}
+	
+	public void mostrarHistorialComentario() {
+		
 	}
 
 	public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
@@ -208,6 +215,14 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 
 	public void setCoordinador(Usuario coordinador) {
 		this.coordinador = coordinador;
+	}
+
+	public List<Usuario> getAuditoresList() {
+		return auditoresList;
+	}
+
+	public void setAuditoresList(List<Usuario> auditoresList) {
+		this.auditoresList = auditoresList;
 	}
 
 	public Auditoria getAuditoria() {
