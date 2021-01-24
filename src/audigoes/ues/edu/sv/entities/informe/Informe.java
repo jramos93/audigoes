@@ -1,152 +1,190 @@
 package audigoes.ues.edu.sv.entities.informe;
 
 import java.io.Serializable;
-import javax.persistence.*;
-
-import audigoes.ues.edu.sv.entities.SuperEntity;
-import audigoes.ues.edu.sv.entities.administracion.Archivo;
-import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
-import audigoes.ues.edu.sv.entities.planificacion.Actividad;
-
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.administracion.Archivo;
+import audigoes.ues.edu.sv.entities.administracion.Usuario;
+import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
+import audigoes.ues.edu.sv.entities.planificacion.Actividad;
 
 /**
  * The persistent class for the informe database table.
  * 
  */
 @Entity
-@NamedQuery(name="Informe.findAll", query="SELECT i FROM Informe i")
+@NamedQuery(name = "Informe.findAll", query = "SELECT i FROM Informe i")
 public class Informe extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "inf_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "inf_id", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "inf_id")
-	@Column(name="inf_id")
+	@Column(name = "inf_id")
 	private int infId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_crea")
+	@Column(name = "fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_modi")
+	@Column(name = "fec_modi")
 	private Date fecModi;
 
 	@Lob
-	@Column(name="inf_aclaracion")
+	@Column(name = "inf_aclaracion")
 	private String infAclaracion;
 
 	@Lob
-	@Column(name="inf_conclusion")
+	@Column(name = "inf_conclusion")
 	private String infConclusion;
-	
+
 	@Lob
-	@Column(name="inf_encabezado")
+	@Column(name = "inf_encabezado")
 	private String infEncabezado;
 
 	@Lob
-	@Column(name="inf_introduccion")
+	@Column(name = "inf_introduccion")
 	private String infIntroduccion;
 
 	@Lob
-	@Column(name="inf_logros")
+	@Column(name = "inf_logros")
 	private String infLogros;
 
 	@Lob
-	@Column(name="inf_pie_pagina")
+	@Column(name = "inf_pie_pagina")
 	private String infPiePagina;
 
 	@Lob
-	@Column(name="inf_portada")
+	@Column(name = "inf_portada")
 	private String infPortada;
-	
+
 	@Lob
-	@Column(name="inf_indice")
+	@Column(name = "inf_indice")
 	private String infIndice;
-	
+
 	@Lob
-	@Column(name="inf_destinatario")
+	@Column(name = "inf_destinatario")
 	private String infDestinatario;
-	
+
 	@Lob
-	@Column(name="inf_objetivos")
+	@Column(name = "inf_objetivos")
 	private String infObjetivos;
-	
+
 	@Lob
-	@Column(name="inf_alcance")
+	@Column(name = "inf_alcance")
 	private String infAlcance;
 
 	@Lob
-	@Column(name="inf_procedimientos")
+	@Column(name = "inf_procedimientos")
 	private String infProcedimientos;
 
 	@Lob
-	@Column(name="inf_recomendaciones")
+	@Column(name = "inf_recomendaciones")
 	private String infRecomendaciones;
 
 	@Lob
-	@Column(name="inf_resultados")
+	@Column(name = "inf_resultados")
 	private String infResultados;
-	
+
 	@Lob
-	@Column(name="inf_observaciones")
+	@Column(name = "inf_observaciones")
 	private String infObservaciones;
-	
-	@Column(name="inf_estado")
+
+	@Column(name = "inf_estado")
 	private int infEstado;
-	
+
 	@Lob
-	@Column(name="inf_seguimiento")
+	@Column(name = "inf_seguimiento")
 	private String infSeguimiento;
 
-	@Column(name="inf_titulo")
+	@Column(name = "inf_titulo")
 	private String infTitulo;
 
-	@Column(name="inf_version")
+	@Column(name = "inf_version")
 	private int infVersion;
 
-	@Column(name="reg_activo")
+	@Column(name = "reg_activo")
 	private int regActivo;
 
-	@Column(name="usu_crea")
+	@Column(name = "usu_crea")
 	private String usuCrea;
 
-	@Column(name="usu_modi")
+	@Column(name = "usu_modi")
 	private String usuModi;
 
-	//bi-directional many-to-one association to ActaLectura
-	@OneToMany(mappedBy="informe")
+	// bi-directional many-to-one association to ActaLectura
+	@OneToMany(mappedBy = "informe")
 	private List<ActaLectura> actaLectura;
-	
-	//bi-directional many-to-one association to ActaLectura
-	@OneToMany(mappedBy="informe")
-	private List<CartaGerencia> cartaGerencia;
-		
-	//bi-directional many-to-one association to ActaLectura
-	@OneToMany(mappedBy="informe")
-	private List<Convocatoria> convocatoria;
-	
 
-	//bi-directional many-to-one association to CedulaNota
-	@OneToMany(mappedBy="informe")
+	// bi-directional many-to-one association to ActaLectura
+	@OneToMany(mappedBy = "informe")
+	private List<CartaGerencia> cartaGerencia;
+
+	// bi-directional many-to-one association to ActaLectura
+	@OneToMany(mappedBy = "informe")
+	private List<Convocatoria> convocatoria;
+
+	// bi-directional many-to-one association to CedulaNota
+	@OneToMany(mappedBy = "informe")
 	private List<CedulaNota> cedulaNotas;
 
-	//bi-directional many-to-one association to Actividad
+	// bi-directional many-to-one association to Actividad
 	@ManyToOne
-	@JoinColumn(name="inf_act_id")
+	@JoinColumn(name = "inf_act_id")
 	private Actividad actividad;
-	
-	//bi-directional many-to-one association to Auditoria
+
+	// bi-directional many-to-one association to Auditoria
 	@ManyToOne
-	@JoinColumn(name="inf_aud_id")
+	@JoinColumn(name = "inf_aud_id")
 	private Auditoria auditoria;
-	
+
 	// bi-directional many-to-one association to Archivo
 	@OneToMany(mappedBy = "procedimientoPlanificacion")
 	private List<Archivo> archivo;
+
+	// bi-directional many-to-one association to Usuario
+	@ManyToOne
+	@JoinColumn(name = "inf_usu_elaboro")
+	private Usuario usuarioElaboro;
+
+	// bi-directional many-to-one association to Usuario
+	@ManyToOne
+	@JoinColumn(name = "inf_usu_reviso")
+	private Usuario usuarioReviso;
+
+	// bi-directional many-to-one association to Usuario
+	@ManyToOne
+	@JoinColumn(name = "inf_usu_aprobo")
+	private Usuario usuarioAprobo;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "inf_fec_elaboro")
+	private Date infFecElaboro;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "inf_fec_reviso")
+	private Date infFecReviso;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "inf_fec_aprobo")
+	private Date infFecAprobo;
 
 	public Informe() {
 	}
@@ -165,6 +203,54 @@ public class Informe extends SuperEntity implements Serializable {
 
 	public void setFecCrea(Date fecCrea) {
 		this.fecCrea = fecCrea;
+	}
+
+	public Usuario getUsuarioElaboro() {
+		return usuarioElaboro;
+	}
+
+	public void setUsuarioElaboro(Usuario usuarioElaboro) {
+		this.usuarioElaboro = usuarioElaboro;
+	}
+
+	public Usuario getUsuarioReviso() {
+		return usuarioReviso;
+	}
+
+	public void setUsuarioReviso(Usuario usuarioReviso) {
+		this.usuarioReviso = usuarioReviso;
+	}
+
+	public Usuario getUsuarioAprobo() {
+		return usuarioAprobo;
+	}
+
+	public void setUsuarioAprobo(Usuario usuarioAprobo) {
+		this.usuarioAprobo = usuarioAprobo;
+	}
+
+	public Date getInfFecElaboro() {
+		return infFecElaboro;
+	}
+
+	public void setInfFecElaboro(Date infFecElaboro) {
+		this.infFecElaboro = infFecElaboro;
+	}
+
+	public Date getInfFecReviso() {
+		return infFecReviso;
+	}
+
+	public void setInfFecReviso(Date infFecReviso) {
+		this.infFecReviso = infFecReviso;
+	}
+
+	public Date getInfFecAprobo() {
+		return infFecAprobo;
+	}
+
+	public void setInfFecAprobo(Date infFecAprobo) {
+		this.infFecAprobo = infFecAprobo;
 	}
 
 	public Date getFecModi() {
@@ -230,7 +316,7 @@ public class Informe extends SuperEntity implements Serializable {
 	public void setInfPortada(String infPortada) {
 		this.infPortada = infPortada;
 	}
-	
+
 	public String getInfDestinatario() {
 		return this.infDestinatario;
 	}
@@ -278,7 +364,7 @@ public class Informe extends SuperEntity implements Serializable {
 	public void setInfTitulo(String infTitulo) {
 		this.infTitulo = infTitulo;
 	}
-	
+
 	public String getInfObservaciones() {
 		return this.infObservaciones;
 	}
@@ -286,7 +372,7 @@ public class Informe extends SuperEntity implements Serializable {
 	public void setInfObservaciones(String infObservaciones) {
 		this.infObservaciones = infObservaciones;
 	}
-	
+
 	public int getInfVersion() {
 		return this.infVersion;
 	}
@@ -378,7 +464,7 @@ public class Informe extends SuperEntity implements Serializable {
 	public void setCartaGerencia(List<CartaGerencia> cartaGerencia) {
 		this.cartaGerencia = cartaGerencia;
 	}
-	
+
 	public CartaGerencia addCartaGerencia(CartaGerencia cartaGerencia) {
 		getCartaGerencia().add(cartaGerencia);
 		cartaGerencia.setInforme(this);
@@ -400,7 +486,7 @@ public class Informe extends SuperEntity implements Serializable {
 	public void setConvocatoria(List<Convocatoria> convocatoria) {
 		this.convocatoria = convocatoria;
 	}
-	
+
 	public Convocatoria addConvocatoria(Convocatoria convocatoria) {
 		getConvocatoria().add(convocatoria);
 		convocatoria.setInforme(this);
@@ -422,7 +508,7 @@ public class Informe extends SuperEntity implements Serializable {
 	public void setActividad(Actividad actividad) {
 		this.actividad = actividad;
 	}
-	
+
 	public Auditoria getAuditoria() {
 		return this.auditoria;
 	}
@@ -430,7 +516,7 @@ public class Informe extends SuperEntity implements Serializable {
 	public void setAuditoria(Auditoria auditoria) {
 		this.auditoria = auditoria;
 	}
-	
+
 	public String getInfObjetivos() {
 		return infObjetivos;
 	}
@@ -501,15 +587,16 @@ public class Informe extends SuperEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Informe [infId=" + infId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi 
-				+ ", infAclaracion=" + infAclaracion + ", infConclusion=" + infConclusion + ", infEncabezado="
-				+ infEncabezado + ", infIntroduccion=" + infIntroduccion + ", infLogros=" + infLogros
-				+ ", infPiePagina=" + infPiePagina + ", infPortada=" + infPortada  + ", infDestinatario=" + infDestinatario  + ", infProcedimientos="
-				+ infProcedimientos + ", infRecomendaciones=" + infRecomendaciones + ", infObservaciones=" + infObservaciones + ", infResultados=" + infResultados
-				+ ", infSeguimiento=" + infSeguimiento + ", infTitulo=" + infTitulo + ", infVersion=" + infVersion + ", infEstado=" + infEstado
+		return "Informe [infId=" + infId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", infAclaracion="
+				+ infAclaracion + ", infConclusion=" + infConclusion + ", infEncabezado=" + infEncabezado
+				+ ", infIntroduccion=" + infIntroduccion + ", infLogros=" + infLogros + ", infPiePagina=" + infPiePagina
+				+ ", infPortada=" + infPortada + ", infDestinatario=" + infDestinatario + ", infProcedimientos="
+				+ infProcedimientos + ", infRecomendaciones=" + infRecomendaciones + ", infObservaciones="
+				+ infObservaciones + ", infResultados=" + infResultados + ", infSeguimiento=" + infSeguimiento
+				+ ", infTitulo=" + infTitulo + ", infVersion=" + infVersion + ", infEstado=" + infEstado
 				+ ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", actaLectura="
-				+ actaLectura + ", cartaGerencia=" + cartaGerencia + ", convocatoria=" + convocatoria + ", cedulaNotas=" + cedulaNotas + ", actividad=" + actividad 
-				+ ", archivo=" + archivo + "]";
+				+ actaLectura + ", cartaGerencia=" + cartaGerencia + ", convocatoria=" + convocatoria + ", cedulaNotas="
+				+ cedulaNotas + ", actividad=" + actividad + ", archivo=" + archivo + "]";
 	}
 
 }

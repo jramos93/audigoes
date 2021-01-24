@@ -36,19 +36,8 @@
 							<div class="p-field p-col" style="margin-top: 25px;">
 								<p:panel>
 									<p:tabView id="tvConvocatoria" orientation="top">
-										<p:tab title="Encabezado">
-											<pe:ckEditor id="cvcencabezado" width="100%"
-												skin="office2013"
-												customConfig="#{request.contextPath}/resources/js/customck.js"
-												value="#{convocatoriaMB.registro.cvcEncabezado}" />
-										</p:tab>
-										<p:tab title="Destinatario">
-											<pe:ckEditor id="cvcdestinatario" width="100%"
-												skin="office2013"
-												customConfig="#{request.contextPath}/resources/js/customck.js"
-												value="#{convocatoriaMB.registro.cvcDestinatario}" />
-										</p:tab>
-										<p:tab title="Cuerpo">
+
+										<p:tab title="Contenido">
 											<pe:ckEditor id="cvccuerpo" width="100%" skin="office2013"
 												customConfig="#{request.contextPath}/resources/js/customck.js"
 												value="#{convocatoriaMB.registro.cvcCuerpo}" />
