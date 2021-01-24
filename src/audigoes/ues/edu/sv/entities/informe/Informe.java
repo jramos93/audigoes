@@ -70,6 +70,14 @@ public class Informe extends SuperEntity implements Serializable {
 	@Lob
 	@Column(name="inf_destinatario")
 	private String infDestinatario;
+	
+	@Lob
+	@Column(name="inf_objetivos")
+	private String infObjetivos;
+	
+	@Lob
+	@Column(name="inf_alcance")
+	private String infAlcance;
 
 	@Lob
 	@Column(name="inf_procedimientos")
@@ -423,6 +431,22 @@ public class Informe extends SuperEntity implements Serializable {
 		this.auditoria = auditoria;
 	}
 	
+	public String getInfObjetivos() {
+		return infObjetivos;
+	}
+
+	public void setInfObjetivos(String infObjetivos) {
+		this.infObjetivos = infObjetivos;
+	}
+
+	public String getInfAlcance() {
+		return infAlcance;
+	}
+
+	public void setInfAlcance(String infAlcance) {
+		this.infAlcance = infAlcance;
+	}
+
 	public List<Archivo> getArchivo() {
 		return this.archivo;
 	}

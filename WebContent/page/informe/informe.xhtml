@@ -55,24 +55,18 @@
 						icon="pi pi-arrow-left" style="float:left;" update="@form :frm">
 					</p:commandButton>
 					<p:commandButton id="btn" value="Guardar" icon="fa fa-check"
-						styleClass="raised-btn" actionListener="#{informeMB.onSave}"
-						update="@form :frm" />
+						rendered="#{informeMB.perEdit}" styleClass="raised-btn"
+						actionListener="#{informeMB.onSave}" update=":frmInforme, :frm" />
 				</div>
 
 				<div align="right" style="margin-top: 50px; float: right;">
-					<p:commandButton id="btnBorradorInform"
-						title="Clic para generar el informe" process="@this"
-						value="Generar Borrador de Informe" icon="pi pi-check-circle"
-						style="float:Righ;" styleClass="blue-btn raised-btn" ajax="false">
-						<p:fileDownload value="#{informeMB.informe}"></p:fileDownload>
-					</p:commandButton>
 					<p:commandButton id="btnInform"
 						title="Clic para generar el informe" process="@this"
-						value="Generar Informe" icon="pi pi-check-circle"
-						style="float:Righ;" styleClass="blue-btn raised-btn" ajax="false">
-						<p:fileDownload value="#{informeMB.informe}"></p:fileDownload>
+						value="Generar Informe" icon="pi pi-check-circle" actionListener="#{informeMB.onGenerarInforme}"
+						style="float:Righ;" styleClass="blue-btn raised-btn" oncomplete="PF('wvPDF').show();">
 					</p:commandButton>
 					<p:commandButton id="btnEnviar" oncomplete="PF('wvCorreo').show();"
+						rendered="#{informeMB.registro.infEstado eq 1 and informeMB.perEdit}"
 						actionListener="#{informeMB.prepararCorreo}"
 						title="Clic para enviar a revisión del informe" process="@this"
 						value="Enviar a Revisión" icon="pi pi-check-circle"
@@ -95,7 +89,7 @@
 						value="Revisión Informe de Auditoría"></h:outputText>
 					<h:outputText rendered="#{informeMB.registro.infEstado eq 5}"
 						style="float:right; font-size:large; font-weight: bold; color:#2ab1be;"
-						value="Aprobación Informe de Auditoría"></h:outputText>		
+						value="Aprobación Informe de Auditoría"></h:outputText>
 					<h:outputText
 						style="float:right; font-size:large; font-weight: bold; color:#525c65; margin-right:10px;"
 						value="Estado:"></h:outputText>
@@ -110,72 +104,87 @@
 					<div class="p-field p-col">
 						<p:outputLabel for="titulo" value="Titulo del Informe" />
 						<p:inputText id="titulo" value="#{informeMB.registro.infTitulo}"
-							required="true" maxlength="250"
+							required="true" maxlength="250" readonly="#{informeMB.perEdit}"
 							requiredMessage="Debe ingresar titulo del informe" />
 					</div>
 					<div class="p-field p-col">
 						<p:outputLabel for="version" value="Version del Informe" />
 						<p:inputText id="version" value="#{informeMB.registro.infVersion}"
-							required="true" maxlength="250"
+							required="true" maxlength="250" readonly="#{informeMB.perEdit}"
 							requiredMessage="Debe ingresar version del informe" />
 					</div>
 					<div class="p-field p-col" style="margin-top: 25px;">
 						<p:tabView id="tvInforme">
 							<p:tab title="Portada">
 								<pe:ckEditor id="infportada" width="100%" skin="office2013"
+									readonly="#{informeMB.perEdit}"
 									customConfig="#{request.contextPath}/resources/js/customck.js"
 									value="#{informeMB.registro.infPortada}" />
 							</p:tab>
 							<p:tab title="Indice">
-								<pe:ckEditor id="infdestinatario" width="100%" skin="office2013"
+								<pe:ckEditor id="infIndice" width="100%" skin="office2013"
+									readonly="#{informeMB.perEdit}"
 									customConfig="#{request.contextPath}/resources/js/customck.js"
 									value="#{informeMB.registro.infIndice}" />
 							</p:tab>
 							<p:tab title="Introducción">
 								<pe:ckEditor id="infintroduccion" width="100%" skin="office2013"
+									readonly="#{informeMB.perEdit}"
 									customConfig="#{request.contextPath}/resources/js/customck.js"
 									value="#{informeMB.registro.infIntroduccion}" />
 							</p:tab>
+							<p:tab title="Objetivos">
+								<pe:ckEditor id="infObjetivos" width="100%" skin="office2013"
+									readonly="#{informeMB.perEdit}"
+									customConfig="#{request.contextPath}/resources/js/customck.js"
+									value="#{informeMB.registro.infObjetivos}" />
+							</p:tab>
+							<p:tab title="Alcance">
+								<pe:ckEditor id="infAlcance" width="100%" skin="office2013"
+									readonly="#{informeMB.perEdit}"
+									customConfig="#{request.contextPath}/resources/js/customck.js"
+									value="#{informeMB.registro.infAlcance}" />
+							</p:tab>
 							<p:tab title="Procedimientos">
 								<pe:ckEditor id="infprocedimientos" width="100%"
-									skin="office2013"
+									skin="office2013" readonly="#{informeMB.perEdit}"
 									customConfig="#{request.contextPath}/resources/js/customck.js"
 									value="#{informeMB.registro.infProcedimientos}" />
 							</p:tab>
 							<p:tab title="Resultados">
 								<pe:ckEditor id="infresultados" width="100%" skin="office2013"
+									readonly="#{informeMB.perEdit}"
 									customConfig="#{request.contextPath}/resources/js/customck.js"
 									value="#{informeMB.registro.infResultados}" />
 							</p:tab>
 							<p:tab title="Seguimientos">
 								<pe:ckEditor id="infseguimiento" width="100%" skin="office2013"
+									readonly="#{informeMB.perEdit}"
 									customConfig="#{request.contextPath}/resources/js/customck.js"
 									value="#{informeMB.registro.infSeguimiento}" />
 							</p:tab>
 							<p:tab title="Recomendaciones">
 								<pe:ckEditor id="infrecomendaciones" width="100%"
-									skin="office2013"
+									skin="office2013" readonly="#{informeMB.perEdit}"
 									customConfig="#{request.contextPath}/resources/js/customck.js"
 									value="#{informeMB.registro.infRecomendaciones}" />
 							</p:tab>
 							<p:tab title="Conclusion">
 								<pe:ckEditor id="infconclusion" width="100%" skin="office2013"
+									readonly="#{informeMB.perEdit}"
 									customConfig="#{request.contextPath}/resources/js/customck.js"
 									value="#{informeMB.registro.infConclusion}" />
 							</p:tab>
 							<p:tab title="Aclaracion">
 								<pe:ckEditor id="infaclaracion" width="100%" skin="office2013"
+									readonly="#{informeMB.perEdit}"
 									customConfig="#{request.contextPath}/resources/js/customck.js"
 									value="#{informeMB.registro.infAclaracion}" />
-							</p:tab>
-							<p:tab title="Pie de Pagina">
-								<pe:ckEditor id="infpiePagina" width="100%" skin="office2013"
-									customConfig="#{request.contextPath}/resources/js/customck.js"
-									value="#{informeMB.registro.infPiePagina}" />
 							</p:tab>
 							<p:tab title="Observaciones">
 								<pe:ckEditor id="infobservaciones" width="100%"
 									skin="office2013"
+									readonly="#{informeMB.perEdit and !informeMB.rolCoordinadorAuditoria}"
 									customConfig="#{request.contextPath}/resources/js/customck.js"
 									value="#{informeMB.registro.infObservaciones}" />
 							</p:tab>
@@ -207,6 +216,25 @@
 										<h:outputText value="#{a.arcNombre}"></h:outputText>
 									</p:column>
 
+									<p:column headerText="Ver"
+										style="width:60px; text-align:center;">
+										<p:commandButton actionListener="#{arcMB.viewFile}"
+											icon="pi pi-eye" oncomplete="PF('wvPDF').show();"
+											title="Clic para ver el archivo">
+											<f:attribute name="pt" value="#{a}"></f:attribute>
+										</p:commandButton>
+									</p:column>
+
+									<p:column headerText="Descargar"
+										style="width:60px; text-align:center;">
+										<p:commandButton actionListener="#{arcMB.downloadFile}"
+											ajax="false" icon="pi pi-download"
+											title="Clic para descargar el archivo">
+											<f:attribute name="pt" value="#{a}"></f:attribute>
+											<p:fileDownload value="#{arcMB.pt}"></p:fileDownload>
+										</p:commandButton>
+									</p:column>
+
 									<p:column headerText="Eliminar" style="width:60px;">
 										<p:commandButton actionListener="#{arcMB.onBorrar(a)}"
 											update="dtArchivos" icon="pi pi-trash"
@@ -224,6 +252,7 @@
 				</div>
 			</p:panel>
 		</h:form>
+
 		<p:dialog widgetVar="wvObservaciones" responsive="true" width="500"
 			closeOnEscape="true" header="Agregar Observaciones" modal="true">
 			<h:form id="frmObsNewEdit">

@@ -10,7 +10,9 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -206,6 +208,21 @@ public class ArchivoMB extends AudigoesController implements Serializable {
 		InputStream bis = new ByteArrayInputStream(ev.getArcArchivo());
 		pt = new DefaultStreamedContent(bis);
 		pt = new DefaultStreamedContent(bis, ev.getArcExt(), ev.getArcNombre());
+	}
+	
+	public void viewFile(ActionEvent event) {
+		Archivo ev = (Archivo) event.getComponent().getAttributes().get("pt");
+		InputStream bis = new ByteArrayInputStream(ev.getArcArchivo());
+		pt = new DefaultStreamedContent(bis);
+		pt = new DefaultStreamedContent(bis, ev.getArcExt(), ev.getArcNombre());
+		onpdf(ev.getArcArchivo());
+	}
+	
+	public void onpdf(byte[] pdfBytesArray) {
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+	    HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
+
+	    session.setAttribute("pdfBytesArray", pdfBytesArray);
 	}
 
 	/* GETS y SETS */

@@ -283,10 +283,11 @@
 						<p:outputLabel value="Valorización:" style="font-weight:bold;"></p:outputLabel>
 						<p:selectOneRadio value="#{ceduMB.registro.cedValorizacion}"
 							disabled="#{!ceduMB.perEdit or ceduMB.status eq 'SHOW' or ceduMB.registro.cedEstado eq 6}">
-							<f:selectItem itemValue="0" itemLabel="Asuntos Menores"></f:selectItem>
-							<f:selectItem itemValue="1" itemLabel="Hallazgo"></f:selectItem>
-							<f:selectItem itemValue="2" itemLabel="Superada"></f:selectItem>
-							<f:selectItem itemValue="3" itemLabel="En Proceso"></f:selectItem>
+
+							<f:selectItem itemValue="4" itemLabel="No Implementada"></f:selectItem>
+							<f:selectItem itemValue="3" itemLabel="Asuntos Menores"></f:selectItem>
+							<f:selectItem itemValue="2" itemLabel="Implementada"></f:selectItem>
+							<f:selectItem itemValue="1" itemLabel="En Proceso"></f:selectItem>
 						</p:selectOneRadio>
 
 
@@ -567,8 +568,8 @@
 			</p:panelGrid>
 		</h:form>
 	</p:dialog>
-	
-		<p:dialog widgetVar="wvCorreo2Analisis" modal="true" showEffect="fade"
+
+	<p:dialog widgetVar="wvCorreo2Analisis" modal="true" showEffect="fade"
 		dynamic="true" closable="true" closeOnEscape="true" responsive="true">
 		<h:form id="frmCorreo2Analisis">
 			<p:commandButton id="btnEnviar"
@@ -595,10 +596,12 @@
 	<p:dialog widgetVar="wvCorreo3Analisis" modal="true" showEffect="fade"
 		dynamic="true" closable="true" closeOnEscape="true" responsive="true">
 		<h:form id="frmCorreo3Analisis">
-			<p:commandButton id="btnEnviar" action="#{ceduMB.onFinalizarAnalisis}"
-				title="Clic para finalizar la revisión" process=":frmCorreo3Analisis"
-				value="Finalizar Revisión" icon="pi pi-check-circle"
-				style="float:left;" styleClass="blue-btn raised-btn"
+			<p:commandButton id="btnEnviar"
+				action="#{ceduMB.onFinalizarAnalisis}"
+				title="Clic para finalizar la revisión"
+				process=":frmCorreo3Analisis" value="Finalizar Revisión"
+				icon="pi pi-check-circle" style="float:left;"
+				styleClass="blue-btn raised-btn"
 				oncomplete="PF('wvCorreo3Analisis').hide();"
 				update=":frmHallazgo :frmListaHallazgos">
 				<p:confirm header="Confirmación" message="¿Finalizar la revisión?"></p:confirm>

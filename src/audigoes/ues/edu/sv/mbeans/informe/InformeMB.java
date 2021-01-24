@@ -15,6 +15,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.mail.Address;
+import javax.servlet.http.HttpSession;
 
 import org.primefaces.component.tabview.TabView;
 import org.primefaces.event.FileUploadEvent;
@@ -26,10 +27,15 @@ import com.itextpdf.io.source.ByteArrayOutputStream;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.BitacoraActividades;
+import audigoes.ues.edu.sv.entities.ejecucion.ComentarioHallazgo;
+import audigoes.ues.edu.sv.entities.ejecucion.ProcedimientoEjecucion;
 import audigoes.ues.edu.sv.entities.informe.ActaLectura;
+import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 import audigoes.ues.edu.sv.entities.informe.Convocatoria;
 import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
+import audigoes.ues.edu.sv.entities.planificacion.ProcedimientoPlanificacion;
+import audigoes.ues.edu.sv.entities.seguimiento.Recomendacion;
 import audigoes.ues.edu.sv.mbean.planificacion.BitacoraActividadMB;
 import audigoes.ues.edu.sv.mbeans.administracion.ArchivoMB;
 import audigoes.ues.edu.sv.util.SendMailAttach;
@@ -119,6 +125,7 @@ public class InformeMB extends AudigoesController implements Serializable {
 				getRegistro().setInfEstado(1);
 				getRegistro().setInfVersion(1);
 				audigoesLocal.insert(getRegistro());
+				inicializarValores();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -147,7 +154,7 @@ public class InformeMB extends AudigoesController implements Serializable {
 		}
 		setStatus("INFORME");
 
-		inicializarValores();
+		revisarPermisos();
 	}
 
 	@Override
@@ -240,6 +247,12 @@ public class InformeMB extends AudigoesController implements Serializable {
 		super.afterCancel();
 	}
 
+	@Override
+	public void afterSave() {
+		super.afterSave();
+		setStatus("INFORME");
+	}
+
 	public void showInforme() {
 		fillInforme();
 		if (getRegistro().getInfId() > 0) {
@@ -249,6 +262,7 @@ public class InformeMB extends AudigoesController implements Serializable {
 			getRegistro().setInfVersion(getVersionActual());
 		}
 		setStatus("INFORME");
+
 	}
 
 	public void showActaLectura() {
@@ -330,45 +344,223 @@ public class InformeMB extends AudigoesController implements Serializable {
 	}
 
 	public void inicializarValores() {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-		String portada = "";
+			String portada = "";
 
-		portada = portada + "<div>&nbsp;\r\n" + "<h1 style=\"text-align:center\"><strong>"
-				+ getRegistro().getAuditoria().getPlanAnual().getInstitucion().getInsNombre().toUpperCase()
-				+ "</strong></h1>\r\n" + "\r\n" + "<h1 style=\"text-align:center\"><strong>UNIDAD DE AUDITORIA INTERNA</strong></h1>\r\n"
-				+ "</div>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
-				+ "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
-				+ "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
-				+ "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
-				+ "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
-				+ "<h1 style=\"text-align:center\"><strong>Informe de " + getRegistro().getAuditoria().getAudNombre()
-				+ "</strong><h3 style=\"text-align:center\"><strong> PERIODO DEL "
-				+ formatter.format(getRegistro().getAuditoria().getAudFechaInicioProgramado()) + "   AL "
-				+ formatter.format(getRegistro().getAuditoria().getAudFechaFinProgramado()) + "</strong></h3>\r\n"
-				+ "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
-				+ "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
-				+ "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
-				+ "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
-				+ "<p>&nbsp;</p>\r\n" + "\r\n" + "<h3 style=\"text-align:right\"><br />\r\n" + "<br />\r\n"
-				+ "<strong>SAN SALVADOR, ENERO 2020</strong></h3>\r\n";
+			portada = portada + "<div>&nbsp;\r\n" + "<h1 style=\"text-align:center\"><strong>"
+					+ getRegistro().getAuditoria().getPlanAnual().getInstitucion().getInsNombre().toUpperCase()
+					+ "</strong></h1>\r\n" + "\r\n"
+					+ "<h1 style=\"text-align:center\"><strong>UNIDAD DE AUDITORIA INTERNA</strong></h1>\r\n"
+					+ "</div>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
+					+ "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
+					+ "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
+					+ "<h1 style=\"text-align:center\"><strong>Informe de "
+					+ getRegistro().getAuditoria().getAudNombre()
+					+ "</strong><h3 style=\"text-align:center\"><strong> PERIODO DEL "
+					+ formatter.format(getRegistro().getAuditoria().getAudFechaInicioProgramado()) + "   AL "
+					+ formatter.format(getRegistro().getAuditoria().getAudFechaFinProgramado()) + "</strong></h3>\r\n"
+					+ "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n"
+					+ "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n"
+					+ "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n" + "<h3 style=\"text-align:right\"><br />\r\n" + "<br />\r\n"
+					+ "<strong>SAN SALVADOR, ENERO 2020</strong></h3>\r\n";
 
-		String indice = "";
+			String indice = "";
 
-		indice = indice + "<div>\r\n" + "<h1 style=\"text-align:center\"><strong>INDICE</strong></h1><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>\r\n" + "\r\n"
-				+ "<h2 style=\"text-align:justify\"><strong>I. Objetivos de la Auditoria</strong></h2>\r\n" + "\r\n"
-				+ "<h2 style=\"text-align:justify\"><strong>II. Alcance de la Auditoria</strong></h2>\r\n" + "\r\n"
-				+ "<h2 style=\"text-align:justify\"><strong>III. Procedimientos de Auditoria Aplicados</strong></h2>\r\n"
-				+ "\r\n" + "<h2 style=\"text-align:justify\"><strong>IV. Resultados de la Auditoria</strong></h2>\r\n"
-				+ "\r\n"
-				+ "<h2 style=\"text-align:justify\"><strong>V. Seguimiento a las recomendaciones de auditorias anteriores</strong></h2>\r\n"
-				+ "\r\n"
-				+ "<h2 style=\"text-align:justify\"><strong>VI. Recomendacioes de la Auditoria</strong></h2>\r\n"
-				+ "\r\n" + "<h2 style=\"text-align:justify\"><strong>VII. Conclusion</strong></h2>\r\n" + "\r\n"
-				+ "<h2 style=\"text-align:justify\"><strong>VIII. Parrafo Aclaratorio</strong></h2>\r\n" + "</div>\r\n";
+			indice = indice + "<div>\r\n"
+					+ "<h2 style=\"text-align:center\"><strong>INDICE</strong></h2><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>\r\n"
+					+ "\r\n" + "<h2 style=\"text-align:justify\"><strong>I. Introducción</strong></h2>\r\n" + "\r\n"
+					+ "<h2 style=\"text-align:justify\"><strong>II. Objetivos de la Auditoría</strong></h2>\r\n"
+					+ "\r\n" + "<h2 style=\"text-align:justify\"><strong>III. Alcance de la Auditoria</strong></h2>\r\n"
+					+ "\r\n"
+					+ "<h2 style=\"text-align:justify\"><strong>IV. Procedimientos de Auditoria Aplicados</strong></h2>\r\n"
+					+ "\r\n"
+					+ "<h2 style=\"text-align:justify\"><strong>V. Resultados de la Auditoria</strong></h2>\r\n"
+					+ "\r\n"
+					+ "<h2 style=\"text-align:justify\"><strong>VI. Seguimiento a las recomendaciones de auditorias anteriores</strong></h2>\r\n"
+					+ "\r\n"
+					+ "<h2 style=\"text-align:justify\"><strong>VII. Recomendacioes de la Auditoria</strong></h2>\r\n"
+					+ "\r\n" + "<h2 style=\"text-align:justify\"><strong>VIII. Conclusion</strong></h2>\r\n" + "\r\n"
+					+ "<h2 style=\"text-align:justify\"><strong>IX. Parrafo Aclaratorio</strong></h2>\r\n"
+					+ "</div>\r\n";
 
-		getRegistro().setInfPortada(portada);
-		getRegistro().setInfIndice(indice);
+			String intro = "";
+
+			intro = intro + "<p><strong>Se&ntilde;or (es)<br />\r\n"
+					+ "Ministro/Consejo Directivo/Junta Directiva/Consejo Municipal<br />\r\n"
+					+ "Presente</strong></p>\r\n" + "\r\n" + "<p>&nbsp;</p>\r\n" + "\r\n"
+					+ "<p>El presente informe contiene los resultados de la auditor&iacute;a "
+					+ getRegistro().getAuditoria().getAudNombre() + ", por el per&iacute;odo del "
+					+ formatter.format(getRegistro().getAuditoria().getAudFechaInicioProgramado()) + "   al "
+					+ formatter.format(getRegistro().getAuditoria().getAudFechaFinProgramado())
+					+ ". La auditor&iacute;a fue realizada en cumplimiento a los Arts. 30 y 31 de la Ley de la Corte de Cuentas de la Rep&uacute;blica y a las Normas de Auditor&iacute;a Interna del Sector Gubernamental, emitidas por la Corte de Cuentas de la Rep&uacute;blica.</p>\r\n";
+
+			String obj = "";
+
+			obj = obj + "<h3><strong>II. Objetivos de la auditor&iacute;a</strong></h3>\r\n" + "\r\n"
+					+ "<h4><strong>Objetivos Generales y Especificos</strong></h4>\r\n" + "\r\n"
+					+ "<p style=\"text-align:justify\">" + getRegistro().getAuditoria().getAudObjetivos() + "</p>";
+
+			String alcance = "";
+
+			alcance = alcance
+					+ "<h3><strong>III. Alcance de la auditor&iacute;a</strong></h3><p style=\"text-align:justify\">"
+					+ getRegistro().getAuditoria().getAudAlcances() + "</p>";
+
+			String procs = "";
+
+			procs = procs
+					+ "<h3><strong>IV. Procedimientos de auditor&iacute;a aplicados</strong></h3><p style=\"text-align:justify\">"
+					+ "<h4><strong>Procedimientos de Planificaci&oacute;n</strong></h4><ol>";
+
+			// procedimientos.planificacion.by.auditoria
+
+			@SuppressWarnings("unchecked")
+			List<ProcedimientoPlanificacion> plani = (List<ProcedimientoPlanificacion>) audigoesLocal.findByNamedQuery(
+					ProcedimientoPlanificacion.class, "procedimientos.planificacion.by.auditoria",
+					new Object[] { getRegistro().getAuditoria().getAudId() });
+			System.out.println(" " + plani.size() + " id " + getRegistro().getAuditoria().getAudId());
+			if (plani != null && !plani.isEmpty()) {
+				for (ProcedimientoPlanificacion p : plani) {
+					System.out.println(" - " + p.getProNombre());
+					procs = procs + "<li>" + p.getProNombre() + "</li>";
+				}
+			}
+
+			procs = procs + "</ol></p>";
+
+			procs = procs + "<p style=\"text-align:justify\">"
+					+ "<h4><strong>Procedimientos de Ejecuci&oacute;n</strong></h4><ol>";
+
+			// procedimientos.planificacion.by.auditoria
+
+			@SuppressWarnings("unchecked")
+			List<ProcedimientoEjecucion> ejec = (List<ProcedimientoEjecucion>) audigoesLocal.findByNamedQuery(
+					ProcedimientoEjecucion.class, "procedimientos.ejecucion.by.auditoria",
+					new Object[] { getRegistro().getAuditoria().getAudId() });
+			System.out.println(" " + ejec.size() + " id " + getRegistro().getAuditoria().getAudId());
+			if (ejec != null && !ejec.isEmpty()) {
+				for (ProcedimientoEjecucion p : ejec) {
+					System.out.println(" - " + p.getPejNombre());
+					procs = procs + "<li>" + p.getPejNombre() + "</li>";
+				}
+			}
+
+			procs = procs + "</ol></p>";
+
+			String resultados = "";
+
+			resultados = resultados
+					+ "<h3><strong>V. Resultados de la auditor&iacute;a </strong></h3><p style=\"text-align:justify\">"
+					+ "<ol>";
+
+			@SuppressWarnings("unchecked")
+			List<CedulaNota> hallazgos = (List<CedulaNota>) audigoesLocal.findByNamedQuery(CedulaNota.class,
+					"hallazgos.all.by.auditoria", new Object[] { getRegistro().getAuditoria().getAudId() });
+			System.out
+					.println(" hallazgos size " + hallazgos.size() + " id " + getRegistro().getAuditoria().getAudId());
+			if (hallazgos != null && !hallazgos.isEmpty()) {
+				for (CedulaNota c : hallazgos) {
+					System.out.println(" - " + c.getCedTitulo());
+					resultados = resultados + "<li><strong>" + c.getCedTitulo().toUpperCase() + "</strong><br/><br/>"
+							+ "<strong> Condición: </strong>" + c.getCedCondicion() + "<br/><br/>"
+							+ "<strong> Criterio: </strong>" + c.getCedCriterio() + "<br/><br/>"
+							+ "<strong> Causa: </strong>" + c.getCedCausa() + "<br/><br/>"
+							+ "<strong> Efecto: </strong>" + c.getCedEfecto() + "<br/><br/>"
+							+ "<strong> Recomendaciones: </strong><br/><br/>";
+					@SuppressWarnings("unchecked")
+					List<Recomendacion> recomendaciones = (List<Recomendacion>) audigoesLocal.findByNamedQuery(
+							Recomendacion.class, "recomendaciones.all.by.cedula", new Object[] { c.getCedId() });
+					if (!recomendaciones.isEmpty()) {
+						resultados = resultados + "<ul>";
+						for (Recomendacion r : recomendaciones) {
+							resultados = resultados + "<li>" + r.getRecRecomendacion() + "</li><br/>";
+						}
+						resultados = resultados + "</ul>";
+					} else {
+						resultados = resultados + "Sin Recomendaciones<br/><br/>";
+					}
+
+					resultados = resultados + "<strong> Comentarios de la Administración: </strong> <br/><br/>";
+
+					if (c.getComentarioHallazgos() != null && !c.getComentarioHallazgos().isEmpty()) {
+						resultados = resultados + "<ul>";
+						for (ComentarioHallazgo ch : c.getComentarioHallazgos()) {
+							resultados = resultados + "<li><strong>" + ch.getUsuario().getUsuNombre() + ": </strong>"
+									+ ch.getComeComentario() + "</li><br/>";
+						}
+						resultados = resultados + "</ul>";
+					} else {
+						resultados = resultados + "Sin Comentarios<br/><br/>";
+					}
+
+					resultados = resultados + "<strong> Comentarios de Auditoría: </strong>"
+							+ c.getCedComentarioAuditor() + "<br/><br/>";
+
+					String estado = "";
+
+					switch (c.getCedValorizacion()) {
+					case 1:
+						estado = "En Proceso";
+						break;
+					case 2:
+						estado = "Implementada";
+						break;
+					case 3:
+						estado = "Asuntos Menores";
+						break;
+					case 4:
+						estado = "No Implementada";
+						break;
+
+					default:
+						estado = "En Proceso";
+						break;
+					}
+					resultados = resultados + "<strong> Valorización: </strong>" + estado + "<br/>";
+
+					resultados = resultados + "</li><br/>";
+				}
+			}
+
+			resultados = resultados + "</ol></p>";
+
+			String seguimientos = "";
+
+			seguimientos = seguimientos
+					+ "<h3><strong>VI. Seguimiento a las recomendaciones de auditorias anteriores </strong></h3><p style=\"text-align:justify\"></p>";
+
+			String recomendaciones = "";
+
+			recomendaciones = recomendaciones
+					+ "<h3><strong>VII. Recomendaciones de auditoría </strong></h3><p style=\"text-align:justify\"></p>";
+
+			String conclusiones = "";
+
+			conclusiones = conclusiones
+					+ "<h3><strong>VIII. Conclusiones </strong></h3><p style=\"text-align:justify\"></p>";
+
+			String parrafo = "";
+
+			parrafo = parrafo
+					+ "<h3><strong>IX. Parrafo Aclaratorio </strong></h3><p style=\"text-align:justify\"><br/><br/><br/><br/><strong>San Salvador, Enero 2020<br/>DIOS UNION LIBERTAD</strong></p>";
+
+			getRegistro().setInfPortada(portada);
+			getRegistro().setInfIndice(indice);
+			getRegistro().setInfIntroduccion(intro);
+			getRegistro().setInfObjetivos(obj);
+			getRegistro().setInfAlcance(alcance);
+			getRegistro().setInfProcedimientos(procs);
+			getRegistro().setInfResultados(resultados);
+			getRegistro().setInfSeguimiento(seguimientos);
+			getRegistro().setInfRecomendaciones(recomendaciones);
+			getRegistro().setInfConclusion(conclusiones);
+			getRegistro().setInfAclaracion(parrafo);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -386,75 +578,21 @@ public class InformeMB extends AudigoesController implements Serializable {
 
 			// Defino el texto del encabezado de pagina con el id header que es que se pone
 			// arriba running(header)
-			str = str + "<div style='margin-top:20px;'> " + "<strong><br><strong><h2 style='text-align:center'>"
-					+ getRegistro().getInfPortada();
-			str = str + "</strong></div></h2>" + "<br><br><br><br><br><br><br> <br><br><br><br><br><br>";
-			// Concateno el texto a agregar
-			str = str + "<h1 style='text-align:center'> Informe de " + getRegistro().getAuditoria().getAudNombre();
-			str = str + "</h1><h3 style='text-align:center'>PERIODO DEL "
-					+ formatter.format(getRegistro().getAuditoria().getAudFechaInicioProgramado());
-			str = str + "   AL " + formatter.format(getRegistro().getAuditoria().getAudFechaFinProgramado());
-			str = str + "</h3><br>";
-
+			str = str + getRegistro().getInfPortada();
 			str = str + "<div style= 'page-break-after:always'></div>";
 
-			str = str + "<div style='margin-top:20px;'> " + "<h3>INDICE</h3>";
-			str = str + "<h5 style='text-align:justify'> I. Objetivos de la Auditoria </h5>";
-			str = str + "<h5 style='text-align:justify'> II. Alcance de la Auditoria </h5>";
-			str = str + "<h5 style='text-align:justify'> III. Procedimientos de Auditoria Aplicados </h5>";
-			str = str + "<h5 style='text-align:justify'> IV. Resultados de la Auditoria </h5>";
-			str = str
-					+ "<h5 style='text-align:justify'> V. Seguimiento a las recomendaciones de auditorias anteriores </h5>";
-			str = str + "<h5 style='text-align:justify'> VI. Recomendacioes de la Auditoria </h5>";
-			str = str + "<h5 style='text-align:justify'> VII. Conclusion </h5>";
-			str = str + "<h5 style='text-align:justify'> VIII. Parrafo Aclaratorio</h5>";
-
+			str = str + getRegistro().getInfIndice();
 			str = str + "<div style= 'page-break-after:always'></div>";
 
-			str = str + "<div> " + "<strong>Señor(es)</strong><strong>" + getRegistro().getInfDestinatario();
-			str = str + "</strong></div>" + "<br>";
-
-			str = str + "<div style='text-align:justify'> El presente informe contiene los resultados de "
-					+ getRegistro().getAuditoria().getAudNombre();
-			str = str + ", por el periodo del " + getRegistro().getAuditoria().getAudFechaInicioReal();
-			str = str + " al " + getRegistro().getAuditoria().getAudFechaFinReal();
-			str = str
-					+ ". La auditoría fue realizada en cumplimiento a los Arts. 30 y 31 de la Ley de la Corte de Cuentas de la República, a las Normas de Auditoría\r\n"
-					+ "Interna del Sector Gubernamental, emitidas por la Corte de Cuentas de la República.</div>";
-
-			str = str + "<h3 style='text-align:justify'> I. Objetivos de la Auditoria </h3>";
-			str = str + "<div>" + getRegistro().getAuditoria().getAudObjetivos();
-			str = str + "</div>";
-
-			str = str + "<h3 style='text-align:justify'> II. Alcance de la Auditoria </h3>";
-			str = str + "<div>" + getRegistro().getAuditoria().getAudAlcances();
-			str = str + "</div>";
-
-			str = str + "<h3 style='text-align:justify'> III. Procedimientos de Auditoria Aplicados </h3>";
-			str = str + "<div>" + getRegistro().getInfProcedimientos();
-			str = str + "</div>";
-
-			str = str + "<h3 style='text-align:justify'> IIV. Resultados de la Auditoria</h3>";
-			str = str + "<div>" + getRegistro().getInfResultados();
-			str = str + "</div>";
-
-			str = str
-					+ "<h3 style='text-align:justify'>V. Seguimiento a las recomendaciones de auditorias anteriores</h3>";
-			str = str + "<div>" + getRegistro().getInfSeguimiento();
-			str = str + "</div>";
-
-			str = str + "<h3 style='text-align:justify'> VI. Recomendacioes de la Auditoria </h3>";
-			str = str + "<div>" + getRegistro().getInfRecomendaciones();
-			str = str + "</div>";
-
-			str = str + "<h3 style='text-align:justify'> VII. Conclusion </h3>";
-			str = str + "<div>" + getRegistro().getInfConclusion();
-			str = str + "</div>";
-
-			str = str + "<h3 style='text-align:justify'> VIII. Parrafo Aclaratorio </h3>";
-			str = str + "<div>" + getRegistro().getInfAclaracion();
-			str = str + "</div>";
-
+			str = str + getRegistro().getInfIntroduccion();
+			str = str + getRegistro().getInfObjetivos();
+			str = str + getRegistro().getInfAlcance();
+			str = str + getRegistro().getInfProcedimientos();
+			str = str + getRegistro().getInfResultados();
+			str = str + getRegistro().getInfSeguimiento();
+			str = str + getRegistro().getInfRecomendaciones();
+			str = str + getRegistro().getInfConclusion();
+			str = str + getRegistro().getInfAclaracion();
 			str = str + "<div style= 'page-break-after:always'></div>";
 
 			HtmlConverter.convertToPdf(str, os);
@@ -467,6 +605,60 @@ public class InformeMB extends AudigoesController implements Serializable {
 			addWarn(new FacesMessage("Advertencia", "Hubo un error al generar el documento de la narrativa"));
 		}
 		return informe;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public byte[] getInformePDF() {
+
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+			// Para definir los encabezados de pagina y los pie de pagina
+			String str = "<html><head>"
+					+ "<style>#header{position: running(header);} @page {margin: 70px 70px 100px;@bottom-right @top-center {content: element(header);} }</style>"
+					+ "</head><body style='width:500px; font-size:smaller;'>";
+
+			// Defino el texto del encabezado de pagina con el id header que es que se pone
+			// arriba running(header)
+			str = str + getRegistro().getInfPortada();
+			str = str + "<div style= 'page-break-after:always'></div>";
+
+			str = str + getRegistro().getInfIndice();
+			str = str + "<div style= 'page-break-after:always'></div>";
+
+			str = str + getRegistro().getInfIntroduccion();
+			str = str + getRegistro().getInfObjetivos();
+			str = str + getRegistro().getInfAlcance();
+			str = str + getRegistro().getInfProcedimientos();
+			str = str + getRegistro().getInfResultados();
+			str = str + getRegistro().getInfSeguimiento();
+			str = str + getRegistro().getInfRecomendaciones();
+			str = str + getRegistro().getInfConclusion();
+			str = str + getRegistro().getInfAclaracion();
+			str = str + "<div style= 'page-break-after:always'></div>";
+
+			HtmlConverter.convertToPdf(str, os);
+
+			return os.toByteArray();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage("Advertencia", "Hubo un error al generar el documento de la narrativa"));
+		}
+		return null;
+	}
+	
+	public void onGenerarInforme() {
+		onpdf(getInformePDF());
+	}
+	
+	public void onpdf(byte[] pdfBytesArray) {
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+	    HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
+
+	    session.setAttribute("pdfBytesArray", pdfBytesArray);
 	}
 
 	public void setInforme(StreamedContent informe) {
@@ -526,12 +718,12 @@ public class InformeMB extends AudigoesController implements Serializable {
 			this.arcMB.getRegistro().setArcArchivo(event.getFile().getContent());
 			this.arcMB.getRegistro().setArcNombre(event.getFile().getFileName());
 			this.arcMB.getRegistro().setArcExt(event.getFile().getContentType());
-			this.arcMB.onSave();
+			// this.arcMB.onSave();
+			audigoesLocal.insert(this.arcMB.getRegistro());
 			// this.arcMB.afterSaveNew();
 			this.arcMB.fillByInforme(getRegistro());
-			if (!getStatus().equals("NEW")) {
-				addWarn(new FacesMessage(SYSTEM_NAME, "Archivo Guardado con Éxito"));
-			}
+			addWarn(new FacesMessage(SYSTEM_NAME, "Archivo Guardado con Éxito"));
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			addWarn(new FacesMessage(SYSTEM_NAME, "Problemas al guardar archivo."));
@@ -561,6 +753,55 @@ public class InformeMB extends AudigoesController implements Serializable {
 
 	public void setBitaMB(BitacoraActividadMB bitaMB) {
 		this.bitaMB = bitaMB;
+	}
+
+	public void revisarPermisos() {
+		super.configBean();
+
+		System.out.println(" id auditoria " + getAuditoria().getAudId());
+		if (getAuditoria() != null) {
+			setPerEdit(false);
+
+			setRolCoordinadorAuditoria(getObjAppsSession().isCoordinador(getObjAppsSession().getUsuario().getUsuId(),
+					getAuditoria().getAuditoriaResponsable()));
+			switch (getRegistro().getInfEstado()) {
+			case 1:
+				if (isRolAuditor()) {
+					System.out.println("edit");
+					setPerEdit(true);
+				} else {
+					setPerEnviar(false);
+				}
+				setPerAutorizar(false);
+				break;
+			case 2:
+				if (isRolCoordinadorAuditoria()) {
+					setPerEdit(true);
+					if (isPerAutorizar()) {
+						setPerAutorizar(true);
+					}
+				} else {
+					setPerAutorizar(false);
+				}
+				setPerEnviar(false);
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+			case 5:
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	@Override
+	protected void configBean() {
+
+		super.configBean();
+
 	}
 
 }

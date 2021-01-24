@@ -19,7 +19,7 @@
 	<named-query name="convocatoria.all">
 		<query>select o from Convocatoria o</query>
 	</named-query>
-		<named-query name="convocatoria.by.informe">
+	<named-query name="convocatoria.by.informe">
 		<query>select o from Convocatoria o where o.informe.infId=?1 and o.regActivo=1</query>
 	</named-query>
 	<named-query name="cartaGerencia.all">
@@ -28,5 +28,23 @@
 	<named-query name="cartaGerencia.get.all.auditoria.informe">
 		<query>select o from CartaGerencia o where o.informe.infId = ?1 and o.regActivo=1</query>
 	</named-query>
+
+	<named-query
+		name="procedimientos.planificacion.by.auditoria">
+		<query>select o from ProcedimientoPlanificacion o where o.programaPlanificacion.auditoria.audId=?1 and o.regActivo=1</query>
+	</named-query>
+
+	<named-query name="procedimientos.ejecucion.by.auditoria">
+		<query>select o from ProcedimientoEjecucion o where o.programaEjecucion.auditoria.audId=?1 and o.regActivo=1</query>
+	</named-query>
+
+	<named-query name="hallazgos.all.by.auditoria">
+		<query>select distinct o from CedulaNota o left join fetch o.comentarioHallazgos 
+				where o.auditoria.audId=?1 and o.regActivo=1</query>
+	</named-query>
 	
+	<named-query name="recomendaciones.all.by.cedula">
+		<query>select o from Recomendacion o where o.cedulaNota.cedId=?1 and o.regActivo=1</query>
+	</named-query>
+
 </entity-mappings>
