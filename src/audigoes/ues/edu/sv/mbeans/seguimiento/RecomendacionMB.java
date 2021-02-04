@@ -29,6 +29,7 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 	private Auditoria auditoria;
 	private CedulaNota cedula;
 	private Seguimiento seguimiento;
+	private Recomendacion recomendacionSelected;
 
 	@ManagedProperty(value = "#{comMB}")
 	private ComentarioMB comMB = new ComentarioMB();
@@ -58,6 +59,17 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 	}
 
 	@SuppressWarnings("unchecked")
+	public void fillRecomendacionesCedulaNota() {
+		try {
+			setListado((List<Recomendacion>) audigoesLocal.findByNamedQuery(Recomendacion.class,
+					"recomendaciones.cedula.nota", new Object[] { getCedula().getCedId() }));
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage(SYSTEM_NAME,"PRoblema al obtener recomendaciones del hallazgo seleccionado"));
+		}
+	}
+
+	@SuppressWarnings("unchecked")
 	public void fillRecomendaciones() {
 		try {
 
@@ -69,37 +81,59 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 		}
 	}
 
+	public void actualizarViesta() {
+		comMB.onCancel();
+	}
+
 	public void mostrarComentarios() {
 		comMB.setRecomendacion(getRegistro());
+		comMB.setSeguimiento(getSeguimiento());
 		comMB.obtenerComentario();
 	}
-	
+
 	public void onSaveComentario() {
-		if(comMB.beforeSave()) {
+		if (comMB.beforeSave()) {
+			comMB.getRegistro().setComRecEstado(1);
+			comMB.getRegistro().setSeguimiento(getSeguimiento());
 			comMB.onSave();
 			onEdit();
 			getRegistro().setSeguimiento(getSeguimiento());
-			getRegistro().setRecEstado(3); //estado 3 = en proceso
+			getRegistro().setRecEstado(1); // estado 1 = Pendiente
 			onSave();
 		}
 	}
-	
+
+	public void onSaveComentarioEnProceso() {
+		if (comMB.beforeSave()) {
+			comMB.getRegistro().setComRecEstado(3);
+			comMB.getRegistro().setSeguimiento(getSeguimiento());
+			comMB.onSave();
+			onEdit();
+			getRegistro().setSeguimiento(getSeguimiento());
+			getRegistro().setRecEstado(3); // estado 3 = en proceso
+			onSave();
+		}
+	}
+
 	public void onSaveImplementarRec() {
-		if(comMB.beforeSave()) {
+		if (comMB.beforeSave()) {
+			comMB.getRegistro().setComRecEstado(2);
+			comMB.getRegistro().setSeguimiento(getSeguimiento());
 			comMB.onSave();
 			onEdit();
 			getRegistro().setSeguimiento(getSeguimiento());
-			getRegistro().setRecEstado(2); //estado 2 = implementado
+			getRegistro().setRecEstado(2); // estado 2 = implementado
 			onSave();
 		}
 	}
-	
+
 	public void onSaveNoImplementarRec() {
-		if(comMB.beforeSave()) {
+		if (comMB.beforeSave()) {
+			comMB.getRegistro().setComRecEstado(4);
 			comMB.onSave();
 			onEdit();
 			getRegistro().setSeguimiento(getSeguimiento());
-			getRegistro().setRecEstado(4); //estado 4 = no implementado
+			getRegistro().setRecEstado(4); // estado 4 = no implementado
 			onSave();
 		}
 	}
@@ -126,7 +160,7 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 		getListado().add(getRegistro());
 		super.afterSaveNew();
 	}
-	
+
 	@Override
 	public boolean beforeSaveNew() {
 		getRegistro().setAuditoria(auditoria);
@@ -186,6 +220,14 @@ public class RecomendacionMB extends AudigoesController implements Serializable 
 
 	public void setSeguimiento(Seguimiento seguimiento) {
 		this.seguimiento = seguimiento;
+	}
+
+	public Recomendacion getRecomendacionSelected() {
+		return recomendacionSelected;
+	}
+
+	public void setRecomendacionSelected(Recomendacion recomendacionSelected) {
+		this.recomendacionSelected = recomendacionSelected;
 	}
 
 }

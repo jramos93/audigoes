@@ -23,19 +23,29 @@
 
 					<p:outputLabel for="audRec" value="Auditoría:"
 						style="font-weight:bold;" />
-					<p:inputTextarea id="audRec" value="#{recMB.auditoria.audNombre}"
+					<p:inputTextarea id="audRec" value="#{segMB.auditoria.audNombre}"
 						rows="2" readonly="true" />
-
-					<p:outputLabel for="rectitulo" value="Recomendación Título:"
+						
+					<p:outputLabel for="cedulaselected" value="Hallazgo:"
 						style="font-weight:bold;" />
-					<p:inputTextarea id="rectitulo" value="#{recMB.registro.recTitulo}"
+					<p:inputTextarea id="cedulaselected" value="#{segMB.cedulaSelected.cedTitulo}"
 						rows="2" readonly="true" />
-
-					<p:outputLabel for="recomendacion" value="Recomendación Detalle:"
-						style="font-weight:bold;" />
-					<p:inputTextarea id="recomendacion"
-						value="#{recMB.registro.recRecomendacion}" readonly="true" />
 				</p:panelGrid>
+				<p:dataTable var="recm" value="#{recMB.listado}"
+					expandedRow="single" expandableRowGroups="true"
+					sortBy="#{recm.cedulaNota.cedTitulo}" widgetVar="wvRecomendaciones"
+					id="dtRecomendacion" style="margin-top:20px;" paginator="true"
+					rowKey="#{recm.recId}" paginatorPosition="bottom"
+					rowsPerPageTemplate="5,10,15" rows="5"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+					<p:column headerText="Titulo Recomendación">
+						<h:outputText value="#{recm.recTitulo}"></h:outputText>
+					</p:column>
+					<p:column headerText="Situación Encontrada">
+						<h:outputText value="#{recm.recSituacion}"></h:outputText>
+					</p:column>
+				</p:dataTable>
 			</div>
 			<div class="ui-fluid p-formgrid p-grid">
 				<p:tabView id="tvComentarios">
@@ -54,15 +64,23 @@
 					styleClass="ui-panelgrid-blank form-group form-elements">
 					<p:row style="text-align:center;">
 						<p:column>
-							<p:commandButton id="btnGuardarBottom" styleClass="blue-btn"
-								action="#{recMB.onSaveComentario}" value="Guardar Comentario"
+							<p:commandButton id="btnGuardarButtom"
+								action="#{recMB.onSaveComentario}"
+								value="Guardar Recomendación Pendiente"
 								update="@form :frmSeguimiento" process="@this @form" />
 						</p:column>
 						<p:column>
-							<p:commandButton id="btnImplementarBottom" styleClass="green-btn"
+							<p:commandButton id="btnEnProcesoButtom" styleClass="blue-btn"
+								rendered="#{comMB.rolAuditor}"
+								action="#{recMB.onSaveComentarioEnProceso}"
+								value="Guardar Recomendación En Proceso"
+								update="@form :frmSeguimiento" process="@this @form" />
+						</p:column>
+						<p:column>
+							<p:commandButton id="btnImplementarButtom" styleClass="green-btn"
 								action="#{recMB.onSaveImplementarRec}"
 								value="Recomendación Implementada"
-								rendered="#{comMB.rolAuditado}" update="@form :frmSeguimiento"
+								rendered="#{comMB.rolAuditor}" update="@form :frmSeguimiento"
 								process="@this @form">
 								<p:confirm header="Confirmación"
 									message="Al guardar comentario la recomendación quedará IMPLEMENTADA. ¿Desea continuar?"
@@ -70,10 +88,10 @@
 							</p:commandButton>
 						</p:column>
 						<p:column>
-							<p:commandButton id="btnNoImplementarBottom"
+							<p:commandButton id="btnNoImplementarButtom"
 								styleClass="pink-btn" action="#{recMB.onSaveNoImplementarRec}"
 								value="Recomendación No Implementada"
-								rendered="#{comMB.rolAuditado}" update="@form :frmSeguimiento"
+								rendered="#{comMB.rolAuditor}" update="@form :frmSeguimiento"
 								process="@this @form">
 								<p:confirm header="Confirmación"
 									message="Al guardar comentario la recomendación quedará NO IMPLEMENTADA. ¿Desea continuar?"

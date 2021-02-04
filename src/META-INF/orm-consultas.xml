@@ -107,8 +107,8 @@
 		result-class="audigoes.ues.edu.sv.entities.vistas.TiempoPorFaseAuditorias">
 		<query>
 			 select aud_id, ins_id, ins_nombre, aud_codigo, aud_nombre, 
-			 if(isnull(timestampdiff(day, aud_fecha_programado, aud_fecha_planificacion)) = 1 , 0 , timestampdiff(day, aud_fecha_programado, aud_fecha_asignada)) tiempo_programado,
- 			 if(isnull(timestampdiff(day, aud_fecha_programado, aud_fecha_planificacion)) = 1 , 0 , timestampdiff(day, aud_fecha_asignada, aud_fecha_planificacion)) tiempo_asignado,
+			 if(isnull(timestampdiff(day, aud_fecha_programado, aud_fecha_asignada)) = 1 , 0 , timestampdiff(day, aud_fecha_programado, aud_fecha_asignada)) tiempo_programado,
+ 			 if(isnull(timestampdiff(day, aud_fecha_asignada, aud_fecha_planificacion)) = 1 , 0 , timestampdiff(day, aud_fecha_asignada, aud_fecha_planificacion)) tiempo_asignado,
 			 if(isnull(timestampdiff(day, aud_fecha_planificacion, aud_fecha_ejecucion)) = 1 , 0 , timestampdiff(day, aud_fecha_planificacion, aud_fecha_ejecucion)) tiempo_planificacion,
 			 if(isnull(timestampdiff(day, aud_fecha_ejecucion, aud_fecha_informe)) = 1 , 0 , timestampdiff(day, aud_fecha_ejecucion, aud_fecha_informe)) tiempo_ejecucion,
 			 if(isnull(timestampdiff(day, aud_fecha_informe, aud_fecha_seguimiento)) = 1 , 0 , timestampdiff(day, aud_fecha_informe, aud_fecha_seguimiento)) tiempo_informe,
@@ -134,13 +134,14 @@
 	<named-native-query name="consulta.duracion.auditorias.horas"
 		result-class="audigoes.ues.edu.sv.entities.vistas.DuracionAuditorias">
 		<query>
-			select aud_id, aud_codigo, if(isnull(timestampdiff(hour, aud_fecha_inicio_programado, now())) = 1, 0 , timestampdiff(hour, aud_fecha_inicio_programado, now())) tiempo_ejecutado 
+			select aud_id, aud_codigo, 
+			if(isnull(timestampdiff(day, aud_fecha_inicio_programado, now())) = 1, 0 , timestampdiff(day, aud_fecha_inicio_programado, now())) tiempo_ejecutado 
 			from auditoria a
 			inner join plan_anual b on a.aud_pla_id = b.pla_id
 			where a.reg_activo = 1 and b.pla_ins_id = ?1 and aud_fase not in ( ?2 ) and aud_fecha_inicio_programado 
 			between ?3 and ?4
 			union
-			select aud_id, aud_codigo, if(isnull(timestampdiff(hour, aud_fecha_inicio_programado, aud_fecha_finalizada)) = 1, 0 , timestampdiff(hour, aud_fecha_inicio_programado, aud_fecha_finalizada)) tiempo_ejecutado  
+			select aud_id, aud_codigo, if(isnull(timestampdiff(day, aud_fecha_inicio_programado, aud_fecha_finalizada)) = 1, 0 , timestampdiff(day, aud_fecha_inicio_programado, aud_fecha_finalizada)) tiempo_ejecutado  
 			from auditoria a 
 			inner join plan_anual b on a.aud_pla_id = b.pla_id
 			where a.reg_activo = 1 and b.pla_ins_id = ?5 and aud_fase = ?6 and aud_fecha_inicio_programado and aud_fecha_inicio_programado 

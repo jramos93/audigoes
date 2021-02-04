@@ -33,11 +33,11 @@
 						<p:panelGrid columns="2"
 							style="width:90%; margin: auto; text-align:center"
 							styleClass="ui-panelgrid-blank">
-							<p:chart type="donut"
+							<p:chart type="donut"  style="height:400px; font-size:1.7em;" styleClass="legend-donut-chart"
 								rendered="#{dashMB.renderAuditoriasPorEstado}"
 								model="#{dashMB.donutChartAuditoriasPorEstado}" />
-							<p:chart type="donut"
-								rendered="#{dashMB.renderHallazgosPorEstado}"
+							<p:chart type="donut" style="height:400px; font-size:1.7em;" styleClass="legend-donut-chart"
+								rendered="#{dashMB.renderHallazgosPorEstado}" 
 								model="#{dashMB.donulChartHallazgosPoeEstado}" />
 						</p:panelGrid>
 						<p:separator rendered="#{dashMB.renderCompTiempos}" />
@@ -47,12 +47,17 @@
 						</p:panelGrid>
 						<p:separator rendered="#{dashMB.renderTotalVsFinalizadas}" />
 						<p:panelGrid style="margin-top:50px;">
-							<p:chart type="bar" rendered="#{dashMB.renderTotalVsFinalizadas}"
-								model="#{dashMB.barChartTotalVsFinalizadas}" />
+							<p:chart type="donut" style="height:400px; font-size:1.7em;" styleClass="legend-donut-chart"
+								model="#{dashMB.donutChartTotalVsFinalizadas}" />
 						</p:panelGrid>
 						<p:panelGrid style="margin-top:50px;">
 							<p:chart type="bar" style="height:500px;"
 								model="#{dashMB.barChartTotalDuracionAuditorias}" />
+						</p:panelGrid>
+						<p:separator />
+						<p:panelGrid style="margin-top:50px;">
+							<p:chart type="bar" style="height:500px; font-size:1.7em;"
+								model="#{dashMB.barChartDuracionPorFase}" />
 						</p:panelGrid>
 						<p:separator />
 						<p:dataTable id="dtTiempoPorFaseAuditorias"
@@ -60,7 +65,7 @@
 							style="margin-top:20px;" paginator="true"
 							value="#{dashMB.tiempoPorFaseAuditoriasList}"
 							paginatorPosition="bottom" rowsPerPageLabel="5,10,15,20,25"
-							rows="15"
+							rows="15" rendered="false"
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
 							<f:facet name="header">Duración en cada fase de auditoría</f:facet>

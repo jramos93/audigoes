@@ -56,6 +56,10 @@ public class Seguimiento extends SuperEntity implements Serializable {
 	//bi-directional many-to-one association to Recomendacion
 	@OneToMany(mappedBy="seguimiento")
 	private List<Recomendacion> recomendacion;
+	
+	// bi-directional many-to-one association to Comentario
+	@OneToMany(mappedBy = "seguimiento")
+	private List<Comentario> comentario;
 
 	//bi-directional many-to-one association to Auditoria
 	@ManyToOne
@@ -159,6 +163,28 @@ public class Seguimiento extends SuperEntity implements Serializable {
 		return recomendacion;
 	}
 
+	public List<Comentario> getComentario() {
+		return comentario;
+	}
+
+	public void setComentario(List<Comentario> comentario) {
+		this.comentario = comentario;
+	}
+	
+	public Comentario addComentario(Comentario comentario) {
+		getComentario().add(comentario);
+		comentario.setSeguimiento(this);
+
+		return comentario;
+	}
+
+	public Comentario removeComentario(Comentario comentario) {
+		getComentario().remove(comentario);
+		comentario.setSeguimiento(null);
+
+		return comentario;
+	}
+
 	public Auditoria getAuditoria() {
 		return this.auditoria;
 	}
@@ -194,7 +220,7 @@ public class Seguimiento extends SuperEntity implements Serializable {
 		return "Seguimiento [segId=" + segId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo="
 				+ regActivo + ", segFecFin=" + segFecFin + ", segFecInicio=" + segFecInicio + ", segObservacion="
 				+ segObservacion + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", recomendacion=" + recomendacion
-				+ ", auditoria=" + auditoria + "]";
+				+ ", comentario=" + comentario + ", auditoria=" + auditoria + "]";
 	}
 
 }

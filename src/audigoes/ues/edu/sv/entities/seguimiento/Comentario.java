@@ -4,71 +4,84 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 
 import java.util.Date;
 import java.util.List;
-
 
 /**
  * The persistent class for the comentario database table.
  * 
  */
 @Entity
-@NamedQuery(name="Comentario.findAll", query="SELECT c FROM Comentario c")
+@NamedQuery(name = "Comentario.findAll", query = "SELECT c FROM Comentario c")
 public class Comentario extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "com_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "com_id", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "com_id")
-	@Column(name="com_id")
+	@Column(name = "com_id")
 	private int comId;
 
-	@Column(name="com_comentario")
+	@Column(name = "com_comentario")
 	private String comComentario;
 
-	@Column(name="com_comentario_auditoria")
+	@Column(name = "com_comentario_auditoria")
 	private String comComentarioAuditoria;
 
-	@Column(name="com_estado")
+	@Column(name = "com_estado")
 	private int comEstado;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="com_fecha_envio_auditado")
+	@Column(name = "com_fecha_envio_auditado")
 	private Date comFechaEnvioAuditado;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="com_fecha_envio_auditoria")
+	@Column(name = "com_fecha_envio_auditoria")
 	private Date comFechaEnvioAuditoria;
 
+	@Column(name = "com_rec_estado")
+	private int comRecEstado;
+
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_crea")
+	@Column(name = "fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_modi")
+	@Column(name = "fec_modi")
 	private Date fecModi;
 
-	@Column(name="reg_activo")
+	@Column(name = "reg_activo")
 	private int regActivo;
 
-	@Column(name="usu_crea")
+	@Column(name = "usu_crea")
 	private String usuCrea;
 
-	@Column(name="usu_modi")
+	@Column(name = "usu_modi")
 	private String usuModi;
 
-	//bi-directional many-to-one association to Recomendacion
+	// bi-directional many-to-one association to Recomendacion
 	@ManyToOne
-	@JoinColumn(name="com_rec_id")
+	@JoinColumn(name = "com_rec_id")
 	private Recomendacion recomendacion;
 
-	//bi-directional many-to-one association to Evidencia
-	@OneToMany(mappedBy="comentario")
+	// bi-directional many-to-one association to Recomendacion
+	@ManyToOne
+	@JoinColumn(name = "com_seg_id")
+	private Seguimiento seguimiento;
+
+	// bi-directional many-to-one association to Recomendacion
+	@ManyToOne
+	@JoinColumn(name = "com_ced_id")
+	private CedulaNota cedulaNota;
+
+	// bi-directional many-to-one association to Evidencia
+	@OneToMany(mappedBy = "comentario")
 	private List<Evidencia> evidencia;
 
-	//bi-directional many-to-one association to ResponsableRecomendacion
-	@OneToMany(mappedBy="comentario")
+	// bi-directional many-to-one association to ResponsableRecomendacion
+	@OneToMany(mappedBy = "comentario")
 	private List<ResponsableRecomendacion> responsableRecomendacion;
 
 	public Comentario() {
@@ -120,6 +133,30 @@ public class Comentario extends SuperEntity implements Serializable {
 
 	public void setComFechaEnvioAuditoria(Date comFechaEnvioAuditoria) {
 		this.comFechaEnvioAuditoria = comFechaEnvioAuditoria;
+	}
+
+	public int getComRecEstado() {
+		return comRecEstado;
+	}
+
+	public void setComRecEstado(int comRecEstado) {
+		this.comRecEstado = comRecEstado;
+	}
+
+	public Seguimiento getSeguimiento() {
+		return seguimiento;
+	}
+
+	public void setSeguimiento(Seguimiento seguimiento) {
+		this.seguimiento = seguimiento;
+	}
+
+	public CedulaNota getCedulaNota() {
+		return cedulaNota;
+	}
+
+	public void setCedulaNota(CedulaNota cedulaNota) {
+		this.cedulaNota = cedulaNota;
 	}
 
 	public Date getFecCrea() {
@@ -240,9 +277,10 @@ public class Comentario extends SuperEntity implements Serializable {
 	public String toString() {
 		return "Comentario [comId=" + comId + ", comComentario=" + comComentario + ", comComentarioAuditoria="
 				+ comComentarioAuditoria + ", comEstado=" + comEstado + ", comFechaEnvioAuditado="
-				+ comFechaEnvioAuditado + ", comFechaEnvioAuditoria=" + comFechaEnvioAuditoria + ", fecCrea=" + fecCrea
-				+ ", fecModi=" + fecModi + ", regActivo=" + regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi
-				+ ", recomendacion=" + recomendacion + ", evidencia=" + evidencia + ", responsableRecomendacion="
+				+ comFechaEnvioAuditado + ", comFechaEnvioAuditoria=" + comFechaEnvioAuditoria + ", comRecEstado="
+				+ comRecEstado + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo=" + regActivo
+				+ ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", recomendacion=" + recomendacion
+				+ ", seguimiento=" + seguimiento + ", evidencia=" + evidencia + ", responsableRecomendacion="
 				+ responsableRecomendacion + "]";
 	}
 

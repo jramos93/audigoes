@@ -10,9 +10,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
+import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.seguimiento.Comentario;
 import audigoes.ues.edu.sv.entities.seguimiento.Recomendacion;
+import audigoes.ues.edu.sv.entities.seguimiento.Seguimiento;
 
 @ManagedBean(name = "comMB")
 @ViewScoped
@@ -26,6 +28,8 @@ public class ComentarioMB extends AudigoesController implements Serializable {
 
 	private Auditoria auditoria;
 	private Recomendacion recomendacion;
+	private Seguimiento seguimiento;
+	private CedulaNota cedula;
 
 	public ComentarioMB() {
 		super(new Comentario());
@@ -68,9 +72,9 @@ public class ComentarioMB extends AudigoesController implements Serializable {
 	@SuppressWarnings("unchecked")
 	public void obtenerComentario() {
 		try {
-			if (getRecomendacion() != null) {
+			if (getCedula() != null && getSeguimiento() != null) {
 				List<Comentario> com = (List<Comentario>) audigoesLocal.findByNamedQuery(Comentario.class,
-						"comentario.by.recomendacion", new Object[] {getRecomendacion().getRecId()});
+						"comentario.by.hallazgo.seguimiento", new Object[] {getSeguimiento().getSegId(), getCedula().getCedId()});
 				if(!com.isEmpty()) {
 					setRegistro(com.get(0));
 					onEdit();
@@ -117,7 +121,9 @@ public class ComentarioMB extends AudigoesController implements Serializable {
 	
 	@Override
 	public boolean beforeSaveNew() {
-		getRegistro().setRecomendacion(getRecomendacion());
+		getRegistro().setSeguimiento(getSeguimiento());
+		getRegistro().setCedulaNota(getCedula());
+		
 		return super.beforeSaveNew();
 		
 	}
@@ -170,6 +176,22 @@ public class ComentarioMB extends AudigoesController implements Serializable {
 		this.recomendacion = recomendacion;
 	}
 	
+	public Seguimiento getSeguimiento() {
+		return seguimiento;
+	}
+
+	public void setSeguimiento(Seguimiento seguimiento) {
+		this.seguimiento = seguimiento;
+	}
+
+	public CedulaNota getCedula() {
+		return cedula;
+	}
+
+	public void setCedula(CedulaNota cedula) {
+		this.cedula = cedula;
+	}
+
 	@Override
 	protected void configBean() {
 		// TODO Auto-generated method stub

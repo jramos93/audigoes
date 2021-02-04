@@ -12,3 +12,14 @@
 	bottom: 20px;
 	right: 20px;
 }
+
+.legend-donut-chart {
+    position: relative;
+    color: #666;
+    font-family: "Trebuchet MS",Arial,Helvetica,sans-serif;
+    font-size: 1.5em;
+}
+
+table.jqplot-table-legend{
+	font-size: 1.5em;
+}

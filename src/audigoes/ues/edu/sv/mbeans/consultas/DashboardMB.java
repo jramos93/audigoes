@@ -66,9 +66,11 @@ public class DashboardMB extends AudigoesController implements Serializable {
 	private LineChartModel lineCharAuditoriasPorEstado;
 	private DonutChartModel donutChartAuditoriasPorEstado;
 	private DonutChartModel donulChartHallazgosPoeEstado;
+	private DonutChartModel donutChartTotalVsFinalizadas;
 	private CartesianChartModel chartModelCompTiempos;
-	private HorizontalBarChartModel barChartTotalVsFinalizadas;
-	private HorizontalBarChartModel barChartTotalDuracionAuditorias;
+	private BarChartModel barChartTotalVsFinalizadas;
+	private BarChartModel barChartTotalDuracionAuditorias;
+	private BarChartModel barChartDuracionPorFase;
 	private List<StatsAuditoriaEstado> statAuditoriaEstadoList;
 	private List<StatsHallazgoEstado> statHallazgoEstadoList;
 	private List<TiempoPorFaseAuditorias> tiempoPorFaseAuditoriasList;
@@ -108,8 +110,9 @@ public class DashboardMB extends AudigoesController implements Serializable {
 		createDonutChartAuditoriasPorEstado();
 		createDonutChartHallazgosPorEstado();
 		createChartModelCompTiempos();
-		createBarChartTotalVsFinalizadas();
+		createDonutChartTotalVsFinalizadas();
 		createBarChartDuracionAuditorias();
+		obtenerTiemposPorFaseAuditorias();
 		obtenerTiemposPorFaseAuditorias();
 
 	}
@@ -226,93 +229,6 @@ public class DashboardMB extends AudigoesController implements Serializable {
 		}
 	}
 
-	public void createBarChartTotalVsFinalizadas() {
-		try {
-			int minAxis = 0;
-			int maxAxis = getTotalAuditoriasPlanificadas();
-
-			setBarChartTotalVsFinalizadas(new HorizontalBarChartModel());
-			ChartSeries totalAuditorias = new ChartSeries();
-
-			totalAuditorias.setLabel("Duración Auditorías");
-
-			totalAuditorias.set("Finalizadas", getTotalAuditoriasFinalizadas());
-			totalAuditorias.set("Planificadas", getTotalAuditoriasPlanificadas());
-			if (getTotalAuditoriasPlanificadas() > 0) {
-				setRenderTotalVsFinalizadas(true);
-			} else {
-				setRenderTotalVsFinalizadas(false);
-			}
-
-			getBarChartTotalVsFinalizadas().addSeries(totalAuditorias);
-			getBarChartTotalVsFinalizadas().setTitle("Auditorias Planificadas vs Auditorias Finalizadas");
-			getBarChartTotalVsFinalizadas().setLegendPosition("e");
-
-			getBarChartTotalVsFinalizadas().setStacked(true);
-
-			Axis xAxis = getBarChartTotalVsFinalizadas().getAxis(AxisType.X);
-			xAxis.setLabel("Total Auditorias");
-			xAxis.setMin(minAxis);
-			xAxis.setMax(maxAxis + 10);
-
-			Axis yAxis = getBarChartTotalVsFinalizadas().getAxis(AxisType.Y);
-			yAxis.setLabel("Auditorías");
-		} catch (Exception e) {
-			e.printStackTrace();
-			addWarn(new FacesMessage(SYSTEM_NAME, "Problema al obtener datos para gráfico Duración de Auditorías"));
-		}
-
-	}
-
-	@SuppressWarnings("unchecked")
-	public void createBarChartDuracionAuditorias() {
-		setFormatter(new SimpleDateFormat("yyyy-MM-dd"));
-		setStrFechaInicio(getFormatter().format(getFechaInicio()));
-		setStrFechaFin(getFormatter().format(getFechaFin()));
-		try {
-			int minAxis = 0;
-			int maxAxis = 0;
-
-			setBarChartTotalDuracionAuditorias(new HorizontalBarChartModel());
-			ChartSeries auditoriasSeries = new ChartSeries();
-
-			setDuracionList((List<DuracionAuditorias>) audigoesLocal.findByNamedQuery(DuracionAuditorias.class,
-					"consulta.duracion.auditorias.horas",
-					new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId(), 6, getStrFechaInicio(),
-							getStrFechaFin(), getObjAppsSession().getUsuario().getInstitucion().getInsId(), 6,
-							getStrFechaInicio(), getStrFechaFin() }));
-			if (!getDuracionList().isEmpty()) {
-				setRenderTotalDuracionAuditorias(true);
-				for (DuracionAuditorias item : getDuracionList()) {
-					auditoriasSeries.set(item.getAudCodigo(), item.getTiempoEjecutado());
-					if (item.getTiempoEjecutado().intValue() > maxAxis) {
-						maxAxis = item.getTiempoEjecutado().intValue();
-					}
-				}
-			} else {
-				setRenderTotalDuracionAuditorias(false);
-			}
-
-			getBarChartTotalDuracionAuditorias().addSeries(auditoriasSeries);
-			getBarChartTotalDuracionAuditorias().setTitle("Duración auditorías");
-			getBarChartTotalDuracionAuditorias().setLegendPosition("e");
-
-			getBarChartTotalDuracionAuditorias().setStacked(true);
-
-			Axis xAxis = getBarChartTotalDuracionAuditorias().getAxis(AxisType.X);
-			xAxis.setLabel("Total Auditorias");
-			xAxis.setMin(minAxis);
-			xAxis.setMax(maxAxis + 10);
-
-			Axis yAxis = getBarChartTotalVsFinalizadas().getAxis(AxisType.Y);
-			yAxis.setLabel("Auditorías");
-		} catch (Exception e) {
-			e.printStackTrace();
-			addWarn(new FacesMessage(SYSTEM_NAME, "Problemas al obtener datos para gráfico Duración Auditorías"));
-		}
-
-	}
-
 	@SuppressWarnings("unchecked")
 	public void createChartModelCompTiempos() {
 		setFormatter(new SimpleDateFormat("yyyy-MM-dd"));
@@ -376,19 +292,170 @@ public class DashboardMB extends AudigoesController implements Serializable {
 
 	}
 
+	public void createDonutChartTotalVsFinalizadas() {
+		Map<String, Number> circle = new LinkedHashMap<String, Number>();
+		setDonutChartTotalVsFinalizadas(new DonutChartModel());
+		try {
+			if (getTotalAuditoriasPlanificadas() > 0) {
+				circle.put("Total Finalizadas", getTotalAuditoriasFinalizadas());
+				circle.put("Total Planificadas", getTotalAuditoriasPlanificadas());
+				setRenderTotalVsFinalizadas(true);
+			} else {
+				setRenderTotalVsFinalizadas(false);
+			}
+
+			donutChartTotalVsFinalizadas.addCircle(circle);
+			donutChartTotalVsFinalizadas.setTitle("Total Auditorías");
+			donutChartTotalVsFinalizadas.setLegendPosition("e");
+			donutChartTotalVsFinalizadas.setSliceMargin(3);
+			donutChartTotalVsFinalizadas.setDataFormat("value");
+			donutChartTotalVsFinalizadas.setShowDataLabels(true);
+			donutChartTotalVsFinalizadas.setShadow(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage(SYSTEM_NAME, "Problema al obtener datos de cantidad de hallazgos por estado"));
+		}
+	}
+
+	public void createBarChartTotalVsFinalizadas() {
+		try {
+			int minAxis = 0;
+			int maxAxis = getTotalAuditoriasPlanificadas();
+
+			setBarChartTotalVsFinalizadas(new BarChartModel());
+			ChartSeries totalAuditorias = new ChartSeries();
+
+			totalAuditorias.setLabel("Duración Auditorías - En Días");
+
+			totalAuditorias.set("Finalizadas", getTotalAuditoriasFinalizadas());
+			totalAuditorias.set("Planificadas", getTotalAuditoriasPlanificadas());
+			if (getTotalAuditoriasPlanificadas() > 0) {
+				setRenderTotalVsFinalizadas(true);
+			} else {
+				setRenderTotalVsFinalizadas(false);
+			}
+
+			getBarChartTotalVsFinalizadas().addSeries(totalAuditorias);
+			getBarChartTotalVsFinalizadas().setTitle("Auditorias Planificadas vs Auditorias Finalizadas");
+			getBarChartTotalVsFinalizadas().setLegendPosition("e");
+
+			getBarChartTotalVsFinalizadas().setStacked(true);
+
+			Axis xAxis = getBarChartTotalVsFinalizadas().getAxis(AxisType.X);
+			xAxis.setLabel("Auditorías");
+
+			Axis yAxis = getBarChartTotalVsFinalizadas().getAxis(AxisType.Y);
+			yAxis.setLabel("Total Auditorías");
+			yAxis.setMin(minAxis);
+			yAxis.setMax(maxAxis + 10);
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage(SYSTEM_NAME, "Problema al obtener datos para gráfico Duración de Auditorías"));
+		}
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public void createBarChartDuracionAuditorias() {
+		setFormatter(new SimpleDateFormat("yyyy-MM-dd"));
+		setStrFechaInicio(getFormatter().format(getFechaInicio()));
+		setStrFechaFin(getFormatter().format(getFechaFin()));
+		try {
+			int minAxis = 0;
+			int maxAxis = 0;
+
+			setBarChartTotalDuracionAuditorias(new BarChartModel());
+			ChartSeries auditoriasSeries = new ChartSeries();
+			auditoriasSeries.setLabel("Días");
+
+			setDuracionList((List<DuracionAuditorias>) audigoesLocal.findByNamedQuery(DuracionAuditorias.class,
+					"consulta.duracion.auditorias.horas",
+					new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId(), 6, getStrFechaInicio(),
+							getStrFechaFin(), getObjAppsSession().getUsuario().getInstitucion().getInsId(), 6,
+							getStrFechaInicio(), getStrFechaFin() }));
+
+			if (!getDuracionList().isEmpty()) {
+				setRenderTotalDuracionAuditorias(true);
+				for (DuracionAuditorias item : getDuracionList()) {
+					auditoriasSeries.set(item.getAudCodigo(), item.getTiempoEjecutado().intValue());
+					if (item.getTiempoEjecutado().intValue() > maxAxis) {
+						maxAxis = item.getTiempoEjecutado().intValue();
+
+					}
+				}
+			} else {
+				setRenderTotalDuracionAuditorias(false);
+			}
+			getBarChartTotalDuracionAuditorias().addSeries(auditoriasSeries);
+			getBarChartTotalDuracionAuditorias().setTitle("Duración auditorías - En Días");
+			getBarChartTotalDuracionAuditorias().setLegendPosition("e");
+			getBarChartTotalDuracionAuditorias().setStacked(true);
+			Axis xAxis = getBarChartTotalDuracionAuditorias().getAxis(AxisType.X);
+			xAxis.setLabel("Auditorias");
+			xAxis.setTickAngle(-90);
+
+			Axis yAxis = getBarChartTotalDuracionAuditorias().getAxis(AxisType.Y);
+			yAxis.setMin(minAxis);
+			yAxis.setMax(maxAxis + 5);
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage(SYSTEM_NAME, "Problemas al obtener datos para gráfico Duración Auditorías"));
+		}
+
+	}
+
 	@SuppressWarnings("unchecked")
 	public void obtenerTiemposPorFaseAuditorias() {
 		setFormatter(new SimpleDateFormat("yyyy-MM-dd"));
 		setStrFechaInicio(getFormatter().format(getFechaInicio()));
 		setStrFechaFin(getFormatter().format(getFechaFin()));
 		try {
+			int minAxis = 0;
+			int maxAxis = 0;
+
+			setBarChartDuracionPorFase(new BarChartModel());
+			ChartSeries faseEjecucionSeries = new ChartSeries();
+			ChartSeries faseInformeSeries = new ChartSeries();
+			ChartSeries faseSeguimientoSeries = new ChartSeries();
+
+			faseEjecucionSeries.setLabel("Fase Ejecución");
+			faseInformeSeries.setLabel("Fase Informe");
+			faseSeguimientoSeries.setLabel("Fase Seguimiento");
 			setTiempoPorFaseAuditoriasList((List<TiempoPorFaseAuditorias>) audigoesLocal.findByNamedQuery(
 					TiempoPorFaseAuditorias.class, "consulta.tiempo.fases.auditoria",
 					new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId(), getStrFechaInicio(),
 							getStrFechaFin() }));
+
+			if (!getTiempoPorFaseAuditoriasList().isEmpty()) {
+				for (TiempoPorFaseAuditorias item : getTiempoPorFaseAuditoriasList()) {
+					faseEjecucionSeries.set(item.getAudCodigo(), item.getTiempoEjecucion().intValue());
+					faseInformeSeries.set(item.getAudCodigo(), item.getTiempoInforme().intValue());
+					faseSeguimientoSeries.set(item.getAudCodigo(), item.getTiempoSeguimiento().intValue());
+					int total = 0;
+					total = item.getTiempoEjecucion().intValue() + item.getTiempoEjecucion().intValue()
+							+ item.getTiempoEjecucion().intValue();
+					if (total > maxAxis) {
+						maxAxis = total;
+					}
+				}
+			}
+			getBarChartDuracionPorFase().addSeries(faseEjecucionSeries);
+			getBarChartDuracionPorFase().addSeries(faseInformeSeries);
+			getBarChartDuracionPorFase().addSeries(faseSeguimientoSeries);
+			getBarChartDuracionPorFase().setTitle("Duración de Auditorías por Fase");
+			getBarChartDuracionPorFase().setLegendPosition("e");
+			getBarChartDuracionPorFase().setStacked(true);
+			Axis xAxis = getBarChartDuracionPorFase().getAxis(AxisType.X);
+			xAxis.setLabel("Auditorias");
+			xAxis.setTickAngle(-90);
+
+			Axis yAxis = getBarChartDuracionPorFase().getAxis(AxisType.Y);
+			yAxis.setMin(minAxis);
+			yAxis.setMax(maxAxis + 5);
 		} catch (Exception e) {
 			e.printStackTrace();
-			addWarn(new FacesMessage(SYSTEM_NAME, "Problemas al obtener datos tiempo por auditoria"));
+			addWarn(new FacesMessage(SYSTEM_NAME,
+					"Problemas al obtener datos tiempo para gráfico de auditorías por fases"));
 		}
 	}
 
@@ -543,20 +610,36 @@ public class DashboardMB extends AudigoesController implements Serializable {
 		this.chartModelCompTiempos = chartModelCompTiempos;
 	}
 
-	public HorizontalBarChartModel getBarChartTotalVsFinalizadas() {
+	public BarChartModel getBarChartTotalVsFinalizadas() {
 		return barChartTotalVsFinalizadas;
 	}
 
-	public void setBarChartTotalVsFinalizadas(HorizontalBarChartModel barChartTotalVsFinalizadas) {
+	public void setBarChartTotalVsFinalizadas(BarChartModel barChartTotalVsFinalizadas) {
 		this.barChartTotalVsFinalizadas = barChartTotalVsFinalizadas;
 	}
 
-	public HorizontalBarChartModel getBarChartTotalDuracionAuditorias() {
+	public DonutChartModel getDonutChartTotalVsFinalizadas() {
+		return donutChartTotalVsFinalizadas;
+	}
+
+	public void setDonutChartTotalVsFinalizadas(DonutChartModel donutChartTotalVsFinalizadas) {
+		this.donutChartTotalVsFinalizadas = donutChartTotalVsFinalizadas;
+	}
+
+	public BarChartModel getBarChartTotalDuracionAuditorias() {
 		return barChartTotalDuracionAuditorias;
 	}
 
-	public void setBarChartTotalDuracionAuditorias(HorizontalBarChartModel barChartTotalDuracionAuditorias) {
+	public void setBarChartTotalDuracionAuditorias(BarChartModel barChartTotalDuracionAuditorias) {
 		this.barChartTotalDuracionAuditorias = barChartTotalDuracionAuditorias;
+	}
+
+	public BarChartModel getBarChartDuracionPorFase() {
+		return barChartDuracionPorFase;
+	}
+
+	public void setBarChartDuracionPorFase(BarChartModel barChartDuracionPorFase) {
+		this.barChartDuracionPorFase = barChartDuracionPorFase;
 	}
 
 	public List<DuracionAuditorias> getDuracionList() {

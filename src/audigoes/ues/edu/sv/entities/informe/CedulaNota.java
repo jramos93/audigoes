@@ -25,6 +25,7 @@ import audigoes.ues.edu.sv.entities.ejecucion.ComentarioHallazgo;
 import audigoes.ues.edu.sv.entities.ejecucion.ProcedimientoEjecucion;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planificacion.ProcedimientoPlanificacion;
+import audigoes.ues.edu.sv.entities.seguimiento.Comentario;
 import audigoes.ues.edu.sv.entities.seguimiento.Recomendacion;
 
 /**
@@ -98,7 +99,7 @@ public class CedulaNota extends SuperEntity implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "ced_fecha_comunicacion")
 	private Date cedFechaComunicacion;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "ced_fecha_respuesta")
 	private Date cedFechaRespuesta;
@@ -157,10 +158,14 @@ public class CedulaNota extends SuperEntity implements Serializable {
 	// bi-directional many-to-one association to Recomendacion
 	@OneToMany(mappedBy = "cedulaNota")
 	private List<Recomendacion> recomendacion;
-	
-	//bi-directional many-to-one association to ComentarioHallazgo
-	@OneToMany(mappedBy="cedulaNota")
+
+	// bi-directional many-to-one association to ComentarioHallazgo
+	@OneToMany(mappedBy = "cedulaNota")
 	private List<ComentarioHallazgo> comentarioHallazgos;
+
+	// bi-directional many-to-one association to Recomendacion
+	@OneToMany(mappedBy = "cedulaNota")
+	private List<Comentario> comentarios;
 
 	public CedulaNota() {
 	}
@@ -425,6 +430,14 @@ public class CedulaNota extends SuperEntity implements Serializable {
 
 	public void setComentarioHallazgos(List<ComentarioHallazgo> comentarioHallazgos) {
 		this.comentarioHallazgos = comentarioHallazgos;
+	}
+
+	public List<Comentario> getComentarios() {
+		return comentarios;
+	}
+
+	public void setComentarios(List<Comentario> comentarios) {
+		this.comentarios = comentarios;
 	}
 
 	@Override
