@@ -37,7 +37,7 @@
 								rendered="#{tpaMB.registro.selected}">
 							</p:commandButton>
 							<p:commandButton update=":frm" value="Eliminar"
-								icon="pi pi-delete" actionListener="#{tpaMB.onDelete}"
+								icon="pi pi-trash" actionListener="#{tpaMB.onDelete}"
 								rendered="#{tpaMB.registro.selected}">
 								<p:confirm header="Confirmación"
 									message="Seguro(a) que desea eliminar el tipo de auditoría seleccionado?"
@@ -56,11 +56,11 @@
 					</p:outputPanel>
 				</f:facet>
 
-				<p:column headerText="Id" sortBy="#{tpa.tpaId}">
+				<p:column headerText="Id" sortBy="#{tpa.tpaId}" style="width:80px;">
 					<h:outputText value="#{tpa.tpaId}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Acronimo" sortBy="#{tpa.tpaAcronimo}">
+				<p:column headerText="Acronimo" sortBy="#{tpa.tpaAcronimo}" style="width:80px;">
 					<h:outputText value="#{tpa.tpaAcronimo}"></h:outputText>
 				</p:column>
 
@@ -73,7 +73,7 @@
 				</p:column>
 
 				<p:column headerText="Estado" filterBy="#{tpa.regActivo}"
-					filterMatchMode="exact">
+					filterMatchMode="exact"  style="width:100px;">
 					<f:facet name="filter">
 						<p:selectOneMenu onchange="PF('wvTiposAuditorias').filter();">
 							<f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}"

@@ -9,7 +9,7 @@
 		<query>select o from TipoAuditoria o</query>
 	</named-query>
 	<named-query name="tipoauditoria.by.institucion">
-		<query>select o from TipoAuditoria o where o.institucion.insId=?1</query>
+		<query>select distinct o from TipoAuditoria o left join fetch o.auditoria where o.institucion.insId=?1</query>
 	</named-query>
 	<!-- <named-query name="rol.all"><query>select o from Rol o </query></named-query> -->
 	<named-query name="institucion.all">
@@ -21,7 +21,7 @@
 		<query>select o from Usuario o</query>
 	</named-query>
 	<named-query name="usuarios.by.institucion">
-		<query>select o from Usuario o Where o.institucion.insId=?1</query>
+		<query>select distinct o from Usuario o left join fetch o.usuarioUnidad Where o.institucion.insId=?1</query>
 	</named-query>
 
 	<!-- OrigenAuditoria -->

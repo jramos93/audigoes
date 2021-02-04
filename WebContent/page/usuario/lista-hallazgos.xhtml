@@ -63,14 +63,14 @@
 					<p:column headerText="Fecha Plazo"
 						style="width:100px; text-align:center;">
 						<h:outputText value="#{c.cedFechaPlazo}">
-							<f:convertDateTime pattern="dd-MM-yyyy" />
+							<f:convertDateTime pattern="dd-MM-yyyy" timeZone="GMT-6"/>
 						</h:outputText>
 					</p:column>
 
 					<p:column headerText="Fecha de Comunicación"
 						style="width:100px; text-align:center;">
 						<h:outputText value="#{c.cedFechaComunicacion}">
-							<f:convertDateTime pattern="dd-MM-yyyy" />
+							<f:convertDateTime pattern="dd-MM-yyyy" timeZone="GMT-6"/>
 						</h:outputText>
 					</p:column>
 

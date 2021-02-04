@@ -46,5 +46,9 @@
 	<named-query name="recomendaciones.all.by.cedula">
 		<query>select o from Recomendacion o where o.cedulaNota.cedId=?1 and o.regActivo=1</query>
 	</named-query>
+	
+	<named-query name="comentarios.all.by.cedula">
+		<query>select o from ComentarioHallazgo o where o.cedulaNota.cedId=?1 and o.regActivo=1</query>
+	</named-query>
 
 </entity-mappings>

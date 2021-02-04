@@ -16,12 +16,12 @@
 					update=":frmEjecucion, :frmProgramaEje">
 				</p:commandButton>
 			</div>
-			
+
 			<div align="right" style="margin-top: 50px; float: right;" id="dbts">
-				<p:commandButton id="btnCedulaMarca"
-					title="Clic para gestionar la cedula de marcas"
-					process="@this" value="Cédula de Marcas" icon="pi pi-table"
-					style="float:left;" styleClass="green-btn raised-btn ">
+				<p:commandButton id="btnCedulaMarca" rendered="false"
+					title="Clic para gestionar la cedula de marcas" process="@this"
+					value="Cédula de Marcas" icon="pi pi-table" style="float:left;"
+					styleClass="green-btn raised-btn ">
 				</p:commandButton>
 			</div>
 
@@ -35,7 +35,8 @@
 				<br />
 				<p:fieldset legend="Programa de Auditoría"
 					style="font-size:larger; font-weight:bold;">
-					<h:panelGrid columns="4" cellspacing="15" style="font-size:small;" columnClasses="ui-lg-3,ui-lg-3,ui-lg-3,ui-lg-3">
+					<h:panelGrid columns="4" cellspacing="15" style="font-size:small;"
+						columnClasses="ui-lg-3,ui-lg-3,ui-lg-3,ui-lg-3">
 						<h:outputText style="font-weight:bold;" value="Identificador:" />
 						<h:outputText style="color:#2ab1be;"
 							value="#{pejeMB.auditoria.audAnio} - #{pejeMB.registro.preNombre}" />
@@ -47,7 +48,8 @@
 							value="#{pejeMB.registro.usuario1.usuNombre} #{pejeMB.registro.usuario1.usuApellido}">
 						</h:outputText>
 						<h:outputText style="font-weight:bold;" value="Fecha Elaboración:" />
-						<h:outputText value="#{pejeMB.registro.preFechaElaboro}" style="color:#2ab1be;">
+						<h:outputText value="#{pejeMB.registro.preFechaElaboro}"
+							style="color:#2ab1be;">
 							<f:convertDateTime pattern="dd-MM-yyyy" />
 						</h:outputText>
 
@@ -55,7 +57,8 @@
 						<h:outputText style="color:#2ab1be;"
 							value="#{pejeMB.registro.usuario2.usuNombre} #{pejeMB.registro.usuario2.usuApellido}" />
 						<h:outputText style="font-weight:bold;" value="Fecha Revisión:" />
-						<h:outputText value="#{pejeMB.registro.preFechaReviso}" style="color:#2ab1be;">
+						<h:outputText value="#{pejeMB.registro.preFechaReviso}"
+							style="color:#2ab1be;">
 							<f:convertDateTime pattern="dd-MM-yyyy" />
 						</h:outputText>
 					</h:panelGrid>
@@ -114,16 +117,23 @@
 
 					<p:column headerText="Fecha Elaboración">
 						<h:outputText value="#{p.pejFechaElaboro}">
-							<f:convertDateTime pattern="dd-MM-yyyy" timeZone="GMT-6"/>
+							<f:convertDateTime pattern="dd-MM-yyyy" timeZone="GMT-6" />
 						</h:outputText>
 					</p:column>
 
 					<p:column headerText="Fecha Revisión">
 						<h:outputText value="#{p.pejFechaReviso}">
-							<f:convertDateTime pattern="dd-MM-yyyy" timeZone="GMT-6"/>
+							<f:convertDateTime pattern="dd-MM-yyyy" timeZone="GMT-6" />
 						</h:outputText>
 					</p:column>
-
+					<p:column headerText="Estado">
+						<h:outputText rendered="#{p.pejEstado eq 1}"
+							value="Elaboración"></h:outputText>
+						<h:outputText rendered="#{p.pejEstado eq 2}"
+							value="Revisión"></h:outputText>
+						<h:outputText rendered="#{p.pejEstado eq 3}"
+							value="Finalizado"></h:outputText>
+					</p:column>
 				</p:dataTable>
 			</div>
 

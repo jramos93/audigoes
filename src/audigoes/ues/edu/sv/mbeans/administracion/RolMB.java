@@ -12,6 +12,8 @@ import javax.faces.bean.ViewScoped;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Rol;
+import audigoes.ues.edu.sv.entities.administracion.RolPermiso;
+import audigoes.ues.edu.sv.entities.administracion.UsuarioPermiso;
 
 @ManagedBean(name = "rolMB")
 @ViewScoped
@@ -109,11 +111,34 @@ public class RolMB extends AudigoesController implements Serializable {
 
 	@Override
 	public boolean beforeDelete() {
-		if (getRegistro().getRolPermiso().size() > 0) {
-			addWarn(new FacesMessage(SYSTEM_NAME, "El rol tiene permisos asignados, no puede ser eliminado"));
+		if (!comprobarDelete(getRegistro())) {
+			addWarn(new FacesMessage(SYSTEM_NAME, "El rol tiene permisos o usuarios asignados, no puede ser eliminado"));
 			return false;
 		}
 		return super.beforeDelete();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean comprobarDelete(Rol rol) {
+		try {
+			List<RolPermiso> rolPermisos = (List<RolPermiso>) audigoesLocal.findByNamedQuery(RolPermiso.class, "rolpermiso.by.rol",
+					new Object[] { rol.getRolId() });
+			if(rolPermisos.isEmpty()) {
+				return false;
+			}
+			
+			List<UsuarioPermiso> usuPermisos = (List<UsuarioPermiso>) audigoesLocal.findByNamedQuery(UsuarioPermiso.class, "usuariopermiso.by.rol",
+					new Object[] { rol.getRolId() });
+			
+			if(usuPermisos.isEmpty()) {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+			
+		}
+		return true;
 	}
 
 	public List<Rol> getFilteredRoles() {

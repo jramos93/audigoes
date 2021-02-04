@@ -48,10 +48,13 @@ public class Institucion extends SuperEntity implements Serializable {
 
 	@Column(name = "ins_iniciales")
 	private String insIniciales;
-
+	
+	@Column(name = "ins_correo")
+	private String insCorreo;
+	
 	@Lob
 	@Column(name = "ins_logo")
-	private String insLogo;
+	private byte[] insLogo;
 
 	@Column(name = "ins_nit")
 	private String insNit;
@@ -149,11 +152,11 @@ public class Institucion extends SuperEntity implements Serializable {
 		this.insIniciales = insIniciales;
 	}
 
-	public String getInsLogo() {
-		return this.insLogo;
+	public byte[] getInsLogo() {
+		return insLogo;
 	}
 
-	public void setInsLogo(String insLogo) {
+	public void setInsLogo(byte[] insLogo) {
 		this.insLogo = insLogo;
 	}
 
@@ -387,6 +390,14 @@ public class Institucion extends SuperEntity implements Serializable {
 		rol.setInstitucion(null);
 
 		return rol;
+	}
+
+	public String getInsCorreo() {
+		return insCorreo;
+	}
+
+	public void setInsCorreo(String insCorreo) {
+		this.insCorreo = insCorreo;
 	}
 
 	@Override

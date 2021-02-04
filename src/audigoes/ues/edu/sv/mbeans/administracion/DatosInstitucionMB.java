@@ -4,10 +4,12 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.primefaces.PrimeFaces;
+import org.primefaces.event.FileUploadEvent;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Institucion;
@@ -19,7 +21,7 @@ public class DatosInstitucionMB extends AudigoesController implements Serializab
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	public DatosInstitucionMB() {
 		super(new Institucion());
 	}
@@ -28,7 +30,7 @@ public class DatosInstitucionMB extends AudigoesController implements Serializab
 	public void init() {
 		try {
 			setRegistro(getObjAppsSession().getUsuario().getInstitucion());
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -47,11 +49,22 @@ public class DatosInstitucionMB extends AudigoesController implements Serializab
 	public List<Institucion> getListado() {
 		return (List<Institucion>) super.getListado();
 	}
-	
+
 	@Override
 	public void afterSaveEdit() {
-		//PrimeFaces.current().ajax().update("frm");
+		// PrimeFaces.current().ajax().update("frm");
 		super.afterSaveEdit();
+	}
+
+	public void handleFileUpload(FileUploadEvent event) {
+		try {
+			System.out.println(" archivo " + event.getFile().getFileName());
+			getRegistro().setInsLogo(event.getFile().getContent());
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage(SYSTEM_NAME, "Problemas al guardar archivo."));
+		}
+
 	}
 
 }

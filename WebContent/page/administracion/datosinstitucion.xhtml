@@ -32,9 +32,11 @@
 		</div>
 		<h:form id="frm">
 			<p:commandButton id="editarInstitucion" value="Editar Datos"
-				actionListener="#{dtinsMB.onEdit}" update="frm" rendered="#{dtinsMB.status != 'EDIT'}" />
-			<p:commandButton id="guardarInstitucion" value="Guardar Datos" 
-				actionListener="#{dtinsMB.onSave}" update="frm" rendered="#{dtinsMB.status == 'EDIT'}"/>
+				icon="pi pi-pencil" actionListener="#{dtinsMB.onEdit}" update="frm"
+				rendered="#{dtinsMB.status != 'EDIT'}" />
+			<p:commandButton id="guardarInstitucion" value="Guardar Datos"
+				icon="pi pi-check" actionListener="#{dtinsMB.onSave}" update="frm"
+				rendered="#{dtinsMB.status == 'EDIT'}" />
 			<div class="ui-fluid">
 				<div class="ui-g">
 					<div class="ui-g-12">
@@ -46,13 +48,23 @@
 								styleClass="ui-panelgrid-blank form-group form-elements"
 								style="border:0px none; background-color:transparent;">
 
-								<p:outputLabel for="logo" value="Logo" />
-								<p:graphicImage id="logo" name="images/logo.jpg"
-									alt="logo_institución" />
+								<p:outputLabel for="upLogo" value="Actualizar logo"
+									rendered="#{dtinsMB.status eq 'EDIT'}" />
+								<p:fileUpload listener="#{dtinsMB.handleFileUpload}" id="upLogo"
+									update="logo" rendered="#{dtinsMB.status eq 'EDIT'}"
+									multiple="false" fileLimit="1" mode="advanced"
+									dragDropSupport="false" cancelLabel="Cancelar" label="Elegir"
+									uploadLabel="Subir" allowTypes="/(\.|\/)(jpe?g|png)$/" />
+
+								<p:outputLabel for="logo" value="Logo"
+									rendered="#{dtinsMB.status ne 'EDIT'}" />
+								<p:graphicImage id="logo" rendered="#{dtinsMB.status ne 'EDIT'}"
+									value="/logoImage?id=#{dtinsMB.registro.insId}" width="150"
+									height="100"></p:graphicImage>
 
 								<p:outputLabel for="nombre" value="Nombre" />
 								<p:inputText id="nombre" value="#{dtinsMB.registro.insNombre}"
-								 	readonly="#{dtinsMB.status != 'EDIT'}" />
+									readonly="#{dtinsMB.status != 'EDIT'}" />
 
 								<p:outputLabel for="acronimo" value="Acrónimo" />
 								<p:inputText id="acronimo"
@@ -68,7 +80,7 @@
 									value="#{dtinsMB.registro.insDireccion}"
 									readonly="#{dtinsMB.status != 'EDIT'}" />
 
-								<p:outputLabel for="telefono" value="Teléfono" />
+								<p:outputLabel for="telefono" value="Teléfono de Contacto" />
 								<p:inputText id="telefono"
 									value="#{dtinsMB.registro.insTelefono}"
 									readonly="#{dtinsMB.status != 'EDIT'}" />
@@ -76,6 +88,10 @@
 								<p:outputLabel for="nit" value="NIT" />
 								<p:inputMask id="nit" value="#{dtinsMB.registro.insNit}"
 									readonly="#{dtinsMB.status != 'EDIT'}" mask="999-999999-999-9" />
+
+								<p:outputLabel for="correo" value="Correo de Contacto" />
+								<p:inputText id="correo" value="#{dtinsMB.registro.insCorreo}"
+									readonly="#{dtinsMB.status != 'EDIT'}" />
 							</p:panelGrid>
 
 						</div>

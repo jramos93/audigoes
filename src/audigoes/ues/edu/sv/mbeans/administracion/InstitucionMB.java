@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+
+import org.primefaces.event.FileUploadEvent;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Institucion;
@@ -64,6 +67,17 @@ public class InstitucionMB extends AudigoesController implements Serializable {
 		} catch (NumberFormatException ex) {
 			return 0;
 		}
+	}
+	
+	public void handleFileUpload(FileUploadEvent event) {
+		try {
+			System.out.println(" archivo " + event.getFile().getFileName());
+			getRegistro().setInsLogo(event.getFile().getContent());
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage(SYSTEM_NAME, "Problemas al guardar archivo."));
+		}
+
 	}
 
 	/* GETS y SETS */

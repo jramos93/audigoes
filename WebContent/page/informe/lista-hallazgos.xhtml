@@ -8,12 +8,11 @@
 
 	<h:form id="frmListaHallazgos">
 		<p:panel
-			rendered="#{audMB.status eq 'SEARCH' and pejeMB.status eq 'SEARCH' and proejeMB.status eq 'SEARCH' and ceduMB.status eq 'VIEW'}">
+			rendered="#{informeMB.status eq 'HALLAZGO' and ceduMB.status eq 'VIEW'}">
 			<div align="left" style="margin-top: 50px; float: left;">
-				<p:commandButton id="btnCancel" action="#{ceduMB.onCancel}"
+				<p:commandButton id="btnCancel" action="#{informeMB.onCancel}"
 					styleClass="pink-btn raised-btn" process="@this" value="Regresar"
-					icon="pi pi-arrow-left" style="float:left;"
-					update=":frmEjecucion, :frmListaHallazgos">
+					icon="pi pi-arrow-left" style="float:left;" update="@form :frm">
 				</p:commandButton>
 			</div>
 
@@ -41,21 +40,10 @@
 				<f:facet name="header">
 					<p:toolbar id="tMenu">
 						<p:toolbarGroup>
-							<p:commandButton value="Agregar" icon="pi pi-plus"
-								update=":frmListaHallazgos, :frmHallazgo"
-								rendered="#{ceduMB.rolAuditor and ceduMB.auditoria.audFase==3}"
-								actionListener="#{ceduMB.onNew}">
-							</p:commandButton>
-
-							<p:commandButton value="Editar" icon="pi pi-pencil"
-								update=":frmListaHallazgos, :frmHallazgo"
-								rendered="#{ceduMB.registro.selected and ceduMB.registro.cedEstado eq 1 and ceduMB.perEdit and ceduMB.auditoria.audFase==3}"
-								actionListener="#{ceduMB.onEditSelected}">
-							</p:commandButton>
 
 							<p:commandButton value="Análisis" icon="pi pi-pencil"
 								update=":frmListaHallazgos, :frmHallazgo"
-								rendered="#{ceduMB.registro.selected and ceduMB.registro.cedEstado eq 5 and ceduMB.perEdit and ceduMB.auditoria.audFase==3}"
+								rendered="#{ceduMB.registro.selected and ceduMB.registro.cedEstado eq 5 and ceduMB.perEdit}"
 								actionListener="#{ceduMB.onEditSelected}">
 							</p:commandButton>
 
@@ -67,7 +55,7 @@
 
 							<p:commandButton value="Supervisar" icon="pi pi-pencil"
 								update=":frmListaHallazgos, :frmHallazgo"
-								rendered="#{ceduMB.registro.selected and !ceduMB.rolAuditor and ceduMB.registro.cedEstado ne 7 and ceduMB.auditoria.audFase==3}"
+								rendered="#{ceduMB.registro.selected and !ceduMB.rolAuditor and ceduMB.registro.cedEstado ne 7}"
 								actionListener="#{ceduMB.onEditSelected}">
 							</p:commandButton>
 						</p:toolbarGroup>

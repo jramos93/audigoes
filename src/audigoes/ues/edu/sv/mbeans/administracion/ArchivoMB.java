@@ -45,6 +45,8 @@ public class ArchivoMB extends AudigoesController implements Serializable {
 	private CedulaNota cedula;
 
 	private StreamedContent pt;
+	
+	private List<Archivo> listado2;
 
 	public ArchivoMB() {
 		super(new Archivo());
@@ -114,6 +116,7 @@ public class ArchivoMB extends AudigoesController implements Serializable {
 		try {
 			setListado((List<Archivo>) audigoesLocal.findByNamedQuery(Archivo.class, "archivos.convocatoria",
 					new Object[] { c.getCvcId() }));
+			System.out.println("getListado "+getListado().size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -122,7 +125,7 @@ public class ArchivoMB extends AudigoesController implements Serializable {
 	@SuppressWarnings("unchecked")
 	public void fillByActa(ActaLectura a) {
 		try {
-			setListado((List<Archivo>) audigoesLocal.findByNamedQuery(Archivo.class, "archivos.acta",
+			setListado2((List<Archivo>) audigoesLocal.findByNamedQuery(Archivo.class, "archivos.acta",
 					new Object[] { a.getAclId() }));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -274,6 +277,14 @@ public class ArchivoMB extends AudigoesController implements Serializable {
 
 	public void setPt(StreamedContent pt) {
 		this.pt = pt;
+	}
+
+	public List<Archivo> getListado2() {
+		return listado2;
+	}
+
+	public void setListado2(List<Archivo> listado2) {
+		this.listado2 = listado2;
 	}
 
 }

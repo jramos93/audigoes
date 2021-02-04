@@ -21,13 +21,11 @@
 					<p:panel>
 						<div align="left" style="float: left;">
 							<p:commandButton id="btn" value="Guardar" icon="fa fa-check"
-								styleClass="raised-btn"
-								rendered="#{convocatoriaMB.registro.cvcEstado eq 0}"
+								styleClass="raised-btn" rendered="#{convocatoriaMB.registro.cvcEstado eq 0}"
 								actionListener="#{convocatoriaMB.onSave}"
 								update=":frmInforme, :frm" />
 							<p:commandButton id="enviar" value="Realizar Convocatoria"
 								icon="pi pi-calendar" styleClass="raised-btn"
-								onShow="PF('wvCorreoConvocatoria').initPosition();"
 								rendered="#{convocatoriaMB.registro.cvcEstado eq 0}"
 								oncomplete="PF('wvCorreoConvocatoria').show();"
 								actionListener="#{convocatoriaMB.onPrepararEnvio}"
@@ -37,8 +35,7 @@
 						<div align="right" style="float: right;">
 							<p:commandButton id="btnConvocatoria"
 								title="Clic para generar la convocatoria"
-								process="@this tvConvocatoria"
-								value="Generar Formato de Convocatoria"
+								process="@this tvConvocatoria" value="Generar Formato de Convocatoria"
 								icon="pi pi-check-circle" style="float:Righ;"
 								styleClass="blue-btn raised-btn"
 								oncomplete="PF('wvPDF').show();"
@@ -46,18 +43,8 @@
 							</p:commandButton>
 						</div>
 						<div class="name" align="center" style="margin-top: 50px;">
-							<h:outputText
-								rendered="#{convocatoriaMB.registro.cvcEstado eq 1}"
-								style="float:right; font-size:large; font-weight: bold; color:#2ab1be;"
-								value="#{convocatoriaMB.registro.cvcFechaEnvio}">
-								<f:convertDateTime pattern="dd-MM-yyyy" timeZone="GMT-6" />
-							</h:outputText>
-							<h:outputText
-								rendered="#{convocatoriaMB.registro.cvcEstado eq 1}"
-								style="float:right; font-size:large; font-weight: bold; color:#525c65; margin-right:10px;"
-								value="Convocatoria Enviada el: "></h:outputText>
-							<br /> <br /> <span class="app-name">Convocatoria de
-								Lectura a Borrador de Informe de Auditoría:</span>
+							<span class="app-name">Convocatoria de Lectura a Borrador
+								de Informe de Auditoría:</span>
 							<h3>Auditoría:
 								#{informeMB.auditoria.audCodigo}-#{informeMB.auditoria.audNombre}</h3>
 						</div>
@@ -72,7 +59,6 @@
 										<p:tab title="Contenido">
 											<pe:ckEditor id="cvccuerpo" width="100%" skin="office2013"
 												height="500px"
-												readonly="#{convocatoriaMB.registro.cvcEstado eq 1}"
 												customConfig="#{request.contextPath}/resources/js/customck.js"
 												value="#{convocatoriaMB.registro.cvcCuerpo}" />
 										</p:tab>
@@ -150,30 +136,18 @@
 						</div>
 					</p:panel>
 				</p:tab>
-				<p:tab title="Acta de Lectura"
-					disabled="#{convocatoriaMB.registro.cvcEstado eq 0}">
+				<p:tab title="Acta de Lectura" disabled="#{convocatoriaMB.registro.cvcEstado eq 0}">
 					<p:panel>
 						<div align="left" style="float: left;">
 							<p:commandButton id="btn2" value="Guardar" icon="fa fa-check"
-								rendered="#{actaLecturaMB.registro.aclEstado ne 3}"
 								styleClass="raised-btn" actionListener="#{actaLecturaMB.onSave}"
 								update=":frmInforme, :frm" />
 							<p:commandButton id="inicio" value="Iniciar Lectura"
 								icon="pi pi-info-circle" styleClass="raised-btn"
-								rendered="#{actaLecturaMB.registro.aclEstado eq 1}"
 								actionListener="#{actaLecturaMB.onIniciar}"
-								update=":frmInforme, :frm, :frmConvocatoriaActa">
+								update=":frmInforme, :frm">
 								<p:confirm header="Confirmación"
 									message="¿Iniciar Reunión de Lectura de Borrador de Informe?"
-									icon="pi pi-info"></p:confirm>
-							</p:commandButton>
-							<p:commandButton id="fin" value="Finalizar Lectura"
-								icon="pi pi-info-circle" styleClass="raised-btn"
-								rendered="#{actaLecturaMB.registro.aclEstado eq 2}"
-								actionListener="#{actaLecturaMB.onFinalizar}"
-								update=":frmInforme, :frm, :frmConvocatoriaActa">
-								<p:confirm header="Confirmación"
-									message="¿Finalizar Reunión de Lectura de Borrador de Informe?"
 									icon="pi pi-info"></p:confirm>
 							</p:commandButton>
 						</div>
@@ -187,23 +161,8 @@
 							</p:commandButton>
 						</div>
 						<div class="name" align="center" style="margin-top: 50px;">
-							<h:outputText rendered="#{actaLecturaMB.registro.aclEstado eq 3}"
-								style="float:right; font-size:large; font-weight: bold; color:#2ab1be;"
-								value="Finalizada">
-							</h:outputText>
-							<h:outputText rendered="#{actaLecturaMB.registro.aclEstado eq 2}"
-								style="float:right; font-size:large; font-weight: bold; color:#2ab1be;"
-								value="Elaboración">
-							</h:outputText>
-							<h:outputText rendered="#{actaLecturaMB.registro.aclEstado eq 1}"
-								style="float:right; font-size:large; font-weight: bold; color:#2ab1be;"
-								value="Preparación">
-							</h:outputText>
-							<h:outputText
-								style="float:right; font-size:large; font-weight: bold; color:#525c65; margin-right:10px;"
-								value="Estado: "></h:outputText>
-							<br /> <br /> <span class="app-name">Acta de Lectura a
-								Borrador de Informe de Auditoría:</span>
+							<span class="app-name">Acta de Lectura a Borrador de
+								Informe de Auditoría:</span>
 							<h3>Auditoría:
 								#{informeMB.auditoria.audCodigo}-#{informeMB.auditoria.audNombre}</h3>
 						</div>
@@ -217,7 +176,6 @@
 											<p:tab title="Contenido">
 												<pe:ckEditor id="aclcuerpo" width="100%" skin="office2013"
 													height="450px"
-													readonly="#{actaLecturaMB.registro.aclEstado ne 2}"
 													customConfig="#{request.contextPath}/resources/js/customck.js"
 													value="#{actaLecturaMB.registro.aclCuerpo}" />
 											</p:tab>
@@ -232,7 +190,7 @@
 														update="dtArchivos"
 														allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
 												</p:panelGrid>
-												<p:dataTable var="a" value="#{arcMB.listado2}"
+												<p:dataTable var="a" value="#{arcMB.listado}"
 													rowIndexVar="index" widgetVar="wvArchivos" reflow="true"
 													id="dtArchivos" style="margin-top:20px;" paginator="true"
 													paginatorPosition="top" rowsPerPageTemplate="1,5,10,15"
@@ -280,16 +238,9 @@
 												</p:dataTable>
 											</p:tab>
 										</p:tabView>
-										<p:panelGrid columns="2"
-											columnClasses="ui-g-9 ui-lg-10,ui-g-3 ui-md-4 ui-lg-2"
-											layout="grid"
-											styleClass="ui-panelgrid-blank form-group form-elements">
-											<p:column></p:column>
-											<p:commandButton id="btnGuardarBottom1"
-												rendered="#{actaLecturaMB.registro.aclEstado ne 3}"
-												action="#{actaLecturaMB.onSave}" value="Guardar"
-												update="@form" process="@this tvActaLectura" />
-										</p:panelGrid>
+										<p:commandButton id="btnGuardarBottom1"
+											action="#{actaLecturaMB.onSave}" value="Guardar"
+											update="@form" process="@this tvActaLectura" />
 									</div>
 								</p:tab>
 							</div>
@@ -301,9 +252,8 @@
 	</h:form>
 
 	<p:dialog widgetVar="wvCorreoConvocatoria" modal="true"
-		appendTo="@(body)" height="550" showEffect="fade" maximizable="true"
-		closable="true" closeOnEscape="true" responsive="true"
-		resizable="true">
+		showEffect="fade" maximizable="true" dynamic="true" closable="true"
+		closeOnEscape="true" responsive="true">
 		<h:form id="frmCorreoConvocatoria">
 			<p:tabView>
 				<p:tab title="Redacción de Correo">
@@ -313,11 +263,11 @@
 						icon="pi pi-check-circle" style="float:left;"
 						styleClass="blue-btn raised-btn"
 						oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wvCorreoConvocatoria').hide();"
-						update=":frmInforme, :frm, :frmConvocatoriaActa">
+						update=":frmInforme, :frm, :frmCorreoConvocatoria">
 						<p:confirm header="Confirmación" message="¿Comunicar a Unidad?"></p:confirm>
 					</p:commandButton>
-					<br />
-					<br />
+					<br/>
+					<br/>
 					<p:panelGrid columns="2" columnClasses="ui-g-6" layout="grid"
 						styleClass="ui-panelgrid-blank form-group form-elements">
 						<p:outputLabel for="responsable"
@@ -337,7 +287,7 @@
 					</p:panelGrid>
 					<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
 						styleClass="ui-panelgrid-blank form-group form-elements">
-						<pe:ckEditor id="narra4" width="100%" height="270"
+						<pe:ckEditor id="narra4" width="100%" height="250"
 							value="#{convocatoriaMB.textoCorreo}" skin="office2013"
 							customConfig="#{request.contextPath}/resources/js/customck.js" />
 					</p:panelGrid>
@@ -369,7 +319,7 @@
 						<p:column selectionMode="single"
 							style="width:16px;text-align:center" />
 
-						<p:column headerText="No." style="width:50px; text-align:center;">
+						<p:column headerText="No.">
 							<h:outputText value="#{index+1}"></h:outputText>
 						</p:column>
 
@@ -396,8 +346,7 @@
 							</p:commandButton>
 						</p:column>
 
-						<p:column headerText="Eliminar"
-							style="width:60px;  text-align:center;">
+						<p:column headerText="Eliminar" style="width:60px;">
 							<p:commandButton actionListener="#{arcMB.onBorrar(a)}"
 								update="dtArchivos" icon="pi pi-trash"
 								title="Clic para eliminar el archivo">

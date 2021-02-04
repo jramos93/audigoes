@@ -243,18 +243,22 @@ public class SendMailAttach {
 			simpleMessage.setRecipients(RecipientType.TO, toAddress);
 			simpleMessage.setRecipient(RecipientType.CC, toCc);
 			simpleMessage.setSubject(subject);
-
+			//System.out.println("SendMailAttach.sendManyTo() a");
 			if (attach != null) {
 				// Adding Attachment
 				messageBodyPart = new MimeBodyPart();
 				File f = new File(attach);
+				System.out.println("attach "+attach);
+				System.out.println("SendMailAttach.sendManyTo()");
 				if (f.exists()) {
+					//System.out.println("SendMailAttach.sendManyTo() exists");
 					DataSource source = new FileDataSource(attach);
 					messageBodyPart.setDataHandler(new DataHandler(source));
 					messageBodyPart.setFileName(f.getName());
 					multiPart.addBodyPart(messageBodyPart);
 				}
 			}
+			//System.out.println("SendMailAttach.sendManyTo() b");
 
 			simpleMessage.setContent(multiPart);
 			Transport.send(simpleMessage);
@@ -355,4 +359,5 @@ public class SendMailAttach {
 			return STATUS_SEND_ERROR;
 		}
 	}
+	
 }

@@ -1,6 +1,7 @@
 package audigoes.ues.edu.sv.mbeans.administracion;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -11,8 +12,9 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
-import audigoes.ues.edu.sv.entities.administracion.Rol;
+import audigoes.ues.edu.sv.entities.administracion.Unidad;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
+import audigoes.ues.edu.sv.entities.administracion.UsuarioUnidad;
 import audigoes.ues.edu.sv.util.Utils;
 
 @ManagedBean(name = "usrMB")
@@ -35,6 +37,9 @@ public class UsrMB extends AudigoesController implements Serializable {
 	private boolean auditorUpdate;
 	private boolean auditorDelete;
 	private boolean generalLogin;
+
+	private List<Unidad> unidadList;
+	private List<Unidad> unidadesSelectedList;
 
 	public UsrMB() {
 		super(new Usuario());
@@ -80,6 +85,18 @@ public class UsrMB extends AudigoesController implements Serializable {
 				|| usuario.getUsuCorreo().toLowerCase().contains(filterText) || usuario.getUsuId() == filterInt;
 	}
 
+	@Override
+	public void onEditSelected() {
+		System.out.println(" onEdit ");
+		super.onEditSelected();
+		System.out.println(" onEdit " + getRegistro().getUsuarioUnidad().size());
+
+		unidadesSelectedList = new ArrayList<Unidad>();
+		for (UsuarioUnidad usu : getRegistro().getUsuarioUnidad()) {
+			unidadesSelectedList.add(usu.getUnidad());
+		}
+	}
+
 	private int getInteger(String string) {
 		try {
 			return Integer.valueOf(string);
@@ -93,9 +110,11 @@ public class UsrMB extends AudigoesController implements Serializable {
 			onCreateUser();
 			uprMB.setUsuario(getRegistro());
 			uprMB.onSaveUser();
+			guardarUnidades();
 		} else if (getStatus().equals("EDIT")) {
 			onEditUser();
 			onSaveEdit();
+			guardarUnidadesEdit();
 		}
 	}
 
@@ -142,6 +161,18 @@ public class UsrMB extends AudigoesController implements Serializable {
 		}
 	}
 
+	@Override
+	public void onNew() {
+		fillUnidadList();
+		super.onNew();
+	}
+
+	@Override
+	public boolean beforeEdit() {
+		fillUnidadList();
+		return super.beforeEdit();
+	}
+
 	public void fillPermisos() {
 //		if (getRegistro() != null) {
 //			try {
@@ -155,6 +186,24 @@ public class UsrMB extends AudigoesController implements Serializable {
 //			}
 //
 //		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void fillUnidadList() {
+		try {
+			setUnidadList((List<Unidad>) audigoesLocal.findByNamedQuery(Unidad.class, "unidad.get.all.institucion",
+					new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() }));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void eliminarUnidadAuditada(Unidad unidad) {
+		if (getStatus().equals("NEW")) {
+			getUnidadesSelectedList().remove(unidad);
+			getUnidadList().add(unidad);
+		}
 	}
 
 	public void addDelPermisos() {
@@ -267,7 +316,57 @@ public class UsrMB extends AudigoesController implements Serializable {
 	@Override
 	public void afterSaveNew() {
 		getListado().add(getRegistro());
+		// guardarUnidades();
 		super.afterSaveNew();
+	}
+
+	public void guardarUnidades() {
+		try {
+			System.out.println("after");
+			UsuarioUnidad usuUnidad;
+			for (Unidad u : getUnidadesSelectedList()) {
+				System.out.println("after " + u.getUniId());
+				usuUnidad = new UsuarioUnidad();
+				usuUnidad.setUsuario(getRegistro());
+				usuUnidad.setUnidad(u);
+				usuUnidad.setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+				usuUnidad.setFecCrea(getToday());
+				usuUnidad.setRegActivo(1);
+
+				audigoesLocal.insert(usuUnidad);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage("Error al registrar las unidades del usuario"));
+		}
+	}
+
+	public void guardarUnidadesEdit() {
+		try {
+			System.out.println("after");
+			UsuarioUnidad usuUnidad;
+
+			for (UsuarioUnidad usu : getRegistro().getUsuarioUnidad()) {
+				audigoesLocal.delete(usu);
+			}
+
+			for (Unidad u : getUnidadesSelectedList()) {
+				System.out.println("after " + u.getUniId());
+
+				usuUnidad = new UsuarioUnidad();
+				usuUnidad.setUsuario(getRegistro());
+				usuUnidad.setUnidad(u);
+				usuUnidad.setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+				usuUnidad.setFecCrea(getToday());
+				usuUnidad.setRegActivo(1);
+
+				audigoesLocal.insert(usuUnidad);
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage("Error al registrar las unidades del usuario"));
+		}
 	}
 
 	public List<Usuario> getFilteredUsuarios() {
@@ -332,5 +431,21 @@ public class UsrMB extends AudigoesController implements Serializable {
 
 	public void setGeneralLogin(boolean generalLogin) {
 		this.generalLogin = generalLogin;
+	}
+
+	public List<Unidad> getUnidadList() {
+		return unidadList;
+	}
+
+	public void setUnidadList(List<Unidad> unidadList) {
+		this.unidadList = unidadList;
+	}
+
+	public List<Unidad> getUnidadesSelectedList() {
+		return unidadesSelectedList;
+	}
+
+	public void setUnidadesSelectedList(List<Unidad> unidadesSelectedList) {
+		this.unidadesSelectedList = unidadesSelectedList;
 	}
 }

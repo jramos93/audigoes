@@ -68,6 +68,13 @@ public class Convocatoria extends SuperEntity implements Serializable {
 	// bi-directional many-to-one association to Archivo
 	@OneToMany(mappedBy = "convocatoria")
 	private List<Archivo> archivo;
+	
+	@Column(name = "cvc_estado")
+	private int cvcEstado;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="cvc_fecha_envio")
+	private Date cvcFechaEnvio;
 
 	public Convocatoria() {
 	}
@@ -160,6 +167,14 @@ public class Convocatoria extends SuperEntity implements Serializable {
 		this.informe = informe;
 	}
 
+	public Date getCvcFechaEnvio() {
+		return cvcFechaEnvio;
+	}
+
+	public void setCvcFechaEnvio(Date cvcFechaEnvio) {
+		this.cvcFechaEnvio = cvcFechaEnvio;
+	}
+
 	public List<Destinatario> getDestinatario() {
 		return this.destinatario;
 	}
@@ -195,6 +210,14 @@ public class Convocatoria extends SuperEntity implements Serializable {
 		archivo.setConvocatoria(this);
 
 		return archivo;
+	}
+
+	public int getCvcEstado() {
+		return cvcEstado;
+	}
+
+	public void setCvcEstado(int cvcEstado) {
+		this.cvcEstado = cvcEstado;
 	}
 
 	public Archivo removeArchivo(Archivo archivo) {

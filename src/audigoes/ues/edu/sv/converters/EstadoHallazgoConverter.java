@@ -31,6 +31,8 @@ public class EstadoHallazgoConverter implements Converter {
 				valor = "SUPERVISIÓN";
 			} else if (valor.equals("7")) {
 				valor = "FINALIZADO";
+			} else if (valor.equals("8")) {
+				valor = "FINALIZADO";
 			} else {
 				valor = "---";
 			}

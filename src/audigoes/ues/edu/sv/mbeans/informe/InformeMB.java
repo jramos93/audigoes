@@ -41,6 +41,7 @@ import audigoes.ues.edu.sv.entities.planificacion.ProcedimientoPlanificacion;
 import audigoes.ues.edu.sv.entities.seguimiento.Recomendacion;
 import audigoes.ues.edu.sv.mbean.planificacion.BitacoraActividadMB;
 import audigoes.ues.edu.sv.mbeans.administracion.ArchivoMB;
+import audigoes.ues.edu.sv.mbeans.ejecucion.CedulaMB;
 import audigoes.ues.edu.sv.util.SendMailAttach;
 
 @ManagedBean(name = "informeMB")
@@ -56,6 +57,11 @@ public class InformeMB extends AudigoesController implements Serializable {
 	private String textoCorreo = "";
 	private String textoCorreoObs = "";
 	private String textoCorreoFin = "";
+	private String textoCorreoInf = "";
+	private String textoCorreoObsInf = "";
+	private String textoCorreoFinInf = "";
+	private String textoCorreoObsInfApb = "";
+	private String textoCorreoFinInfApb = "";
 
 	@ManagedProperty(value = "#{actaLecturaMB}")
 	private ActaLecturaMB actLecMB = new ActaLecturaMB();
@@ -71,6 +77,9 @@ public class InformeMB extends AudigoesController implements Serializable {
 
 	@ManagedProperty(value = "#{bitaMB}")
 	private BitacoraActividadMB bitaMB = new BitacoraActividadMB();
+	
+	@ManagedProperty(value = "#{ceduMB}")
+	private CedulaMB ceduMB = new CedulaMB();
 
 	private Auditoria auditoria;
 	private int versionActual;
@@ -129,8 +138,9 @@ public class InformeMB extends AudigoesController implements Serializable {
 				getRegistro().setRegActivo(1);
 				getRegistro().setInfEstado(1);
 				getRegistro().setInfVersion(1);
-				audigoesLocal.insert(getRegistro());
 				inicializarValores();
+				audigoesLocal.insert(getRegistro());
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -160,6 +170,13 @@ public class InformeMB extends AudigoesController implements Serializable {
 		setStatus("INFORME");
 
 		revisarPermisos();
+	}
+	
+	public void onHallazgos() {
+		ceduMB.setAuditoria(getAuditoria());
+		ceduMB.fillNotas();
+		ceduMB.setStatus("VIEW");
+		setStatus("HALLAZGO");
 	}
 
 	@Override
@@ -284,15 +301,18 @@ public class InformeMB extends AudigoesController implements Serializable {
 		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 		setAuditoria(((Auditoria) sessionMap.get("auditoria")));
 		onInforme();
+		convMB.setAuditoria(getAuditoria());
 		convMB.buscaConvocatoria(getRegistro());
 		
-		//this.arcMB.fillByInforme(getRegistro());
+		System.out.println("tamaño "+this.arcMB.getListado().size());
 
 		BitacoraActividades a = bitaMB.buscarActividad(15, getAuditoria());
 		if (a == null) {
 			bitaMB.iniciarActividad(15, "Elaboración Borrador de Informe", getAuditoria(),
 					getObjAppsSession().getUsuario());
 		}
+		
+		actLecMB.buscarActa(getRegistro());
 
 		setStatus("ACTA_LECTURA");
 
@@ -519,8 +539,13 @@ public class InformeMB extends AudigoesController implements Serializable {
 						resultados = resultados + "Sin Comentarios<br/><br/>";
 					}
 
-					resultados = resultados + "<strong> Comentarios de Auditoría: </strong>"
-							+ c.getCedComentarioAuditor() + "<br/><br/>";
+					resultados = resultados + "<strong> Comentarios de Auditoría: </strong>";
+					if(c.getCedComentarioAuditor()!=null) {
+						resultados = resultados+ c.getCedComentarioAuditor()
+						+ "<br/><br/>";
+					} else {
+						resultados = resultados+" Sin Comentarios <br/><br/>";
+					}
 
 					String estado = "";
 
@@ -707,6 +732,25 @@ public class InformeMB extends AudigoesController implements Serializable {
 			return usuario;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public Usuario buscarJefe(Auditoria auditoria) {
+		Usuario usuario = null;
+		try {
+			List<AuditoriaResponsable> responsables = (List<AuditoriaResponsable>) audigoesLocal.findByNamedQuery(
+					AuditoriaResponsable.class, "find.jefe.by.auditoria", new Object[] { auditoria.getAudId() });
+			if (!responsables.isEmpty()) {
+				usuario = responsables.get(0).getUsuario();
+				return usuario;
+			} else {
+				addWarn(new FacesMessage("Error, la auditoria no cuenta con un coordinador asignado"));
+				return usuario;
+			}
+		} catch (Exception e) {
+			addWarn(new FacesMessage("Error al identificar  el coordinador de la auditoria"));
+			return usuario;
+		}
+	}
 
 	public void prepararCorreo() {
 		textoCorreo = "<p><strong>AUDIGOES LE INFORMA:</strong></p>"
@@ -719,7 +763,7 @@ public class InformeMB extends AudigoesController implements Serializable {
 	
 	public void prepararCorreoObs() {
 		textoCorreoObs = "<p><strong>AUDIGOES LE INFORMA:</strong></p>"
-				+ "<p>Se han enviado las observaciones del memorando de planificaci&oacute;n "
+				+ "<p>Se han enviado las observaciones del borrador de informe "
 				+ "correspondiente a la auditor&iacute;a <strong>"
 				+ getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo() + "-"
 				+ getRegistro().getAuditoria().getAudAnio() + "-" + getRegistro().getAuditoria().getAudCorrelativo()
@@ -728,13 +772,60 @@ public class InformeMB extends AudigoesController implements Serializable {
 
 	public void prepararCorreoFin() {
 		textoCorreoFin = "<p><strong>AUDIGOES LE INFORMA:</strong></p>"
-				+ "<p>Se ha finalizado la revisión del memorando de planificaci&oacute;n "
+				+ "<p>Se ha finalizado la revisión del borrador de informe "
 				+ "correspondiente a la auditor&iacute;a <strong>"
 				+ getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo() + "-"
 				+ getRegistro().getAuditoria().getAudAnio() + "-" + getRegistro().getAuditoria().getAudCorrelativo()
-				+ "</strong> por lo que puede proceder con el Memorando de Planificación</p>\r\n" + "<p>Atte.-</p>";
+				+ "</strong> por lo que puede proceder con la convocatoria a lectura</p>\r\n" + "<p>Atte.-</p>";
+	}
+	
+	public void prepararCorreoInf() {
+		textoCorreoInf = "<p><strong>AUDIGOES LE INFORMA:</strong></p>"
+				+ "<p>Se ha enviado para su revisi&oacute;n el informe final "
+				+ "correspondiente a la auditor&iacute;a <strong>"
+				+ getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo() + "-"
+				+ getRegistro().getAuditoria().getAudAnio() + "-" + getRegistro().getAuditoria().getAudCorrelativo()
+				+ "</strong> por lo que se le pide ingresar al sistema para revisarlo.</p>\r\n" + "<p>Atte.-</p>";
+	}
+	
+	public void prepararCorreoObsInf() {
+		textoCorreoObsInf = "<p><strong>AUDIGOES LE INFORMA:</strong></p>"
+				+ "<p>Se han enviado las observaciones del informe final "
+				+ "correspondiente a la auditor&iacute;a <strong>"
+				+ getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo() + "-"
+				+ getRegistro().getAuditoria().getAudAnio() + "-" + getRegistro().getAuditoria().getAudCorrelativo()
+				+ "</strong> por lo que se le pide ingresar al sistema para solventarlas.</p>\r\n" + "<p>Atte.-</p>";
 	}
 
+	public void prepararCorreoFinInf() {
+		textoCorreoFinInf = "<p><strong>AUDIGOES LE INFORMA:</strong></p>"
+				+ "<p>Se ha finalizado la revisión del informe final "
+				+ "correspondiente a la auditor&iacute;a <strong>"
+				+ getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo() + "-"
+				+ getRegistro().getAuditoria().getAudAnio() + "-" + getRegistro().getAuditoria().getAudCorrelativo()
+				+ "</strong> por lo que se pide su apoyo para la aprobación del mismo.</p>\r\n" + "<p>Atte.-</p>";
+	}
+	
+	public void prepararCorreoObsInfApb() {
+		textoCorreoObsInfApb = "<p><strong>AUDIGOES LE INFORMA:</strong></p>"
+				+ "<p>Se han enviado las observaciones del informe final "
+				+ "correspondiente a la auditor&iacute;a <strong>"
+				+ getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo() + "-"
+				+ getRegistro().getAuditoria().getAudAnio() + "-" + getRegistro().getAuditoria().getAudCorrelativo()
+				+ "</strong> por lo que se le pide ingresar al sistema para solventarlas.</p>\r\n" + "<p>Atte.-</p>";
+	}
+
+	public void prepararCorreoFinInfApb() {
+		textoCorreoFinInfApb = "<p><strong>AUDIGOES LE INFORMA:</strong></p>"
+				+ "<p>Se ha finalizado la revisión y aprobado el informe final "
+				+ "correspondiente a la auditor&iacute;a <strong>"
+				+ getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo() + "-"
+				+ getRegistro().getAuditoria().getAudAnio() + "-" + getRegistro().getAuditoria().getAudCorrelativo()
+				+ "</strong></p>\r\n" + "<p>Atte.-</p>";
+	}
+
+	// Revisión y Aprobación de Borrador de Informe
+	
 	public void onEnviarRevision() {
 		Usuario usr = buscarCoordinador(getRegistro().getAuditoria());
 		if (usr != null) {
@@ -914,6 +1005,306 @@ public class InformeMB extends AudigoesController implements Serializable {
 			return false;
 		}
 	}
+	
+	// Revisión y aprobación de informe final
+	
+	public void onEnviarRevisionInf() {
+		Usuario usr = buscarCoordinador(getRegistro().getAuditoria());
+		if (usr != null) {
+			try {
+				getRegistro().setInfEstado(5);
+				//getRegistro().setInfFecElaboro(getToday());
+				//getRegistro().setUsuarioElaboro(getObjAppsSession().getUsuario());
+				System.out.println("status");
+				onSave();
+				if (correoRevisionInf(textoCorreoInf, usr)) {
+
+					BitacoraActividades a = bitaMB.buscarActividad(18, getRegistro().getAuditoria());
+					if (a != null) {
+						bitaMB.finalizarActividad(18, getRegistro().getAuditoria(), getObjAppsSession().getUsuario());
+					}
+
+					bitaMB.iniciarActividad(19, "Revisión de informe de auditoría", getRegistro().getAuditoria(),
+							getObjAppsSession().getUsuario());
+				}
+				revisarPermisos();
+			} catch (Exception e) {
+				e.printStackTrace();
+				addWarn(new FacesMessage("Error al enviar a revisión"));
+			}
+		}
+	}
+	
+	public void onEnviarObservacionInf() {
+		Usuario usr = buscarCoordinador(getRegistro().getAuditoria());
+		if (usr != null) {
+			try {
+				getRegistro().setInfEstado(4);
+				getRegistro().setUsuarioReviso(getObjAppsSession().getUsuario());
+				getRegistro().setInfFecReviso(getToday());
+				System.out.println("status");
+				onSave();
+				if (correoObservacionInf(textoCorreoObsInf, getObjAppsSession().getUsuario())) {
+					BitacoraActividades a = bitaMB.buscarActividad(19, getRegistro().getAuditoria());
+					if (a != null) {
+						bitaMB.finalizarActividad(19, getRegistro().getAuditoria(), getObjAppsSession().getUsuario());
+					}
+
+					bitaMB.iniciarActividad(18, "Elaboración de informe de auditoría", getRegistro().getAuditoria(),
+							getObjAppsSession().getUsuario());
+				}
+				revisarPermisos();
+			} catch (Exception e) {
+				e.printStackTrace();
+				addWarn(new FacesMessage("Error al enviar las observaciones"));
+			}
+		}
+	}
+	
+	public void onFinalizarInf() {
+		Usuario usr = buscarCoordinador(getRegistro().getAuditoria());
+		if (usr != null) {
+			try {
+				getRegistro().setInfEstado(6);
+				getRegistro().setUsuarioReviso(getObjAppsSession().getUsuario());
+				getRegistro().setInfFecReviso(getToday());
+				System.out.println("status");
+				onSave();
+				if (correoApbInf(textoCorreoFin, getObjAppsSession().getUsuario())) {
+
+					BitacoraActividades a = bitaMB.buscarActividad(19, getRegistro().getAuditoria());
+					if (a != null) {
+						bitaMB.finalizarActividad(19, getRegistro().getAuditoria(), getObjAppsSession().getUsuario());
+					}
+					
+					bitaMB.iniciarActividad(20, "Aprobación de informe de auditoría", getRegistro().getAuditoria(),
+							getObjAppsSession().getUsuario());
+
+				}
+				revisarPermisos();
+			} catch (Exception e) {
+				e.printStackTrace();
+				addWarn(new FacesMessage("Error al finalizar las observaciones"));
+			}
+		}
+	}
+	
+	public void onEnviarObservacionInfApb() {
+		Usuario usr = buscarCoordinador(getRegistro().getAuditoria());
+		if (usr != null) {
+			try {
+				getRegistro().setInfEstado(5);
+				//getRegistro().setUsuarioReviso(getObjAppsSession().getUsuario());
+				//getRegistro().setInfFecReviso(getToday());
+				System.out.println("status");
+				onSave();
+				if (correoObservacionInfApb(textoCorreoObsInf, getObjAppsSession().getUsuario())) {
+					BitacoraActividades a = bitaMB.buscarActividad(20, getRegistro().getAuditoria());
+					if (a != null) {
+						bitaMB.finalizarActividad(20, getRegistro().getAuditoria(), getObjAppsSession().getUsuario());
+					}
+
+					bitaMB.iniciarActividad(19, "Revisión de informe de auditoría", getRegistro().getAuditoria(),
+							getObjAppsSession().getUsuario());
+				}
+				revisarPermisos();
+			} catch (Exception e) {
+				e.printStackTrace();
+				addWarn(new FacesMessage("Error al enviar las observaciones"));
+			}
+		}
+	}
+	
+	public void onFinalizarInfApb() {
+		Usuario usr = buscarCoordinador(getRegistro().getAuditoria());
+		if (usr != null) {
+			try {
+				getRegistro().setInfEstado(7);
+				getRegistro().setUsuarioAprobo(getObjAppsSession().getUsuario());
+				getRegistro().setInfFecAprobo(getToday());
+				System.out.println("status");
+				onSave();
+				if (correoApbInfApb(textoCorreoFin, getObjAppsSession().getUsuario())) {
+
+					BitacoraActividades a = bitaMB.buscarActividad(20, getRegistro().getAuditoria());
+					if (a != null) {
+						bitaMB.finalizarActividad(20, getRegistro().getAuditoria(), getObjAppsSession().getUsuario());
+					}
+
+				}
+				revisarPermisos();
+			} catch (Exception e) {
+				e.printStackTrace();
+				addWarn(new FacesMessage("Error al finalizar las observaciones"));
+			}
+		}
+	}
+	
+	public boolean correoRevisionInf(String texto, Usuario coordinador) {
+		String from;
+		String cc;
+		String to;
+		String subject;
+		String text;
+		String attach;
+		String logo;
+		String body;
+		Address[] toList;
+		Address[] toCc;
+
+		try {
+			from = "audigoes.ues@gmail.com";
+			to = coordinador.getUsuCorreo();
+			subject = "Solicitud de revisión de informe final";
+			String toccs = "";
+
+			for (AuditoriaResponsable r : auditoria.getAuditoriaResponsable()) {
+				toccs = toccs + r.getUsuario().getUsuCorreo() + ",";
+			}
+			toCc = InternetAddress.parse(toccs);
+
+			body = texto;
+			logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/images/logo-azul.png");
+
+			SendMailAttach mail = new SendMailAttach(from, to, toCc, subject, body, null, logo);
+			mail.sendManyCc();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean correoObservacionInf(String texto, Usuario coordinador) {
+		String from;
+		String cc;
+		String to;
+		String subject;
+		String attach;
+		String logo;
+		String body;
+		Address[] toList;
+		Address[] toCc;
+
+		try {
+			from = "audigoes.ues@gmail.com";
+			cc = coordinador.getUsuCorreo();
+			subject = "Observaciones al informe final";
+			String tolists = "";
+
+			for (AuditoriaResponsable r : auditoria.getAuditoriaResponsable()) {
+				tolists = tolists + r.getUsuario().getUsuCorreo() + ",";
+			}
+			toList = InternetAddress.parse(tolists);
+
+			body = texto;
+			logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/images/logo-azul.png");
+
+			SendMailAttach mail = new SendMailAttach(from, toList, cc, subject, body, null, logo);
+			mail.sendManyTo();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean correoApbInf(String texto, Usuario coordinador) {
+		String from;
+		String cc;
+		String to;
+		String subject;
+		String attach;
+		String logo;
+		String body;
+		Address[] toList;
+		Address[] toCc;
+
+		try {
+			from = "audigoes.ues@gmail.com";
+			cc = coordinador.getUsuCorreo();
+			subject = "Solicitud de aprobación al informe final";
+			String tolists = "";
+
+			to = "wilmer.grijalva@gmail.com";
+			body = texto;
+			logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/images/logo-azul.png");
+
+			SendMailAttach mail = new SendMailAttach(from, cc, to, subject, body, null, logo);
+			mail.send();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean correoObservacionInfApb(String texto, Usuario coordinador) {
+		String from;
+		String cc;
+		String to;
+		String subject;
+		String attach;
+		String logo;
+		String body;
+		Address[] toList;
+		Address[] toCc;
+
+		try {
+			from = "audigoes.ues@gmail.com";
+			cc = "wilmer.grijalva@gmail.com";
+			subject = "Observaciones al informe final";
+			String tolists = "";
+
+			to = coordinador.getUsuCorreo();
+
+			body = texto;
+			logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/images/logo-azul.png");
+
+			SendMailAttach mail = new SendMailAttach(from, cc, to, subject, body, null, logo);
+			mail.send();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean correoApbInfApb(String texto, Usuario coordinador) {
+		String from;
+		String cc;
+		String to;
+		String subject;
+		String attach;
+		String logo;
+		String body;
+		Address[] toList;
+		Address[] toCc;
+
+		try {
+			from = "audigoes.ues@gmail.com";
+			//cc = coordinador.getUsuCorreo();
+			subject = "Aprobación al informe final";
+
+			cc = "wilmer.grijalva@gmail.com";
+			String tolists = "";
+
+			for (AuditoriaResponsable r : auditoria.getAuditoriaResponsable()) {
+				tolists = tolists + r.getUsuario().getUsuCorreo() + ",";
+			}
+			tolists = tolists+ ","+coordinador.getUsuCorreo();
+			toList = InternetAddress.parse(tolists);
+			body = texto;
+			logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/images/logo-azul.png");
+
+			SendMailAttach mail = new SendMailAttach(from, toList, cc, subject, body, null, logo);
+			mail.sendManyTo();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	public void handleFileUpload(FileUploadEvent event) {
 		try {
@@ -927,6 +1318,9 @@ public class InformeMB extends AudigoesController implements Serializable {
 			this.arcMB.getRegistro().setArcArchivo(event.getFile().getContent());
 			this.arcMB.getRegistro().setArcNombre(event.getFile().getFileName());
 			this.arcMB.getRegistro().setArcExt(event.getFile().getContentType());
+			this.arcMB.getRegistro().setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+			this.arcMB.getRegistro().setFecCrea(getToday());
+			this.arcMB.getRegistro().setRegActivo(1);
 			// this.arcMB.onSave();
 			audigoesLocal.insert(this.arcMB.getRegistro());
 			// this.arcMB.afterSaveNew();
@@ -980,10 +1374,60 @@ public class InformeMB extends AudigoesController implements Serializable {
 		this.textoCorreoFin = textoCorreoFin;
 	}
 
+	public CedulaMB getCeduMB() {
+		return ceduMB;
+	}
+
+	public void setCeduMB(CedulaMB ceduMB) {
+		this.ceduMB = ceduMB;
+	}
+
+	public String getTextoCorreoInf() {
+		return textoCorreoInf;
+	}
+
+	public void setTextoCorreoInf(String textoCorreoInf) {
+		this.textoCorreoInf = textoCorreoInf;
+	}
+
+	public String getTextoCorreoObsInf() {
+		return textoCorreoObsInf;
+	}
+
+	public void setTextoCorreoObsInf(String textoCorreoObsInf) {
+		this.textoCorreoObsInf = textoCorreoObsInf;
+	}
+
+	public String getTextoCorreoObsInfApb() {
+		return textoCorreoObsInfApb;
+	}
+
+	public void setTextoCorreoObsInfApb(String textoCorreoObsInfApb) {
+		this.textoCorreoObsInfApb = textoCorreoObsInfApb;
+	}
+
+	public String getTextoCorreoFinInfApb() {
+		return textoCorreoFinInfApb;
+	}
+
+	public void setTextoCorreoFinInfApb(String textoCorreoFinInfApb) {
+		this.textoCorreoFinInfApb = textoCorreoFinInfApb;
+	}
+
+	public String getTextoCorreoFinInf() {
+		return textoCorreoFinInf;
+	}
+
+	public void setTextoCorreoFinInf(String textoCorreoFinInf) {
+		this.textoCorreoFinInf = textoCorreoFinInf;
+	}
+
 	public void revisarPermisos() {
 		super.configBean();
 		if (getAuditoria() != null) {
 			setPerEdit(false);
+			//setPerAutorizar(false);
+			setPerAprobar(false);
 
 			setRolCoordinadorAuditoria(getObjAppsSession().isCoordinador(getObjAppsSession().getUsuario().getUsuId(),
 					getAuditoria().getAuditoriaResponsable()));
@@ -1010,8 +1454,32 @@ public class InformeMB extends AudigoesController implements Serializable {
 			case 3:
 				break;
 			case 4:
+				if (isRolAuditor()) {
+					setPerEdit(true);
+				} else {
+					setPerEnviar(false);
+				}
+				setPerAutorizar(false);
 				break;
 			case 5:
+				if (isRolCoordinadorAuditoria()) {
+					//setPerEdit(true);
+					if (isPerAutorizar()) {
+						setPerAutorizar(true);
+					}
+				} else {
+					setPerAutorizar(false);
+				}
+				setPerEnviar(false);
+				break;
+			case 6:
+				System.out.println("6 ");
+				if(isRolJefe()) {
+					System.out.println("is");
+					setPerAprobar(true);
+					setPerEnviar(true);
+				}
+				setPerAutorizar(false);
 				break;
 			default:
 				break;

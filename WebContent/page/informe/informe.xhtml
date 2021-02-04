@@ -20,10 +20,18 @@
 						icon="pi pi-arrow-left" style="float:left;">
 					</p:commandButton>
 				</div>
-				<p:panelGrid columns="3" columnClasses="ui-g-12 ui-md-4 ui-lg-4"
+				<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-6 ui-lg-3"
 					layout="grid"
 					styleClass="ui-panelgrid-blank form-group form-elements"
 					style="margin-top:100px; text-align:center;">
+
+					<p:commandLink value="" actionListener="#{informeMB.onHallazgos}"
+						title="Hallazgos preliminares de auditoría"
+						update="@form :frmListaHallazgos">
+						<p:graphicImage value="/resources/images/hallazgos.png"
+							style="height:200px;" />
+					</p:commandLink>
+
 					<p:commandLink value="" actionListener="#{informeMB.onInforme}"
 						update="@form :frmInforme">
 						<p:graphicImage value="/resources/images/informe.png"
@@ -42,6 +50,8 @@
 						<p:graphicImage value="/resources/images/carta.png"
 							style="height:200px;" />
 					</h:commandLink>
+
+
 				</p:panelGrid>
 			</p:panel>
 		</h:form>
@@ -49,23 +59,24 @@
 		<h:form id="frmInforme">
 			<p:panel rendered="#{informeMB.status eq 'INFORME'}">
 
-				<div align="left" style="margin-top: 50px; float: left;">
+				<div align="left" style="float: left; margin-top: 50px;">
 					<p:commandButton id="btnCancel" action="#{informeMB.onCancel}"
 						styleClass="pink-btn raised-btn" process="@this" value="Regresar"
 						icon="pi pi-arrow-left" style="float:left;" update="@form :frm">
 					</p:commandButton>
 					<p:commandButton id="btn" value="Guardar" icon="fa fa-check"
-						rendered="#{informeMB.perEdit or informeMB.perAutorizar}"
+						rendered="#{informeMB.perEdit or informeMB.perAutorizar or informeMB.perAprobar}"
 						styleClass="raised-btn" actionListener="#{informeMB.onSave}"
 						update=":frmInforme, :frm" />
 				</div>
 
-				<div align="right" style="margin-top: 50px; float: right;">
+				<div align="right" style="float: right; margin-top: 50px;">
 					<p:commandButton id="btnInform"
 						title="Clic para generar el informe" process="@this"
 						value="Generar Informe" icon="pi pi-check-circle"
 						actionListener="#{informeMB.onGenerarInforme}" style="float:Righ;"
-						styleClass="blue-btn raised-btn" oncomplete="PF('wvPDF').show();">
+						styleClass="purple-btn raised-btn"
+						oncomplete="PF('wvPDF').show();">
 					</p:commandButton>
 					<p:commandButton id="btnEnviar" oncomplete="PF('wvCorreo').show();"
 						rendered="#{informeMB.registro.infEstado eq 1 and informeMB.perEnviar}"
@@ -93,7 +104,58 @@
 						style="float:left;" styleClass="blue-btn raised-btn"
 						update=":frmCorreoFin">
 					</p:commandButton>
+
+					<p:commandButton id="btnEnviarInf"
+						oncomplete="PF('wvCorreoInf').show();"
+						rendered="#{informeMB.registro.infEstado eq 4 and informeMB.perEnviar}"
+						actionListener="#{informeMB.prepararCorreoInf}"
+						title="Clic para enviar a revisión del informe" process="@this"
+						value="Enviar a Revisión" icon="pi pi-check-circle"
+						style="float:Righ;" styleClass="blue-btn raised-btn"
+						update=":frmCorreoInf">
+					</p:commandButton>
+					<p:commandButton id="btnEnviarObsInf"
+						oncomplete="PF('wvCorreoObsInf').show();"
+						actionListener="#{informeMB.prepararCorreoObsInf}"
+						rendered="#{informeMB.registro.infEstado eq 5 and informeMB.perAutorizar}"
+						title="Clic para enviar las observaciones al auditor"
+						process="@this" value="Comunicar Observaciones"
+						icon="pi pi-check-circle" style="float:left;"
+						styleClass="blue-btn raised-btn" update=":frmCorreoObsInf">
+					</p:commandButton>
+
+					<p:commandButton id="btnFinInf"
+						oncomplete="PF('wvCorreoFinInf').show();"
+						rendered="#{informeMB.registro.infEstado eq 5 and informeMB.perAutorizar}"
+						actionListener="#{informeMB.prepararCorreoFinInf}"
+						title="Clic para finalizar la revisión" process="@this"
+						value="Finalizar Revisión" icon="pi pi-check-circle"
+						style="float:left;" styleClass="blue-btn raised-btn"
+						update=":frmCorreoFinInf">
+					</p:commandButton>
+					
+					<p:commandButton id="btnEnviarObsInfApb"
+						oncomplete="PF('wvCorreoObsInfApb').show();"
+						actionListener="#{informeMB.prepararCorreoObsInfApb}"
+						rendered="#{informeMB.registro.infEstado eq 6 and informeMB.perAprobar}"
+						title="Clic para enviar las observaciones al coordinador"
+						process="@this" value="Comunicar Observaciones"
+						icon="pi pi-check-circle" style="float:left;"
+						styleClass="blue-btn raised-btn" update=":frmCorreoObsInfApb">
+					</p:commandButton>
+
+					<p:commandButton id="btnFinInfApb"
+						oncomplete="PF('wvCorreoFinInfApb').show();"
+						rendered="#{informeMB.registro.infEstado eq 6 and informeMB.perAprobar}"
+						actionListener="#{informeMB.prepararCorreoFinInfApb}"
+						title="Clic para finalizar y aprobar el informe" process="@this"
+						value="Aprobar" icon="pi pi-check-circle"
+						style="float:left;" styleClass="blue-btn raised-btn"
+						update=":frmCorreoFinInfApb">
+					</p:commandButton>
+
 				</div>
+
 				<div class="name" align="center" style="margin-top: 100px;">
 					<h:outputText rendered="#{informeMB.registro.infEstado eq 1}"
 						style="float:right; font-size:large; font-weight: bold; color:#2ab1be;"
@@ -106,10 +168,16 @@
 						value="Lectura de Borrador de Informe"></h:outputText>
 					<h:outputText rendered="#{informeMB.registro.infEstado eq 4}"
 						style="float:right; font-size:large; font-weight: bold; color:#2ab1be;"
-						value="Revisión Informe de Auditoría"></h:outputText>
+						value="Elaboración Informe de Auditoría"></h:outputText>
 					<h:outputText rendered="#{informeMB.registro.infEstado eq 5}"
 						style="float:right; font-size:large; font-weight: bold; color:#2ab1be;"
+						value="Revisión Informe de Auditoría"></h:outputText>
+					<h:outputText rendered="#{informeMB.registro.infEstado eq 6}"
+						style="float:right; font-size:large; font-weight: bold; color:#2ab1be;"
 						value="Aprobación Informe de Auditoría"></h:outputText>
+					<h:outputText rendered="#{informeMB.registro.infEstado eq 7}"
+						style="float:right; font-size:large; font-weight: bold; color:#2ab1be;"
+						value="Informe de Auditoría Finalizado"></h:outputText>	
 					<h:outputText
 						style="float:right; font-size:large; font-weight: bold; color:#525c65; margin-right:10px;"
 						value="Estado:"></h:outputText>
@@ -118,7 +186,6 @@
 						#{informeMB.auditoria.audCodigo}-#{informeMB.auditoria.audNombre}</h3>
 				</div>
 				<br />
-
 
 				<div class="ui-fluid p-formgrid p-grid">
 					<div class="p-field p-col">
@@ -208,6 +275,13 @@
 									customConfig="#{request.contextPath}/resources/js/customck.js"
 									value="#{informeMB.registro.infObservaciones}" />
 							</p:tab>
+							<p:tab title="Observaciones Jefatura">
+								<pe:ckEditor id="infobservacionesJefe" width="100%"
+									skin="office2013"
+									readonly="#{!informeMB.rolJefe or !informeMB.perAprobar}"
+									customConfig="#{request.contextPath}/resources/js/customck.js"
+									value="#{informeMB.registro.infObservacionesJefe}" />
+							</p:tab>
 							<p:tab title="Informes Firmados">
 								<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
 									styleClass="ui-panelgrid-blank form-group form-elements">
@@ -218,6 +292,7 @@
 										uploadLabel="Subir" label="Elegir" update="dtArchivos"
 										allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
 								</p:panelGrid>
+
 								<p:dataTable var="a" value="#{arcMB.listado}"
 									rowIndexVar="index" widgetVar="wvArchivos" reflow="true"
 									id="dtArchivos" style="margin-top:20px;" paginator="true"
@@ -283,6 +358,7 @@
 		</h:form>
 
 		<p:dialog widgetVar="wvObservaciones" responsive="true" width="500"
+			position="center" height="400" appendTo="@(body)"
 			closeOnEscape="true" header="Agregar Observaciones" modal="true">
 			<h:form id="frmObsNewEdit">
 
@@ -301,7 +377,8 @@
 		</p:dialog>
 
 		<p:dialog widgetVar="wvCorreo" modal="true" showEffect="fade"
-			closable="true" closeOnEscape="true" responsive="true">
+			position="center" height="400" appendTo="@(body)" closable="true"
+			closeOnEscape="true" responsive="true">
 			<h:form id="frmCorreo">
 				<p:commandButton id="btnEnviar"
 					action="#{informeMB.onEnviarRevision}"
@@ -323,8 +400,33 @@
 			</h:form>
 		</p:dialog>
 
+		<p:dialog widgetVar="wvCorreoInf" modal="true" showEffect="fade"
+			position="center" height="400" appendTo="@(body)" closable="true"
+			closeOnEscape="true" responsive="true">
+			<h:form id="frmCorreoInf">
+				<p:commandButton id="btnEnviar"
+					action="#{informeMB.onEnviarRevisionInf}"
+					oncomplete="PF('wvCorreoInf').hide();"
+					title="Clic para enviar a revision el informe"
+					process=":frmCorreoInf" value="Enviar a Revisión"
+					icon="pi pi-check-circle" style="float:left;"
+					styleClass="blue-btn raised-btn" update=":frm, :frmInforme">
+					<p:confirm header="Confirmación" message="¿Enviar a revisión?"></p:confirm>
+				</p:commandButton>
+				<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+					<p:outputLabel for="inf" value="Digite el texto del correo:"
+						style="font-weight:bold;" />
+					<pe:ckEditor id="inf" width="100%" skin="office2013"
+						customConfig="#{request.contextPath}/resources/js/customck.js"
+						value="#{informeMB.textoCorreoInf}" />
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
 		<p:dialog widgetVar="wvCorreoObs" modal="true" showEffect="fade"
-			closable="true" closeOnEscape="true" responsive="true">
+			position="center" height="400" appendTo="@(body)" closable="true"
+			closeOnEscape="true" responsive="true">
 			<h:form id="frmCorreoObs">
 				<p:commandButton id="btnEnviar"
 					action="#{informeMB.onEnviarObservacion}"
@@ -332,8 +434,7 @@
 					process=":frmCorreoObs" value="Comunicar Observaciones"
 					icon="pi pi-check-circle" style="float:left;"
 					styleClass="blue-btn raised-btn"
-					oncomplete="PF('wvCorreoObs').hide();"
-					update=":frm, :frmInforme">
+					oncomplete="PF('wvCorreoObs').hide();" update=":frm, :frmInforme">
 					<p:confirm header="Confirmación" message="¿Enviar observaciones?"></p:confirm>
 				</p:commandButton>
 				<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
@@ -347,16 +448,41 @@
 			</h:form>
 		</p:dialog>
 
+		<p:dialog widgetVar="wvCorreoObsInf" modal="true" showEffect="fade"
+			position="center" height="400" appendTo="@(body)" closable="true"
+			closeOnEscape="true" responsive="true">
+			<h:form id="frmCorreoObsInf">
+				<p:commandButton id="btnEnviar"
+					action="#{informeMB.onEnviarObservacionInf}"
+					title="Clic para enviar las observaciones al auditor"
+					process=":frmCorreoObsInf" value="Comunicar Observaciones"
+					icon="pi pi-check-circle" style="float:left;"
+					styleClass="blue-btn raised-btn"
+					oncomplete="PF('wvCorreoObsInf').hide();"
+					update=":frm, :frmInforme">
+					<p:confirm header="Confirmación" message="¿Enviar observaciones?"></p:confirm>
+				</p:commandButton>
+				<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+					<p:outputLabel for="narra" value="Digite el texto del correo:"
+						style="font-weight:bold;" />
+					<pe:ckEditor id="narra" width="100%"
+						value="#{informeMB.textoCorreoObsInf}" skin="office2013"
+						customConfig="#{request.contextPath}/resources/js/customck.js" />
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
 		<p:dialog widgetVar="wvCorreoFin" modal="true" showEffect="fade"
-			closable="true" closeOnEscape="true" responsive="true">
+			position="center" height="400" appendTo="@(body)" closable="true"
+			closeOnEscape="true" responsive="true">
 			<h:form id="frmCorreoFin">
 				<p:commandButton id="btnEnviar" action="#{informeMB.onFinalizar}"
-					title="Clic para finalizar la revisión del programa de planificación"
+					title="Clic para finalizar la revisión del borrador de informe"
 					process=":frmCorreoFin" value="Finalizar Revisión"
 					icon="pi pi-check-circle" style="float:left;"
 					styleClass="blue-btn raised-btn"
-					oncomplete="PF('wvCorreoFin').hide();"
-					update=":frm, :frmInforme">
+					oncomplete="PF('wvCorreoFin').hide();" update=":frm, :frmInforme">
 					<p:confirm header="Confirmación" message="¿Finalizar Revisión?"></p:confirm>
 				</p:commandButton>
 				<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
@@ -370,8 +496,80 @@
 			</h:form>
 		</p:dialog>
 
+		<p:dialog widgetVar="wvCorreoFinInf" modal="true" showEffect="fade"
+			closable="true" closeOnEscape="true" responsive="true">
+			<h:form id="frmCorreoFinInf">
+				<p:commandButton id="btnEnviar" action="#{informeMB.onFinalizarInf}"
+					title="Clic para finalizar la revisión del informe y comunicar al Jefe de Auditoría"
+					process=":frmCorreoFinInf" value="Finalizar Revisión"
+					icon="pi pi-check-circle" style="float:left;"
+					styleClass="blue-btn raised-btn"
+					oncomplete="PF('wvCorreoFinInf').hide();"
+					update=":frm, :frmInforme">
+					<p:confirm header="Confirmación" message="¿Finalizar Revisión?"></p:confirm>
+				</p:commandButton>
+				<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+					<p:outputLabel for="narra" value="Digite el texto del correo:"
+						style="font-weight:bold;" />
+					<pe:ckEditor id="narra" width="100%"
+						value="#{informeMB.textoCorreoFinInf}" skin="office2013"
+						customConfig="#{request.contextPath}/resources/js/customck.js" />
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+		
+		<p:dialog widgetVar="wvCorreoObsInfApb" modal="true" showEffect="fade"
+			position="center" height="400" appendTo="@(body)" closable="true"
+			closeOnEscape="true" responsive="true">
+			<h:form id="frmCorreoObsInfApb">
+				<p:commandButton id="btnEnviar"
+					action="#{informeMB.onEnviarObservacionInfApb}"
+					title="Clic para enviar las observaciones al auditor"
+					process=":frmCorreoObsInfApb" value="Comunicar Observaciones"
+					icon="pi pi-check-circle" style="float:left;"
+					styleClass="blue-btn raised-btn"
+					oncomplete="PF('wvCorreoObsInfApb').hide();"
+					update=":frm, :frmInforme">
+					<p:confirm header="Confirmación" message="¿Enviar observaciones?"></p:confirm>
+				</p:commandButton>
+				<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+					<p:outputLabel for="narra" value="Digite el texto del correo:"
+						style="font-weight:bold;" />
+					<pe:ckEditor id="narra" width="100%"
+						value="#{informeMB.textoCorreoObsInfApb}" skin="office2013"
+						customConfig="#{request.contextPath}/resources/js/customck.js" />
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+		
+		<p:dialog widgetVar="wvCorreoFinInfApb" modal="true" showEffect="fade"
+			closable="true" closeOnEscape="true" responsive="true">
+			<h:form id="frmCorreoFinInfApb">
+				<p:commandButton id="btnEnviar" action="#{informeMB.onFinalizarInfApb}"
+					title="Clic para finalizar la revisión del informe y comunicar al Jefe de Auditoría"
+					process=":frmCorreoFinInfApb" value="Aprobar Informe"
+					icon="pi pi-check-circle" style="float:left;"
+					styleClass="blue-btn raised-btn"
+					oncomplete="PF('wvCorreoFinInfApb').hide();"
+					update=":frm, :frmInforme">
+					<p:confirm header="Confirmación" message="¿Finalizar Revisió y Aprobar Informe?"></p:confirm>
+				</p:commandButton>
+				<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+					<p:outputLabel for="narra" value="Digite el texto del correo:"
+						style="font-weight:bold;" />
+					<pe:ckEditor id="narra" width="100%"
+						value="#{informeMB.textoCorreoFinInfApb}" skin="office2013"
+						customConfig="#{request.contextPath}/resources/js/customck.js" />
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
 		<ui:include src="actalectura.xhtml"></ui:include>
 		<ui:include src="cartagerencia.xhtml"></ui:include>
+		<ui:include src="lista-hallazgos.xhtml"></ui:include>
 	</ui:define>
 
 </ui:composition>

@@ -12,11 +12,11 @@
 		</div>
 		<h:form id="frm">
 			<p:dataTable var="usu" value="#{usrMB.listado}" widgetVar="wvUsuario"
-				reflow="true" id="dtUsuario" style="margin-top:20px;"
+				reflow="true" id="dtUsuario" style="margin-top:20px;" 
 				paginator="true" filteredValue="#{usrMB.filteredUsuarios}"
 				globalFilterFunction="#{usrMB.globalFilterFunction}"
 				selection="#{usrMB.regSelected}" selectionMode="single"
-				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+				paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="10"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
 				rowKey="#{usu.usuId}">
@@ -143,7 +143,7 @@
 
 											<h:outputLabel for="usufechanacimiento"
 												value="Fecha Nacimiento:" />
-											<p:calendar id="usufechanacimiento"
+											<p:calendar id="usufechanacimiento" locale="es"
 												value="#{usrMB.registro.usuFechaNacimiento}" required="true"
 												requiredMessage="Debe ingresar fecha nacimiento" />
 
@@ -170,6 +170,20 @@
 												value="#{usrMB.registro.usuDireccionResidencia}"
 												required="true"
 												requiredMessage="Debe ingresar dirección de residencia" />
+										</p:panelGrid>
+										<p:panelGrid columns="2"
+											columnClasses="ui-g-12 ui-md-2,ui-g-12 ui-md-10"
+											layout="grid"
+											styleClass="ui-panelgrid-blank form-group form-elements">
+											<h:outputLabel for="usuUnidad" value="Unidades:" />
+											<p:selectCheckboxMenu id="usuUnidad"
+												converter="unidadConverter" multiple="true"
+												converterMessage="Problemas al agregar unidad"
+												filterMatchMode="contains" panelStyle="width: 30rem"
+												scrollHeight="250" value="#{usrMB.unidadesSelectedList}">
+												<f:selectItems value="#{usrMB.unidadList}" var="und"
+													itemLabel="#{und.uniNombre}" itemValue="#{und}" />
+											</p:selectCheckboxMenu>
 										</p:panelGrid>
 									</p:tab>
 
@@ -208,9 +222,16 @@
 							</div>
 						</div>
 					</div>
-					<p:commandButton id="btn" value="Guardar" icon="fa fa-check"
-						oncomplete="PF('wvUsuNewEdit').hide();"
-						actionListener="#{usrMB.onSaveUser}" update=":frm:dtUsuario" />
+					<p:panelGrid columns="2"
+						columnClasses="ui-g-9 ui-lg-10,ui-g-3 ui-md-4 ui-lg-2"
+						layout="grid"
+						styleClass="ui-panelgrid-blank form-group form-elements">
+						<p:column></p:column>
+						<p:commandButton id="btn" value="Guardar" icon="fa fa-check"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wvUsuNewEdit').hide();"
+							actionListener="#{usrMB.onSaveUser}"
+							update=":frm:dtUsuario, :frmUsuNewEdit" />
+					</p:panelGrid>
 				</div>
 			</h:form>
 		</p:dialog>
@@ -223,7 +244,8 @@
 				<p:panelGrid columns="1" layout="grid"
 					styleClass="ui-panelgrid-blank form-group form-elements">
 					<b>Indicaciones:</b>
-					<p>Seleccione el rol y posteriormente seleccione los permisos que desea brindar al usuario</p>
+					<p>Seleccione el rol y posteriormente seleccione los permisos
+						que desea brindar al usuario</p>
 
 					<p:outputLabel value="Rol:" />
 					<p:selectOneMenu id="rol" value="#{uprMB.rol}"

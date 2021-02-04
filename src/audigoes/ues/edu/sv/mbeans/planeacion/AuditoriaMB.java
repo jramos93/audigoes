@@ -560,17 +560,23 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	@Override
 	public boolean beforeDelete() {
-		if (getRegistro().getActividad().size() > 0) {
-			addWarn(new FacesMessage(SYSTEM_NAME, "La auditoría ya tiene actividades asignadas, no puede eliminarse"));
+		try {
+			if (getRegistro().getActividad().size() > 0) {
+				addWarn(new FacesMessage(SYSTEM_NAME, "La auditoría ya tiene actividades asignadas, no puede eliminarse"));
+				return false;
+			}
+			if (getRegistro().getAuditoriaResponsable().size() > 0) {
+				addWarn(new FacesMessage(SYSTEM_NAME, "La auditoría tiene responsable asignado. No puede ser eliminada"));
+				return false;
+			}
+			if (getRegistro().getAuditoriaUnidad().size() > 0) {
+				addWarn(new FacesMessage(SYSTEM_NAME, "La auditoría tiene unidades asignadas. No puede ser eliminada"));
+			}
+		} catch (Exception e) {
+			addWarn(new FacesMessage(SYSTEM_NAME, "La auditoría tiene REGISTROS asociados, no se puede eliminar"));
 			return false;
 		}
-		if (getRegistro().getAuditoriaResponsable().size() > 0) {
-			addWarn(new FacesMessage(SYSTEM_NAME, "La auditoría tiene responsable asignado. No puede ser eliminada"));
-			return false;
-		}
-		if (getRegistro().getAuditoriaUnidad().size() > 0) {
-			addWarn(new FacesMessage(SYSTEM_NAME, "La auditoría tiene unidades asignadas. No puede ser eliminada"));
-		}
+		
 		return super.beforeDelete();
 	}
 

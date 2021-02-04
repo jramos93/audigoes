@@ -32,20 +32,23 @@
 							</p:commandButton>
 							<p:commandButton id="bntEditarRol" value="Editar Rol"
 								styleClass="raised-btn" actionListener="#{rolMB.onEdit}"
-								icon="pi pi-plus" oncomplete="PF('wvNewEditRol').show();"
+								icon="pi pi-pencil" oncomplete="PF('wvNewEditRol').show();"
 								update=":dgNewEditRol" rendered="#{rolMB.registro.selected}">
 							</p:commandButton>
-							<p:commandButton update=":frmRolNewEdit" value="Permisos"
-								styleClass="raised-btn" oncomplete="PF('wvRolNewEdit').show()"
-								icon="pi pi-eye" actionListener="#{rolMB.fillPermisos}"
-								rendered="#{rolMB.registro.selected}">
-							</p:commandButton>
 							<p:commandButton id="btnEliminar" value="Eliminar"
-								styleClass="raised-btn" actionListener="#{rolMB.onDelete}"
-								update="@form" rendered="#{rolMB.registro.selected}">
+								icon="pi pi-trash" styleClass="raised-btn"
+								actionListener="#{rolMB.onDelete}" update="@form"
+								rendered="#{rolMB.registro.selected}">
 								<p:confirm header="Confirmación"
 									message="Seguro(a) que desea eliminar el rol seleccionado?"
 									icon="pi pi-exclamation-triangle" />
+							</p:commandButton>
+							<p:separator></p:separator>
+							<p:commandButton update=":frmRolNewEdit" value="Permisos"
+								styleClass="blue-btn raised-btn"
+								oncomplete="PF('wvRolNewEdit').show()" icon="pi pi-eye"
+								actionListener="#{rolMB.fillPermisos}"
+								rendered="#{rolMB.registro.selected}">
 							</p:commandButton>
 						</p:toolbarGroup>
 					</p:toolbar>
@@ -130,13 +133,16 @@
 						var="permiso" itemValue="#{permiso}" responsive="true"
 						itemLabel="#{permiso.perNombre}" showCheckbox="true"
 						showSourceFilter="true" showTargetFilter="true"
+						addAllLabel="Agregar Todo" removeLabel="Remover"
+						addLabel="Agregar" removeAllLabel="Remover Todos"
 						filterMatchMode="contains" converter="permisoConverter">
 						<f:facet name="sourceCaption"> Disponibles</f:facet>
 						<f:facet name="targetCaption"> Asignados</f:facet>
 						<p:ajax event="transfer" listener="#{rlpMB.asignarPermiso}"
 							update=":frmRolNewEdit" />
 						<p:column style="width:100%;">
-							<h:outputText style="margin-left:10px;" value="#{permiso.perNombre}" />
+							<h:outputText style="margin-left:10px;"
+								value="#{permiso.perNombre}" />
 						</p:column>
 					</p:pickList>
 				</p:panelGrid>

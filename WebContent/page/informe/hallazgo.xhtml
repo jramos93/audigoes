@@ -26,12 +26,12 @@
 			<div align="right" style="margin-top: 50px; float: right;">
 
 				<p:commandButton action="#{ceduMB.prepararCorreo}"
-					oncomplete="PF('wvCorreo').show();"
+					oncomplete="PF('wvCorreoCed').show();"
 					rendered="#{ceduMB.status eq 'EDIT' and ceduMB.registro.cedEstado eq 1 and ceduMB.perEnviar}"
 					title="Clic para enviar a revisión de la coordinación"
 					process="@this" value="Enviar a Revisión" icon="pi pi-check-circle"
 					style="float:left;" styleClass="blue-btn raised-btn"
-					update=":frmCorreo">
+					update=":frmCorreoCed">
 				</p:commandButton>
 
 				<p:commandButton action="#{ceduMB.prepararCorreoObs}"
@@ -44,7 +44,7 @@
 				</p:commandButton>
 				
 				<p:commandButton actionListener="#{ceduMB.onFinAuditor}"
-					rendered="#{ceduMB.registro.cedEstado eq 3 and ceduMB.perEnviar}"
+					rendered="#{ceduMB.status eq 'EDIT' and ceduMB.registro.cedEstado eq 3 and ceduMB.perEnviar}"
 					title="Clic para finalizar redacción de hallazgo (No se comunicará a Unidad)"
 					process="@this" value="Finalizar Redacción" icon="pi pi-power-settings-new"
 					style="float:left;" styleClass="blue-btn raised-btn"
@@ -81,6 +81,15 @@
 				<p:commandButton action="#{ceduMB.prepararCorreoUnidad}"
 					oncomplete="PF('wvCorreo4').show();"
 					rendered="#{ceduMB.registro.cedEstado eq 3 and ceduMB.perEnviar}"
+					title="Clic para comunicar el hallazgo a la unidad" process="@this"
+					value="Comunicar a Unidad" icon="pi pi-envelope"
+					style="float:left;" styleClass="blue-btn raised-btn"
+					update=":frmCorreo4">
+				</p:commandButton>
+				
+				<p:commandButton action="#{ceduMB.prepararCorreoUnidad}"
+					oncomplete="PF('wvCorreo4').show();"
+					rendered="#{ceduMB.registro.cedEstado eq 7 and ceduMB.perEnviar and comeMB.listado.size()==0}"
 					title="Clic para comunicar el hallazgo a la unidad" process="@this"
 					value="Comunicar a Unidad" icon="pi pi-envelope"
 					style="float:left;" styleClass="blue-btn raised-btn"
@@ -123,23 +132,27 @@
 						<p:outputLabel value="Título: " style="font-weight:bold;" />
 						<p:inputTextarea value="#{ceduMB.registro.cedTitulo}" rows="2"
 							style="width:100%;"
-							/>
+							readonly="#{!ceduMB.perEdit or ceduMB.status eq 'SHOW' or ceduMB.registro.cedEstado ne 1}" />
 
 						<p:outputLabel value="Condición " style="font-weight:bold;" />
 						<p:inputTextarea value="#{ceduMB.registro.cedCondicion}" rows="3"
-							style="width:100%;"/>
+							style="width:100%;"
+							readonly="#{!ceduMB.perEdit or ceduMB.status eq 'SHOW' or ceduMB.registro.cedEstado ne 1}" />
 
 						<p:outputLabel value="Criterio: " style="font-weight:bold;" />
 						<p:inputTextarea value="#{ceduMB.registro.cedCriterio}" rows="6"
-							style="width:100%;" />
+							style="width:100%;"
+							readonly="#{!ceduMB.perEdit or ceduMB.status eq 'SHOW' or ceduMB.registro.cedEstado ne 1}" />
 
 						<p:outputLabel value="Causa: " style="font-weight:bold;" />
 						<p:inputTextarea value="#{ceduMB.registro.cedCausa}" rows="3"
-							style="width:100%;" />
+							style="width:100%;"
+							readonly="#{!ceduMB.perEdit or ceduMB.status eq 'SHOW' or ceduMB.registro.cedEstado ne 1}" />
 
 						<p:outputLabel value="Efecto: " style="font-weight:bold;" />
 						<p:inputTextarea value="#{ceduMB.registro.cedEfecto}" rows="3"
-							style="width:100%;"/>
+							style="width:100%;"
+							readonly="#{!ceduMB.perEdit or ceduMB.status eq 'SHOW' or ceduMB.registro.cedEstado ne 1}" />
 
 					</p:panelGrid>
 
@@ -164,6 +177,7 @@
 								<p:toolbarGroup>
 									<p:commandButton value="Agregar" icon="pi pi-plus"
 										oncomplete="PF('wvRecomendacion').show();"
+										rendered="#{ceduMB.status eq 'EDIT' and ceduMB.perEdit and ceduMB.perNew}"
 										update=":frmRecomendacion" actionListener="#{recMB.onNew}">
 									</p:commandButton>
 
@@ -220,8 +234,8 @@
 							<p:commandButton
 								action="#{ceduMB.prepararCorreoDevolver(comentario)}"
 								oncomplete="PF('wvCorreoDevolver').show();"
-								rendered="#{comentario.comeEnviado==1 and (ceduMB.registro.cedEstado eq 5 or ceduMB.registro.cedEstado eq 4) and ceduMB.perEdit}"
-								title="Clic para devolver a la unidad" process="@this"
+								rendered="#{comentario.comeEnviado==1 and (ceduMB.registro.cedEstado eq 7) and ceduMB.perEdit}"
+								title="Clic para enviar nuevamente a la unidad" process="@this"
 								value="Solicitar Comentarios Nuevamente"
 								icon="pi pi-check-circle" style="float:left;"
 								styleClass="blue-btn raised-btn" update=":frmCorreoDevolver">
@@ -412,14 +426,14 @@
 		</h:form>
 	</p:dialog>
 
-	<p:dialog widgetVar="wvCorreo" modal="true" showEffect="fade"
+	<p:dialog widgetVar="wvCorreoCed" modal="true" showEffect="fade"
 		dynamic="true" closable="true" closeOnEscape="true" responsive="true">
-		<h:form id="frmCorreo">
+		<h:form id="frmCorreoCed">
 			<p:commandButton id="btnEnviar" action="#{ceduMB.onEnviarRevision}"
 				title="Clic para enviar a revisión de la coordinación el hallazgo encontrado"
-				process=":frmCorreo" value="Enviar a Revisión"
+				process=":frmCorreoCed" value="Enviar a Revisión"
 				icon="pi pi-check-circle" style="float:left;"
-				styleClass="blue-btn raised-btn" oncomplete="PF('wvCorreo').hide();"
+				styleClass="blue-btn raised-btn" oncomplete="PF('wvCorreoCed').hide();"
 				update=":frmHallazgo :frmListaHallazgos">
 				<p:confirm header="Confirmación" message="¿Enviar a revisión?"></p:confirm>
 			</p:commandButton>
@@ -605,7 +619,7 @@
 		dynamic="true" closable="true" closeOnEscape="true" responsive="true">
 		<h:form id="frmCorreo3Analisis">
 			<p:commandButton id="btnEnviar"
-				action="#{ceduMB.onFinalizarAnalisis}"
+				action="#{ceduMB.onFinalizarAnalisisInforme}"
 				title="Clic para finalizar la revisión"
 				process=":frmCorreo3Analisis" value="Finalizar Revisión"
 				icon="pi pi-check-circle" style="float:left;"

@@ -106,6 +106,10 @@ public class Informe extends SuperEntity implements Serializable {
 	@Lob
 	@Column(name = "inf_observaciones")
 	private String infObservaciones;
+	
+	@Lob
+	@Column(name = "inf_observaciones_jefe")
+	private String infObservacionesJefe;
 
 	@Column(name = "inf_estado")
 	private int infEstado;
@@ -531,6 +535,14 @@ public class Informe extends SuperEntity implements Serializable {
 
 	public void setInfAlcance(String infAlcance) {
 		this.infAlcance = infAlcance;
+	}
+
+	public String getInfObservacionesJefe() {
+		return infObservacionesJefe;
+	}
+
+	public void setInfObservacionesJefe(String infObservacionesJefe) {
+		this.infObservacionesJefe = infObservacionesJefe;
 	}
 
 	public List<Archivo> getArchivo() {

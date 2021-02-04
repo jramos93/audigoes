@@ -19,4 +19,12 @@
 	<named-query name="institucion.login">
 		<query>select o from Institucion o where o.regActivo=1</query>
 	</named-query>
+	
+	<named-query name="rolpermiso.by.rol">
+		<query>select o from RolPermiso o where o.rol.rolId=?1 and o.regActivo=1</query>
+	</named-query>
+	
+	<named-query name="usuariopermiso.by.rol">
+		<query>select o from UsuarioPermiso o where o.rol.rolId=?1 and o.regActivo=1</query>
+	</named-query>
 </entity-mappings>

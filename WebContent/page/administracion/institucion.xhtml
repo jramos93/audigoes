@@ -21,16 +21,20 @@
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
 				<p:ajax event="rowSelect" listener="#{insMB.onRowSelect}"
-					update="dtInstituciones" />
-				<f:facet name="paginatorTopLeft">
-					<p:commandButton value="Agregar" icon="pi pi-plus"
-						actionListener="#{insMB.onNew}"
-						oncomplete="PF('wvInsNewEdit').show();" update=":frmInsNewEdit" />
-					<p:commandButton update=":frmInsNewEdit" value="Editar"
-						oncomplete="PF('wvInsNewEdit').show()" icon="pi pi-pencil"
-						title="Modificar" actionListener="#{insMB.onEdit}"
-						rendered="#{insMB.registro.selected}">
-					</p:commandButton>
+					update="dtInstituciones:tMenu" />
+				<f:facet name="header">
+					<p:toolbar id="tMenu">
+						<p:toolbarGroup>
+							<p:commandButton value="Agregar" icon="pi pi-plus"
+								actionListener="#{insMB.onNew}"
+								oncomplete="PF('wvInsNewEdit').show();" update=":frmInsNewEdit" />
+							<p:commandButton update=":frmInsNewEdit" value="Editar"
+								oncomplete="PF('wvInsNewEdit').show()" icon="pi pi-pencil"
+								title="Modificar" actionListener="#{insMB.onEdit}"
+								rendered="#{insMB.registro.selected}">
+							</p:commandButton>
+						</p:toolbarGroup>
+					</p:toolbar>
 				</f:facet>
 
 				<f:facet name="paginatorTopRight">
@@ -54,7 +58,8 @@
 					<h:outputText value="#{ins.insSlogan}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Abreviatura nombre" sortBy="#{ins.insIniciales}">
+				<p:column headerText="Abreviatura nombre"
+					sortBy="#{ins.insIniciales}">
 					<h:outputText value="#{ins.insIniciales}"></h:outputText>
 				</p:column>
 
@@ -81,55 +86,68 @@
 			</p:dataTable>
 		</h:form>
 
-		<p:dialog widgetVar="wvInsNewEdit" responsive="true" width="500"
+		<p:dialog widgetVar="wvInsNewEdit" responsive="true" width="980"
 			closeOnEscape="true" header="Gestión de Instituciones" modal="true">
 			<h:form id="frmInsNewEdit">
-				<div class="ui-fluid p-formgrid p-grid">
-					<div class="p-field p-col">
-						<p:outputLabel for="nombre" value="Nombre del institución:" />
-						<p:inputText id="nombre" value="#{insMB.registro.insNombre}"
-							required="true" maxlength="250" />
-					</div>
-					<div class="p-field p-col">
-						<p:outputLabel for="slogan" value="Eslogan:" />
-						<p:inputTextarea id="slogan" rows="4" required="true"
-							value="#{insMB.registro.insSlogan}" maxlength="1000" />
-					</div>
-					<div class="p-field p-col">
-						<p:outputLabel for="abreviatura" value="Abreviatura nombre:" />
-						<p:inputText id="abreviatura"
-							value="#{insMB.registro.insIniciales}" required="true"
-							maxlength="25" />
-					</div>
-					<div class="p-field p-col">
-						<p:outputLabel for="nit" value="NIT:" />
-						<p:inputMask id="nit" value="#{insMB.registro.insNit}"
-							required="true" mask="999-999999-999-9" />
-					</div>
-					<div class="p-field p-col">
-						<p:outputLabel for="telefono" value="Teléfono:" />
-						<p:inputText id="telefono" value="#{insMB.registro.insTelefono}"
-							required="true" maxlength="250" />
-					</div>
-					<div class="p-field p-col">
-						<p:outputLabel for="direccion" value="Dirección:" />
-						<p:inputTextarea id="direccion" rows="4" required="true"
-							value="#{insMB.registro.insDireccion}" maxlength="1000" />
-					</div>
+				<p:panelGrid columns="4"
+					columnClasses="ui-g-12 ui-md-2,ui-g-12 ui-md-4,ui-g-12 ui-md-2 ui-grc-2,ui-g-12 ui-md-4"
+					layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+					<p:outputLabel for="nombre" value="Nombre del institución:" />
+					<p:inputText id="nombre" value="#{insMB.registro.insNombre}"
+						style="width:90%;" required="true" maxlength="250" />
 
-					<div class="p-field-radiobutton">
-						<p:outputLabel for="estado" value="Estado:" />
-						<p:selectOneRadio id="estado" value="#{insMB.registro.regActivo}"
-							required="true" disabled="#{insMB.status=='NEW'}">
-							<f:selectItems value="#{insMB.regActivoList}"></f:selectItems>
-						</p:selectOneRadio>
-					</div>
+					<p:outputLabel for="slogan" value="Eslogan:" />
+					<p:inputTextarea id="slogan" rows="4" required="true"
+						style="width:90%;" value="#{insMB.registro.insSlogan}"
+						maxlength="1000" />
+
+					<p:outputLabel for="abreviatura" value="Abreviatura nombre:" />
+					<p:inputText id="abreviatura"
+						value="#{insMB.registro.insIniciales}" required="true"
+						style="width:90%;" maxlength="25" />
+
+					<p:outputLabel for="nit" value="NIT:" />
+					<p:inputMask id="nit" value="#{insMB.registro.insNit}"
+						style="width:90%;" required="true" mask="999-999999-999-9" />
 
 
-					<p:commandButton actionListener="#{insMB.onSave}" value="Guardar"
-						oncomplete="PF('wvInsNewEdit').hide();"
-						update=":frm:dtInstituciones" />
-				</div>
+					<p:outputLabel for="telefono" value="Teléfono de Contacto:" />
+					<p:inputText id="telefono" value="#{insMB.registro.insTelefono}"
+						style="width:90%;" required="true" maxlength="250" />
+
+					<p:outputLabel for="correo" value="Correo de Contacto:" />
+					<p:inputText id="correo" value="#{insMB.registro.insCorreo}"
+						style="width:90%;" required="true" maxlength="250" />
+
+					<p:outputLabel for="direccion" value="Dirección:" />
+					<p:inputTextarea id="direccion" rows="4" required="true"
+						style="width:90%;" value="#{insMB.registro.insDireccion}"
+						maxlength="1000" />
+
+					<p:outputLabel for="estado" value="Estado:" />
+					<p:selectOneRadio id="estado" value="#{insMB.registro.regActivo}"
+						required="true" disabled="#{insMB.status=='NEW'}">
+						<f:selectItems value="#{insMB.regActivoList}"></f:selectItems>
+					</p:selectOneRadio>
+				</p:panelGrid>
+				<p:panelGrid columns="3" columnClasses="ui-lg-4, ui-lg-5, ui-lg-3" layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+					<h:outputText value="Subida de logo:"
+						rendered="#{insMB.status ne 'SHOW'}"></h:outputText>
+					<p:fileUpload listener="#{insMB.handleFileUpload}" update="btn"
+						rendered="#{insMB.status ne 'SHOW'}" multiple="false"
+						fileLimit="1" mode="advanced" dragDropSupport="false"
+						cancelLabel="Cancelar" label="Elegir" uploadLabel="Subir"
+						allowTypes="/(\.|\/)(jpe?g|png)$/" />
+					<p:graphicImage id="btn"
+						value="/logoImage?id=#{insMB.registro.insId}" width="150"
+						height="100"></p:graphicImage>
+				</p:panelGrid>
+
+				<p:commandButton actionListener="#{insMB.onSave}" value="Guardar"
+					oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wvInsNewEdit').hide();"
+					update=":frm:dtInstituciones, :frmInsNewEdit" />
 			</h:form>
 		</p:dialog>
 	</ui:define>

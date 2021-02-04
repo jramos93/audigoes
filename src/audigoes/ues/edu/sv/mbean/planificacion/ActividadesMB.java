@@ -38,7 +38,7 @@ public class ActividadesMB extends AudigoesController implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
-			//super.init();
+			// super.init();
 
 			fillActividades();
 			if (getListado() != null) {
@@ -197,12 +197,23 @@ public class ActividadesMB extends AudigoesController implements Serializable {
 
 	public void iniciarPlanificacion() {
 		try {
-			auditoria.setAudFechaPlanificacion(getToday());
-			auditoria.setAudFase(2);
-			if (audigoesLocal.update(auditoria) != null) {
-				bitaMB.finalizarActividad(2, auditoria, getObjAppsSession().getUsuario());
+			int contador = 0;
+			for (Actividad a : getListado()) {
+				if (a.getActFecFin() == null) {
+					contador = 1;
+				}
 			}
-			addInfo(new FacesMessage("Fase de planificación iniciada correctamente"));
+			if (contador == 0) {
+				auditoria.setAudFechaPlanificacion(getToday());
+				auditoria.setAudFase(2);
+				if (audigoesLocal.update(auditoria) != null) {
+					bitaMB.finalizarActividad(2, auditoria, getObjAppsSession().getUsuario());
+				}
+				addInfo(new FacesMessage("Fase de planificación iniciada correctamente"));
+			} else {
+				addWarn(new FacesMessage("Debe ingresar fecha de fin de todas las actividades"));
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

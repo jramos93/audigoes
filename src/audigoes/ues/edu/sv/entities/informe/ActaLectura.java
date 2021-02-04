@@ -69,6 +69,9 @@ public class ActaLectura extends SuperEntity implements Serializable {
 	// bi-directional many-to-one association to Archivo
 	@OneToMany(mappedBy = "actaLectura")
 	private List<Archivo> archivo;
+	
+	@Column(name = "acl_estado")
+	private int aclEstado;
 
 	public ActaLectura() {
 	}
@@ -159,6 +162,14 @@ public class ActaLectura extends SuperEntity implements Serializable {
 
 	public void setInforme(Informe informe) {
 		this.informe = informe;
+	}
+
+	public int getAclEstado() {
+		return aclEstado;
+	}
+
+	public void setAclEstado(int aclEstado) {
+		this.aclEstado = aclEstado;
 	}
 
 	public List<Destinatario> getDestinatario() {
