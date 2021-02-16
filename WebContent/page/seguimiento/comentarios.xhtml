@@ -14,8 +14,9 @@
 					actionListener="/audigoes/page/planeacion/auditoria.xhtml">
 				</p:commandButton>
 			</div>
+
 			<div class="name" align="center" style="margin-top: 100px;">
-				<span class="app-name">Comentarios</span>
+				<span class="app-name">Recomendaciones y Comentarios</span>
 			</div>
 			<div class="ui-fluid p-formgrid p-grid">
 				<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
@@ -25,61 +26,120 @@
 						style="font-weight:bold;" />
 					<p:inputTextarea id="audRec" value="#{segMB.auditoria.audNombre}"
 						rows="2" readonly="true" />
-						
+
 					<p:outputLabel for="cedulaselected" value="Hallazgo:"
 						style="font-weight:bold;" />
-					<p:inputTextarea id="cedulaselected" value="#{segMB.cedulaSelected.cedTitulo}"
-						rows="2" readonly="true" />
+					<p:inputTextarea id="cedulaselected"
+						value="#{segMB.cedulaSelected.cedTitulo}" rows="2" readonly="true" />
 				</p:panelGrid>
-				<p:dataTable var="recm" value="#{recMB.listado}"
-					expandedRow="single" expandableRowGroups="true"
-					sortBy="#{recm.cedulaNota.cedTitulo}" widgetVar="wvRecomendaciones"
-					id="dtRecomendacion" style="margin-top:20px;" paginator="true"
-					rowKey="#{recm.recId}" paginatorPosition="bottom"
-					rowsPerPageTemplate="5,10,15" rows="5"
-					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
-					<p:column headerText="Titulo Recomendación">
-						<h:outputText value="#{recm.recTitulo}"></h:outputText>
-					</p:column>
-					<p:column headerText="Situación Encontrada">
-						<h:outputText value="#{recm.recSituacion}"></h:outputText>
-					</p:column>
-				</p:dataTable>
+
+				<div class="card">
+					<h2>Recomendaciones</h2>
+					<p:accordionPanel widgetVar="wvapRecomendaciones"
+						value="#{recMB.listado}" var="r">
+						<p:tab title="#{r.recTitulo}">
+							<h3>Situación Encontrada:</h3>
+							<p class="p-m-0">#{r.recSituacion}</p>
+							<h3>Recomendación:</h3>
+							<p class="p-m-0">#{r.recRecomendacion}</p>
+						</p:tab>
+					</p:accordionPanel>
+
+				</div>
 			</div>
 			<div class="ui-fluid p-formgrid p-grid">
-				<p:tabView id="tvComentarios">
-					<p:tab title="Comentarios de Unidad(es) Auditada(s)">
-						<pe:ckEditor id="comentarioAuditado" width="100%"
-							value="#{comMB.registro.comComentario}"
-							readonly="#{!comMB.rolAuditado}" />
-					</p:tab>
-					<p:tab title="Comentarios de Auditoría">
-						<pe:ckEditor id="comentarioAuditaria" width="100%"
-							value="#{comMB.registro.comComentarioAuditoria}"
-							readonly="#{!comMB.rolAuditor}" />
-					</p:tab>
-				</p:tabView>
+				<div align="right" style="margin-top: 50px; float: right;"></div>
+			</div>
+
+			<div>
+				<p:panel>
+					<f:facet name="header">
+						<p:row>
+							<p:commandButton id="btnComunicarUnidadAuditoria"
+								action="#{comMB.preparaCorreoComunicarAuditoria}"
+								oncomplete="PF('wvCorreoNotificacion').show();"
+								title="Clic para enviar a revisión de la coordinación"
+								process="@this" value="Comunicar a Auditoría"
+								icon="pi pi-check-circle" style="float:left;"
+								styleClass="green-btn raised-btn"
+								update=":frmCorreoNotificacion"
+								rendered="#{comMB.registro.comEstado == 1 and comMB.rolAuditado}">
+							</p:commandButton>
+							<p:commandButton id="btnEnviarARevision"
+								action="#{comMB.preparaCorreoEnviarRevision}"
+								oncomplete="PF('wvCorreoNotificacion').show();"
+								title="Clic para enviar a revisión de la coordinación"
+								process="@this" value="Enviar a Revisión"
+								icon="pi pi-check-circle" style="float:left;"
+								styleClass="blue-btn raised-btn"
+								update=":frmCorreoNotificacion"
+								rendered="#{comMB.registro.comEstado == 3 and comMB.rolAuditor}">
+							</p:commandButton>
+							<p:commandButton id="btnFinalizarRevision"
+								action="#{comMB.preparaCorreoAComunicar}"
+								oncomplete="PF('wvCorreoNotificacion').show();"
+								title="Clic para enviar a revisión de la coordinación"
+								process="@this" value="Finalizar Revisión"
+								icon="pi pi-check-circle" style="float:left;"
+								styleClass="blue-btn raised-btn"
+								update=":frmCorreoNotificacion"
+								rendered="#{comMB.registro.comEstado == 4 and comMB.rolCoordinadorAuditoria}">
+							</p:commandButton>
+							<p:commandButton id="btnObservarComentario"
+								action="#{comMB.preparaCorreoComentarioObservado}"
+								oncomplete="PF('wvCorreoNotificacion').show();"
+								title="Clic para enviar a revisión de la coordinación"
+								process="@this" value="Observar Comentario"
+								icon="pi pi-check-circle" style="float:left;"
+								styleClass="pink-btn raised-btn"
+								update=":frmCorreoNotificacion"
+								rendered="#{comMB.registro.comEstado == 4 and comMB.rolCoordinadorAuditoria}">
+							</p:commandButton>
+							<p:commandButton id="btnComunicarUnidadAuditada"
+								action="#{comMB.preparaCorreoComunicado}"
+								oncomplete="PF('wvCorreoNotificacion').show();"
+								title="Clic para enviar a revisión de la coordinación"
+								process="@this" value="Comunicar a Unidad Auditada"
+								icon="pi pi-check-circle" style="float:left;"
+								styleClass="green-btn raised-btn"
+								update=":frmCorreoNotificacion"
+								rendered="#{comMB.registro.comEstado == 6 and comMB.rolCoordinadorAuditoria}">
+							</p:commandButton>
+						</p:row>
+
+					</f:facet>
+					<p:tabView id="tvComentarios">
+						<p:tab title="Comentarios de Unidad(es) Auditada(s)">
+							<pe:ckEditor id="comentarioAuditado" width="100%"
+								value="#{comMB.registro.comComentario}"
+								readonly="#{!comMB.rolAuditado}" />
+						</p:tab>
+						<p:tab title="Comentarios de Auditoría">
+							<pe:ckEditor id="comentarioAuditaria" width="100%"
+								value="#{comMB.registro.comComentarioAuditoria}"
+								readonly="#{!comMB.rolAuditor}" />
+						</p:tab>
+					</p:tabView>
+				</p:panel>
 				<p:panelGrid style="width:100%"
 					styleClass="ui-panelgrid-blank form-group form-elements">
 					<p:row style="text-align:center;">
 						<p:column>
 							<p:commandButton id="btnGuardarButtom"
-								action="#{recMB.onSaveComentario}"
-								value="Guardar Recomendación Pendiente"
+								action="#{segMB.onSaveComentario}" value="Guardar Comentario"
 								update="@form :frmSeguimiento" process="@this @form" />
 						</p:column>
 						<p:column>
 							<p:commandButton id="btnEnProcesoButtom" styleClass="blue-btn"
 								rendered="#{comMB.rolAuditor}"
-								action="#{recMB.onSaveComentarioEnProceso}"
-								value="Guardar Recomendación En Proceso"
+								action="#{segMB.onSaveComentarioEnProceso}"
+								value="Guardar Comentario - Recomendaciones En Proceso"
 								update="@form :frmSeguimiento" process="@this @form" />
 						</p:column>
 						<p:column>
 							<p:commandButton id="btnImplementarButtom" styleClass="green-btn"
-								action="#{recMB.onSaveImplementarRec}"
-								value="Recomendación Implementada"
+								action="#{segMB.onSaveComentarioImplementado}"
+								value="Guardar Comentario - Recomendaciones Implementadas"
 								rendered="#{comMB.rolAuditor}" update="@form :frmSeguimiento"
 								process="@this @form">
 								<p:confirm header="Confirmación"
@@ -89,8 +149,9 @@
 						</p:column>
 						<p:column>
 							<p:commandButton id="btnNoImplementarButtom"
-								styleClass="pink-btn" action="#{recMB.onSaveNoImplementarRec}"
-								value="Recomendación No Implementada"
+								styleClass="pink-btn"
+								action="#{segMB.onSaveComentarioNoImplementar}"
+								value="Guardar Comentario - Recomendaciones No Implementadas"
 								rendered="#{comMB.rolAuditor}" update="@form :frmSeguimiento"
 								process="@this @form">
 								<p:confirm header="Confirmación"
@@ -103,5 +164,80 @@
 			</div>
 		</p:panel>
 	</h:form>
+	
+	<p:dialog id="dgCorreoNotificacion" widgetVar="wvCorreoNotificacion" modal="true"
+		showEffect="fade" dynamic="true" closable="true" closeOnEscape="true"
+		responsive="true">
+		<h:form id="frmCorreoNotificacion">
+			<p:commandButton id="btnComunicarAuditoria"
+				action="#{comMB.setComentarioComunicarAuditoria}"
+				rendered="#{comMB.registro.comEstado == 1}"
+				title="Clic para enviar notificación"
+				process=":frmCorreoNotificacion" value="Iniciar Seguimiento"
+				icon="pi pi-check-circle" style="float:left;"
+				styleClass="blue-btn raised-btn"
+				oncomplete="PF('wvCorreoNotificacion').hide();"
+				update=":frmComentarios">
+				<p:confirm header="Confirmación"
+					message="¿Desea comunicar a la Unidad de Auditoría?"></p:confirm>
+			</p:commandButton>
+			<p:commandButton id="btnEnviarRevision"
+				action="#{comMB.setComentarioRevision}"
+				rendered="#{comMB.registro.comEstado == 3}"
+				title="Clic para enviar notificación"
+				process=":frmCorreoNotificacion" value="Iniciar Seguimiento"
+				icon="pi pi-check-circle" style="float:left;"
+				styleClass="blue-btn raised-btn"
+				oncomplete="PF('wvCorreoNotificacion').hide();"
+				update=":frmComentarios">
+				<p:confirm header="Confirmación"
+					message="¿Desea enviar a revisión?"></p:confirm>
+			</p:commandButton>
+			<p:commandButton id="btnComentarioObservado"
+				action="#{comMB.setComentarioObservado}"
+				rendered="#{comMB.registro.comEstado == 4}"
+				title="Clic para enviar notificación"
+				process=":frmCorreoNotificacion" value="Ingresar Observación"
+				icon="pi pi-check-circle" style="float:left;"
+				styleClass="blue-btn raised-btn"
+				oncomplete="PF('wvCorreoNotificacion').hide();"
+				update=":frmComentarios">
+				<p:confirm header="Confirmación"
+					message="¿Desea enviar a revisión?"></p:confirm>
+			</p:commandButton>
+			<p:commandButton id="btnComentarioAComunicar"
+				action="#{comMB.setComentarioAComunicar}"
+				rendered="#{comMB.registro.comEstado == 4}"
+				title="Clic para enviar notificación"
+				process=":frmCorreoNotificacion" value="Finalizar Revisión"
+				icon="pi pi-check-circle" style="float:left;"
+				styleClass="blue-btn raised-btn"
+				oncomplete="PF('wvCorreoNotificacion').hide();"
+				update=":frmComentarios">
+				<p:confirm header="Confirmación"
+					message="¿Desea enviar a revisión?"></p:confirm>
+			</p:commandButton>
+			<p:commandButton id="btnComentarioComunicado"
+				action="#{comMB.setComentarioComunicado}"
+				rendered="#{comMB.registro.comEstado == 6}"
+				title="Clic para enviar notificación"
+				process=":frmCorreoNotificacion" value="Comunicar a Unidad"
+				icon="pi pi-check-circle" style="float:left;"
+				styleClass="blue-btn raised-btn"
+				oncomplete="PF('wvCorreoNotificacion').hide();"
+				update=":frmComentarios">
+				<p:confirm header="Confirmación"
+					message="¿Desea enviar a revisión?"></p:confirm>
+			</p:commandButton>
+			<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+				<p:outputLabel for="txtcorreocomunicarauditoria"
+					value="Digite el texto del correo:" style="font-weight:bold;" />
+				<pe:ckEditor id="txtcorreocomunicarauditoria" width="100%"
+					value="#{segMB.textoCorreo}" skin="office2013"
+					customConfig="#{request.contextPath}/resources/js/customck.js" />
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
 
 </ui:composition>

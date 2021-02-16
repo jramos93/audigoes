@@ -17,6 +17,30 @@
 			<div class="name" align="center" style="margin-top: 100px;">
 				<span class="app-name">Seguimiento Hallazgos de Auditoría </span>
 			</div>
+			<div align="right" style="margin-top: 50px; float: right;">
+				<p:commandButton id="btnNotificarSeguimiento"
+					oncomplete="PF('wvCorreo').show();"
+					actionListener="#{segMB.prepararCorreo}"
+					value="Notificar Seguimiento" styleClass="blue-btn"
+					title="Clic para enviar la notificacion" process="@form"
+					icon="pi pi-check-circle" style="float:Righ;"
+					rendered="#{segMB.registro.segFecInicio != null and segMB.registro.segFecFin == null}">
+				</p:commandButton>
+				<p:commandButton id="btnIniciarSeguimiento"
+					action="#{segMB.preparaCorreoInicioSeguimiento}"
+					oncomplete="PF('wvCorreoIniSeguimiento').show();"
+					rendered="#{segMB.registro.segFecInicio == null}"
+					title="Clic para enviar a revisión de la coordinación"
+					process="@this" value="Iniciar Seguimiento"
+					icon="pi pi-check-circle" style="float:left;"
+					styleClass="blue-btn raised-btn" update=":frmCorreoIniSeguimiento">
+				</p:commandButton>
+				<p:commandButton id="btnFinalizarSeguimiento"
+					value="Finalizar Seguimiento"
+					actionListener="#{segMB.finalizarSeguimiento}" update="@form"
+					rendered="#{segMB.registro.segFecInicio != null and segMB.registro.segFecFin == null}">
+				</p:commandButton>
+			</div>
 
 			<div class="ui-fluid p-formgrid p-grid">
 				<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
@@ -52,53 +76,6 @@
 			<div class="ui-fluid p-formgrid p-grid">
 				<p:tabView id="tvSeguimientoAuditoria">
 					<p:tab title="Seguimiento">
-						<div class="ui-fluid p-formgrid p-grid">
-							<p:panelGrid columnClasses="ui-lg-1,ui-lg-1,ui-lg-1,ui-lg-1"
-								styleClass="ui-panelgrid-blank form-group form-elements">
-								<p:row>
-									<p:column>
-										<p:outputLabel value="Indicaciones generales para el auditor" />
-									</p:column>
-
-									<p:column colspan="2">
-										<p:inputTextarea id="indicaciones"
-											value="#{segMB.registro.segObservacion}" rows="4" cols="300" />
-									</p:column>
-								</p:row>
-							</p:panelGrid>
-
-						</div>
-						<p:panelGrid style="width:100%"
-							styleClass="ui-panelgrid-blank form-group form-elements">
-							<p:row style="text-align:center;">
-								<p:column>
-									<p:commandButton id="btnNotificarSeguimiento"
-										oncomplete="PF('wvCorreo').show();"
-										actionListener="#{segMB.prepararCorreo}"
-										value="Notificar Seguimiento" styleClass="blue-btn"
-										title="Clic para enviar la notificacion" process="@form"
-										icon="pi pi-check-circle" style="float:Righ;"
-										rendered="#{segMB.registro.segFecInicio != null and segMB.registro.segFecFin == null}" />
-								</p:column>
-								<p:column>
-									<p:commandButton id="btnIniciarSeguimiento"
-										value="Iniciar Seguimiento" styleClass="blue-btn"
-										actionListener="#{segMB.iniciarSeguimiento}" update="@form"
-										rendered="#{segMB.registro.segFecInicio == null}" />
-									<p:commandButton id="btnFinalizarSeguimiento"
-										value="Finalizar Seguimiento"
-										actionListener="#{segMB.finalizarSeguimiento}" update="@form"
-										rendered="#{segMB.registro.segFecInicio != null and segMB.registro.segFecFin == null}">
-									</p:commandButton>
-								</p:column>
-								<p:column>
-									<p:commandButton id="btnGuardarSeguimiento"
-										value="Guardar Seguimiento" icon="fa fa-check"
-										actionListener="#{segMB.onSave}" styleClass="green-btn"
-										rendered="#{segMB.registro.segFecFin == null}" />
-								</p:column>
-							</p:row>
-						</p:panelGrid>
 						<p:dataTable var="ced" value="#{segMB.cedulaNotaList}"
 							expandedRow="single" expandableRowGroups="true"
 							widgetVar="wvHallazgos" id="dtHallazgos" style="margin-top:20px;"
@@ -140,7 +117,8 @@
 
 							<p:column headerText="Estado"
 								style="text-align:center; width:100px;">
-								<h:outputText value="#{ced.cedEstado}" converter="estadoHallazgo">
+								<h:outputText value="#{ced.cedEstado}"
+									converter="estadoHallazgo">
 								</h:outputText>
 							</p:column>
 						</p:dataTable>
@@ -197,66 +175,32 @@
 		</p:panel>
 	</h:form>
 
-	<p:dialog id="dgRecomendacionesSeguimiento" maximizable="true"
-		widgetVar="wvRecomendacionesSeguimiento" responsive="true"
-		minHeight="650" closeOnEscape="true" position="center"
-		header="Historial Recomendaciones" modal="true">
-		<p:ajax event="close" update=":frmSeguimiento"
-			listener="#{recMB.actualizarSeguimiento}" />
-		<h:form id="frmRecomendacionesSeguimiento">
-			<p:dataTable var="hrecm"
-				value="#{segMB.recomendacionesSeguimientoList}" expandedRow="single"
-				expandableRowGroups="true" sortBy="#{hrecm.cedulaNota.cedTitulo}"
-				widgetVar="wvRecomendacionesHist" id="dtRecomendacionHist"
-				style="margin-top:20px;" paginator="true" rowKey="#{hrecm.recId}"
-				paginatorPosition="bottom" rowsPerPageTemplate="5,10,15" rows="5"
-				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-				currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
-				<p:headerRow>
-					<p:column colspan="4">
-						<h:outputText value="Hallazgo: #{hrecm.cedulaNota.cedTitulo}"></h:outputText>
-					</p:column>
-				</p:headerRow>
-				<p:column headerText="Titulo Recomendación">
-					<h:outputText value="#{hrecm.recTitulo}"></h:outputText>
-				</p:column>
-				<p:column headerText="Situación Encontrada">
-					<h:outputText value="#{hrecm.recSituacion}"></h:outputText>
-				</p:column>
-				<p:column headerText="Estado" width="150" style="text-align:center">
-					<h:outputText value="#{hrecm.recEstado}"
-						converter="estadoRecomendacion"></h:outputText>
-				</p:column>
-				<p:column headerText="Comentarios">
-					<p:commandButton id="btnComentarioHist" icon="ui-icon ui-icon-note"
-						action="#{segMB.mostrarComentariosHistorial}"
-						update=":dgComentarioRecHistorial" process="@this"
-						oncomplete="PF('wvComentarioRecHistorial').show(); PF('wvComentarioRecHistorial').toggleMaximize();">
-						<f:setPropertyActionListener value="#{hrecm}"
-							target="#{segMB.recomendacionSelected}" />
-					</p:commandButton>
-				</p:column>
-			</p:dataTable>
-		</h:form>
-	</p:dialog>
+	<p:dialog widgetVar="wvCorreoIniSeguimiento" modal="true"
+		showEffect="fade" dynamic="true" closable="true" closeOnEscape="true"
+		responsive="true" maximizable="true">
+		<h:form id="frmCorreoIniSeguimiento">
+			<p:commandButton id="btnEnviar" action="#{segMB.iniciarSeguimiento}"
+				title="Clic para enviar notificación"
+				process=":frmCorreoIniSeguimiento" value="Iniciar Seguimiento"
+				icon="pi pi-check-circle" style="float:left;"
+				styleClass="blue-btn raised-btn"
+				oncomplete="PF('wvCorreoIniSeguimiento').hide();"
+				update=":frmSeguimiento">
+				<p:confirm header="Confirmación"
+					message="¿Desea iniciar seguimiento de la auditoría?"></p:confirm>
+			</p:commandButton>
 
-	<p:dialog id="dgComentarioRecHistorial" maximizable="true"
-		widgetVar="wvComentarioRecHistorial" responsive="true" minHeight="650"
-		closeOnEscape="true" header="Historial Comentario" modal="true">
-		<h:form id="frmComentarioRecHistorial">
-
-			<p:tabView id="tvComentariosRecHistorial">
-				<p:tab title="Comentarios de Unidad(es) Auditada(s)">
-					<pe:ckEditor id="comentarioAuditadoHist" width="100%"
-						value="#{comMB.registro.comComentario}"
-						readonly="#{!comMB.rolAuditado}" />
-				</p:tab>
-				<p:tab title="Comentarios de Auditoría">
-					<pe:ckEditor id="comentarioAuditariaHist" width="100%"
-						value="#{comMB.registro.comComentarioAuditoria}"
-						readonly="#{!comMB.rolAuditor}" />
-				</p:tab>
-			</p:tabView>
+			<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements" >
+				<p:outputLabel>Fecha límite para dar respuesta</p:outputLabel>
+				<p:calendar id="fechaLimite"
+					value="#{segMB.registro.segFechaRespuesta}" locale="sv"></p:calendar>
+				<p:outputLabel for="txtcorreo" value="Digite el texto del correo:"
+					style="font-weight:bold;" />
+				<pe:ckEditor id="txtcorreo" width="100%"
+					value="#{segMB.textoCorreo}" skin="office2013"
+					customConfig="#{request.contextPath}/resources/js/customck.js" />
+			</p:panelGrid>
 		</h:form>
 	</p:dialog>
 

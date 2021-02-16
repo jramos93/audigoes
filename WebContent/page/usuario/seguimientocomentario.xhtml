@@ -1,0 +1,249 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<h:form id="frmSeguimientoComentario">
+		<p:panel rendered="#{segaudMB.status eq 'SEGUIMIENTO_COMENTARIOS'}">
+
+			<div align="left" style="margin-top: 50px; float: left;">
+				<p:commandButton id="btnCancel" action="#{segaudMB.onCancel}"
+					value="Regresar" icon="pi pi-arrow-left" style="float:left;"
+					styleClass="pink-btn raised-btn"
+					update=":frmSeguimientoHallazgo, :frmSeguimientoComentario" process="@this">
+				</p:commandButton>
+
+				<p:commandButton value="Guardar" icon="fa fa-check"
+					styleClass="raised-btn"  action="#{segaudMB.guardarComentario}"
+					update=":frmSeguimientoComentario" />
+			</div>
+
+			<div align="right" style="margin-top: 50px; float: right;">
+
+				<p:commandButton action="#{ceduUsuMB.prepararCorreo}"
+					oncomplete="PF('wvCorreo').show();"
+					rendered="#{ceduUsuMB.status eq 'EDIT' and ceduUsuMB.registro.cedEstado eq 4 and comeMB.registro.comeEnviado==0}"
+					title="Clic para enviar comentarios al auditor" process="@this"
+					value="Enviar Comentarios" icon="pi pi-check-circle"
+					style="float:left;" styleClass="blue-btn raised-btn"
+					update=":frmCorreo">
+				</p:commandButton>
+
+			</div>
+
+			<div class="name" align="center" style="margin-top: 100px;">
+				<h:outputText
+					style="float:right; font-size:large; font-weight: bold; color:#2ab1be;"
+					value="#{ceduUsuMB.registro.cedEstado}" converter="estadoHallazgo"></h:outputText>
+				<h:outputText
+					style="float:right; font-size:large; font-weight: bold; color:#525c65; margin-right:10px;"
+					value="Estado:"></h:outputText>
+				<br /> <br /> <span class="app-name">Seguimiento de Hallazgos
+				</span>
+				<h3 style="color: #2ab1be;">Cuenta con #{ceduUsuMB.dias} días
+					para dar respuesta</h3>
+				<p:fieldset legend="Indicaciones"
+					style="font-size:larger; font-weight:bold;">
+					<h:panelGrid columns="4" cellspacing="15"
+						style="font-size:small; text-align:left;"
+						columnClasses="ui-lg-3,ui-lg-3,ui-lg-3,ui-lg-3">
+
+						<h:outputText style="font-weight:bold;" value="Fecha Plazo:" />
+						<h:outputText style="color:#2ab1be;"
+							value="#{segaudMB.cedulaSelected.cedFechaPlazo}">
+							<f:convertDateTime pattern="dd-MM-yyyy" />
+						</h:outputText>
+						<h:outputText style="font-weight:bold;" value="Auditor Encargado:" />
+						<h:outputText
+							value="#{segaudMB.cedulaSelected.usuario1.usuNombre} #{segaudMB.cedulaSelected.usuario1.usuApellido}"
+							style="color:#2ab1be;">
+						</h:outputText>
+					</h:panelGrid>
+				</p:fieldset>
+			</div>
+			<p:tabView id="tview">
+				<p:tab title="Detalle del Hallazgo">
+					<p:panelGrid columns="1" columnClasses="ui-lg-12" layout="grid"
+						styleClass="ui-panelgrid-blank form-group form-elements">
+
+						<p:outputLabel value="Título: " style="font-weight:bold;" />
+						<p:inputTextarea value="#{segaudMB.cedulaSelected.cedTitulo}" rows="2"
+							style="width:100%;" readonly="true" />
+
+						<p:outputLabel value="Condición " style="font-weight:bold;" />
+						<p:inputTextarea value="#{segaudMB.cedulaSelected.cedCondicion}"
+							rows="4" style="width:100%;" readonly="true" />
+
+						<p:outputLabel value="Criterio: " style="font-weight:bold;" />
+						<p:inputTextarea value="#{segaudMB.cedulaSelected.cedCriterio}"
+							rows="10" style="width:100%;" readonly="true" />
+
+						<p:outputLabel value="Causa: " style="font-weight:bold;" />
+						<p:inputTextarea value="#{segaudMB.cedulaSelected.cedCausa}" rows="4"
+							style="width:100%;" readonly="true" />
+
+						<p:outputLabel value="Efecto: " style="font-weight:bold;" />
+						<p:inputTextarea value="#{segaudMB.cedulaSelected.cedEfecto}" rows="4"
+							style="width:100%;" readonly="true" />
+
+					</p:panelGrid>
+
+				</p:tab>
+				<p:tab title="Recomendaciones">
+					<p:dataTable var="r" value="#{segaudMB.recomendacionList}" rowIndexVar="indexrec"
+						widgetVar="wvReco" reflow="true" id="dtReco"
+						style="margin-top:20px;" paginator="true"
+						filteredValue="#{segaudMB.filteredRecomendaciones}"
+						globalFilterFunction="#{segaudMB.globalFilterFunctionRecomendaciones}"
+						selection="#{segaudMB.recomendacionSelected}" selectionMode="single"
+						paginatorPosition="top" rowsPerPageTemplate="5,10,15,25,50" rows="5"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+						rowKey="#{r.recId}">
+
+						<f:facet name="header">
+							Listado de recomendaciones de auditoría
+						</f:facet>
+						<f:facet name="paginatorTopRight">
+							<p:outputPanel>
+								<h:outputText value="Búsqueda global: " />
+								<p:inputText id="globalFilter" onkeyup="PF('wvReco').filter();"
+									style="width:150px" placeholder="Ingresa una palabra" />
+							</p:outputPanel>
+						</f:facet>
+
+						<p:column headerText="No." style="text-align:center;">
+							<h:outputText value="#{index+1}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Título">
+							<h:outputText value="#{r.recTitulo}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Situación Encontrada">
+							<h:outputText value="#{r.recSituacion}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Recomendación">
+							<h:outputText value="#{r.recRecomendacion}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Estado" style="text-align:center;">
+							<h:outputText value="#{r.recEstado}"
+								converter="estadoRecomendacion">
+							</h:outputText>
+						</p:column>
+
+					</p:dataTable>
+				</p:tab>
+
+				<p:tab title="Comentarios de la Unidad">
+					<p:panelGrid columns="1" columnClasses="ui-lg-12" layout="grid"
+						styleClass="ui-panelgrid-blank form-group form-elements">
+
+						<p:outputLabel value="Ingrese sus comentarios: "
+							style="font-weight:bold;" />
+						<pe:ckEditor id="comentarioAuditado" width="100%" height="150" 
+							value="#{comMB.registro.comComentario}" skin="office2013"
+							customConfig="#{request.contextPath}/resources/js/customck.js" />
+					</p:panelGrid>
+
+					<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+						styleClass="ui-panelgrid-blank form-group form-elements">
+						<h:outputText value="Subida de archivos:"></h:outputText>
+						<p:fileUpload listener="#{evdMB.handleFileUpload}"
+							disabled="#{ceduUsuMB.status eq 'NEW' or ceduUsuMB.registro.cedEstado ne 4 or comeMB.registro.comeEnviado==1}"
+							multiple="true" mode="advanced" dragDropSupport="false"
+							cancelLabel="Cancelar" uploadLabel="Subir" label="Elegir"
+							update=":frmSeguimientoComentario:tview:dtArchivos"
+							allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|ppt|pptx)$/" />
+					</p:panelGrid>
+
+					<p:dataTable var="a" value="#{evdMB.listado}" rowIndexVar="index"
+						widgetVar="wvArchivos" reflow="true" id="dtArchivos"
+						style="margin-top:20px;" paginator="true" paginatorPosition="top"
+						rowsPerPageTemplate="1,5,10,15" rows="5"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+						rowKey="#{a.evdId}">
+						<f:facet name="header">Evidencia proporcionada por unidad</f:facet>
+
+						<p:column headerText="No.">
+							<h:outputText value="#{index+1}"></h:outputText>
+						</p:column>
+						<p:column headerText="Nombre" filterBy="#{a.evdNombre}"
+							filterMatchMode="contains">
+							<h:outputText value="#{a.evdNombre}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Extensión" filterBy="#{a.evdExtension}"
+							filterMatchMode="contains">
+							<h:outputText value="#{a.evdExtension}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="Descargar"
+							style="width:60px; text-align:center;">
+							<p:commandButton actionListener="#{evdMB.downloadFile}"
+								ajax="false" icon="ui-icon-arrowthick-1-s"
+								title="Clic para descargar el archivo">
+								<f:attribute name="pt" value="#{a}"></f:attribute>
+								<p:fileDownload value="#{evdMB.pt}"></p:fileDownload>
+							</p:commandButton>
+						</p:column>
+
+						<p:column headerText="Eliminar"
+							style="width:60px; text-align:center;">
+							<p:commandButton actionListener="#{evdMB.onBorrar(a)}"
+								disabled="#{ceduUsuMB.registro.cedEstado ne 4 or comeMB.registro.comeEnviado==1}"
+								update=":frmHallazgo:tview:dtArchivos" icon="pi pi-trash"
+								title="Clic para eliminar el archivo">
+								<p:confirm header="Confirmación" message="¿Eliminar?"
+									icon="pi pi-info-circle"></p:confirm>
+							</p:commandButton>
+						</p:column>
+
+					</p:dataTable>
+				</p:tab>
+
+			</p:tabView>
+
+			<p:panelGrid columns="2"
+				columnClasses="ui-g-9 ui-lg-10,ui-g-3 ui-md-4 ui-lg-2" layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+				<p:column></p:column>
+				<p:commandButton value="Guardar" icon="fa fa-check"
+					rendered="#{ceduUsuMB.registro.cedEstado eq 4}"
+					actionListener="#{ceduUsuMB.onSave}" update=":frmHallazgo" />
+			</p:panelGrid>
+
+		</p:panel>
+
+	</h:form>
+
+	<p:dialog widgetVar="wvCorreo" modal="true" showEffect="fade"
+		dynamic="true" closable="true" closeOnEscape="true" responsive="true">
+		<h:form id="frmCorreo">
+			<p:commandButton id="btnEnviar"
+				action="#{ceduUsuMB.onEnviarComentarios}"
+				title="Clic para enviar a revisión de la coordinación el hallazgo encontrado"
+				process=":frmCorreo" value="Enviar a Auditor"
+				icon="pi pi-check-circle" style="float:left;"
+				styleClass="blue-btn raised-btn" oncomplete="PF('wvCorreo').hide();"
+				update=":frmHallazgo :frmListaHallazgos">
+				<p:confirm header="Confirmación" message="¿Enviar a revisión?"></p:confirm>
+			</p:commandButton>
+			<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+				styleClass="ui-panelgrid-blank form-group form-elements">
+				<p:outputLabel for="narra" value="Digite el texto del correo:"
+					style="font-weight:bold;" />
+				<pe:ckEditor id="narra" width="100%"
+					value="#{ceduUsuMB.textoCorreo}" skin="office2013"
+					customConfig="#{request.contextPath}/resources/js/customck.js" />
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+
+</ui:composition>

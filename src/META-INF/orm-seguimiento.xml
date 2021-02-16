@@ -7,27 +7,37 @@
 	<named-query name="seguimiento.get.by.auditoria">
 		<query>select o from Seguimiento o where o.auditoria.audId = ?1 and o.regActivo = 1 order by o.segFecInicio ASC</query>
 	</named-query>
-	
+
 	<named-query name="recomendacion.get.all.auditoria">
 		<query>select o from Recomendacion o where o.auditoria.audId = ?1 and (o.recEstado = 1 or o.recEstado = 3) and o.regActivo = 1 order by o.cedulaNota.cedId</query>
 	</named-query>
-	
+
 	<named-query name="comentario.by.hallazgo.seguimiento">
 		<query>select o from Comentario o where o.seguimiento.segId = ?1 and o.cedulaNota.cedId = ?2 and o.regActivo = 1</query>
 	</named-query>
 	<named-query name="hallazgos.by.auditoria">
 		<query>select o from CedulaNota o where o.auditoria.audId = ?1 and o.regActivo = 1</query>
 	</named-query>
-	<named-query name="seguimiento.recomendaciones.seguimiento.selected">
+	<named-query
+		name="seguimiento.recomendaciones.seguimiento.selected">
 		<query>select o from Recomendacion o where o.seguimiento.segId = ?1 and o.regActivo = 1 </query>
 	</named-query>
 	<named-query name="seguimiento.auditores.asignados">
 		<query>select o.usuario from AuditoriaResponsable o where o.auditoria.audId = ?1 and o.regActivo = 1</query>
 	</named-query>
 	<named-query name="cedula.nota.por.auditoria">
-		<query>select o from CedulaNota o where o.auditoria.audId = ?1 and o.regActivo = 1</query>
+		<query>select o from CedulaNota o where o.auditoria.audId = ?1 and o.cedEstado in (8) and o.regActivo = 1</query>
 	</named-query>
 	<named-query name="recomendaciones.cedula.nota">
 		<query>select o from Recomendacion o where o.cedulaNota.cedId = ?1 and (o.recEstado = 1 or o.recEstado = 3) and o.regActivo = 1 </query>
+	</named-query>
+	<named-query name="seguimiento.hallazgo.auditoria.auditado">
+		<query>select o from CedulaNota o where o.regActivo = 1 and (o.cedEstado between 8 and 9) and o.auditoria.audId in 
+			(select a.auditoria.audId from Seguimiento a where a.segFecFin is null and a.regActivo = 1 and a.auditoria.planAnual.institucion.insId = ?1)
+		</query>
+	</named-query>
+	<named-query
+		name="seguimiento.recomendaciones.por.seguimiento">
+		<query>select o from Recomendacion o where o.cedulaNota.cedId = ?1</query>
 	</named-query>
 </entity-mappings>

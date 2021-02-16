@@ -17,6 +17,7 @@ import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
+import audigoes.ues.edu.sv.entities.planeacion.AuditoriaResponsable;
 import audigoes.ues.edu.sv.entities.seguimiento.Comentario;
 import audigoes.ues.edu.sv.entities.seguimiento.Recomendacion;
 import audigoes.ues.edu.sv.entities.seguimiento.Seguimiento;
@@ -185,6 +186,53 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 		recMB.setRegistro(getRecomendacionSelected());
 		recMB.mostrarComentarios();
 	}
+	
+	public void preparaCorreoInicioSeguimiento() {
+		textoCorreo = "<p><strong>AUDIGOES LE INFORMA:</strong></p>"
+				+ "<p>Se notifica que se ha dado por iniciado el seguimiento "
+				+ "correspondiente a la auditor&iacute;a <strong>"
+				+ getAuditoria().getTipoAuditoria().getTpaAcronimo() + "-"
+				+ getAuditoria().getAudAnio() + "-" + getAuditoria().getAudCorrelativo()
+				+ "</strong> denominado <strong>" + getAuditoria().getAudNombre()
+				+ " </strong> por lo que se le pide ingresar al sistema para realizar los comentarios correspondientes.</p>\r\n" + "<p>Atte.-</p>";
+	}
+	
+	public void onEnviarCorreoInicioSeguimiento() {
+		Usuario usr = buscarCoordinador(getAuditoria());
+		if (usr != null) {
+			try {
+				/*getRegistro().setCedEstado(2);
+				onSave();
+				if (!correoRevision(textoCorreo, usr)) {
+					addWarn(new FacesMessage("Error en el envio del correo"));
+				}
+				revisarPermisos();*/
+				setStatus("VIEW");
+			} catch (Exception e) {
+				e.printStackTrace();
+				addWarn(new FacesMessage("Error al enviar a revisión"));
+			}
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Usuario buscarCoordinador(Auditoria auditoria) {
+		Usuario usuario = null;
+		try {
+			List<AuditoriaResponsable> responsables = (List<AuditoriaResponsable>) audigoesLocal.findByNamedQuery(
+					AuditoriaResponsable.class, "find.coordinador.by.auditoria", new Object[] { auditoria.getAudId() });
+			if (!responsables.isEmpty()) {
+				usuario = responsables.get(0).getUsuario();
+				return usuario;
+			} else {
+				addWarn(new FacesMessage("Error, la auditoria no cuenta con un coordinador asignado"));
+				return usuario;
+			}
+		} catch (Exception e) {
+			addWarn(new FacesMessage("Error al identificar  el coordinador de la auditoria"));
+			return usuario;
+		}
+	}
 
 	public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
 		String filterText = (filter == null) ? null : filter.toString().trim().toLowerCase();
@@ -247,7 +295,6 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 				e.printStackTrace();
 				addWarn(new FacesMessage(SYSTEM_NAME, "Problema al guardar comentario"));
 			}
-			
 		}
 	}
 

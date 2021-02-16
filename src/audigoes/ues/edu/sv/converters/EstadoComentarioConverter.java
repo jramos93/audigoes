@@ -5,8 +5,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-@FacesConverter("estadoHallazgo")
-public class EstadoHallazgoConverter implements Converter {
+@FacesConverter("estadoComentarioConverter")
+public class EstadoComentarioConverter implements Converter {
 
 	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String value) {
@@ -18,29 +18,21 @@ public class EstadoHallazgoConverter implements Converter {
 		String valor = value.toString();
 		if (!valor.isEmpty()) {
 			if (valor.equals("1")) {
-				valor = "REDACCIÓN";
+				valor = "REDACCIÓN"; //REDACCIÓN UNIDAD AUDITADA
 			} else if (valor.equals("2")) {
-				valor = "REVISIÓN";
+				valor = "COMUNICADO A AUDITORIA"; //COMUNICADO A AUDITORÍA
 			} else if (valor.equals("3")) {
-				valor = "A COMUNICAR";
+				valor = "REDACCIÓN"; //REDACCIÓN UNIDAD DE AUDITORÍA
 			} else if (valor.equals("4")) {
-				valor = "COMUNICADO";
+				valor = "REVISIÓN";
 			} else if (valor.equals("5")) {
-				valor = "ANÁLISIS";
+				valor = "OBSERVADO";
 			} else if (valor.equals("6")) {
-				valor = "SUPERVISIÓN";
+				valor = "A COMUNICAR";
 			} else if (valor.equals("7")) {
-				valor = "FINALIZADO";
-			} else if (valor.equals("8")) {
-				valor = "PENDIENTE";
-			} else if (valor.equals("9")) {
-				valor = "EN PROCESO";
-			} else if (valor.equals("10")) {
-				valor = "IMPLEMENTADO";
-			} else if (valor.equals("11")) {
-				valor = "NO IMPLEMENTADO";
+				valor = "COMUNICADO";
 			} else {
-				valor = "---";
+				valor = "NO DEFINIDO";
 			}
 		}
 		return valor;

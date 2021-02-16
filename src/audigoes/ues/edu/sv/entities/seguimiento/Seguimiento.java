@@ -46,6 +46,10 @@ public class Seguimiento extends SuperEntity implements Serializable {
 
 	@Column(name="seg_observacion")
 	private String segObservacion;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="seg_fecha_respuesta")
+	private Date segFechaRespuesta;
 
 	@Column(name="usu_crea")
 	private String usuCrea;
@@ -123,6 +127,14 @@ public class Seguimiento extends SuperEntity implements Serializable {
 
 	public void setSegObservacion(String segObservacion) {
 		this.segObservacion = segObservacion;
+	}
+
+	public Date getSegFechaRespuesta() {
+		return segFechaRespuesta;
+	}
+
+	public void setSegFechaRespuesta(Date segFechaRespuesta) {
+		this.segFechaRespuesta = segFechaRespuesta;
 	}
 
 	public String getUsuCrea() {
@@ -219,8 +231,9 @@ public class Seguimiento extends SuperEntity implements Serializable {
 	public String toString() {
 		return "Seguimiento [segId=" + segId + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo="
 				+ regActivo + ", segFecFin=" + segFecFin + ", segFecInicio=" + segFecInicio + ", segObservacion="
-				+ segObservacion + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", recomendacion=" + recomendacion
-				+ ", comentario=" + comentario + ", auditoria=" + auditoria + "]";
+				+ segObservacion + ", segFechaRespuesta=" + segFechaRespuesta + ", usuCrea=" + usuCrea + ", usuModi="
+				+ usuModi + ", recomendacion=" + recomendacion + ", comentario=" + comentario + ", auditoria="
+				+ auditoria + "]";
 	}
 
 }
