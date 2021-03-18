@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+
+		<h:form id="frmChangePass">
+			<div class="name" align="center">
+				<span class="app-name">Cambio de Clave</span>
+			</div>
+
+			<div class="ui-fluid p-formgrid p-grid">
+				<p:panelGrid columns="1" columnClasses="ui-g-12" layout="grid"
+					style="margin: 0 auto;"
+					styleClass="ui-panelgrid-blank form-group form-elements ui-lg-4">
+
+					<p:outputLabel for="usuario" value="Usuario: "
+						style="font-weight:bold;" />
+					<p:inputText id="usuario" placeholder="Usuario"
+						value="#{loginMB.usuario}" readonly="true" />
+
+					<p:outputLabel for="clave" value="Clave Antigua: "
+						style="font-weight:bold;" />
+					<p:password id="clave" placeholder="Clave Antigua" feedback="false"
+						required="true" value="#{loginMB.clave}"
+						requiredMessage="Ingresa la clave" toggleMask="true" redisplay="true"/>
+
+					<p:outputLabel for="clavenueva" value="Clave Nueva: "
+						style="font-weight:bold;" />
+					<p:password id="clavenueva" placeholder="Clave Nueva"
+						validatorMessage="Clave Nueva debe Coincidir con la Confirmación"
+						required="true" feedback="true" match="clavenueva2"
+						promptLabel="Por Favor Ingrese una Contraseña Valida"
+						value="#{loginMB.claveNueva}" weakLabel="Debil" strongLabel="Fuerte"
+						goodLabel="Bien" requiredMessage="Ingresa la clave" toggleMask="true" redisplay="true"/>
+
+					<p:outputLabel for="clavenueva2" value="Confirmación Clave: "
+						style="font-weight:bold;" />
+					<p:password id="clavenueva2" placeholder="Confirme Clave Nueva"
+						promptLabel="Por Favor Ingrese una Contraseña Valida"
+						feedback="true" value="#{loginMB.claveConfirmada}" required="true"
+						weakLabel="Debil" strongLabel="Fuerte" goodLabel="Bien"
+						requiredMessage="Ingresa la clave" toggleMask="true" redisplay="true"/>
+
+					<p:commandButton action="#{loginMB.onChangePasswd}"
+						update="frmChangePass" ajax="false"
+						process="@this,usuario,clave,clavenueva,clavenueva2 "
+						value="Cambiar Clave" icon="fa fa-user"
+						styleClass="blue-btn raised-btn rounded-btn" />
+				</p:panelGrid>
+
+
+			</div>
+
+
+
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

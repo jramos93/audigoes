@@ -2,6 +2,7 @@ package audigoes.ues.edu.sv.security;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -11,16 +12,18 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.primefaces.model.menu.MenuModel;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Institucion;
-import audigoes.ues.edu.sv.entities.administracion.Rol;
 import audigoes.ues.edu.sv.entities.administracion.Sesiones;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
 import audigoes.ues.edu.sv.entities.administracion.UsuarioPermiso;
 import audigoes.ues.edu.sv.session.ValidacionSBSLLocal;
+import audigoes.ues.edu.sv.util.SendMailAttach;
 
 public class SecurityController extends AudigoesController {
 
@@ -63,6 +66,7 @@ public class SecurityController extends AudigoesController {
 				if (this.usuario != null && this.clave != null && this.institucionSelected != null) {
 					this.msgCodigo = this.validacionSBSL.validar(this.usuario, this.clave,
 							this.institucionSelected.getInsId());
+					System.out.println(" msgCodigo " + this.msgCodigo);
 					if (this.msgCodigo.equals(ValidacionSBSLLocal.VAL_USUARIO_VALIDO)) {
 						ObjAppsSession objAppsSession = new ObjAppsSession();
 						Sesiones sesion = null;
@@ -99,10 +103,20 @@ public class SecurityController extends AudigoesController {
 						}
 
 					} else {
-						message.setDetail(
-								"Error! Usuario y/o clave no valido o no pertenece a la institución seleccionada");
-						this.addWarn(message);
-						return null;
+						if (this.msgCodigo.equals(ValidacionSBSLLocal.VAL_USUARIO_DE_BAJA)) {
+							message.setDetail("Error! Usuario no posee acceso al sistema");
+							this.addWarn(message);
+							return null;
+						} else if (this.msgCodigo.equals(ValidacionSBSLLocal.VAL_USUARIO_DEBE_CAMBIAR_CLAVE)) {
+							message.setDetail("Error! Usuario debe cambiar clave");
+							this.addWarn(message);
+							return "/changepass.xhtml?faces-redirect=true";
+						} else {
+							message.setDetail(
+									"Error! Usuario y/o clave no valido o no pertenece a la institución seleccionada");
+							this.addWarn(message);
+							return null;
+						}
 					}
 				} else {
 					message.setDetail("Error! ingrese el usuario y clave");
@@ -120,6 +134,42 @@ public class SecurityController extends AudigoesController {
 			this.addWarn(message);
 			return null;
 		}
+	}
+
+	public String onLogout() {
+		if (this.beforeLogout()) {
+			FacesContext context = FacesContext.getCurrentInstance();
+			context.getExternalContext().getSessionMap().remove("audigoes.user.name");
+			context.getExternalContext().getSessionMap().remove("audigoes.session");
+			HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+			HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
+			response.setHeader("Pragma", "no-cache");
+			response.setHeader("Cache-control", "must-revalidate");
+			response.setHeader("Cache-control", "no-cache");
+			response.setDateHeader("Expires", 0L);
+			Enumeration attribs = session.getAttributeNames();
+
+			while (attribs.hasMoreElements()) {
+				String mb = (String) attribs.nextElement();
+				if (mb.endsWith("MB")) {
+					session.removeAttribute(mb);
+				}
+			}
+
+			session.invalidate();
+
+			this.usuario = null;
+			this.clave = null;
+			this.loggedIn = false;
+			this.menu = null;
+			this.afterLogout();
+			return this.outcome;
+		} else {
+			return null;
+		}
+	}
+
+	protected void afterLogout() {
 	}
 
 	private Sesiones getInitSesion(Usuario usuario) {
@@ -148,6 +198,25 @@ public class SecurityController extends AudigoesController {
 		try {
 			setInstitucionList((List<Institucion>) audigoesLocal.findByNamedQuery(Institucion.class,
 					"institucion.login", new Object[] {}));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+	public void onGeneraClave() {
+		try {
+			// PrimeRequestContext primeRequestContext =
+			// PrimeRequestContext.getCurrentInstance();
+			System.out.println(" usuario: "+getUsuario());
+			System.out.println(" ins: "+getInstitucionSelected().getInsId());
+			Integer msgCodigo = validacionSBSL.generarClave(this.usuario, this.institucionSelected.getInsId());
+			if (msgCodigo!=20) {
+				addWarn(new FacesMessage("Error en la generación de la clave"));
+			} else {
+				addInfo(new FacesMessage("Correo enviado correctamente"));
+
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

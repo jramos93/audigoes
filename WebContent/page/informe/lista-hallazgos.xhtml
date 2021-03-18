@@ -85,6 +85,13 @@
 					<h:outputText value="#{c.cedCriterio}"></h:outputText>
 				</p:column>
 
+				<p:column headerText="Valorización"
+					style="text-align:center; width:100px;">
+					<h:outputText value="#{c.cedValorizacion}"
+						converter="valorizacionHallazgo">
+					</h:outputText>
+				</p:column>
+
 				<p:column headerText="Estado"
 					style="text-align:center; width:100px;">
 					<h:outputText value="#{c.cedEstado}" converter="estadoHallazgo">

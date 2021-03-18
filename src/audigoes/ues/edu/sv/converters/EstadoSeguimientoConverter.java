@@ -5,8 +5,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-@FacesConverter("faseAuditoriaConverter")
-public class FaseAuditoriaConverter implements Converter {
+@FacesConverter("estadoSeguimiento")
+public class EstadoSeguimientoConverter implements Converter {
 
 	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String value) {
@@ -18,22 +18,12 @@ public class FaseAuditoriaConverter implements Converter {
 		String valor = value.toString();
 		if (!valor.isEmpty()) {
 			if (valor.equals("0")) {
-				valor = "PROGRAMADA";
+				valor = "Seguimiento Sin Iniciar";
 			} else if (valor.equals("1")) {
-				valor = "ASIGNADA";
+				valor = "Seguimiento Iniciado";
 			} else if (valor.equals("2")) {
-				valor = "FASE PLANIFICACIÓN";
-			} else if (valor.equals("3")) {
-				valor = "FASE EJECUCIÓN";
-			} else if (valor.equals("4")) {
-				valor = "FASE INFORME";
-			} else if (valor.equals("5")) {
-				valor = "PENDIENTE DE SEGUIMIENTO";
-			} else if (valor.equals("6")) {
-				valor = "SEGUIMIENTO";
-			} else if (valor.equals("7")) {
-				valor = "FINALIZADA";
-			} else {
+				valor = "Seguimiento Finalizado";
+			}  else {
 				valor = "---";
 			}
 		}

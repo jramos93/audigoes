@@ -5,8 +5,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-@FacesConverter("faseAuditoriaConverter")
-public class FaseAuditoriaConverter implements Converter {
+@FacesConverter("valorizacionHallazgo")
+public class ValorizacionHallazgoConverter implements Converter {
 
 	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String value) {
@@ -17,22 +17,14 @@ public class FaseAuditoriaConverter implements Converter {
 	public String getAsString(FacesContext arg0, UIComponent arg1, Object value) {
 		String valor = value.toString();
 		if (!valor.isEmpty()) {
-			if (valor.equals("0")) {
-				valor = "PROGRAMADA";
-			} else if (valor.equals("1")) {
-				valor = "ASIGNADA";
+			if (valor.equals("1")) {
+				valor = "En Proceso";
 			} else if (valor.equals("2")) {
-				valor = "FASE PLANIFICACIÓN";
+				valor = "Implementada";
 			} else if (valor.equals("3")) {
-				valor = "FASE EJECUCIÓN";
+				valor = "Asuntos Menores";
 			} else if (valor.equals("4")) {
-				valor = "FASE INFORME";
-			} else if (valor.equals("5")) {
-				valor = "PENDIENTE DE SEGUIMIENTO";
-			} else if (valor.equals("6")) {
-				valor = "SEGUIMIENTO";
-			} else if (valor.equals("7")) {
-				valor = "FINALIZADA";
+				valor = "No Implementada";
 			} else {
 				valor = "---";
 			}

@@ -8,6 +8,11 @@
 		<query>select o from CedulaNota o where o.auditoria.audId=?1 and o.regActivo=1</query>
 	</named-query>
 
+	<named-query name="notas.by.usuario.seguimiento">
+		<query>select distinct o from CedulaNota o join fetch o.comentarioHallazgos a where a.usuario.usuId=?1 and o.regActivo=1 
+				and (o.cedEstado=9 or o.cedEstado=10 or o.cedEstado=11)</query>
+	</named-query>
+	
 	<named-query name="notas.by.usuario">
 		<query>select distinct o from CedulaNota o join fetch o.comentarioHallazgos a where a.usuario.usuId=?1 and o.regActivo=1 
 				and (o.cedEstado=4 or o.cedEstado=5 or o.cedEstado=6)</query>

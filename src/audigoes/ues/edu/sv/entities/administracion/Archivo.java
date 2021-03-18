@@ -10,94 +10,99 @@ import audigoes.ues.edu.sv.entities.informe.CartaGerencia;
 import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 import audigoes.ues.edu.sv.entities.informe.Convocatoria;
 import audigoes.ues.edu.sv.entities.informe.Informe;
+import audigoes.ues.edu.sv.entities.informe.InformeSeguimiento;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
 import audigoes.ues.edu.sv.entities.planificacion.ProcedimientoPlanificacion;
 
 import java.util.Arrays;
 import java.util.Date;
 
-
 /**
  * The persistent class for the archivo database table.
  * 
  */
 @Entity
-@NamedQuery(name="Archivo.findAll", query="SELECT a FROM Archivo a")
-public class Archivo extends SuperEntity implements Serializable  {
+@NamedQuery(name = "Archivo.findAll", query = "SELECT a FROM Archivo a")
+public class Archivo extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "arc_id", schema = "audigoes", table = "contador", pkColumnName = "cnt_nombre", valueColumnName = "cnt_valor", pkColumnValue = "mar_id", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "arc_id")
-	@Column(name="arc_id")
+	@Column(name = "arc_id")
 	private int arcId;
 
 	@Lob
-	@Column(name="arc_archivo")
+	@Column(name = "arc_archivo")
 	private byte[] arcArchivo;
 
-	@Column(name="arc_ext")
+	@Column(name = "arc_ext")
 	private String arcExt;
 
-	@Column(name="arc_nombre")
+	@Column(name = "arc_nombre")
 	private String arcNombre;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_crea")
+	@Column(name = "fec_crea")
 	private Date fecCrea;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="fec_modi")
+	@Column(name = "fec_modi")
 	private Date fecModi;
 
-	@Column(name="reg_activo")
+	@Column(name = "reg_activo")
 	private int regActivo;
 
-	@Column(name="usu_crea")
+	@Column(name = "usu_crea")
 	private String usuCrea;
 
-	@Column(name="usu_modi")
+	@Column(name = "usu_modi")
 	private String usuModi;
 
-	//bi-directional many-to-one association to PlanAnual
+	// bi-directional many-to-one association to PlanAnual
 	@ManyToOne
-	@JoinColumn(name="arc_pla_id")
+	@JoinColumn(name = "arc_pla_id")
 	private PlanAnual planAnual;
 
-	//bi-directional many-to-one association to ProcedimientoEjecucion
+	// bi-directional many-to-one association to ProcedimientoEjecucion
 	@ManyToOne
-	@JoinColumn(name="arc_pej_id")
+	@JoinColumn(name = "arc_pej_id")
 	private ProcedimientoEjecucion procedimientoEjecucion;
-	
-	//bi-directional many-to-one association to ProcedimientoPlanificacion
+
+	// bi-directional many-to-one association to ProcedimientoPlanificacion
 	@ManyToOne
-	@JoinColumn(name="arc_pro_id")
+	@JoinColumn(name = "arc_pro_id")
 	private ProcedimientoPlanificacion procedimientoPlanificacion;
 
-	//bi-directional many-to-one association to Informe
+	// bi-directional many-to-one association to Informe
 	@ManyToOne
-	@JoinColumn(name="arc_inf_id")
+	@JoinColumn(name = "arc_inf_id")
 	private Informe informe;
-	
-	//bi-directional many-to-one association to Convocatoria
+
+	// bi-directional many-to-one association to Informe
 	@ManyToOne
-	@JoinColumn(name="arc_cvc_id")
+	@JoinColumn(name = "arc_infs_id")
+	private InformeSeguimiento informeSeguimiento;
+
+	// bi-directional many-to-one association to Convocatoria
+	@ManyToOne
+	@JoinColumn(name = "arc_cvc_id")
 	private Convocatoria convocatoria;
-	
-	//bi-directional many-to-one association to Carta a la Gerencia
+
+	// bi-directional many-to-one association to Carta a la Gerencia
 	@ManyToOne
-	@JoinColumn(name="arc_ctg_id")
+	@JoinColumn(name = "arc_ctg_id")
 	private CartaGerencia cartaGerencia;
-	
-	//bi-directional many-to-one association to Acta Lectura
+
+	// bi-directional many-to-one association to Acta Lectura
 	@ManyToOne
-	@JoinColumn(name="arc_acl_id")
+	@JoinColumn(name = "arc_acl_id")
 	private ActaLectura actaLectura;
-	
+
 	@ManyToOne
-	@JoinColumn(name="arc_ced_id")
+	@JoinColumn(name = "arc_ced_id")
 	private CedulaNota cedula;
-	
+
 	public Archivo() {
 	}
 
@@ -196,7 +201,7 @@ public class Archivo extends SuperEntity implements Serializable  {
 	public void setProcedimientoPlanificacion(ProcedimientoPlanificacion procedimientoPlanificacion) {
 		this.procedimientoPlanificacion = procedimientoPlanificacion;
 	}
-	
+
 	public Informe getInforme() {
 		return informe;
 	}
@@ -237,6 +242,14 @@ public class Archivo extends SuperEntity implements Serializable  {
 		this.cedula = cedula;
 	}
 
+	public InformeSeguimiento getInformeSeguimiento() {
+		return informeSeguimiento;
+	}
+
+	public void setInformeSeguimiento(InformeSeguimiento informeSeguimiento) {
+		this.informeSeguimiento = informeSeguimiento;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -265,10 +278,8 @@ public class Archivo extends SuperEntity implements Serializable  {
 				+ ", arcNombre=" + arcNombre + ", fecCrea=" + fecCrea + ", fecModi=" + fecModi + ", regActivo="
 				+ regActivo + ", usuCrea=" + usuCrea + ", usuModi=" + usuModi + ", planAnual=" + planAnual
 				+ ", procedimientoEjecucion=" + procedimientoEjecucion + ", procedimientoPlanificacion="
-				+ procedimientoPlanificacion + ", informe=" + informe
-				+ ", cartaGerencia=" + cartaGerencia + ", actaLectura=" + actaLectura 
-				+ ", convocatoria=" + convocatoria +"]";
+				+ procedimientoPlanificacion + ", informe=" + informe + ", cartaGerencia=" + cartaGerencia
+				+ ", actaLectura=" + actaLectura + ", convocatoria=" + convocatoria + "]";
 	}
-	
 
 }

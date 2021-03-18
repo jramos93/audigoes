@@ -111,34 +111,51 @@ public class RolMB extends AudigoesController implements Serializable {
 
 	@Override
 	public boolean beforeDelete() {
+		System.out.println("beforeDelete");
 		if (!comprobarDelete(getRegistro())) {
-			addWarn(new FacesMessage(SYSTEM_NAME, "El rol tiene permisos o usuarios asignados, no puede ser eliminado"));
+			addWarn(new FacesMessage(SYSTEM_NAME,
+					"El rol tiene permisos o usuarios asignados, no puede ser eliminado"));
 			return false;
+		} else {
+			System.out.println("A eliminar");
 		}
 		return super.beforeDelete();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public boolean comprobarDelete(Rol rol) {
+		boolean bandera = true;
 		try {
-			List<RolPermiso> rolPermisos = (List<RolPermiso>) audigoesLocal.findByNamedQuery(RolPermiso.class, "rolpermiso.by.rol",
-					new Object[] { rol.getRolId() });
-			if(rolPermisos.isEmpty()) {
-				return false;
+			System.out.println("rol " + rol.getRolId());
+			List<RolPermiso> rolPermisos = (List<RolPermiso>) audigoesLocal.findByNamedQuery(RolPermiso.class,
+					"rolpermiso.by.rol.delete", new Object[] { rol.getRolId() });
+			if (!rolPermisos.isEmpty()) {
+				System.out.println("return 1");
+				bandera = false;
 			}
-			
-			List<UsuarioPermiso> usuPermisos = (List<UsuarioPermiso>) audigoesLocal.findByNamedQuery(UsuarioPermiso.class, "usuariopermiso.by.rol",
-					new Object[] { rol.getRolId() });
-			
-			if(usuPermisos.isEmpty()) {
-				return false;
+
+			List<UsuarioPermiso> usuPermisos = (List<UsuarioPermiso>) audigoesLocal.findByNamedQuery(
+					UsuarioPermiso.class, "usuariopermiso.by.rol.delete", new Object[] { rol.getRolId() });
+
+			if (!usuPermisos.isEmpty()) {
+				System.out.println("return 2");
+				bandera = false;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
-			
+
+			System.out.println("no return");
+
+			return bandera;
+
 		}
-		return true;
+		return bandera;
+	}
+
+	@Override
+	public void afterDelete() {
+		getListado().remove(getRegistro());
+		super.afterDelete();
 	}
 
 	public List<Rol> getFilteredRoles() {

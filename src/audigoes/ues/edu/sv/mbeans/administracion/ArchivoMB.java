@@ -26,6 +26,7 @@ import audigoes.ues.edu.sv.entities.informe.CartaGerencia;
 import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 import audigoes.ues.edu.sv.entities.informe.Convocatoria;
 import audigoes.ues.edu.sv.entities.informe.Informe;
+import audigoes.ues.edu.sv.entities.informe.InformeSeguimiento;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
 import audigoes.ues.edu.sv.entities.planificacion.ProcedimientoPlanificacion;
 import audigoes.ues.edu.sv.entities.seguimiento.Evidencia;
@@ -96,6 +97,16 @@ public class ArchivoMB extends AudigoesController implements Serializable {
 		try {
 			setListado((List<Archivo>) audigoesLocal.findByNamedQuery(Archivo.class, "archivos.informe",
 					new Object[] { i.getInfId() }));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void fillByInformeSeguimiento(InformeSeguimiento i) {
+		try {
+			setListado((List<Archivo>) audigoesLocal.findByNamedQuery(Archivo.class, "archivos.informe.seguimiento",
+					new Object[] { i.getInfsId() }));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

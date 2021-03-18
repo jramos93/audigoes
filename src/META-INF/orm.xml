@@ -102,6 +102,9 @@
 	<named-query name="archivos.informe">
 		<query>select o from Archivo o where o.informe.infId=?1 and o.regActivo=1</query>
 	</named-query>
+	<named-query name="archivos.informe.seguimiento">
+		<query>select o from Archivo o where o.informeSeguimiento.infsId=?1 and o.regActivo=1</query>
+	</named-query>
 	<named-query name="archivos.carta">
 		<query>select o from Archivo o where o.cartaGerencia.ctgId=?1 and o.regActivo=1</query>
 	</named-query>

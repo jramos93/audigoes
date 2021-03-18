@@ -7,11 +7,12 @@
 	template="/WEB-INF/template.xhtml">
 
 	<ui:define name="content">
-
-		<div class="name" align="center">
-			<span class="app-name">Auditorías</span>
-		</div>
-		<h:form id="frm">
+	<ui:param name="mbean" value="#{audMB}"></ui:param>
+	<ui:include src="/access.xhtml"></ui:include>
+		<h:form id="frm" rendered="#{audMB.perRead}">
+			<div class="name" align="center">
+				<span class="app-name">Auditorías</span>
+			</div>
 			<p:panel rendered="#{audMB.status eq 'SEARCH'}">
 				<p:panelGrid id="pgPlanesAuditoria">
 
@@ -39,15 +40,13 @@
 								</p:commandButton>
 								<p:commandButton id="btnEditarAuditoria"
 									action="#{audMB.onEdit}" styleClass="raised-btn"
-									rendered="#{audMB.registro.selected and loginMB.objAppsSession.usuario.usuRol==2}"
-									value="Editar" icon="pi pi-pencil"
-									update="@form :frmNewEditAuditoria">
+									rendered="#{audMB.registro.selected and false}" value="Editar"
+									icon="pi pi-pencil" update="@form :frmNewEditAuditoria">
 								</p:commandButton>
 								<p:commandButton update=":frm" value="Eliminar"
 									styleClass="raised-btn" icon="pi pi-trash"
 									actionListener="#{audMB.onDelete}"
-									rendered="#{audMB.registro.selected and loginMB.objAppsSession.usuario.usuRol==2}"
-									process="@this">
+									rendered="#{audMB.registro.selected and false}" process="@this">
 									<p:confirm header="Confirmación"
 										message="Seguro(a) que desea eliminar el registros"
 										icon="pi pi-exclamation-triangle" />
@@ -87,7 +86,8 @@
 									ajax="false">
 								</p:commandButton>
 								<p:commandButton id="btnAuditSeguimiento" value="Seguimiento"
-									actionListener="#{audMB.seguimiento}" ajax="false"
+									icon="pi pi-folder" actionListener="#{audMB.seguimiento}"
+									ajax="false"
 									rendered="#{audMB.registro.selected and audMB.registro.audFase>=5}"
 									styleClass="blue-btn raised-btn"
 									action="/page/seguimiento/seguimiento.xhtml">
@@ -360,7 +360,7 @@
 			<h:form id="frmBitacora">
 				<p:tabView>
 
-					
+
 
 					<p:tab title="Lista Actividades">
 						<p:dataTable id="dtBitacoras" value="#{bitaMB.listado}"
@@ -407,10 +407,11 @@
 							</p:column>
 						</p:dataTable>
 					</p:tab>
-					
+
 					<p:tab title="Timeline">
-						<p:timeline id="timelineSecond" value="#{bitaMB.modelBitacora}" var="bita"
-							timeZone="GMT-6" width="980px" widgetVar="timelineSecondWdgt">
+						<p:timeline id="timelineSecond" value="#{bitaMB.modelBitacora}"
+							var="bita" timeZone="GMT-6" width="980px"
+							widgetVar="timelineSecondWdgt">
 							<p:ajax event="rangechange" process="@none"
 								onstart="onrangechange2(); return false;" />
 							<h:panelGrid columns="1">

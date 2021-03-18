@@ -5,7 +5,15 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd">
 
 	<named-query name="seguimiento.get.by.auditoria">
+		<query>select o from Seguimiento o where o.auditoria.audId = ?1 and o.regActivo = 1 and o.segEstado=1 order by o.segFecInicio ASC</query>
+	</named-query>
+	
+	<named-query name="historial.seguimiento.get.by.auditoria">
 		<query>select o from Seguimiento o where o.auditoria.audId = ?1 and o.regActivo = 1 order by o.segFecInicio ASC</query>
+	</named-query>
+	
+	<named-query name="seguimiento.get.by.auditoria.finalizados">
+		<query>select o from Seguimiento o where o.auditoria.audId = ?1 and o.regActivo = 1 and o.segEstado=2 order by o.segFecFin DESC</query>
 	</named-query>
 
 	<named-query name="recomendacion.get.all.auditoria">
@@ -26,18 +34,26 @@
 		<query>select o.usuario from AuditoriaResponsable o where o.auditoria.audId = ?1 and o.regActivo = 1</query>
 	</named-query>
 	<named-query name="cedula.nota.por.auditoria">
-		<query>select o from CedulaNota o where o.auditoria.audId = ?1 and o.cedEstado in (8) and o.regActivo = 1</query>
+		<query>select distinct o from CedulaNota o left join fetch o.comentarioHallazgos where o.auditoria.audId = ?1 and o.seguimiento is null and o.cedValorizacion not in (2) and o.regActivo = 1</query>
+	</named-query>
+	<named-query name="cedula.nota.seguimiento.por.auditoria">
+		<query>select o from CedulaNota o where o.auditoria.audId = ?1 and o.seguimiento.segId=?2 and o.cedValorizacion not in (2) and o.regActivo = 1</query>
 	</named-query>
 	<named-query name="recomendaciones.cedula.nota">
 		<query>select o from Recomendacion o where o.cedulaNota.cedId = ?1 and (o.recEstado = 1 or o.recEstado = 3) and o.regActivo = 1 </query>
 	</named-query>
 	<named-query name="seguimiento.hallazgo.auditoria.auditado">
-		<query>select o from CedulaNota o where o.regActivo = 1 and (o.cedEstado between 8 and 9) and o.auditoria.audId in 
+		<query>select o from CedulaNota o where o.regActivo = 1 and (o.cedEstado between 9 and 10) and o.auditoria.audId in 
 			(select a.auditoria.audId from Seguimiento a where a.segFecFin is null and a.regActivo = 1 and a.auditoria.planAnual.institucion.insId = ?1)
 		</query>
 	</named-query>
 	<named-query
 		name="seguimiento.recomendaciones.por.seguimiento">
 		<query>select o from Recomendacion o where o.cedulaNota.cedId = ?1</query>
+	</named-query>
+	
+	<named-query name="hallazgos.by.seguimiento">
+		<query>select distinct o from CedulaNota o left join fetch o.comentarioHallazgos 
+				where o.seguimiento.segId=?1 and o.regActivo=1</query>
 	</named-query>
 </entity-mappings>

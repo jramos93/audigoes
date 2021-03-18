@@ -1,11 +1,13 @@
 package audigoes.ues.edu.sv.session;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.net.Inet4Address;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -17,8 +19,11 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpServletRequest;
 
 import audigoes.ues.edu.sv.entities.SuperEntity;
+import audigoes.ues.edu.sv.entities.administracion.SolicitudesClave;
+import audigoes.ues.edu.sv.entities.administracion.Usuario;
 
 /**
  * Session Bean implementation class audigoesSBSL
@@ -164,10 +169,10 @@ public class audigoesSBSL implements audigoesSBSLLocal {
 			CriteriaBuilder qb = this.getEm().getCriteriaBuilder();
 			CriteriaQuery<?> cq = qb.createQuery(clase);
 			Root<?> reg = cq.from(clase);
-			cq.where(qb.equal(reg.get(var),parametros));
+			cq.where(qb.equal(reg.get(var), parametros));
 			Query q = this.getEm().createQuery(cq);
 			q.setHint("javax.persistence.cache.storeMode", "REFRESH");
-			registro=q.getSingleResult();
+			registro = q.getSingleResult();
 		} catch (NoResultException e) {
 			;
 		} catch (Exception e) {
@@ -179,6 +184,63 @@ public class audigoesSBSL implements audigoesSBSLLocal {
 			}
 		}
 		return registro;
+	}
+
+	@Override
+	public List<?> findByCondition(Class<? extends Serializable> clase, String where, String order) throws Exception {
+		List<?> lista = null;
+		try {
+			String sql = "select object(o) from " + clase.getSimpleName() + " as o";
+
+			if (where != null && where.length() > 0) {
+				sql = sql + " where " + where;
+			}
+
+			if (order != null && order.length() > 0) {
+				sql = sql + " order by " + order;
+			}
+			System.out.println("sql "+sql);
+
+			Query q = this.getEm().createQuery(sql);
+			q.setHint("javax.persistence.cache.storeMode", "REFRESH");
+			lista = q.getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (!this.transActiva && this.getEm() != null) {
+				this.getEm().clear();
+				this.getEm().close();
+			}
+		}
+		return lista;
+	}
+
+	public long registrarSolicitud(Usuario u) throws Exception {
+		try {
+			HttpServletRequest e = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
+					.getRequest();
+
+			String ip = e.getHeader("X-FORWARDED-FOR");
+			if (ip != null) {
+				ip = ip.replace(",.*", "");
+			} else {
+				ip = e.getRemoteAddr();
+			}
+
+			SolicitudesClave s = new SolicitudesClave();
+			s.setUsuario(u);
+			s.setScIp(ip);
+			s.setScHost(Inet4Address.getLocalHost().getHostName());
+			s.setFecCrea(new Date());
+			s.setUsuCrea(u.getUsuUsuario());
+			s.setRegActivo(1);
+
+			insert(s);
+			return s.getScId();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
 	}
 
 	public EntityManagerFactory getEmf() {

@@ -38,6 +38,18 @@
 					</p:selectOneMenu>
 				</div>
 				<div class="p-field p-col">
+					<p:outputLabel for="audTipoOrigen" value="Origen de Auditoría" />
+					<p:selectOneMenu id="audTipoOrigen"
+						converter="tipoOrigenConverter"
+						converterMessage="Problemas al guardar tipo de auditoría"
+						value="#{audMB.tipoOrigenSelected}">
+						<f:selectItem itemLabel="Seleccione tipo de origen"
+							noSelectionOption="true" />
+						<f:selectItems value="#{audMB.tipoOrigenList}" var="tpo"
+							itemLabel="#{tpo.oriNombre}" itemValue="#{tpo}" />
+					</p:selectOneMenu>
+				</div>
+				<div class="p-field p-col">
 					<p:outputLabel for="anio" value="Año auditoria:" />
 					<p:inputMask id="anio" value="#{audMB.registro.audAnio}"
 						required="true" placeholder="20XX"

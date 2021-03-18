@@ -48,7 +48,8 @@
 				</div>
 				<div class="ui-g-12">
 					<p:password id="clave" placeholder="Clave" feedback="false"
-						value="#{loginMB.clave}" requiredMessage="Ingresa la clave" />
+						toggleMask="true" value="#{loginMB.clave}"
+						requiredMessage="Ingresa la clave" />
 				</div>
 				<div class="ui-g-12 button-container">
 					<p:commandButton action="#{loginMB.onLogin}" update="frmLogin"
@@ -56,9 +57,48 @@
 						value="Ingresar" icon="fa fa-user"
 						styleClass="blue-btn raised-btn rounded-btn" />
 				</div>
+				<p:commandLink id="ajax" update=":frmOlvido" process="@this"
+					oncomplete="PF('olvidoClave').show();">
+					<h:outputText value="Olvido su Clave" />
+				</p:commandLink>
 			</h:form>
 		</div>
 	</div>
+
+	<p:dialog widgetVar="olvidoClave" responsive="true" appendTo="@(body)"
+		modal="true" closeOnEscape="true" header="Olvido su Clave"
+		position="center,center">
+		<div class="ui-fluid">
+			<div class="ui-g">
+				<h:form id="frmOlvido">
+					<div class="ui-g-12">
+						<p:selectOneMenu id="logInstitucion" required="true"
+							requiredMessage="Por favor seleccione la institución"
+							converter="institucionConverter"
+							converterMessage="Problemas al seleccionar institucion"
+							value="#{loginMB.institucionSelected}">
+							<f:selectItem itemLabel="Seleccione la institucion"
+								itemValue="#{null}" noSelectionOption="true" />
+							<f:selectItems id="siInstituciones"
+								value="#{loginMB.institucionList}" var="ins"
+								itemLabel="#{ins.insNombre}" itemValue="#{ins}" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12">
+						<p:inputText id="usuario" placeholder="Usuario"
+							value="#{loginMB.usuario}" required="true"
+							requiredMessage="Ingresa el Usuario" />
+					</div>
+					<div class="ui-g-12 button-container">
+						<p:commandButton action="#{loginMB.onNotificar}"
+							update=":frmLogin" ajax="false"
+							process="@this,usuario,logInstitucion" value="Solicitar Clave"
+							icon="fa fa-user" styleClass="blue-btn raised-btn rounded-btn" />
+					</div>
+				</h:form>
+			</div>
+		</div>
+	</p:dialog>
 
 	<h:outputStylesheet name="css/layout-blue.css" library="verona-layout" />
 	<h:outputStylesheet name="estilo-growl.css" library="css" />

@@ -748,6 +748,7 @@ public class AudigoesController {
 			setPerEnviar(getObjAppsSession().isPermisoValido("ENVIAR"));
 			setPerAutorizar(getObjAppsSession().isPermisoValido("AUTORIZAR"));
 			setPerAprobar(getObjAppsSession().isPermisoValido("APROBAR"));
+			setPerRead(getObjAppsSession().isPermisoValido("LEER"));
 			
 			//System.out.println(" Auditor: "+isRolAuditor());
 			//System.out.println(" Coordinador: "+isRolCoordinador());

@@ -107,11 +107,13 @@ public class UsrMB extends AudigoesController implements Serializable {
 
 	public void onSaveUser() {
 		if (getStatus().equals("NEW")) {
+			System.out.println("new");
 			onCreateUser();
 			uprMB.setUsuario(getRegistro());
 			uprMB.onSaveUser();
 			guardarUnidades();
 		} else if (getStatus().equals("EDIT")) {
+			System.out.println("edit");
 			onEditUser();
 			onSaveEdit();
 			guardarUnidadesEdit();

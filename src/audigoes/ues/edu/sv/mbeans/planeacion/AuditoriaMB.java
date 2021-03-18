@@ -23,6 +23,7 @@ import audigoes.ues.edu.sv.entities.informe.Informe;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planeacion.AuditoriaResponsable;
 import audigoes.ues.edu.sv.entities.planeacion.AuditoriaUnidad;
+import audigoes.ues.edu.sv.entities.planeacion.OrigenAuditoria;
 import audigoes.ues.edu.sv.entities.planeacion.PlanAnual;
 import audigoes.ues.edu.sv.entities.planeacion.TipoAuditoria;
 import audigoes.ues.edu.sv.mbean.planificacion.ActividadesMB;
@@ -48,6 +49,9 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 
 	private List<TipoAuditoria> tipoAuditoriaList;
 	private TipoAuditoria tipoAuditoriaSelected;
+	
+	private List<OrigenAuditoria> tipoOrigenList;
+	private OrigenAuditoria tipoOrigenSelected;
 
 	private List<Unidad> unidadList;
 	private List<Unidad> unidadesSelectedList;
@@ -266,6 +270,17 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 			e.printStackTrace();
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void fillTipoOrigenList() {
+		try {
+			setTipoOrigenList((List<OrigenAuditoria>) audigoesLocal.findByNamedQuery(OrigenAuditoria.class,
+					"origenauditoria.by.institucion",
+					new Object[] { getObjAppsSession().getUsuario().getInstitucion().getInsId() }));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	@SuppressWarnings("unchecked")
 	public void fillAuditoriasPlan() {
@@ -379,6 +394,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	@Override
 	public boolean beforeNew() {
 		fillTipoAuditoriaList();
+		fillTipoOrigenList();
 		fillPlanAnualList();
 		fillUnidadList();
 		fillUsuariosInstitucionList();
@@ -394,10 +410,12 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 	@Override
 	public boolean beforeEdit() {
 		fillTipoAuditoriaList();
+		fillTipoOrigenList();
 		fillPlanAnualList();
 		fillUnidadList();
 		fillUsuariosInstitucionList();
 		setTipoAuditoriaSelected(getRegistro().getTipoAuditoria());
+		setTipoOrigenSelected(getRegistro().getOrigenAuditoria());
 		setPlanSelected(getRegistro().getPlanAnual());
 		fillInidadesAuditadasList();
 		this.audUniMB.setAuditoria(getRegistro());
@@ -443,6 +461,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 				getRegistro().setAudCorrelativo(getCorrelativoAuditoria());
 				getRegistro().setPlanAnual(getPlanSelected());
 				getRegistro().setTipoAuditoria(getTipoAuditoriaSelected());
+				getRegistro().setOrigenAuditoria(getTipoOrigenSelected());
 				getRegistro().setAudFechaProgramado(getToday());
 				createCodAuditoria();
 				return super.beforeSave();
@@ -711,6 +730,22 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 		this.unidadesSelectedList = unidadesSelectedList;
 	}
 
+	public List<OrigenAuditoria> getTipoOrigenList() {
+		return tipoOrigenList;
+	}
+
+	public void setTipoOrigenList(List<OrigenAuditoria> tipoOrigenList) {
+		this.tipoOrigenList = tipoOrigenList;
+	}
+
+	public OrigenAuditoria getTipoOrigenSelected() {
+		return tipoOrigenSelected;
+	}
+
+	public void setTipoOrigenSelected(OrigenAuditoria tipoOrigenSelected) {
+		this.tipoOrigenSelected = tipoOrigenSelected;
+	}
+
 	public Unidad getUnidadSelected() {
 		return unidadSelected;
 	}
@@ -759,6 +794,7 @@ public class AuditoriaMB extends AudigoesController implements Serializable {
 			if (!isPerRoot()) {
 				// setPerEnviar(getObjAppsSession().isPermisoValido("AUDITOR", "ENVIAR"));
 			}
+			
 		}
 	}
 }

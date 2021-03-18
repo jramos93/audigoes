@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<h:form id="frmListaHallazgos">
+			<p:panel rendered="#{ceduUsuSegMB.status eq 'SEARCH'}">
+
+				<div class="name" align="center" style="margin-top: 100px;">
+					<span class="app-name">Lista de Hallazgos Preliminares a dar
+						Respuesta</span>
+				</div>
+				<br />
+
+				<p:dataTable var="c" value="#{ceduUsuSegMB.listado}"
+					sortBy="#{c.auditoria.audId}" rowIndexVar="index"
+					widgetVar="wvCedula" reflow="true" id="dtCedula"
+					style="margin-top:20px;" paginator="true"
+					filteredValue="#{ceduUsuSegMB.filteredCedula}"
+					globalFilterFunction="#{ceduUsuSegMB.globalFilterFunction}"
+					selection="#{ceduUsuSegMB.regSelected}" selectionMode="single"
+					paginatorPosition="top" rowsPerPageTemplate="1,5,10,15" rows="5"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+					rowKey="#{c.cedId}">
+
+					<p:ajax event="rowSelect" listener="#{ceduUsuSegMB.onRowSelect}"
+						update=":frmListaHallazgos:dtCedula:tMenu" />
+
+					<f:facet name="header">
+						<p:toolbar id="tMenu">
+							<p:toolbarGroup>
+								<p:commandButton value="Responder" icon="pi pi-pencil"
+									update=":frmListaHallazgos, :frmHallazgo"
+									rendered="#{ceduUsuSegMB.registro.selected and ceduUsuSegMB.registro.cedEstado eq 9 and comeMB.registro.comeEnviado==0}"
+									actionListener="#{ceduUsuSegMB.onEditSelected}">
+								</p:commandButton>
+
+								<p:commandButton value="Visualizar" icon="pi pi-eye"
+									update=":frmListaHallazgos, :frmHallazgo"
+									rendered="#{ceduUsuSegMB.registro.selected}"
+									actionListener="#{ceduUsuSegMB.onShowSelected}">
+								</p:commandButton>
+							</p:toolbarGroup>
+						</p:toolbar>
+					</f:facet>
+					<f:facet name="paginatorTopRight">
+						<p:outputPanel>
+							<h:outputText value="Búsqueda global: " />
+							<p:inputText id="globalFilter" onkeyup="PF('wvCedula').filter();"
+								style="width:150px" placeholder="Ingresa una palabra" />
+						</p:outputPanel>
+					</f:facet>
+
+					<p:column headerText="Auditoría" style="width:150px;">
+						<h:outputText
+							value="#{c.auditoria.audCodigo}: #{c.auditoria.audNombre}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Fecha Plazo"
+						style="width:100px; text-align:center;">
+						<h:outputText value="#{c.cedFechaPlazo}">
+							<f:convertDateTime pattern="dd-MM-yyyy" timeZone="GMT-6"/>
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Fecha de Comunicación"
+						style="width:100px; text-align:center;">
+						<h:outputText value="#{c.cedFechaComunicacion}">
+							<f:convertDateTime pattern="dd-MM-yyyy" timeZone="GMT-6"/>
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Título">
+						<h:outputText value="#{c.cedTitulo}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Condición">
+						<h:outputText value="#{c.cedCondicion}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Criterio" style="width:350px;">
+						<h:outputText value="#{c.cedCriterio}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Estado" style="text-align:center;">
+						<h:outputText value="#{c.cedEstado}" converter="estadoHallazgo">
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+
+			</p:panel>
+		</h:form>
+
+		<ui:include src="hallazgo-seguimiento.xhtml"></ui:include>
+	</ui:define>
+</ui:composition>

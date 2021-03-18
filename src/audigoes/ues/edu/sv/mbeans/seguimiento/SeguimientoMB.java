@@ -12,15 +12,18 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.mail.Address;
+import javax.mail.internet.InternetAddress;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
 import audigoes.ues.edu.sv.entities.administracion.Usuario;
+import audigoes.ues.edu.sv.entities.ejecucion.ComentarioHallazgo;
 import audigoes.ues.edu.sv.entities.informe.CedulaNota;
 import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planeacion.AuditoriaResponsable;
 import audigoes.ues.edu.sv.entities.seguimiento.Comentario;
 import audigoes.ues.edu.sv.entities.seguimiento.Recomendacion;
 import audigoes.ues.edu.sv.entities.seguimiento.Seguimiento;
+import audigoes.ues.edu.sv.mbeans.ejecucion.CedulaMB;
 import audigoes.ues.edu.sv.util.SendMailAttach;
 
 @ManagedBean(name = "segMB")
@@ -48,9 +51,15 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 
 	@ManagedProperty(value = "#{recMB}")
 	private RecomendacionMB recMB = new RecomendacionMB();
-	
+
 	@ManagedProperty(value = "#{comMB}")
-	private ComentarioMB comMB  = new ComentarioMB(); 
+	private ComentarioMB comMB = new ComentarioMB();
+
+	@ManagedProperty(value = "#{ceduMB}")
+	private CedulaMB ceduMB = new CedulaMB();
+
+	@ManagedProperty(value = "#{informeSegMB}")
+	private InformeSeguimientoMB informeSegMB = new InformeSeguimientoMB();
 
 	public SeguimientoMB() {
 		super(new Seguimiento());
@@ -63,12 +72,21 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 			Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 			setAuditoria((Auditoria) sessionMap.get("auditoria"));
 
-			//obtenerRecomendaciones();
+			// obtenerRecomendaciones();
 			obtenerCoordinador();
 			obtenerSeguimiento();
 			obtenerCedulaNotaList();
 
-			// super.init();
+			if (getAuditoria() != null) {
+				if (getRegistro().getSegEstado() == 1) {
+					informeSegMB.setSeguimiento(getRegistro());
+					informeSegMB.onInforme();
+				} else {
+					System.out.println("No hay para informe");
+				}
+			}
+
+			super.init();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -95,17 +113,30 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 	@SuppressWarnings("unchecked")
 	public void obtenerCedulaNotaList() {
 		try {
-			if(getAuditoria() != null) {
-				setCedulaNotaList((List<CedulaNota>) audigoesLocal.findByNamedQuery(CedulaNota.class,
-						"cedula.nota.por.auditoria", new Object[] {getAuditoria().getAudId()}));
+			System.out.println("obtenerCedulaNotaList");
+			if (getAuditoria() != null) {
+				ceduMB.setAuditoria(getAuditoria());
+				if (getStatus().equals("NEW")) {
+					System.out.println("new");
+					ceduMB.setListado((List<CedulaNota>) audigoesLocal.findByNamedQuery(CedulaNota.class,
+							"cedula.nota.por.auditoria", new Object[] { getAuditoria().getAudId() }));
+				}
+				if (getStatus().equals("EDIT")) {
+					System.out.println("edit");
+					ceduMB.setListado((List<CedulaNota>) audigoesLocal.findByNamedQuery(CedulaNota.class,
+							"cedula.nota.seguimiento.por.auditoria",
+							new Object[] { getAuditoria().getAudId(), getRegistro().getSegId() }));
+				}
+			} else {
+				System.out.println("no hay auditoria");
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			addWarn(new FacesMessage(SYSTEM_NAME, "Problemas al obtener hallazgos de auditoría"));
 		}
 	}
-	
+
 	public void onCedulaSelected() {
 		try {
 			getCedulaSelected().setSelected(true);
@@ -132,6 +163,7 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 	public void obtenerSeguimiento() {
 		try {
 			if (getAuditoria() != null) {
+				System.out.println(" " + getAuditoria().getAudId());
 				setListado((List<Seguimiento>) audigoesLocal.findByNamedQuery(Seguimiento.class,
 						"seguimiento.get.by.auditoria", new Object[] { getAuditoria().getAudId() }));
 				if (!getListado().isEmpty()) {
@@ -141,8 +173,12 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 						onNew();
 					}
 				} else {
+					System.out.println("No hay seguimiento realizado");
 					onNew();
 				}
+
+				setListado((List<Seguimiento>) audigoesLocal.findByNamedQuery(Seguimiento.class,
+						"historial.seguimiento.get.by.auditoria", new Object[] { getAuditoria().getAudId() }));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -186,27 +222,26 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 		recMB.setRegistro(getRecomendacionSelected());
 		recMB.mostrarComentarios();
 	}
-	
+
 	public void preparaCorreoInicioSeguimiento() {
 		textoCorreo = "<p><strong>AUDIGOES LE INFORMA:</strong></p>"
 				+ "<p>Se notifica que se ha dado por iniciado el seguimiento "
-				+ "correspondiente a la auditor&iacute;a <strong>"
-				+ getAuditoria().getTipoAuditoria().getTpaAcronimo() + "-"
-				+ getAuditoria().getAudAnio() + "-" + getAuditoria().getAudCorrelativo()
+				+ "correspondiente a la auditor&iacute;a <strong>" + getAuditoria().getTipoAuditoria().getTpaAcronimo()
+				+ "-" + getAuditoria().getAudAnio() + "-" + getAuditoria().getAudCorrelativo()
 				+ "</strong> denominado <strong>" + getAuditoria().getAudNombre()
-				+ " </strong> por lo que se le pide ingresar al sistema para realizar los comentarios correspondientes.</p>\r\n" + "<p>Atte.-</p>";
+				+ " </strong> por lo que se le pide ingresar al sistema para realizar los comentarios correspondientes.</p>\r\n"
+				+ "<p>Atte.-</p>";
 	}
-	
+
 	public void onEnviarCorreoInicioSeguimiento() {
 		Usuario usr = buscarCoordinador(getAuditoria());
 		if (usr != null) {
 			try {
-				/*getRegistro().setCedEstado(2);
-				onSave();
-				if (!correoRevision(textoCorreo, usr)) {
-					addWarn(new FacesMessage("Error en el envio del correo"));
-				}
-				revisarPermisos();*/
+				/*
+				 * getRegistro().setCedEstado(2); onSave(); if (!correoRevision(textoCorreo,
+				 * usr)) { addWarn(new FacesMessage("Error en el envio del correo")); }
+				 * revisarPermisos();
+				 */
 				setStatus("VIEW");
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -214,7 +249,7 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Usuario buscarCoordinador(Auditoria auditoria) {
 		Usuario usuario = null;
@@ -274,9 +309,96 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 		}
 	}
 
+	public void asignarSeguimiento() {
+		try {
+			if (getStatus().equals("NEW")) {
+				getRegistro().setAuditoria(getAuditoria());
+				getRegistro().setSegEstado(1);
+				onSaveNew();
+				getListado().add(getRegistro());
+				onEdit();
+
+				auditoria.setAudFase(6);
+				audigoesLocal.update(auditoria);
+
+				CedulaNota ced;
+				for (CedulaNota c : ceduMB.getListado()) {
+					if (c.getCedValorizacion() != 2) {
+						ced = new CedulaNota();
+						ced.setAuditoria(c.getAuditoria());
+						ced.setSeguimiento(getRegistro());
+						ced.setCedEstado(8);
+						ced.setCedValorizacion(c.getCedValorizacion());
+						ced.setUsuario1(c.getUsuario1());
+						ced.setCedTitulo(c.getCedTitulo());
+						ced.setCedReferencia(c.getCedReferencia());
+						ced.setCedCondicion(c.getCedCondicion());
+						ced.setCedCriterio(c.getCedCriterio());
+						ced.setCedFechaElaboro(c.getCedFechaElaboro());
+						ced.setCedCausa(c.getCedCausa());
+						ced.setCedEfecto(c.getCedEfecto());
+						ced.setFecCrea(c.getFecCrea());
+						ced.setUsuCrea(c.getUsuCrea());
+						ced.setRegActivo(c.getRegActivo());
+						audigoesLocal.insert(ced);
+					}
+				}
+			} else if (getStatus().equals("EDIT")) {
+				getRegistro().setSegFecInicio(getToday());
+				onSaveEdit();
+				onEdit();
+			}
+
+			notificarCorreoSeguimiento(textoCorreo);
+
+			init();
+			revisarPermisos();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void notificarCorreoSeguimiento(String texto) {
+		String from;
+		String cc;
+		String to;
+		String subject;
+		String text;
+		String attach;
+		String logo;
+		String body;
+		Address[] toList;
+		Address[] toCc;
+
+		try {
+			from = "audigoes.ues@gmail.com";
+			cc = "javiieramos93@gmail.com";
+			subject = "Notificación Asignación de Seguimiento";
+
+			String tolist = "";
+			for (AuditoriaResponsable r : auditoria.getAuditoriaResponsable()) {
+				if (r.getAurRol() != 0) {
+					tolist = tolist + r.getUsuario().getUsuCorreo() + ",";
+				}
+			}
+			System.out.println(" " + tolist);
+			tolist = "javiieramos93@gmail.com, jramos.j2011@gmail.com,";
+			toList = InternetAddress.parse(tolist);
+
+			body = texto;
+			logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/images/logo-azul.png");
+
+			SendMailAttach mail = new SendMailAttach(from, toList, cc, subject, body, null, logo);
+			mail.sendManyTo();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
 	public void finalizarSeguimiento() {
 		try {
 			getRegistro().setSegFecFin(getToday());
+			getRegistro().setSegEstado(2);
 			getListado().get(getListado().size() - 1).setSegFecFin(getToday());
 			onSaveEdit();
 			onNew();
@@ -285,7 +407,7 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 			addWarn(new FacesMessage(SYSTEM_NAME, "Problemas al finalizar seguimiento"));
 		}
 	}
-	
+
 	public void onSaveComentario() {
 		if (comMB.beforeSave()) {
 			try {
@@ -306,10 +428,10 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 			try {
 				getCedulaSelected().setCedEstado(8);
 				audigoesLocal.update(getCedulaSelected());
-				addInfo(new FacesMessage(SYSTEM_NAME,"Estado de hallazgo actualizado a EN PROCESO"));
+				addInfo(new FacesMessage(SYSTEM_NAME, "Estado de hallazgo actualizado a EN PROCESO"));
 			} catch (Exception e) {
 				e.printStackTrace();
-				addWarn(new FacesMessage(SYSTEM_NAME,"Problema al actualizar estado del hallazgo"));
+				addWarn(new FacesMessage(SYSTEM_NAME, "Problema al actualizar estado del hallazgo"));
 			}
 		}
 	}
@@ -322,10 +444,10 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 			try {
 				getCedulaSelected().setCedEstado(9);
 				audigoesLocal.update(getCedulaSelected());
-				addInfo(new FacesMessage(SYSTEM_NAME,"Estado de hallazgo actualizado"));
+				addInfo(new FacesMessage(SYSTEM_NAME, "Estado de hallazgo actualizado"));
 			} catch (Exception e) {
 				e.printStackTrace();
-				addWarn(new FacesMessage(SYSTEM_NAME,"Problema al actualizar estado del hallazgo"));
+				addWarn(new FacesMessage(SYSTEM_NAME, "Problema al actualizar estado del hallazgo"));
 			}
 		}
 	}
@@ -338,12 +460,12 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 			try {
 				getCedulaSelected().setCedEstado(10);
 				audigoesLocal.update(getCedulaSelected());
-				addInfo(new FacesMessage(SYSTEM_NAME,"Estado de hallazgo actualizado a NO IMPLEMENTADO"));
+				addInfo(new FacesMessage(SYSTEM_NAME, "Estado de hallazgo actualizado a NO IMPLEMENTADO"));
 			} catch (Exception e) {
 				e.printStackTrace();
-				addWarn(new FacesMessage(SYSTEM_NAME,"Problema al actualizar estado del hallazgo"));
+				addWarn(new FacesMessage(SYSTEM_NAME, "Problema al actualizar estado del hallazgo"));
 			}
-			
+
 		}
 	}
 
@@ -401,11 +523,12 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 
 	public void prepararCorreo() {
 		textoCorreo = "<p><strong>AUDIGOES LE INFORMA:</strong></p>"
-				+ "<p>Se le notifica que la fase de seguimiento a iniciado"
+				+ "<p>Se le notifica que ha sido asignado como auditor para la fase de seguimiento "
 				+ "correspondiente a la auditor&iacute;a <strong>"
 				+ getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo() + "-"
 				+ getRegistro().getAuditoria().getAudAnio() + "-" + getRegistro().getAuditoria().getAudCorrelativo()
-				+ "</strong> por lo que se le pide ingresar al sistema para revisarlo.</p>\r\n" + "<p>Atte.-</p>";
+				+ "</strong> por lo que se le pide ingresar al sistema para iniciar su seguimiento.</p>\r\n"
+				+ "<p>Atte.-</p>";
 	}
 
 	public void onEnviarRevision() {
@@ -512,9 +635,64 @@ public class SeguimientoMB extends AudigoesController implements Serializable {
 		this.cedulaSelected = cedulaSelected;
 	}
 
+	public CedulaMB getCeduMB() {
+		return ceduMB;
+	}
+
+	public void setCeduMB(CedulaMB ceduMB) {
+		this.ceduMB = ceduMB;
+	}
+
+	public InformeSeguimientoMB getInformeSegMB() {
+		return informeSegMB;
+	}
+
+	public void setInformeSegMB(InformeSeguimientoMB informeSegMB) {
+		this.informeSegMB = informeSegMB;
+	}
+
+	public void revisarPermisos() {
+		if (getAuditoria() != null) {
+			setPerEdit(false);
+			setPerNew(false);
+
+			setRolCoordinadorAuditoria(getObjAppsSession().isCoordinador(getObjAppsSession().getUsuario().getUsuId(),
+					getAuditoria().getAuditoriaResponsable()));
+
+			System.out.println(" " + getStatus());
+			if (getStatus().equals("EDIT")) {
+				switch (getRegistro().getSegEstado()) {
+				case 1:
+					if (isRolAuditor()) {
+						setPerEdit(true);
+					} else {
+						setPerEnviar(false);
+					}
+					setPerAutorizar(false);
+					break;
+				case 2:
+					if (isRolCoordinadorAuditoria()) {
+						setPerEdit(true);
+						if (isPerAutorizar()) {
+							setPerAutorizar(true);
+						}
+					} else {
+						setPerAutorizar(false);
+					}
+					setPerEnviar(false);
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+
 	@Override
 	protected void configBean() {
 		// TODO Auto-generated method stub
 		super.configBean();
+		revisarPermisos();
+
 	}
 }

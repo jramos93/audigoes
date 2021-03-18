@@ -27,6 +27,7 @@ import audigoes.ues.edu.sv.entities.planeacion.Auditoria;
 import audigoes.ues.edu.sv.entities.planificacion.ProcedimientoPlanificacion;
 import audigoes.ues.edu.sv.entities.seguimiento.Comentario;
 import audigoes.ues.edu.sv.entities.seguimiento.Recomendacion;
+import audigoes.ues.edu.sv.entities.seguimiento.Seguimiento;
 
 /**
  * The persistent class for the cedula_notas database table.
@@ -124,6 +125,10 @@ public class CedulaNota extends SuperEntity implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "ced_aud_id")
 	private Auditoria auditoria;
+	
+	@ManyToOne
+	@JoinColumn(name = "ced_seg_id")
+	private Seguimiento seguimiento;
 
 	// bi-directional many-to-one association to Informe
 	@ManyToOne
@@ -438,6 +443,14 @@ public class CedulaNota extends SuperEntity implements Serializable {
 
 	public void setComentarios(List<Comentario> comentarios) {
 		this.comentarios = comentarios;
+	}
+
+	public Seguimiento getSeguimiento() {
+		return seguimiento;
+	}
+
+	public void setSeguimiento(Seguimiento seguimiento) {
+		this.seguimiento = seguimiento;
 	}
 
 	@Override

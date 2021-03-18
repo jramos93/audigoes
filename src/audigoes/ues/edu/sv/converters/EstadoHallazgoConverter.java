@@ -32,13 +32,15 @@ public class EstadoHallazgoConverter implements Converter {
 			} else if (valor.equals("7")) {
 				valor = "FINALIZADO";
 			} else if (valor.equals("8")) {
-				valor = "PENDIENTE";
+				valor = "A COMUNICAR";
 			} else if (valor.equals("9")) {
-				valor = "EN PROCESO";
+				valor = "COMUNICADO";
 			} else if (valor.equals("10")) {
-				valor = "IMPLEMENTADO";
+				valor = "ANÁLISIS";
 			} else if (valor.equals("11")) {
-				valor = "NO IMPLEMENTADO";
+				valor = "SUPERVISIÓN";
+			} else if (valor.equals("12")) {
+				valor = "FINALIZADO";
 			} else {
 				valor = "---";
 			}

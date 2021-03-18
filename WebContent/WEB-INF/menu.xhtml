@@ -11,7 +11,7 @@
 				<div class="layout-menu-container">
 					<h:form id="menuform">
 						<pv:menu id="pvMenu">
-							<p:menuitem value="Inicio" url="/audigoes/page/main.xhtml" />
+							<p:menuitem value="Inicio" url="/audigoes/page/main.xhtml"/>
 							<p:submenu label="Administración" icon="pi pi-file"
 								rendered="#{loginMB.rolCoordinador or loginMB.rolJefe or loginMB.rolAdministrador}">
 								<p:menuitem value="Gestion de Roles" rendered="#{loginMB.rolJefe or loginMB.rolAdministrador}"
@@ -56,7 +56,7 @@
 
 
 							<p:menuitem label="Consultas" value="Consultas"
-								icon="pi pi-chart-line"
+								icon="pi pi-chart-line" rendered="#{loginMB.loggedIn}"
 								url="/audigoes/page/consultas/consultas.xhtml">
 							</p:menuitem>
 							<p:menuitem label="Dashboard" value="Dashboard"
@@ -73,7 +73,7 @@
 							<p:menuitem value="Seguimiento Auditorías"
 								icon="pi pi-comments"
 								rendered="#{loginMB.rolAuditado}"
-								url="/audigoes/page/usuario/seguimientohallazgos.xhtml">
+								url="/audigoes/page/usuario/lista-hallazgos-seguimiento.xhtml">
 							</p:menuitem>
 
 						</pv:menu>

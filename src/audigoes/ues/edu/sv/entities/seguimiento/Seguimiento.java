@@ -29,6 +29,9 @@ public class Seguimiento extends SuperEntity implements Serializable {
 	@Column(name="fec_crea")
 	private Date fecCrea;
 
+	@Column(name="seg_estado")
+	private int segEstado;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="fec_modi")
 	private Date fecModi;
@@ -36,11 +39,11 @@ public class Seguimiento extends SuperEntity implements Serializable {
 	@Column(name="reg_activo")
 	private int regActivo;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="seg_fec_fin")
 	private Date segFecFin;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="seg_fec_inicio")
 	private Date segFecInicio;
 
@@ -103,6 +106,14 @@ public class Seguimiento extends SuperEntity implements Serializable {
 
 	public void setRegActivo(int regActivo) {
 		this.regActivo = regActivo;
+	}
+
+	public int getSegEstado() {
+		return segEstado;
+	}
+
+	public void setSegEstado(int segEstado) {
+		this.segEstado = segEstado;
 	}
 
 	public Date getSegFecFin() {

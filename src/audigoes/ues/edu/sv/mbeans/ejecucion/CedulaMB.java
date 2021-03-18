@@ -253,6 +253,17 @@ public class CedulaMB extends AudigoesController implements Serializable {
 				+ "<p><strong>Condición: </strong>" + getRegistro().getCedCondicion() + "</p>"
 				+ "<p><strong>Criterio:</strong> " + getRegistro().getCedCriterio() + "</p>" + "<br/><p>Atte.-</p>";
 	}
+	
+	public void prepararCorreoUnidadSeguimiento() {
+		textoCorreoUnidad = "<p><strong>AUDIGOES LE INFORMA:</strong></p>" + "<p>La Unidad de Auditoría Interna ha "
+				+ "iniciado el seguimiento correspondiente a la auditor&iacute;a <strong>"
+				+ getRegistro().getAuditoria().getTipoAuditoria().getTpaAcronimo() + "-"
+				+ getRegistro().getAuditoria().getAudAnio() + "-" + getRegistro().getAuditoria().getAudCorrelativo()
+				+ "</strong> solicitando su respuesta a las recomendaciones pendientes de implementar para el hallazgo: </p>\r\n"
+				+ "<p><strong>Título: </strong>" + getRegistro().getCedTitulo() + "</p>"
+				+ "<p><strong>Condición: </strong>" + getRegistro().getCedCondicion() + "</p>"
+				+ "<p><strong>Criterio:</strong> " + getRegistro().getCedCriterio() + "</p>" + "<br/><p>Atte.-</p>";
+	}
 
 	public void prepararCorreoAnalisis() {
 		textoCorreo = "<p><strong>AUDIGOES LE INFORMA:</strong></p>"
@@ -345,6 +356,24 @@ public class CedulaMB extends AudigoesController implements Serializable {
 			}
 		}
 	}
+	
+	public void onEnviarRevisionAnalisisSeg() {
+		Usuario usr = buscarCoordinador(getRegistro().getAuditoria());
+		if (usr != null) {
+			try {
+				getRegistro().setCedEstado(11);
+				onSave();
+				if (!correoRevision(textoCorreo, usr)) {
+					addWarn(new FacesMessage("Error en el envio del correo"));
+				}
+				revisarPermisos();
+				setStatus("VIEW");
+			} catch (Exception e) {
+				e.printStackTrace();
+				addWarn(new FacesMessage("Error al enviar a revisión"));
+			}
+		}
+	}
 
 	public void onEnviarObservacion() {
 		try {
@@ -389,6 +418,29 @@ public class CedulaMB extends AudigoesController implements Serializable {
 	public void onEnviarObservacionAnalisis() {
 		try {
 			getRegistro().setCedEstado(5);
+			getRegistro().setUsuario2(getObjAppsSession().getUsuario());
+			getRegistro().setCedFechaReviso(getToday());
+			onSave();
+			try {
+				if (!correoObservacion(textoCorreoObs, getObjAppsSession().getUsuario())) {
+					addWarn(new FacesMessage("Error en el envio del correo"));
+				}
+				revisarPermisos();
+			} catch (Exception e) {
+				e.printStackTrace();
+				addWarn(new FacesMessage("Error al enviar a revisión"));
+			}
+
+			setStatus("VIEW");
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage("Error al enviar a revisión"));
+		}
+	}
+	
+	public void onEnviarObservacionAnalisisSeg() {
+		try {
+			getRegistro().setCedEstado(10);
 			getRegistro().setUsuario2(getObjAppsSession().getUsuario());
 			getRegistro().setCedFechaReviso(getToday());
 			onSave();
@@ -462,6 +514,23 @@ public class CedulaMB extends AudigoesController implements Serializable {
 			addWarn(new FacesMessage("Error al finalizar las observaciones"));
 		}
 	}
+	
+	public void onFinalizarAnalisisSeg() {
+		try {
+			getRegistro().setCedEstado(12);
+			getRegistro().setUsuario2(getObjAppsSession().getUsuario());
+			getRegistro().setCedFechaReviso(getToday());
+			onSave();
+			revisarPermisos();
+			if (!correoFin(textoCorreoFin, getObjAppsSession().getUsuario())) {
+				addWarn(new FacesMessage("Error en el envio del correo"));
+			}
+			setStatus("VIEW");
+		} catch (Exception e) {
+			e.printStackTrace();
+			addWarn(new FacesMessage("Error al finalizar las observaciones"));
+		}
+	}
 
 	@SuppressWarnings("unchecked")
 	public Informe buscaInforme(Auditoria auditoria) {
@@ -499,6 +568,49 @@ public class CedulaMB extends AudigoesController implements Serializable {
 							bitaMB.iniciarActividad(13, "Comunicación de hallazgos preliminares",
 									getRegistro().getAuditoria(), getObjAppsSession().getUsuario());
 						}
+
+						ComentarioHallazgo com;
+						for (Usuario u : selectedUsuariosList) {
+							com = new ComentarioHallazgo();
+							com.setCedulaNota(getRegistro());
+							com.setUsuario(u);
+							com.setAuditoria(getRegistro().getAuditoria());
+							com.setComeEnviado(0);
+							com.setFecCrea(getToday());
+							com.setUsuCrea(getObjAppsSession().getUsuario().getUsuUsuario());
+							com.setRegActivo(1);
+
+							audigoesLocal.insert(com);
+							System.out.println("u " + u.getUsuNombre());
+						}
+
+					}
+					setStatus("VIEW");
+				} catch (Exception e) {
+					e.printStackTrace();
+					addWarn(new FacesMessage("Error al comunicar la nota"));
+				}
+			}
+		} else {
+			addWarn(new FacesMessage("Error, seleccione al responsable"));
+		}
+	}
+	
+	public void onEnviarUnidadSeguimiento() {
+
+		if (getSelectedUsuariosList() != null) {
+			
+			Usuario usr = getObjAppsSession().getUsuario();
+			if (usr != null) {
+				try {
+					onEdit();
+					getRegistro().setCedEstado(9);
+					getRegistro().setCedFechaComunicacion(getToday());
+					onSave();
+					revisarPermisos();
+					if (!correoUnidadSeguimiento(textoCorreoUnidad, getSelectedUsuariosList(), usr)) {
+						addWarn(new FacesMessage("Error en el envio del correo"));
+					} else {
 
 						ComentarioHallazgo com;
 						for (Usuario u : selectedUsuariosList) {
@@ -710,6 +822,40 @@ public class CedulaMB extends AudigoesController implements Serializable {
 			from = "audigoes.ues@gmail.com";
 			cc = auditor.getUsuCorreo();
 			subject = "Comunicación de Situación Encontrada";
+			// to = usuario.getUsuCorreo();
+			String tolists = "";
+
+			for (Usuario u : usuarios) {
+				tolists = tolists + u.getUsuCorreo() + ",";
+			}
+			toList = InternetAddress.parse(tolists);
+			body = texto;
+			logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/images/logo-azul.png");
+
+			SendMailAttach mail = new SendMailAttach(from, toList, cc, subject, body, null, logo);
+			mail.sendManyTo();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;// TODO: handle exception
+		}
+	}
+	
+	public boolean correoUnidadSeguimiento(String texto, List<Usuario> usuarios, Usuario auditor) {
+		String from;
+		String cc;
+		String to;
+		String subject;
+		String attach;
+		String logo;
+		String body;
+		Address[] toList;
+		Address[] toCc;
+
+		try {
+			from = "audigoes.ues@gmail.com";
+			cc = auditor.getUsuCorreo();
+			subject = "Comunicación de Seguimiento a Situación Encontrada";
 			// to = usuario.getUsuCorreo();
 			String tolists = "";
 
@@ -998,8 +1144,12 @@ public class CedulaMB extends AudigoesController implements Serializable {
 				if (comentarios != null && !comentarios.isEmpty()) {
 					resultados = resultados + "<ul>";
 					for (ComentarioHallazgo ch : comentarios) {
-						resultados = resultados + "<li><strong>" + ch.getUsuario().getUsuNombre() + ": </strong>"
-								+ ch.getComeComentario() + "</li><br/>";
+						resultados = resultados + "<li><strong>" + ch.getUsuario().getUsuNombre() + ": </strong> ";
+						if (ch.getComeComentario() == null) {
+							resultados = resultados + "Sin Comentarios </li><br/>";
+						} else {
+							resultados = resultados + ch.getComeComentario() + "</li><br/>";
+						}
 					}
 					resultados = resultados + "</ul>";
 				} else {
@@ -1007,11 +1157,10 @@ public class CedulaMB extends AudigoesController implements Serializable {
 				}
 
 				resultados = resultados + "<strong> Comentarios de Auditoría: </strong>";
-				if(c.getCedComentarioAuditor()!=null) {
-					resultados = resultados+ c.getCedComentarioAuditor()
-					+ "<br/><br/>";
+				if (c.getCedComentarioAuditor() != null) {
+					resultados = resultados + c.getCedComentarioAuditor() + "<br/><br/>";
 				} else {
-					resultados = resultados+" Sin Comentarios <br/><br/>";
+					resultados = resultados + " Sin Comentarios <br/><br/>";
 				}
 
 				String estado = "";
@@ -1151,7 +1300,66 @@ public class CedulaMB extends AudigoesController implements Serializable {
 					setPerEdit(false);
 					setPerAutorizar(false);
 				}
-				break;	
+				break;
+			case 8:
+				if (isRolAuditor()) {
+					setPerEnviar(true);
+				}
+				if (isRolCoordinador() || isRolCoordinadorAuditoria()) {
+					setPerEnviar(false);
+				}
+				setPerEdit(false);
+				setPerAutorizar(false);
+				break;
+			case 9:
+				setPerEnviar(false);
+				if (isRolAuditor()) {
+					setPerEdit(true);
+
+				}
+				setPerNew(false);
+				setPerAutorizar(false);
+				break;
+			case 10:
+				if (isRolAuditor()) {
+					setPerEnviar(true);
+					setPerEdit(true);
+					setPerNew(true);
+				}
+				if (isRolCoordinador() || isRolCoordinadorAuditoria()) {
+					setPerEnviar(false);
+					setPerEdit(false);
+					setPerAutorizar(false);
+				}
+				break;
+			case 11:
+
+				setPerEnviar(false);
+				setPerEdit(false);
+				// setPerAutorizar(false);
+				System.out.println("6");
+				if (isRolCoordinadorAuditoria()) {
+					System.out.println("6 isRolCoordinadorAuditoria isPerAutorizar"+isPerAutorizar());
+					setPerEdit(true);
+					if (isPerAutorizar()) {
+						System.out.println("6 isPerAutorizar");
+						setPerAutorizar(true);
+					}
+				} else {
+					setPerAutorizar(false);
+				}
+				break;
+			case 12:
+
+				if (isRolAuditor()) {
+					setPerEdit(true);
+				}
+				if (isRolCoordinador() || isRolCoordinadorAuditoria()) {
+					setPerEnviar(false);
+					setPerEdit(false);
+					setPerAutorizar(false);
+				}
+				break;
 			default:
 				if (isRolAuditor()) {
 					setPerEdit(true);

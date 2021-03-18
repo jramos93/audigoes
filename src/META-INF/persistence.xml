@@ -66,5 +66,7 @@
 		<class>audigoes.ues.edu.sv.entities.vistas.TiempoPlanificadoVsTiempoEjecutado</class>
 		<class>audigoes.ues.edu.sv.entities.vistas.DuracionAuditorias</class>
 		<class>audigoes.ues.edu.sv.entities.ejecucion.ComentarioHallazgo</class>
+		<class>audigoes.ues.edu.sv.entities.informe.InformeSeguimiento</class>
+		<class>audigoes.ues.edu.sv.entities.administracion.SolicitudesClave</class>
 	</persistence-unit>
 </persistence>

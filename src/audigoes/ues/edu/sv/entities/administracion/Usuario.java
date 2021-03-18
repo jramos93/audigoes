@@ -75,6 +75,13 @@ public class Usuario extends SuperEntity implements Serializable {
 	@Temporal(TemporalType.DATE)
 	@Column(name="usu_fecha_nacimiento")
 	private Date usuFechaNacimiento;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name="usu_fecha_cambio_clave")
+	private Date usuFechaCambioClave;
+	
+	@Column(name = "usu_expirado")
+	private int usuExpirado;
 
 	@Lob
 	@Column(name="usu_foto")
@@ -214,6 +221,22 @@ public class Usuario extends SuperEntity implements Serializable {
 
 	public void setUsuApellido(String usuApellido) {
 		this.usuApellido = usuApellido;
+	}
+
+	public Date getUsuFechaCambioClave() {
+		return usuFechaCambioClave;
+	}
+
+	public void setUsuFechaCambioClave(Date usuFechaCambioClave) {
+		this.usuFechaCambioClave = usuFechaCambioClave;
+	}
+
+	public int getUsuExpirado() {
+		return usuExpirado;
+	}
+
+	public void setUsuExpirado(int usuExpirado) {
+		this.usuExpirado = usuExpirado;
 	}
 
 	public String getUsuCargo() {

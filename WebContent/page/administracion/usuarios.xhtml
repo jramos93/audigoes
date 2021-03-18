@@ -12,7 +12,7 @@
 		</div>
 		<h:form id="frm">
 			<p:dataTable var="usu" value="#{usrMB.listado}" widgetVar="wvUsuario"
-				reflow="true" id="dtUsuario" style="margin-top:20px;" 
+				reflow="true" id="dtUsuario" style="margin-top:20px;"
 				paginator="true" filteredValue="#{usrMB.filteredUsuarios}"
 				globalFilterFunction="#{usrMB.globalFilterFunction}"
 				selection="#{usrMB.regSelected}" selectionMode="single"
@@ -156,6 +156,14 @@
 											<p:inputMask id="usudnit" value="#{usrMB.registro.usuNit}"
 												mask="9999-999999-999-9" required="true"
 												requiredMessage="Debe ingresar número de NIT" />
+
+											<h:outputLabel for="regactivo" value="Estado:" />
+
+											<p:selectOneRadio id="regactivo"
+												value="#{usrMB.registro.regActivo}" required="true">
+												<f:selectItems value="#{usrMB.regActivoList}"></f:selectItems>
+
+											</p:selectOneRadio>
 
 											<!-- 											<h:outputLabel for="skip" value="Asignar permisos luego" /> -->
 											<!-- 											<h:selectBooleanCheckbox id="skip" value="#{usuMB.skip}" /> -->
