@@ -17,6 +17,7 @@ import java.util.List;
  * 
  */
 @Entity
+@Table(name="actividad")
 @NamedQuery(name="Actividad.findAll", query="SELECT a FROM Actividad a")
 public class Actividad extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

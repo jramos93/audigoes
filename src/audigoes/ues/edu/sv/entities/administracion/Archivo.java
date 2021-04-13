@@ -22,6 +22,7 @@ import java.util.Date;
  * 
  */
 @Entity
+@Table(name="archivo")
 @NamedQuery(name = "Archivo.findAll", query = "SELECT a FROM Archivo a")
 public class Archivo extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

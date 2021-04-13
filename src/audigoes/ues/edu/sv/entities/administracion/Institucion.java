@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,6 +26,7 @@ import audigoes.ues.edu.sv.entities.planeacion.TipoAuditoria;
  * 
  */
 @Entity
+@Table(name="institucion")
 @NamedQuery(name = "Institucion.findAll", query = "SELECT i FROM Institucion i")
 public class Institucion extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

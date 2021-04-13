@@ -13,6 +13,7 @@ import java.util.Date;
  * 
  */
 @Entity
+@Table(name="marca")
 @NamedQuery(name="Marca.findAll", query="SELECT m FROM Marca m")
 public class Marca extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

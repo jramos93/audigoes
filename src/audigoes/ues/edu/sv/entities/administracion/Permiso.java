@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,6 +24,7 @@ import audigoes.ues.edu.sv.entities.SuperEntity;
  * 
  */
 @Entity
+@Table(name="permiso")
 @NamedQuery(name="Permiso.findAll", query="SELECT p FROM Permiso p")
 public class Permiso extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

@@ -10,6 +10,7 @@ import java.util.Date;
  * 
  */
 @Entity
+@Table(name="bitacora")
 @NamedQuery(name="Bitacora.findAll", query="SELECT b FROM Bitacora b")
 public class Bitacora extends audigoes.ues.edu.sv.entities.SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

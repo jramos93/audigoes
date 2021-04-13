@@ -14,6 +14,7 @@ import java.util.List;
  * 
  */
 @Entity
+@Table(name="comentario")
 @NamedQuery(name = "Comentario.findAll", query = "SELECT c FROM Comentario c")
 public class Comentario extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

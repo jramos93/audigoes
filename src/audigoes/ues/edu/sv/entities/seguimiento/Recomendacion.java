@@ -15,6 +15,7 @@ import java.util.List;
  * 
  */
 @Entity
+@Table(name="recomendacion")
 @NamedQuery(name = "Recomendacion.findAll", query = "SELECT r FROM Recomendacion r")
 public class Recomendacion extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

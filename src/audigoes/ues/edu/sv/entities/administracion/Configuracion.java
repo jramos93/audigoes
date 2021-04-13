@@ -12,6 +12,7 @@ import java.util.Date;
  * 
  */
 @Entity
+@Table(name="configuracion")
 @NamedQuery(name = "Configuracion.findAll", query = "SELECT c FROM Configuracion c")
 public class Configuracion extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

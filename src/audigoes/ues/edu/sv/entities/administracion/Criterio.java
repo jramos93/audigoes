@@ -13,6 +13,7 @@ import java.util.Date;
  * 
  */
 @Entity
+@Table(name="criterio")
 @NamedQuery(name="Criterio.findAll", query="SELECT c FROM Criterio c")
 public class Criterio extends SuperEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
