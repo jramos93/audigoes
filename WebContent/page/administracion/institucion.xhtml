@@ -131,7 +131,8 @@
 						<f:selectItems value="#{insMB.regActivoList}"></f:selectItems>
 					</p:selectOneRadio>
 				</p:panelGrid>
-				<p:panelGrid columns="3" columnClasses="ui-lg-4, ui-lg-5, ui-lg-3" layout="grid"
+				<p:panelGrid columns="3" columnClasses="ui-lg-4, ui-lg-5, ui-lg-3"
+					layout="grid"
 					styleClass="ui-panelgrid-blank form-group form-elements">
 					<h:outputText value="Subida de logo:"
 						rendered="#{insMB.status ne 'SHOW'}"></h:outputText>
@@ -148,6 +149,32 @@
 				<p:commandButton actionListener="#{insMB.onSave}" value="Guardar"
 					oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wvInsNewEdit').hide();"
 					update=":frm:dtInstituciones, :frmInsNewEdit" />
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="wvConfirmacion" responsive="true" width="480"
+			closeOnEscape="true" header="Confirmación de Usuario Creado"
+			modal="true">
+			<h:form id="frmConfirmacion">
+				<p:fieldset >
+					<h:outputText style="text-align:justify;"
+						value="Se ha creado el siguiente usuario con accesos de administración en la institución recien creada, 
+						se solicitará cambiar la clave la primera ves que se inicie sesión, además se envio una copia de los datos a la cuenta de correo: "></h:outputText>
+						<h:outputText value="audigoes@ues.edu.sv" style="font-weight:bold;"></h:outputText>
+				</p:fieldset>
+				<p:panelGrid columns="2"
+					columnClasses="ui-g-12 ui-md-2,ui-g-12 ui-md-4"
+					layout="grid"
+					styleClass="ui-panelgrid-blank form-group form-elements">
+					<p:outputLabel for="nombre" value="Usuario: " />
+					<h:outputText id="nombre" value="audigoesUES"
+						style="width:90%; font-weight:bold;" />
+
+					<p:outputLabel for="clave" value="Contraseña: " />
+					<h:outputText id="clave" value="audit21tbsUES"
+						style="width:90%; font-weight:bold;" />
+
+				</p:panelGrid>
 			</h:form>
 		</p:dialog>
 	</ui:define>

@@ -515,7 +515,9 @@ public class AudigoesController {
 			this.faseAuditoriaList.add(new SelectItem(2, "FASE PLANIFICACIÓN"));
 			this.faseAuditoriaList.add(new SelectItem(3, "FASE EJECUCIÓN"));
 			this.faseAuditoriaList.add(new SelectItem(4, "FASE INFORME"));
-			this.faseAuditoriaList.add(new SelectItem(5, "FASE SEGUIMIENTO"));
+			this.faseAuditoriaList.add(new SelectItem(5, "PENDIENTE DE SEGUIMIENTO"));
+			this.faseAuditoriaList.add(new SelectItem(6, "FASE SEGUIMIENTO"));
+			this.faseAuditoriaList.add(new SelectItem(7, "FINALIZADA"));
 		}
 		return faseAuditoriaList;
 	}

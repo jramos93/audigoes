@@ -138,7 +138,7 @@ public class LoginMB extends SecurityController implements Serializable {
 		String subject = "AUDIGOES - Solicitud Cambio de Clave";
 		String text = "<br/> Se le informa que se ha solicitado la generación de una nueva clave temporal de acceso para el sistema.<br/><br/>";
 		text = text + " Le pedimos que confirme haciendo clic en el siguiente enlace : "
-				+ "<strong>&nbsp;<a style='text-decoration=none;' title='Confirmar' href='http://localhost:8080/audigoes/cambioClave?param=" + user + " &param2=" + solicitud
+				+ "<strong>&nbsp;<a style='text-decoration=none;' title='Confirmar' href='http://audigoes.site/audigoes/cambioClave?param=" + user + " &param2=" + solicitud
 				+ "'<b>Solicitar Clave</b></a></strong>. <br/><br/>";
 		text = text
 				+ " Si usted no ha solicitado el cambio de clave, comuniquese con el administrador del sistema <br/><br/>";

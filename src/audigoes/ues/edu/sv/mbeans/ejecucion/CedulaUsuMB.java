@@ -149,6 +149,9 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 
 		arcMB.setCedula(getRegistro());
 		arcMB.fillByCedula(getRegistro());
+		dias = (int) ((getRegistro().getCedFechaPlazo().getTime() - getToday().getTime()) / 86400000);
+		dias = 1;
+		System.out.println("dias "+dias);
 
 		super.onShowSelected();
 	}
@@ -206,6 +209,8 @@ public class CedulaUsuMB extends AudigoesController implements Serializable {
 		arcMB.fillByCedula(getRegistro());
 
 		dias = (int) ((getRegistro().getCedFechaPlazo().getTime() - getToday().getTime()) / 86400000);
+		dias = 1;
+		System.out.println("dias "+dias);
 
 		System.out.println("Hay " + dias + " dias de diferencia");
 	}

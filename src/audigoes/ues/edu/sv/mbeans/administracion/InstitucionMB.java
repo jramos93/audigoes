@@ -9,6 +9,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 
 import audigoes.ues.edu.sv.controller.AudigoesController;
@@ -96,6 +97,8 @@ public class InstitucionMB extends AudigoesController implements Serializable {
 	@Override
 	public void afterSaveNew() {
 		getListado().add(getRegistro());
+		PrimeFaces.current().executeScript("PF('wvConfirmacion').show();)");
+		PrimeFaces.current().ajax().update(":frmConfirmacion");
 		super.afterSaveNew();
 	}
 
