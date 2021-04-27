@@ -104,20 +104,20 @@
 							<p:outputLabel for="nombre" value="Nombre del Programa:"
 								style="font-weight:bold;" />
 							<p:inputTextarea id="nombre" value="#{pejeMB.registro.preNombre}"
-								rows="2" required="true" maxlength="250"
+								rows="2" required="true" maxlength="1000"
 								readonly="#{pejeMB.status eq 'NEW' or (pejeMB.registro.preEstado ne 1) or !pejeMB.perEdit}"
 								requiredMessage="El nombre es requerido" />
 
 							<p:outputLabel for="objg" value="Objetivo General:"
 								style="font-weight:bold;" />
 							<p:inputTextarea id="objg" value="#{pejeMB.registro.preObjG}"
-								rows="2" maxlength="550"
+								rows="2"
 								readonly="#{pejeMB.status eq 'NEW' or (pejeMB.registro.preEstado ne 1) or !pejeMB.perEdit}" />
 
 							<p:outputLabel for="obje" value="Objetivos Especificos:"
 								style="font-weight:bold;" />
 							<p:inputTextarea id="obje" value="#{pejeMB.registro.preObjE}"
-								rows="4" maxlength="1000"
+								rows="4"
 								readonly="#{pejeMB.status eq 'NEW' or (pejeMB.registro.preEstado ne 1) or !pejeMB.perEdit}" />
 						</p:panelGrid>
 						<p:panelGrid columns="4"

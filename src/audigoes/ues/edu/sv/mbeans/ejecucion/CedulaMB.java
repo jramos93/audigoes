@@ -930,6 +930,8 @@ public class CedulaMB extends AudigoesController implements Serializable {
 	@Override
 	public void afterSaveNew() {
 		getListado().add(getRegistro());
+		recMB.setAuditoria(auditoria);
+		recMB.setCedula(getRegistro());
 		super.afterSaveNew();
 	}
 
